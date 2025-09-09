@@ -304,6 +304,19 @@ message getFriendInfoResp {
   repeated FriendInfoOnly friendInfos = 1;
 }
 
+//定义 AddFriendCategory 的请求参数
+message AddFriendCategoryReq {
+  string ownerUserID = 1;
+  string friendUserID = 2;
+  int32 category = 3;
+}
+
+// 定义 AddFriendCategory 的响应参数
+// 如果无需返回参数，则不需要添加定义。错误码和错误信息已经默认定义。
+message AddFriendCategoryResp {
+
+}
+
 service friend {
   // Friend request
   rpc applyToAddFriend(applyToAddFriendReq) returns (applyToAddFriendResp);
@@ -359,4 +372,7 @@ service friend {
   rpc NotificationUserInfoUpdate(notificationUserInfoUpdateReq) returns (notificationUserInfoUpdateResp);
 
   rpc getFriendInfo(getFriendInfoReq) returns (getFriendInfoResp);
+
+  // 定义一个 AddFriendCategory 的 RPC 方法
+  rpc AddFriendCategory(AddFriendCategoryReq) returns (AddFriendCategoryResp);
 }

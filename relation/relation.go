@@ -17,6 +17,7 @@ package relation
 import (
 	"errors"
 	"fmt"
+
 	"github.com/openimsdk/protocol/constant"
 )
 
@@ -247,4 +248,17 @@ func (x *GetPaginationFriendsResp) Format() any {
 		return fmt.Sprintf("len is %v", len(x.FriendsInfo))
 	}
 	return x
+}
+
+func (x *AddFriendCategoryReq) Check() error {
+	if x.OwnerUserID == "" {
+		return errors.New("ownerUserID is empty")
+	}
+	if x.FriendUserID == "" {
+		return errors.New("friendUserID is empty")
+	}
+	if x.Category == 0 {
+		return errors.New("category is empty")
+	}
+	return nil
 }
