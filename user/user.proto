@@ -379,6 +379,20 @@ message clientConfig {
   string value = 3;
 }
 
+//同步用户信息
+message syncEhrUserReq {
+}
+
+message syncEhrUserResp {
+}
+
+//同步部门信息
+message syncEhrDepartmentsReq {
+}
+
+message syncEhrDepartmentsResp {
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -440,4 +454,7 @@ service user {
 
   rpc pageUserClientConfig(pageUserClientConfigReq) returns (pageUserClientConfigResp);
 
+  rpc syncEhrUser(syncEhrUserReq) returns (syncEhrUserResp);
+
+  rpc syncEhrDepartments(syncEhrDepartmentsReq) returns (syncEhrDepartmentsResp);
 }

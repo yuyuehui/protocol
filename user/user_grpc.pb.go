@@ -63,6 +63,8 @@ const (
 	User_SetUserClientConfig_FullMethodName           = "/openim.user.user/setUserClientConfig"
 	User_DelUserClientConfig_FullMethodName           = "/openim.user.user/delUserClientConfig"
 	User_PageUserClientConfig_FullMethodName          = "/openim.user.user/pageUserClientConfig"
+	User_SyncEhrUser_FullMethodName                   = "/openim.user.user/syncEhrUser"
+	User_SyncEhrDepartments_FullMethodName            = "/openim.user.user/syncEhrDepartments"
 )
 
 // UserClient is the client API for User service.
@@ -122,6 +124,8 @@ type UserClient interface {
 	SetUserClientConfig(ctx context.Context, in *SetUserClientConfigReq, opts ...grpc.CallOption) (*SetUserClientConfigResp, error)
 	DelUserClientConfig(ctx context.Context, in *DelUserClientConfigReq, opts ...grpc.CallOption) (*DelUserClientConfigResp, error)
 	PageUserClientConfig(ctx context.Context, in *PageUserClientConfigReq, opts ...grpc.CallOption) (*PageUserClientConfigResp, error)
+	SyncEhrUser(ctx context.Context, in *SyncEhrUserReq, opts ...grpc.CallOption) (*SyncEhrUserResp, error)
+	SyncEhrDepartments(ctx context.Context, in *SyncEhrDepartmentsReq, opts ...grpc.CallOption) (*SyncEhrDepartmentsResp, error)
 }
 
 type userClient struct {
@@ -432,6 +436,26 @@ func (c *userClient) PageUserClientConfig(ctx context.Context, in *PageUserClien
 	return out, nil
 }
 
+func (c *userClient) SyncEhrUser(ctx context.Context, in *SyncEhrUserReq, opts ...grpc.CallOption) (*SyncEhrUserResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncEhrUserResp)
+	err := c.cc.Invoke(ctx, User_SyncEhrUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) SyncEhrDepartments(ctx context.Context, in *SyncEhrDepartmentsReq, opts ...grpc.CallOption) (*SyncEhrDepartmentsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncEhrDepartmentsResp)
+	err := c.cc.Invoke(ctx, User_SyncEhrDepartments_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -489,6 +513,8 @@ type UserServer interface {
 	SetUserClientConfig(context.Context, *SetUserClientConfigReq) (*SetUserClientConfigResp, error)
 	DelUserClientConfig(context.Context, *DelUserClientConfigReq) (*DelUserClientConfigResp, error)
 	PageUserClientConfig(context.Context, *PageUserClientConfigReq) (*PageUserClientConfigResp, error)
+	SyncEhrUser(context.Context, *SyncEhrUserReq) (*SyncEhrUserResp, error)
+	SyncEhrDepartments(context.Context, *SyncEhrDepartmentsReq) (*SyncEhrDepartmentsResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -588,6 +614,12 @@ func (UnimplementedUserServer) DelUserClientConfig(context.Context, *DelUserClie
 }
 func (UnimplementedUserServer) PageUserClientConfig(context.Context, *PageUserClientConfigReq) (*PageUserClientConfigResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageUserClientConfig not implemented")
+}
+func (UnimplementedUserServer) SyncEhrUser(context.Context, *SyncEhrUserReq) (*SyncEhrUserResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncEhrUser not implemented")
+}
+func (UnimplementedUserServer) SyncEhrDepartments(context.Context, *SyncEhrDepartmentsReq) (*SyncEhrDepartmentsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncEhrDepartments not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1150,6 +1182,42 @@ func _User_PageUserClientConfig_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_SyncEhrUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncEhrUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SyncEhrUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SyncEhrUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SyncEhrUser(ctx, req.(*SyncEhrUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_SyncEhrDepartments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncEhrDepartmentsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SyncEhrDepartments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SyncEhrDepartments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SyncEhrDepartments(ctx, req.(*SyncEhrDepartmentsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1276,6 +1344,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "pageUserClientConfig",
 			Handler:    _User_PageUserClientConfig_Handler,
+		},
+		{
+			MethodName: "syncEhrUser",
+			Handler:    _User_SyncEhrUser_Handler,
+		},
+		{
+			MethodName: "syncEhrDepartments",
+			Handler:    _User_SyncEhrDepartments_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
