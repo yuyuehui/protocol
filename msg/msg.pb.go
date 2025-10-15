@@ -4665,7 +4665,7 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12,\n" +
 	"\x11expressionContent\x18\x03 \x01(\tR\x11expressionContent\x12\x16\n" +
 	"\x06userID\x18\x04 \x01(\tR\x06userID\"\r\n" +
-	"\vLikeMsgResp2\x88\x17\n" +
+	"\vLikeMsgResp2\xc8\x17\n" +
 	"\x03msg\x12D\n" +
 	"\tGetMaxSeq\x12\x1a.openim.sdkws.GetMaxSeqReq\x1a\x1b.openim.sdkws.GetMaxSeqResp\x12A\n" +
 	"\n" +
@@ -4701,7 +4701,8 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x19SetUserConversationMaxSeq\x12(.openim.msg.SetUserConversationMaxSeqReq\x1a).openim.msg.SetUserConversationMaxSeqResp\x12p\n" +
 	"\x19SetUserConversationMinSeq\x12(.openim.msg.SetUserConversationMinSeqReq\x1a).openim.msg.SetUserConversationMinSeqResp\x12j\n" +
 	"\x17GetLastMessageSeqByTime\x12&.openim.msg.GetLastMessageSeqByTimeReq\x1a'.openim.msg.GetLastMessageSeqByTimeResp\x12O\n" +
-	"\x0eGetLastMessage\x12\x1d.openim.msg.GetLastMessageReq\x1a\x1e.openim.msg.GetLastMessageRespB#Z!github.com/openimsdk/protocol/msgb\x06proto3"
+	"\x0eGetLastMessage\x12\x1d.openim.msg.GetLastMessageReq\x1a\x1e.openim.msg.GetLastMessageResp\x12>\n" +
+	"\vLikeMessage\x12\x16.openim.msg.LikeMsgReq\x1a\x17.openim.msg.LikeMsgRespB#Z!github.com/openimsdk/protocol/msgb\x06proto3"
 
 var (
 	file_msg_msg_proto_rawDescOnce sync.Once
@@ -4896,41 +4897,43 @@ var file_msg_msg_proto_depIdxs = []int32{
 	75,  // 71: openim.msg.msg.SetUserConversationMinSeq:input_type -> openim.msg.SetUserConversationMinSeqReq
 	77,  // 72: openim.msg.msg.GetLastMessageSeqByTime:input_type -> openim.msg.GetLastMessageSeqByTimeReq
 	79,  // 73: openim.msg.msg.GetLastMessage:input_type -> openim.msg.GetLastMessageReq
-	101, // 74: openim.msg.msg.GetMaxSeq:output_type -> openim.sdkws.GetMaxSeqResp
-	38,  // 75: openim.msg.msg.GetMaxSeqs:output_type -> openim.msg.SeqsInfoResp
-	38,  // 76: openim.msg.msg.GetHasReadSeqs:output_type -> openim.msg.SeqsInfoResp
-	40,  // 77: openim.msg.msg.GetMsgByConversationIDs:output_type -> openim.msg.GetMsgByConversationIDsResp
-	42,  // 78: openim.msg.msg.GetConversationMaxSeq:output_type -> openim.msg.GetConversationMaxSeqResp
-	102, // 79: openim.msg.msg.PullMessageBySeqs:output_type -> openim.sdkws.PullMessageBySeqsResp
-	69,  // 80: openim.msg.msg.GetSeqMessage:output_type -> openim.msg.GetSeqMessageResp
-	55,  // 81: openim.msg.msg.SearchMessage:output_type -> openim.msg.SearchMessageResp
-	7,   // 82: openim.msg.msg.SendMsg:output_type -> openim.msg.SendMsgResp
-	9,   // 83: openim.msg.msg.SendSimpleMsg:output_type -> openim.msg.SendSimpleMsgResp
-	66,  // 84: openim.msg.msg.SetUserConversationsMinSeq:output_type -> openim.msg.SetUserConversationsMinSeqResp
-	27,  // 85: openim.msg.msg.ClearConversationsMsg:output_type -> openim.msg.ClearConversationsMsgResp
-	29,  // 86: openim.msg.msg.UserClearAllMsg:output_type -> openim.msg.UserClearAllMsgResp
-	31,  // 87: openim.msg.msg.DeleteMsgs:output_type -> openim.msg.DeleteMsgsResp
-	35,  // 88: openim.msg.msg.DeleteMsgPhysicalBySeq:output_type -> openim.msg.DeleteMsgPhysicalBySeqResp
-	33,  // 89: openim.msg.msg.DeleteMsgPhysical:output_type -> openim.msg.DeleteMsgPhysicalResp
-	11,  // 90: openim.msg.msg.SetSendMsgStatus:output_type -> openim.msg.SetSendMsgStatusResp
-	13,  // 91: openim.msg.msg.GetSendMsgStatus:output_type -> openim.msg.GetSendMsgStatusResp
-	18,  // 92: openim.msg.msg.RevokeMsg:output_type -> openim.msg.RevokeMsgResp
-	20,  // 93: openim.msg.msg.MarkMsgsAsRead:output_type -> openim.msg.MarkMsgsAsReadResp
-	22,  // 94: openim.msg.msg.MarkConversationAsRead:output_type -> openim.msg.MarkConversationAsReadResp
-	24,  // 95: openim.msg.msg.SetConversationHasReadSeq:output_type -> openim.msg.SetConversationHasReadSeqResp
-	45,  // 96: openim.msg.msg.GetConversationsHasReadAndMaxSeq:output_type -> openim.msg.GetConversationsHasReadAndMaxSeqResp
-	48,  // 97: openim.msg.msg.GetActiveUser:output_type -> openim.msg.GetActiveUserResp
-	51,  // 98: openim.msg.msg.GetActiveGroup:output_type -> openim.msg.GetActiveGroupResp
-	60,  // 99: openim.msg.msg.GetServerTime:output_type -> openim.msg.GetServerTimeResp
-	62,  // 100: openim.msg.msg.ClearMsg:output_type -> openim.msg.ClearMsgResp
-	64,  // 101: openim.msg.msg.DestructMsgs:output_type -> openim.msg.DestructMsgsResp
-	72,  // 102: openim.msg.msg.GetActiveConversation:output_type -> openim.msg.GetActiveConversationResp
-	74,  // 103: openim.msg.msg.SetUserConversationMaxSeq:output_type -> openim.msg.SetUserConversationMaxSeqResp
-	76,  // 104: openim.msg.msg.SetUserConversationMinSeq:output_type -> openim.msg.SetUserConversationMinSeqResp
-	78,  // 105: openim.msg.msg.GetLastMessageSeqByTime:output_type -> openim.msg.GetLastMessageSeqByTimeResp
-	80,  // 106: openim.msg.msg.GetLastMessage:output_type -> openim.msg.GetLastMessageResp
-	74,  // [74:107] is the sub-list for method output_type
-	41,  // [41:74] is the sub-list for method input_type
+	81,  // 74: openim.msg.msg.LikeMessage:input_type -> openim.msg.LikeMsgReq
+	101, // 75: openim.msg.msg.GetMaxSeq:output_type -> openim.sdkws.GetMaxSeqResp
+	38,  // 76: openim.msg.msg.GetMaxSeqs:output_type -> openim.msg.SeqsInfoResp
+	38,  // 77: openim.msg.msg.GetHasReadSeqs:output_type -> openim.msg.SeqsInfoResp
+	40,  // 78: openim.msg.msg.GetMsgByConversationIDs:output_type -> openim.msg.GetMsgByConversationIDsResp
+	42,  // 79: openim.msg.msg.GetConversationMaxSeq:output_type -> openim.msg.GetConversationMaxSeqResp
+	102, // 80: openim.msg.msg.PullMessageBySeqs:output_type -> openim.sdkws.PullMessageBySeqsResp
+	69,  // 81: openim.msg.msg.GetSeqMessage:output_type -> openim.msg.GetSeqMessageResp
+	55,  // 82: openim.msg.msg.SearchMessage:output_type -> openim.msg.SearchMessageResp
+	7,   // 83: openim.msg.msg.SendMsg:output_type -> openim.msg.SendMsgResp
+	9,   // 84: openim.msg.msg.SendSimpleMsg:output_type -> openim.msg.SendSimpleMsgResp
+	66,  // 85: openim.msg.msg.SetUserConversationsMinSeq:output_type -> openim.msg.SetUserConversationsMinSeqResp
+	27,  // 86: openim.msg.msg.ClearConversationsMsg:output_type -> openim.msg.ClearConversationsMsgResp
+	29,  // 87: openim.msg.msg.UserClearAllMsg:output_type -> openim.msg.UserClearAllMsgResp
+	31,  // 88: openim.msg.msg.DeleteMsgs:output_type -> openim.msg.DeleteMsgsResp
+	35,  // 89: openim.msg.msg.DeleteMsgPhysicalBySeq:output_type -> openim.msg.DeleteMsgPhysicalBySeqResp
+	33,  // 90: openim.msg.msg.DeleteMsgPhysical:output_type -> openim.msg.DeleteMsgPhysicalResp
+	11,  // 91: openim.msg.msg.SetSendMsgStatus:output_type -> openim.msg.SetSendMsgStatusResp
+	13,  // 92: openim.msg.msg.GetSendMsgStatus:output_type -> openim.msg.GetSendMsgStatusResp
+	18,  // 93: openim.msg.msg.RevokeMsg:output_type -> openim.msg.RevokeMsgResp
+	20,  // 94: openim.msg.msg.MarkMsgsAsRead:output_type -> openim.msg.MarkMsgsAsReadResp
+	22,  // 95: openim.msg.msg.MarkConversationAsRead:output_type -> openim.msg.MarkConversationAsReadResp
+	24,  // 96: openim.msg.msg.SetConversationHasReadSeq:output_type -> openim.msg.SetConversationHasReadSeqResp
+	45,  // 97: openim.msg.msg.GetConversationsHasReadAndMaxSeq:output_type -> openim.msg.GetConversationsHasReadAndMaxSeqResp
+	48,  // 98: openim.msg.msg.GetActiveUser:output_type -> openim.msg.GetActiveUserResp
+	51,  // 99: openim.msg.msg.GetActiveGroup:output_type -> openim.msg.GetActiveGroupResp
+	60,  // 100: openim.msg.msg.GetServerTime:output_type -> openim.msg.GetServerTimeResp
+	62,  // 101: openim.msg.msg.ClearMsg:output_type -> openim.msg.ClearMsgResp
+	64,  // 102: openim.msg.msg.DestructMsgs:output_type -> openim.msg.DestructMsgsResp
+	72,  // 103: openim.msg.msg.GetActiveConversation:output_type -> openim.msg.GetActiveConversationResp
+	74,  // 104: openim.msg.msg.SetUserConversationMaxSeq:output_type -> openim.msg.SetUserConversationMaxSeqResp
+	76,  // 105: openim.msg.msg.SetUserConversationMinSeq:output_type -> openim.msg.SetUserConversationMinSeqResp
+	78,  // 106: openim.msg.msg.GetLastMessageSeqByTime:output_type -> openim.msg.GetLastMessageSeqByTimeResp
+	80,  // 107: openim.msg.msg.GetLastMessage:output_type -> openim.msg.GetLastMessageResp
+	82,  // 108: openim.msg.msg.LikeMessage:output_type -> openim.msg.LikeMsgResp
+	75,  // [75:109] is the sub-list for method output_type
+	41,  // [41:75] is the sub-list for method input_type
 	41,  // [41:41] is the sub-list for extension type_name
 	41,  // [41:41] is the sub-list for extension extendee
 	0,   // [0:41] is the sub-list for field type_name
