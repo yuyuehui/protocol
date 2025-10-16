@@ -210,6 +210,21 @@ message MsgData {
   repeated string atUserIDList = 21;
   string attachedInfo = 22;
   string ex = 23;
+  LikeInfo likeInfo = 24;
+}
+
+// 点赞信息
+message LikeInfo {
+  int64 like_count = 1;
+  repeated LikeUser like_users = 2;
+}
+
+// 点赞用户信息
+message LikeUser {
+  string user_id = 1;
+  string emojiInfo = 2;
+  int64 like_time = 3;
+  string nickname = 4;
 }
 message PushMessages {
   map<string, PullMsgs> msgs = 1;
