@@ -226,6 +226,20 @@ message LikeUser {
   int64 like_time = 3;
   string nickname = 4;
 }
+
+// 点赞消息提示
+message LikeMsgTips {
+  string likerUserID = 1;      
+  string clientMsgID = 2;   
+  int64 likeTime = 3;          
+  int64 seq = 4;               
+  int32 sessionType = 5;      
+  string conversationID = 6;   
+  string emojiInfo = 7;        
+  int64 likeCount = 8;     
+}
+
+
 message PushMessages {
   map<string, PullMsgs> msgs = 1;
   map<string, PullMsgs> notificationMsgs = 2;

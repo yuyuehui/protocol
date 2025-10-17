@@ -115,7 +115,7 @@ const (
 
 	MsgRevokeNotification  = 2101
 	DeleteMsgsNotification = 2102
-
+	LikeMsgNotification = 2103
 	HasReadReceipt = 2200
 
 	NotificationEnd = 5000
