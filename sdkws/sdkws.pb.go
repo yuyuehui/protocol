@@ -1928,6 +1928,8 @@ type LikeMsgTips struct {
 	ConversationID string                 `protobuf:"bytes,6,opt,name=conversationID,proto3" json:"conversationID"`
 	EmojiInfo      string                 `protobuf:"bytes,7,opt,name=emojiInfo,proto3" json:"emojiInfo"`
 	LikeCount      int64                  `protobuf:"varint,8,opt,name=likeCount,proto3" json:"likeCount"`
+	LikerNickname  string                 `protobuf:"bytes,9,opt,name=LikerNickname,proto3" json:"LikerNickname"`
+	RecvID         string                 `protobuf:"bytes,10,opt,name=RecvID,proto3" json:"RecvID"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2016,6 +2018,20 @@ func (x *LikeMsgTips) GetLikeCount() int64 {
 		return x.LikeCount
 	}
 	return 0
+}
+
+func (x *LikeMsgTips) GetLikerNickname() string {
+	if x != nil {
+		return x.LikerNickname
+	}
+	return ""
+}
+
+func (x *LikeMsgTips) GetRecvID() string {
+	if x != nil {
+		return x.RecvID
+	}
+	return ""
 }
 
 type PushMessages struct {
@@ -6054,7 +6070,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1c\n" +
 	"\temojiInfo\x18\x02 \x01(\tR\temojiInfo\x12\x1b\n" +
 	"\tlike_time\x18\x03 \x01(\x03R\blikeTime\x12\x1a\n" +
-	"\bnickname\x18\x04 \x01(\tR\bnickname\"\x85\x02\n" +
+	"\bnickname\x18\x04 \x01(\tR\bnickname\"\xc3\x02\n" +
 	"\vLikeMsgTips\x12 \n" +
 	"\vlikerUserID\x18\x01 \x01(\tR\vlikerUserID\x12 \n" +
 	"\vclientMsgID\x18\x02 \x01(\tR\vclientMsgID\x12\x1a\n" +
@@ -6063,7 +6079,10 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\vsessionType\x18\x05 \x01(\x05R\vsessionType\x12&\n" +
 	"\x0econversationID\x18\x06 \x01(\tR\x0econversationID\x12\x1c\n" +
 	"\temojiInfo\x18\a \x01(\tR\temojiInfo\x12\x1c\n" +
-	"\tlikeCount\x18\b \x01(\x03R\tlikeCount\"\xd4\x02\n" +
+	"\tlikeCount\x18\b \x01(\x03R\tlikeCount\x12$\n" +
+	"\rLikerNickname\x18\t \x01(\tR\rLikerNickname\x12\x16\n" +
+	"\x06RecvID\x18\n" +
+	" \x01(\tR\x06RecvID\"\xd4\x02\n" +
 	"\fPushMessages\x128\n" +
 	"\x04msgs\x18\x01 \x03(\v2$.openim.sdkws.PushMessages.MsgsEntryR\x04msgs\x12\\\n" +
 	"\x10notificationMsgs\x18\x02 \x03(\v20.openim.sdkws.PushMessages.NotificationMsgsEntryR\x10notificationMsgs\x1aO\n" +
