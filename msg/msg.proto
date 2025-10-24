@@ -406,6 +406,7 @@ message LikeMsgReq {
   int64  seq = 2;
   string expressionContent = 3;
   string userID = 4;
+  string nickName = 5;
 }
 
 message LikeMsgResp {
