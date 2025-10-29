@@ -32,7 +32,7 @@ const (
 	Revoke           = 111 // 撤回消息
 	Typing           = 113 // 正在输入状态
 	Quote            = 114 // 引用消息
-	Emoji            = 115 // 表情包消息
+	Emoji            = 121 // 表情包消息
 
 	AdvancedText                 = 117 // 高级文本消息
 	MarkdownText                 = 118 // Markdown格式文本
