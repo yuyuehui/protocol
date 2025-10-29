@@ -18,22 +18,21 @@ const (
 
 	///ContentType - 消息内容类型定义
 	//UserRelated - 用户相关消息类型
-	ContentTypeBegin = 100
-	Text             = 101 // 文本消息
-	Picture          = 102 // 图片消息
-	Voice            = 103 // 语音消息
-	Video            = 104 // 视频消息
-	File             = 105 // 文件消息
-	AtText           = 106 // @消息
-	Merger           = 107 // 合并转发消息
-	Card             = 108 // 名片消息
-	Location         = 109 // 位置消息
-	Custom           = 110 // 自定义消息
-	Revoke           = 111 // 撤回消息
-	Typing           = 113 // 正在输入状态
-	Quote            = 114 // 引用消息
-	Emoji            = 121 // 表情包消息
-
+	ContentTypeBegin             = 100
+	Text                         = 101 // 文本消息
+	Picture                      = 102 // 图片消息
+	Voice                        = 103 // 语音消息
+	Video                        = 104 // 视频消息
+	File                         = 105 // 文件消息
+	AtText                       = 106 // @消息
+	Merger                       = 107 // 合并转发消息
+	Card                         = 108 // 名片消息
+	Location                     = 109 // 位置消息
+	Custom                       = 110 // 自定义消息
+	Revoke                       = 111 // 撤回消息
+	Typing                       = 113 // 正在输入状态
+	Quote                        = 114 // 引用消息
+	Emoji                        = 116 // 表情包消息
 	AdvancedText                 = 117 // 高级文本消息
 	MarkdownText                 = 118 // Markdown格式文本
 	CustomNotTriggerConversation = 119 // 自定义消息(不触发会话更新)
