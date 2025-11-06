@@ -4256,6 +4256,7 @@ type LikeMsgReq struct {
 	ExpressionContent string                 `protobuf:"bytes,3,opt,name=expressionContent,proto3" json:"expressionContent"`
 	UserID            string                 `protobuf:"bytes,4,opt,name=userID,proto3" json:"userID"`
 	NickName          string                 `protobuf:"bytes,5,opt,name=nickName,proto3" json:"nickName"`
+	FaceUrl           string                 `protobuf:"bytes,6,opt,name=faceUrl,proto3" json:"faceUrl"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -4321,6 +4322,13 @@ func (x *LikeMsgReq) GetUserID() string {
 func (x *LikeMsgReq) GetNickName() string {
 	if x != nil {
 		return x.NickName
+	}
+	return ""
+}
+
+func (x *LikeMsgReq) GetFaceUrl() string {
+	if x != nil {
+		return x.FaceUrl
 	}
 	return ""
 }
@@ -4666,14 +4674,15 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x04msgs\x18\x01 \x03(\v2(.openim.msg.GetLastMessageResp.MsgsEntryR\x04msgs\x1aN\n" +
 	"\tMsgsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12+\n" +
-	"\x05value\x18\x02 \x01(\v2\x15.openim.sdkws.MsgDataR\x05value:\x028\x01\"\xa8\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x15.openim.sdkws.MsgDataR\x05value:\x028\x01\"\xc2\x01\n" +
 	"\n" +
 	"LikeMsgReq\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12\x10\n" +
 	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12,\n" +
 	"\x11expressionContent\x18\x03 \x01(\tR\x11expressionContent\x12\x16\n" +
 	"\x06userID\x18\x04 \x01(\tR\x06userID\x12\x1a\n" +
-	"\bnickName\x18\x05 \x01(\tR\bnickName\"\r\n" +
+	"\bnickName\x18\x05 \x01(\tR\bnickName\x12\x18\n" +
+	"\afaceUrl\x18\x06 \x01(\tR\afaceUrl\"\r\n" +
 	"\vLikeMsgResp2\xc8\x17\n" +
 	"\x03msg\x12D\n" +
 	"\tGetMaxSeq\x12\x1a.openim.sdkws.GetMaxSeqReq\x1a\x1b.openim.sdkws.GetMaxSeqResp\x12A\n" +

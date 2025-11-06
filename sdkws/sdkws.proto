@@ -239,6 +239,7 @@ message LikeMsgTips {
   int64 likeCount = 8;     
   string LikerNickname = 9;
   string RecvID = 10;
+  string LikerFaceURL = 11;
 }
 
 

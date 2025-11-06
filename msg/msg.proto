@@ -407,6 +407,7 @@ message LikeMsgReq {
   string expressionContent = 3;
   string userID = 4;
   string nickName = 5;
+  string faceUrl = 6;
 }
 
 message LikeMsgResp {

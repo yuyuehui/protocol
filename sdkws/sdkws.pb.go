@@ -1930,6 +1930,7 @@ type LikeMsgTips struct {
 	LikeCount      int64                  `protobuf:"varint,8,opt,name=likeCount,proto3" json:"likeCount"`
 	LikerNickname  string                 `protobuf:"bytes,9,opt,name=LikerNickname,proto3" json:"LikerNickname"`
 	RecvID         string                 `protobuf:"bytes,10,opt,name=RecvID,proto3" json:"RecvID"`
+	LikerFaceURL   string                 `protobuf:"bytes,11,opt,name=LikerFaceURL,proto3" json:"LikerFaceURL"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2030,6 +2031,13 @@ func (x *LikeMsgTips) GetLikerNickname() string {
 func (x *LikeMsgTips) GetRecvID() string {
 	if x != nil {
 		return x.RecvID
+	}
+	return ""
+}
+
+func (x *LikeMsgTips) GetLikerFaceURL() string {
+	if x != nil {
+		return x.LikerFaceURL
 	}
 	return ""
 }
@@ -6070,7 +6078,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1c\n" +
 	"\temojiInfo\x18\x02 \x01(\tR\temojiInfo\x12\x1b\n" +
 	"\tlike_time\x18\x03 \x01(\x03R\blikeTime\x12\x1a\n" +
-	"\bnickname\x18\x04 \x01(\tR\bnickname\"\xc3\x02\n" +
+	"\bnickname\x18\x04 \x01(\tR\bnickname\"\xe7\x02\n" +
 	"\vLikeMsgTips\x12 \n" +
 	"\vlikerUserID\x18\x01 \x01(\tR\vlikerUserID\x12 \n" +
 	"\vclientMsgID\x18\x02 \x01(\tR\vclientMsgID\x12\x1a\n" +
@@ -6082,7 +6090,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\tlikeCount\x18\b \x01(\x03R\tlikeCount\x12$\n" +
 	"\rLikerNickname\x18\t \x01(\tR\rLikerNickname\x12\x16\n" +
 	"\x06RecvID\x18\n" +
-	" \x01(\tR\x06RecvID\"\xd4\x02\n" +
+	" \x01(\tR\x06RecvID\x12\"\n" +
+	"\fLikerFaceURL\x18\v \x01(\tR\fLikerFaceURL\"\xd4\x02\n" +
 	"\fPushMessages\x128\n" +
 	"\x04msgs\x18\x01 \x03(\v2$.openim.sdkws.PushMessages.MsgsEntryR\x04msgs\x12\\\n" +
 	"\x10notificationMsgs\x18\x02 \x03(\v20.openim.sdkws.PushMessages.NotificationMsgsEntryR\x10notificationMsgs\x1aO\n" +
