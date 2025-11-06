@@ -1855,6 +1855,7 @@ type LikeUser struct {
 	EmojiInfo     string                 `protobuf:"bytes,2,opt,name=emojiInfo,proto3" json:"emojiInfo"`
 	LikeTime      int64                  `protobuf:"varint,3,opt,name=like_time,json=likeTime,proto3" json:"like_time"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname"`
+	FaceUrl       string                 `protobuf:"bytes,5,opt,name=face_url,json=faceUrl,proto3" json:"face_url"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1913,6 +1914,13 @@ func (x *LikeUser) GetLikeTime() int64 {
 func (x *LikeUser) GetNickname() string {
 	if x != nil {
 		return x.Nickname
+	}
+	return ""
+}
+
+func (x *LikeUser) GetFaceUrl() string {
+	if x != nil {
+		return x.FaceUrl
 	}
 	return ""
 }
@@ -6073,12 +6081,13 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\n" +
 	"like_count\x18\x01 \x01(\x03R\tlikeCount\x125\n" +
 	"\n" +
-	"like_users\x18\x02 \x03(\v2\x16.openim.sdkws.LikeUserR\tlikeUsers\"z\n" +
+	"like_users\x18\x02 \x03(\v2\x16.openim.sdkws.LikeUserR\tlikeUsers\"\x95\x01\n" +
 	"\bLikeUser\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1c\n" +
 	"\temojiInfo\x18\x02 \x01(\tR\temojiInfo\x12\x1b\n" +
 	"\tlike_time\x18\x03 \x01(\x03R\blikeTime\x12\x1a\n" +
-	"\bnickname\x18\x04 \x01(\tR\bnickname\"\xe7\x02\n" +
+	"\bnickname\x18\x04 \x01(\tR\bnickname\x12\x19\n" +
+	"\bface_url\x18\x05 \x01(\tR\afaceUrl\"\xe7\x02\n" +
 	"\vLikeMsgTips\x12 \n" +
 	"\vlikerUserID\x18\x01 \x01(\tR\vlikerUserID\x12 \n" +
 	"\vclientMsgID\x18\x02 \x01(\tR\vclientMsgID\x12\x1a\n" +

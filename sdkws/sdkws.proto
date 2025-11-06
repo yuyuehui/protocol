@@ -225,6 +225,7 @@ message LikeUser {
   string emojiInfo = 2;
   int64 like_time = 3;
   string nickname = 4;
+  string face_url = 5;
 }
 
 // 点赞消息提示
