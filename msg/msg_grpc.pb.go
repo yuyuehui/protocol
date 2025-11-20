@@ -68,6 +68,7 @@ const (
 	Msg_GetLastMessageSeqByTime_FullMethodName          = "/openim.msg.msg/GetLastMessageSeqByTime"
 	Msg_GetLastMessage_FullMethodName                   = "/openim.msg.msg/GetLastMessage"
 	Msg_LikeMessage_FullMethodName                      = "/openim.msg.msg/LikeMessage"
+	Msg_UnLikeMessage_FullMethodName                    = "/openim.msg.msg/UnLikeMessage"
 )
 
 // MsgClient is the client API for Msg service.
@@ -123,6 +124,7 @@ type MsgClient interface {
 	GetLastMessageSeqByTime(ctx context.Context, in *GetLastMessageSeqByTimeReq, opts ...grpc.CallOption) (*GetLastMessageSeqByTimeResp, error)
 	GetLastMessage(ctx context.Context, in *GetLastMessageReq, opts ...grpc.CallOption) (*GetLastMessageResp, error)
 	LikeMessage(ctx context.Context, in *LikeMsgReq, opts ...grpc.CallOption) (*LikeMsgResp, error)
+	UnLikeMessage(ctx context.Context, in *LikeMsgReq, opts ...grpc.CallOption) (*LikeMsgResp, error)
 }
 
 type msgClient struct {
@@ -473,6 +475,16 @@ func (c *msgClient) LikeMessage(ctx context.Context, in *LikeMsgReq, opts ...grp
 	return out, nil
 }
 
+func (c *msgClient) UnLikeMessage(ctx context.Context, in *LikeMsgReq, opts ...grpc.CallOption) (*LikeMsgResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LikeMsgResp)
+	err := c.cc.Invoke(ctx, Msg_UnLikeMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
@@ -526,6 +538,7 @@ type MsgServer interface {
 	GetLastMessageSeqByTime(context.Context, *GetLastMessageSeqByTimeReq) (*GetLastMessageSeqByTimeResp, error)
 	GetLastMessage(context.Context, *GetLastMessageReq) (*GetLastMessageResp, error)
 	LikeMessage(context.Context, *LikeMsgReq) (*LikeMsgResp, error)
+	UnLikeMessage(context.Context, *LikeMsgReq) (*LikeMsgResp, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -637,6 +650,9 @@ func (UnimplementedMsgServer) GetLastMessage(context.Context, *GetLastMessageReq
 }
 func (UnimplementedMsgServer) LikeMessage(context.Context, *LikeMsgReq) (*LikeMsgResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeMessage not implemented")
+}
+func (UnimplementedMsgServer) UnLikeMessage(context.Context, *LikeMsgReq) (*LikeMsgResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnLikeMessage not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -1271,6 +1287,24 @@ func _Msg_LikeMessage_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_UnLikeMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeMsgReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UnLikeMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_UnLikeMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UnLikeMessage(ctx, req.(*LikeMsgReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1413,6 +1447,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LikeMessage",
 			Handler:    _Msg_LikeMessage_Handler,
+		},
+		{
+			MethodName: "UnLikeMessage",
+			Handler:    _Msg_UnLikeMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
