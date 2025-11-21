@@ -43,6 +43,7 @@ const (
 	GroupMsg                     = 201 // 群组消息
 	SignalMsg                    = 202 // 信令消息
 	CustomNotification           = 203 // 自定义通知
+	MixedTextPicture             = 204 // 混合文本图片消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
