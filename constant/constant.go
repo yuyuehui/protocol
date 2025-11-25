@@ -43,6 +43,7 @@ const (
 	GroupMsg                     = 201 // 群组消息
 	SignalMsg                    = 202 // 信令消息
 	CustomNotification           = 203 // 自定义通知
+	MixedTextPicture             = 204 // 混合文本图片消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -281,6 +282,7 @@ var ContentType2PushContent = map[int64]string{
 	Text:      "[TEXT]",         // 文本
 	AtText:    "[@TEXT]",        // @文本
 	Emoji:     "[EMOJI]",        // 表情包
+	MixedTextPicture: "[MIXEDTEXTPICTURE]", // 图片和文字混合消息
 	GroupMsg:  "[GROUPMSG]]",    // 群组消息
 	Common:    "[NEWMSG]",       // 通用消息
 	SignalMsg: "[SIGNALINVITE]", // 信令邀请

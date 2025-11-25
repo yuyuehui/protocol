@@ -471,4 +471,5 @@ service msg {
   rpc GetLastMessageSeqByTime(GetLastMessageSeqByTimeReq) returns (GetLastMessageSeqByTimeResp);
   rpc GetLastMessage(GetLastMessageReq) returns (GetLastMessageResp);
   rpc LikeMessage(LikeMsgReq) returns (LikeMsgResp);
+  rpc UnLikeMessage(LikeMsgReq) returns (LikeMsgResp);
 }
