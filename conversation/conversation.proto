@@ -38,6 +38,7 @@ message Conversation {
   int64 msgDestructTime = 15;
   int64 latestMsgDestructTime = 16;
   bool isMsgDestruct = 17;
+  bool isMark = 18;
 }
 
 message ConversationReq {
@@ -56,6 +57,7 @@ message ConversationReq {
   openim.protobuf.Int32Value groupAtType = 13;
   openim.protobuf.Int64Value msgDestructTime = 14;
   openim.protobuf.BoolValue isMsgDestruct = 15;
+  openim.protobuf.BoolValue isMark = 16;
 }
 
 message SetConversationReq {
@@ -233,6 +235,7 @@ message UpdateConversationReq {
   openim.protobuf.Int64Value msgDestructTime = 12;
   openim.protobuf.BoolValue isMsgDestruct = 13;
   openim.protobuf.Int64Value latestMsgDestructTime = 14;
+  openim.protobuf.BoolValue isMark = 15;
 }
 
 message UpdateConversationResp {}
@@ -296,6 +299,17 @@ message GetPinnedConversationIDsResp {
   repeated string conversationIDs = 1;
 }
 
+message MarkConversationReq {
+  string userID = 1;
+  string conversationID = 2;
+  bool isMark = 3;
+}
+
+message MarkConversationResp {
+  bool success = 1;
+  string message = 2;
+}
+
 message ClearUserConversationMsgReq {
   int64 timestamp = 1;
   int32 limit = 2;
@@ -342,6 +356,7 @@ service conversation {
   rpc GetConversationsNeedClearMsg(GetConversationsNeedClearMsgReq) returns (GetConversationsNeedClearMsgResp);
   rpc GetNotNotifyConversationIDs(GetNotNotifyConversationIDsReq) returns (GetNotNotifyConversationIDsResp);
   rpc GetPinnedConversationIDs(GetPinnedConversationIDsReq) returns (GetPinnedConversationIDsResp);
+  rpc MarkConversation(MarkConversationReq) returns (MarkConversationResp);
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
