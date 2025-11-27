@@ -63,6 +63,10 @@ const (
 	User_SetUserClientConfig_FullMethodName           = "/openim.user.user/setUserClientConfig"
 	User_DelUserClientConfig_FullMethodName           = "/openim.user.user/delUserClientConfig"
 	User_PageUserClientConfig_FullMethodName          = "/openim.user.user/pageUserClientConfig"
+	User_SaveUserEmoji_FullMethodName                 = "/openim.user.user/saveUserEmoji"
+	User_DeleteUserEmoji_FullMethodName               = "/openim.user.user/deleteUserEmoji"
+	User_GetUserEmoji_FullMethodName                  = "/openim.user.user/getUserEmoji"
+	User_GetAllUserEmojis_FullMethodName              = "/openim.user.user/getAllUserEmojis"
 )
 
 // UserClient is the client API for User service.
@@ -122,6 +126,10 @@ type UserClient interface {
 	SetUserClientConfig(ctx context.Context, in *SetUserClientConfigReq, opts ...grpc.CallOption) (*SetUserClientConfigResp, error)
 	DelUserClientConfig(ctx context.Context, in *DelUserClientConfigReq, opts ...grpc.CallOption) (*DelUserClientConfigResp, error)
 	PageUserClientConfig(ctx context.Context, in *PageUserClientConfigReq, opts ...grpc.CallOption) (*PageUserClientConfigResp, error)
+	SaveUserEmoji(ctx context.Context, in *SaveUserEmojiReq, opts ...grpc.CallOption) (*SaveUserEmojiResp, error)
+	DeleteUserEmoji(ctx context.Context, in *DeleteUserEmojiReq, opts ...grpc.CallOption) (*DeleteUserEmojiResp, error)
+	GetUserEmoji(ctx context.Context, in *GetUserEmojiReq, opts ...grpc.CallOption) (*GetUserEmojiResp, error)
+	GetAllUserEmojis(ctx context.Context, in *GetAllUserEmojisReq, opts ...grpc.CallOption) (*GetAllUserEmojisResp, error)
 }
 
 type userClient struct {
@@ -432,6 +440,46 @@ func (c *userClient) PageUserClientConfig(ctx context.Context, in *PageUserClien
 	return out, nil
 }
 
+func (c *userClient) SaveUserEmoji(ctx context.Context, in *SaveUserEmojiReq, opts ...grpc.CallOption) (*SaveUserEmojiResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveUserEmojiResp)
+	err := c.cc.Invoke(ctx, User_SaveUserEmoji_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteUserEmoji(ctx context.Context, in *DeleteUserEmojiReq, opts ...grpc.CallOption) (*DeleteUserEmojiResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteUserEmojiResp)
+	err := c.cc.Invoke(ctx, User_DeleteUserEmoji_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetUserEmoji(ctx context.Context, in *GetUserEmojiReq, opts ...grpc.CallOption) (*GetUserEmojiResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserEmojiResp)
+	err := c.cc.Invoke(ctx, User_GetUserEmoji_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetAllUserEmojis(ctx context.Context, in *GetAllUserEmojisReq, opts ...grpc.CallOption) (*GetAllUserEmojisResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllUserEmojisResp)
+	err := c.cc.Invoke(ctx, User_GetAllUserEmojis_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -489,6 +537,10 @@ type UserServer interface {
 	SetUserClientConfig(context.Context, *SetUserClientConfigReq) (*SetUserClientConfigResp, error)
 	DelUserClientConfig(context.Context, *DelUserClientConfigReq) (*DelUserClientConfigResp, error)
 	PageUserClientConfig(context.Context, *PageUserClientConfigReq) (*PageUserClientConfigResp, error)
+	SaveUserEmoji(context.Context, *SaveUserEmojiReq) (*SaveUserEmojiResp, error)
+	DeleteUserEmoji(context.Context, *DeleteUserEmojiReq) (*DeleteUserEmojiResp, error)
+	GetUserEmoji(context.Context, *GetUserEmojiReq) (*GetUserEmojiResp, error)
+	GetAllUserEmojis(context.Context, *GetAllUserEmojisReq) (*GetAllUserEmojisResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -588,6 +640,18 @@ func (UnimplementedUserServer) DelUserClientConfig(context.Context, *DelUserClie
 }
 func (UnimplementedUserServer) PageUserClientConfig(context.Context, *PageUserClientConfigReq) (*PageUserClientConfigResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageUserClientConfig not implemented")
+}
+func (UnimplementedUserServer) SaveUserEmoji(context.Context, *SaveUserEmojiReq) (*SaveUserEmojiResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveUserEmoji not implemented")
+}
+func (UnimplementedUserServer) DeleteUserEmoji(context.Context, *DeleteUserEmojiReq) (*DeleteUserEmojiResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserEmoji not implemented")
+}
+func (UnimplementedUserServer) GetUserEmoji(context.Context, *GetUserEmojiReq) (*GetUserEmojiResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserEmoji not implemented")
+}
+func (UnimplementedUserServer) GetAllUserEmojis(context.Context, *GetAllUserEmojisReq) (*GetAllUserEmojisResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllUserEmojis not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1150,6 +1214,78 @@ func _User_PageUserClientConfig_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_SaveUserEmoji_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveUserEmojiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SaveUserEmoji(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SaveUserEmoji_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SaveUserEmoji(ctx, req.(*SaveUserEmojiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteUserEmoji_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserEmojiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteUserEmoji(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteUserEmoji_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteUserEmoji(ctx, req.(*DeleteUserEmojiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetUserEmoji_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserEmojiReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserEmoji(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserEmoji_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserEmoji(ctx, req.(*GetUserEmojiReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetAllUserEmojis_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUserEmojisReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetAllUserEmojis(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetAllUserEmojis_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetAllUserEmojis(ctx, req.(*GetAllUserEmojisReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1276,6 +1412,22 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "pageUserClientConfig",
 			Handler:    _User_PageUserClientConfig_Handler,
+		},
+		{
+			MethodName: "saveUserEmoji",
+			Handler:    _User_SaveUserEmoji_Handler,
+		},
+		{
+			MethodName: "deleteUserEmoji",
+			Handler:    _User_DeleteUserEmoji_Handler,
+		},
+		{
+			MethodName: "getUserEmoji",
+			Handler:    _User_GetUserEmoji_Handler,
+		},
+		{
+			MethodName: "getAllUserEmojis",
+			Handler:    _User_GetAllUserEmojis_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

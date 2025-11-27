@@ -379,6 +379,64 @@ message clientConfig {
   string value = 3;
 }
 
+message saveUserEmojiReq {
+  string emojiID = 1;      
+  string emojiName = 2;
+  int32 emojiType = 3;
+  string emojiURL = 4;     
+  string emojiPath = 5;
+  int32 emojiWidth = 6;
+  int32 emojiHeight = 7;
+  int64 emojiSize = 8;
+  int64 duration = 9;
+  string category = 10;
+  string thumbnailURL = 11;
+  bool isAnimated = 12;
+  string ex = 13;
+}
+
+message saveUserEmojiResp {
+
+}
+
+message deleteUserEmojiReq {
+  string emojiID = 1;
+}
+
+message deleteUserEmojiResp {
+
+}
+
+message getUserEmojiReq {
+  string emojiID = 1;
+}
+
+message getUserEmojiResp {
+  string emojiID = 1;      
+  string emojiName = 2;
+  int32 emojiType = 3;
+  string emojiURL = 4;    
+  string emojiPath = 5;
+  int32 emojiWidth = 6;
+  int32 emojiHeight = 7;
+  int64 emojiSize = 8;
+  int64 duration = 9;
+  string category = 10;
+  string thumbnailURL = 11;
+  bool isAnimated = 12;
+  int64 createTime = 13;
+  int64 updateTime = 14;
+  string ex = 15;
+}
+
+message getAllUserEmojisReq {
+  string userID = 1;
+}
+
+message getAllUserEmojisResp {
+  repeated getUserEmojiResp emojis = 1;
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -439,4 +497,12 @@ service user {
   rpc delUserClientConfig(delUserClientConfigReq) returns (delUserClientConfigResp);
 
   rpc pageUserClientConfig(pageUserClientConfigReq) returns (pageUserClientConfigResp);
+
+  rpc saveUserEmoji(saveUserEmojiReq) returns (saveUserEmojiResp);
+
+  rpc deleteUserEmoji(deleteUserEmojiReq) returns (deleteUserEmojiResp);
+
+  rpc getUserEmoji(getUserEmojiReq) returns (getUserEmojiResp);
+
+  rpc getAllUserEmojis(getAllUserEmojisReq) returns (getAllUserEmojisResp);
 }
