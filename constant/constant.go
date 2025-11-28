@@ -70,6 +70,8 @@ const (
 	UserCommandAddNotification    = 1305 // 用户命令添加通知
 	UserCommandDeleteNotification = 1306 // 用户命令删除通知
 	UserCommandUpdateNotification = 1307 // 用户命令更新通知
+	UserEmojiAddNotification      = 1310 // 用户表情添加通知
+	UserEmojiDeleteNotification   = 1309 // 用户表情删除通知
 
 	UserSubscribeOnlineStatusNotification = 1308 // 用户在线状态订阅通知
 
