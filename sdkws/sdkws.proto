@@ -521,6 +521,16 @@ message UserCommandDeleteTips {
   string toUserID = 2;
 }
 
+message UserEmojiAddTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+}
+
+message UserEmojiDeleteTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+}
+
 //////////////////////conversation/////////////////////
 message ConversationUpdateTips {
   string userID = 1;

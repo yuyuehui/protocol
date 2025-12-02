@@ -3974,6 +3974,550 @@ func (x *ClientConfig) GetValue() string {
 	return ""
 }
 
+type SaveUserEmojiReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EmojiID       string                 `protobuf:"bytes,1,opt,name=emojiID,proto3" json:"emojiID"`
+	EmojiName     string                 `protobuf:"bytes,2,opt,name=emojiName,proto3" json:"emojiName"`
+	EmojiType     int32                  `protobuf:"varint,3,opt,name=emojiType,proto3" json:"emojiType"`
+	EmojiURL      string                 `protobuf:"bytes,4,opt,name=emojiURL,proto3" json:"emojiURL"`
+	EmojiPath     string                 `protobuf:"bytes,5,opt,name=emojiPath,proto3" json:"emojiPath"`
+	EmojiWidth    int32                  `protobuf:"varint,6,opt,name=emojiWidth,proto3" json:"emojiWidth"`
+	EmojiHeight   int32                  `protobuf:"varint,7,opt,name=emojiHeight,proto3" json:"emojiHeight"`
+	EmojiSize     int64                  `protobuf:"varint,8,opt,name=emojiSize,proto3" json:"emojiSize"`
+	Duration      int64                  `protobuf:"varint,9,opt,name=duration,proto3" json:"duration"`
+	Category      string                 `protobuf:"bytes,10,opt,name=category,proto3" json:"category"`
+	ThumbnailURL  string                 `protobuf:"bytes,11,opt,name=thumbnailURL,proto3" json:"thumbnailURL"`
+	IsAnimated    bool                   `protobuf:"varint,12,opt,name=isAnimated,proto3" json:"isAnimated"`
+	Ex            string                 `protobuf:"bytes,13,opt,name=ex,proto3" json:"ex"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveUserEmojiReq) Reset() {
+	*x = SaveUserEmojiReq{}
+	mi := &file_user_user_proto_msgTypes[78]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveUserEmojiReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveUserEmojiReq) ProtoMessage() {}
+
+func (x *SaveUserEmojiReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[78]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveUserEmojiReq.ProtoReflect.Descriptor instead.
+func (*SaveUserEmojiReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{78}
+}
+
+func (x *SaveUserEmojiReq) GetEmojiID() string {
+	if x != nil {
+		return x.EmojiID
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetEmojiName() string {
+	if x != nil {
+		return x.EmojiName
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetEmojiType() int32 {
+	if x != nil {
+		return x.EmojiType
+	}
+	return 0
+}
+
+func (x *SaveUserEmojiReq) GetEmojiURL() string {
+	if x != nil {
+		return x.EmojiURL
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetEmojiPath() string {
+	if x != nil {
+		return x.EmojiPath
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetEmojiWidth() int32 {
+	if x != nil {
+		return x.EmojiWidth
+	}
+	return 0
+}
+
+func (x *SaveUserEmojiReq) GetEmojiHeight() int32 {
+	if x != nil {
+		return x.EmojiHeight
+	}
+	return 0
+}
+
+func (x *SaveUserEmojiReq) GetEmojiSize() int64 {
+	if x != nil {
+		return x.EmojiSize
+	}
+	return 0
+}
+
+func (x *SaveUserEmojiReq) GetDuration() int64 {
+	if x != nil {
+		return x.Duration
+	}
+	return 0
+}
+
+func (x *SaveUserEmojiReq) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetThumbnailURL() string {
+	if x != nil {
+		return x.ThumbnailURL
+	}
+	return ""
+}
+
+func (x *SaveUserEmojiReq) GetIsAnimated() bool {
+	if x != nil {
+		return x.IsAnimated
+	}
+	return false
+}
+
+func (x *SaveUserEmojiReq) GetEx() string {
+	if x != nil {
+		return x.Ex
+	}
+	return ""
+}
+
+type SaveUserEmojiResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveUserEmojiResp) Reset() {
+	*x = SaveUserEmojiResp{}
+	mi := &file_user_user_proto_msgTypes[79]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveUserEmojiResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveUserEmojiResp) ProtoMessage() {}
+
+func (x *SaveUserEmojiResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[79]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveUserEmojiResp.ProtoReflect.Descriptor instead.
+func (*SaveUserEmojiResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{79}
+}
+
+type DeleteUserEmojiReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EmojiID       string                 `protobuf:"bytes,1,opt,name=emojiID,proto3" json:"emojiID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteUserEmojiReq) Reset() {
+	*x = DeleteUserEmojiReq{}
+	mi := &file_user_user_proto_msgTypes[80]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteUserEmojiReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteUserEmojiReq) ProtoMessage() {}
+
+func (x *DeleteUserEmojiReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[80]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteUserEmojiReq.ProtoReflect.Descriptor instead.
+func (*DeleteUserEmojiReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{80}
+}
+
+func (x *DeleteUserEmojiReq) GetEmojiID() string {
+	if x != nil {
+		return x.EmojiID
+	}
+	return ""
+}
+
+type DeleteUserEmojiResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteUserEmojiResp) Reset() {
+	*x = DeleteUserEmojiResp{}
+	mi := &file_user_user_proto_msgTypes[81]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteUserEmojiResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteUserEmojiResp) ProtoMessage() {}
+
+func (x *DeleteUserEmojiResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[81]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteUserEmojiResp.ProtoReflect.Descriptor instead.
+func (*DeleteUserEmojiResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{81}
+}
+
+type GetUserEmojiReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EmojiID       string                 `protobuf:"bytes,1,opt,name=emojiID,proto3" json:"emojiID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserEmojiReq) Reset() {
+	*x = GetUserEmojiReq{}
+	mi := &file_user_user_proto_msgTypes[82]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserEmojiReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserEmojiReq) ProtoMessage() {}
+
+func (x *GetUserEmojiReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[82]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserEmojiReq.ProtoReflect.Descriptor instead.
+func (*GetUserEmojiReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{82}
+}
+
+func (x *GetUserEmojiReq) GetEmojiID() string {
+	if x != nil {
+		return x.EmojiID
+	}
+	return ""
+}
+
+type GetUserEmojiResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EmojiID       string                 `protobuf:"bytes,1,opt,name=emojiID,proto3" json:"emojiID"`
+	EmojiName     string                 `protobuf:"bytes,2,opt,name=emojiName,proto3" json:"emojiName"`
+	EmojiType     int32                  `protobuf:"varint,3,opt,name=emojiType,proto3" json:"emojiType"`
+	EmojiURL      string                 `protobuf:"bytes,4,opt,name=emojiURL,proto3" json:"emojiURL"`
+	EmojiPath     string                 `protobuf:"bytes,5,opt,name=emojiPath,proto3" json:"emojiPath"`
+	EmojiWidth    int32                  `protobuf:"varint,6,opt,name=emojiWidth,proto3" json:"emojiWidth"`
+	EmojiHeight   int32                  `protobuf:"varint,7,opt,name=emojiHeight,proto3" json:"emojiHeight"`
+	EmojiSize     int64                  `protobuf:"varint,8,opt,name=emojiSize,proto3" json:"emojiSize"`
+	Duration      int64                  `protobuf:"varint,9,opt,name=duration,proto3" json:"duration"`
+	Category      string                 `protobuf:"bytes,10,opt,name=category,proto3" json:"category"`
+	ThumbnailURL  string                 `protobuf:"bytes,11,opt,name=thumbnailURL,proto3" json:"thumbnailURL"`
+	IsAnimated    bool                   `protobuf:"varint,12,opt,name=isAnimated,proto3" json:"isAnimated"`
+	CreateTime    int64                  `protobuf:"varint,13,opt,name=createTime,proto3" json:"createTime"`
+	UpdateTime    int64                  `protobuf:"varint,14,opt,name=updateTime,proto3" json:"updateTime"`
+	Ex            string                 `protobuf:"bytes,15,opt,name=ex,proto3" json:"ex"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserEmojiResp) Reset() {
+	*x = GetUserEmojiResp{}
+	mi := &file_user_user_proto_msgTypes[83]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserEmojiResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserEmojiResp) ProtoMessage() {}
+
+func (x *GetUserEmojiResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[83]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserEmojiResp.ProtoReflect.Descriptor instead.
+func (*GetUserEmojiResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{83}
+}
+
+func (x *GetUserEmojiResp) GetEmojiID() string {
+	if x != nil {
+		return x.EmojiID
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetEmojiName() string {
+	if x != nil {
+		return x.EmojiName
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetEmojiType() int32 {
+	if x != nil {
+		return x.EmojiType
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetEmojiURL() string {
+	if x != nil {
+		return x.EmojiURL
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetEmojiPath() string {
+	if x != nil {
+		return x.EmojiPath
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetEmojiWidth() int32 {
+	if x != nil {
+		return x.EmojiWidth
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetEmojiHeight() int32 {
+	if x != nil {
+		return x.EmojiHeight
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetEmojiSize() int64 {
+	if x != nil {
+		return x.EmojiSize
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetDuration() int64 {
+	if x != nil {
+		return x.Duration
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetThumbnailURL() string {
+	if x != nil {
+		return x.ThumbnailURL
+	}
+	return ""
+}
+
+func (x *GetUserEmojiResp) GetIsAnimated() bool {
+	if x != nil {
+		return x.IsAnimated
+	}
+	return false
+}
+
+func (x *GetUserEmojiResp) GetCreateTime() int64 {
+	if x != nil {
+		return x.CreateTime
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
+func (x *GetUserEmojiResp) GetEx() string {
+	if x != nil {
+		return x.Ex
+	}
+	return ""
+}
+
+type GetAllUserEmojisReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllUserEmojisReq) Reset() {
+	*x = GetAllUserEmojisReq{}
+	mi := &file_user_user_proto_msgTypes[84]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllUserEmojisReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllUserEmojisReq) ProtoMessage() {}
+
+func (x *GetAllUserEmojisReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[84]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllUserEmojisReq.ProtoReflect.Descriptor instead.
+func (*GetAllUserEmojisReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{84}
+}
+
+func (x *GetAllUserEmojisReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+type GetAllUserEmojisResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Emojis        []*GetUserEmojiResp    `protobuf:"bytes,1,rep,name=emojis,proto3" json:"emojis"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllUserEmojisResp) Reset() {
+	*x = GetAllUserEmojisResp{}
+	mi := &file_user_user_proto_msgTypes[85]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllUserEmojisResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllUserEmojisResp) ProtoMessage() {}
+
+func (x *GetAllUserEmojisResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[85]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllUserEmojisResp.ProtoReflect.Descriptor instead.
+func (*GetAllUserEmojisResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{85}
+}
+
+func (x *GetAllUserEmojisResp) GetEmojis() []*GetUserEmojiResp {
+	if x != nil {
+		return x.Emojis
+	}
+	return nil
+}
+
 type AccountCheckRespSingleUserStatus struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
@@ -3984,7 +4528,7 @@ type AccountCheckRespSingleUserStatus struct {
 
 func (x *AccountCheckRespSingleUserStatus) Reset() {
 	*x = AccountCheckRespSingleUserStatus{}
-	mi := &file_user_user_proto_msgTypes[78]
+	mi := &file_user_user_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3996,7 +4540,7 @@ func (x *AccountCheckRespSingleUserStatus) String() string {
 func (*AccountCheckRespSingleUserStatus) ProtoMessage() {}
 
 func (x *AccountCheckRespSingleUserStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_user_user_proto_msgTypes[78]
+	mi := &file_user_user_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4294,7 +4838,61 @@ const file_user_user_proto_rawDesc = "" +
 	"\fclientConfig\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
-	"\x05value\x18\x03 \x01(\tR\x05value2\x91\x17\n" +
+	"\x05value\x18\x03 \x01(\tR\x05value\"\x8e\x03\n" +
+	"\x10saveUserEmojiReq\x12\x18\n" +
+	"\aemojiID\x18\x01 \x01(\tR\aemojiID\x12\x1c\n" +
+	"\temojiName\x18\x02 \x01(\tR\temojiName\x12\x1c\n" +
+	"\temojiType\x18\x03 \x01(\x05R\temojiType\x12\x1a\n" +
+	"\bemojiURL\x18\x04 \x01(\tR\bemojiURL\x12\x1c\n" +
+	"\temojiPath\x18\x05 \x01(\tR\temojiPath\x12\x1e\n" +
+	"\n" +
+	"emojiWidth\x18\x06 \x01(\x05R\n" +
+	"emojiWidth\x12 \n" +
+	"\vemojiHeight\x18\a \x01(\x05R\vemojiHeight\x12\x1c\n" +
+	"\temojiSize\x18\b \x01(\x03R\temojiSize\x12\x1a\n" +
+	"\bduration\x18\t \x01(\x03R\bduration\x12\x1a\n" +
+	"\bcategory\x18\n" +
+	" \x01(\tR\bcategory\x12\"\n" +
+	"\fthumbnailURL\x18\v \x01(\tR\fthumbnailURL\x12\x1e\n" +
+	"\n" +
+	"isAnimated\x18\f \x01(\bR\n" +
+	"isAnimated\x12\x0e\n" +
+	"\x02ex\x18\r \x01(\tR\x02ex\"\x13\n" +
+	"\x11saveUserEmojiResp\".\n" +
+	"\x12deleteUserEmojiReq\x12\x18\n" +
+	"\aemojiID\x18\x01 \x01(\tR\aemojiID\"\x15\n" +
+	"\x13deleteUserEmojiResp\"+\n" +
+	"\x0fgetUserEmojiReq\x12\x18\n" +
+	"\aemojiID\x18\x01 \x01(\tR\aemojiID\"\xce\x03\n" +
+	"\x10getUserEmojiResp\x12\x18\n" +
+	"\aemojiID\x18\x01 \x01(\tR\aemojiID\x12\x1c\n" +
+	"\temojiName\x18\x02 \x01(\tR\temojiName\x12\x1c\n" +
+	"\temojiType\x18\x03 \x01(\x05R\temojiType\x12\x1a\n" +
+	"\bemojiURL\x18\x04 \x01(\tR\bemojiURL\x12\x1c\n" +
+	"\temojiPath\x18\x05 \x01(\tR\temojiPath\x12\x1e\n" +
+	"\n" +
+	"emojiWidth\x18\x06 \x01(\x05R\n" +
+	"emojiWidth\x12 \n" +
+	"\vemojiHeight\x18\a \x01(\x05R\vemojiHeight\x12\x1c\n" +
+	"\temojiSize\x18\b \x01(\x03R\temojiSize\x12\x1a\n" +
+	"\bduration\x18\t \x01(\x03R\bduration\x12\x1a\n" +
+	"\bcategory\x18\n" +
+	" \x01(\tR\bcategory\x12\"\n" +
+	"\fthumbnailURL\x18\v \x01(\tR\fthumbnailURL\x12\x1e\n" +
+	"\n" +
+	"isAnimated\x18\f \x01(\bR\n" +
+	"isAnimated\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\r \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x0e \x01(\x03R\n" +
+	"updateTime\x12\x0e\n" +
+	"\x02ex\x18\x0f \x01(\tR\x02ex\"-\n" +
+	"\x13getAllUserEmojisReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\"M\n" +
+	"\x14getAllUserEmojisResp\x125\n" +
+	"\x06emojis\x18\x01 \x03(\v2\x1d.openim.user.getUserEmojiRespR\x06emojis2\xdd\x19\n" +
 	"\x04user\x12Z\n" +
 	"\x11getDesignateUsers\x12!.openim.user.getDesignateUsersReq\x1a\".openim.user.getDesignateUsersResp\x12Q\n" +
 	"\x0eupdateUserInfo\x12\x1e.openim.user.updateUserInfoReq\x1a\x1f.openim.user.updateUserInfoResp\x12W\n" +
@@ -4325,7 +4923,11 @@ const file_user_user_proto_rawDesc = "" +
 	"\x13getUserClientConfig\x12#.openim.user.getUserClientConfigReq\x1a$.openim.user.getUserClientConfigResp\x12`\n" +
 	"\x13setUserClientConfig\x12#.openim.user.setUserClientConfigReq\x1a$.openim.user.setUserClientConfigResp\x12`\n" +
 	"\x13delUserClientConfig\x12#.openim.user.delUserClientConfigReq\x1a$.openim.user.delUserClientConfigResp\x12c\n" +
-	"\x14pageUserClientConfig\x12$.openim.user.pageUserClientConfigReq\x1a%.openim.user.pageUserClientConfigRespB$Z\"github.com/openimsdk/protocol/userb\x06proto3"
+	"\x14pageUserClientConfig\x12$.openim.user.pageUserClientConfigReq\x1a%.openim.user.pageUserClientConfigResp\x12N\n" +
+	"\rsaveUserEmoji\x12\x1d.openim.user.saveUserEmojiReq\x1a\x1e.openim.user.saveUserEmojiResp\x12T\n" +
+	"\x0fdeleteUserEmoji\x12\x1f.openim.user.deleteUserEmojiReq\x1a .openim.user.deleteUserEmojiResp\x12K\n" +
+	"\fgetUserEmoji\x12\x1c.openim.user.getUserEmojiReq\x1a\x1d.openim.user.getUserEmojiResp\x12W\n" +
+	"\x10getAllUserEmojis\x12 .openim.user.getAllUserEmojisReq\x1a!.openim.user.getAllUserEmojisRespB$Z\"github.com/openimsdk/protocol/userb\x06proto3"
 
 var (
 	file_user_user_proto_rawDescOnce sync.Once
@@ -4339,7 +4941,7 @@ func file_user_user_proto_rawDescGZIP() []byte {
 	return file_user_user_proto_rawDescData
 }
 
-var file_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 83)
+var file_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 91)
 var file_user_user_proto_goTypes = []any{
 	(*GetAllUserIDReq)(nil),                   // 0: openim.user.getAllUserIDReq
 	(*GetAllUserIDResp)(nil),                  // 1: openim.user.getAllUserIDResp
@@ -4419,117 +5021,134 @@ var file_user_user_proto_goTypes = []any{
 	(*PageUserClientConfigReq)(nil),           // 75: openim.user.pageUserClientConfigReq
 	(*PageUserClientConfigResp)(nil),          // 76: openim.user.pageUserClientConfigResp
 	(*ClientConfig)(nil),                      // 77: openim.user.clientConfig
-	(*AccountCheckRespSingleUserStatus)(nil),  // 78: openim.user.accountCheckResp.singleUserStatus
-	nil,                                       // 79: openim.user.userRegisterCountResp.CountEntry
-	nil,                                       // 80: openim.user.sortQueryReq.UserIDNameEntry
-	nil,                                       // 81: openim.user.getUserClientConfigResp.ConfigsEntry
-	nil,                                       // 82: openim.user.setUserClientConfigReq.ConfigsEntry
-	(*sdkws.RequestPagination)(nil),           // 83: openim.sdkws.RequestPagination
-	(*sdkws.UserInfo)(nil),                    // 84: openim.sdkws.UserInfo
-	(*sdkws.UserInfoWithEx)(nil),              // 85: openim.sdkws.UserInfoWithEx
-	(*conversation.Conversation)(nil),         // 86: openim.conversation.Conversation
-	(*wrapperspb.StringValue)(nil),            // 87: openim.protobuf.StringValue
+	(*SaveUserEmojiReq)(nil),                  // 78: openim.user.saveUserEmojiReq
+	(*SaveUserEmojiResp)(nil),                 // 79: openim.user.saveUserEmojiResp
+	(*DeleteUserEmojiReq)(nil),                // 80: openim.user.deleteUserEmojiReq
+	(*DeleteUserEmojiResp)(nil),               // 81: openim.user.deleteUserEmojiResp
+	(*GetUserEmojiReq)(nil),                   // 82: openim.user.getUserEmojiReq
+	(*GetUserEmojiResp)(nil),                  // 83: openim.user.getUserEmojiResp
+	(*GetAllUserEmojisReq)(nil),               // 84: openim.user.getAllUserEmojisReq
+	(*GetAllUserEmojisResp)(nil),              // 85: openim.user.getAllUserEmojisResp
+	(*AccountCheckRespSingleUserStatus)(nil),  // 86: openim.user.accountCheckResp.singleUserStatus
+	nil,                                       // 87: openim.user.userRegisterCountResp.CountEntry
+	nil,                                       // 88: openim.user.sortQueryReq.UserIDNameEntry
+	nil,                                       // 89: openim.user.getUserClientConfigResp.ConfigsEntry
+	nil,                                       // 90: openim.user.setUserClientConfigReq.ConfigsEntry
+	(*sdkws.RequestPagination)(nil),           // 91: openim.sdkws.RequestPagination
+	(*sdkws.UserInfo)(nil),                    // 92: openim.sdkws.UserInfo
+	(*sdkws.UserInfoWithEx)(nil),              // 93: openim.sdkws.UserInfoWithEx
+	(*conversation.Conversation)(nil),         // 94: openim.conversation.Conversation
+	(*wrapperspb.StringValue)(nil),            // 95: openim.protobuf.StringValue
 }
 var file_user_user_proto_depIdxs = []int32{
-	83, // 0: openim.user.getAllUserIDReq.pagination:type_name -> openim.sdkws.RequestPagination
-	78, // 1: openim.user.accountCheckResp.results:type_name -> openim.user.accountCheckResp.singleUserStatus
-	84, // 2: openim.user.getDesignateUsersResp.usersInfo:type_name -> openim.sdkws.UserInfo
-	84, // 3: openim.user.updateUserInfoReq.userInfo:type_name -> openim.sdkws.UserInfo
-	85, // 4: openim.user.updateUserInfoExReq.userInfo:type_name -> openim.sdkws.UserInfoWithEx
-	86, // 5: openim.user.setConversationReq.conversation:type_name -> openim.conversation.Conversation
-	86, // 6: openim.user.getConversationResp.conversation:type_name -> openim.conversation.Conversation
-	86, // 7: openim.user.getConversationsResp.conversations:type_name -> openim.conversation.Conversation
-	86, // 8: openim.user.getAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
-	86, // 9: openim.user.batchSetConversationsReq.conversations:type_name -> openim.conversation.Conversation
-	83, // 10: openim.user.getPaginationUsersReq.pagination:type_name -> openim.sdkws.RequestPagination
-	84, // 11: openim.user.getPaginationUsersResp.users:type_name -> openim.sdkws.UserInfo
-	84, // 12: openim.user.userRegisterReq.users:type_name -> openim.sdkws.UserInfo
-	79, // 13: openim.user.userRegisterCountResp.count:type_name -> openim.user.userRegisterCountResp.CountEntry
+	91, // 0: openim.user.getAllUserIDReq.pagination:type_name -> openim.sdkws.RequestPagination
+	86, // 1: openim.user.accountCheckResp.results:type_name -> openim.user.accountCheckResp.singleUserStatus
+	92, // 2: openim.user.getDesignateUsersResp.usersInfo:type_name -> openim.sdkws.UserInfo
+	92, // 3: openim.user.updateUserInfoReq.userInfo:type_name -> openim.sdkws.UserInfo
+	93, // 4: openim.user.updateUserInfoExReq.userInfo:type_name -> openim.sdkws.UserInfoWithEx
+	94, // 5: openim.user.setConversationReq.conversation:type_name -> openim.conversation.Conversation
+	94, // 6: openim.user.getConversationResp.conversation:type_name -> openim.conversation.Conversation
+	94, // 7: openim.user.getConversationsResp.conversations:type_name -> openim.conversation.Conversation
+	94, // 8: openim.user.getAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
+	94, // 9: openim.user.batchSetConversationsReq.conversations:type_name -> openim.conversation.Conversation
+	91, // 10: openim.user.getPaginationUsersReq.pagination:type_name -> openim.sdkws.RequestPagination
+	92, // 11: openim.user.getPaginationUsersResp.users:type_name -> openim.sdkws.UserInfo
+	92, // 12: openim.user.userRegisterReq.users:type_name -> openim.sdkws.UserInfo
+	87, // 13: openim.user.userRegisterCountResp.count:type_name -> openim.user.userRegisterCountResp.CountEntry
 	36, // 14: openim.user.subscribeOrCancelUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
 	36, // 15: openim.user.getSubscribeUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
 	36, // 16: openim.user.getUserStatusResp.statusList:type_name -> openim.user.onlineStatus
 	41, // 17: openim.user.setUserOnlineStatusReq.status:type_name -> openim.user.userOnlineStatus
-	87, // 18: openim.user.processUserCommandAddReq.value:type_name -> openim.protobuf.StringValue
-	87, // 19: openim.user.processUserCommandAddReq.ex:type_name -> openim.protobuf.StringValue
-	87, // 20: openim.user.processUserCommandUpdateReq.value:type_name -> openim.protobuf.StringValue
-	87, // 21: openim.user.processUserCommandUpdateReq.ex:type_name -> openim.protobuf.StringValue
+	95, // 18: openim.user.processUserCommandAddReq.value:type_name -> openim.protobuf.StringValue
+	95, // 19: openim.user.processUserCommandAddReq.ex:type_name -> openim.protobuf.StringValue
+	95, // 20: openim.user.processUserCommandUpdateReq.value:type_name -> openim.protobuf.StringValue
+	95, // 21: openim.user.processUserCommandUpdateReq.ex:type_name -> openim.protobuf.StringValue
 	51, // 22: openim.user.processUserCommandGetResp.CommandResp:type_name -> openim.user.CommandInfoResp
 	54, // 23: openim.user.processUserCommandGetAllResp.CommandResp:type_name -> openim.user.AllCommandInfoResp
-	83, // 24: openim.user.searchNotificationAccountReq.pagination:type_name -> openim.sdkws.RequestPagination
+	91, // 24: openim.user.searchNotificationAccountReq.pagination:type_name -> openim.sdkws.RequestPagination
 	61, // 25: openim.user.searchNotificationAccountResp.notificationAccounts:type_name -> openim.user.notificationAccountInfo
 	61, // 26: openim.user.getNotificationAccountResp.account:type_name -> openim.user.notificationAccountInfo
-	80, // 27: openim.user.sortQueryReq.userIDName:type_name -> openim.user.sortQueryReq.UserIDNameEntry
-	84, // 28: openim.user.sortQueryResp.users:type_name -> openim.sdkws.UserInfo
+	88, // 27: openim.user.sortQueryReq.userIDName:type_name -> openim.user.sortQueryReq.UserIDNameEntry
+	92, // 28: openim.user.sortQueryResp.users:type_name -> openim.sdkws.UserInfo
 	36, // 29: openim.user.getAllOnlineUsersResp.StatusList:type_name -> openim.user.onlineStatus
-	81, // 30: openim.user.getUserClientConfigResp.configs:type_name -> openim.user.getUserClientConfigResp.ConfigsEntry
-	82, // 31: openim.user.setUserClientConfigReq.configs:type_name -> openim.user.setUserClientConfigReq.ConfigsEntry
-	83, // 32: openim.user.pageUserClientConfigReq.pagination:type_name -> openim.sdkws.RequestPagination
+	89, // 30: openim.user.getUserClientConfigResp.configs:type_name -> openim.user.getUserClientConfigResp.ConfigsEntry
+	90, // 31: openim.user.setUserClientConfigReq.configs:type_name -> openim.user.setUserClientConfigReq.ConfigsEntry
+	91, // 32: openim.user.pageUserClientConfigReq.pagination:type_name -> openim.sdkws.RequestPagination
 	77, // 33: openim.user.pageUserClientConfigResp.configs:type_name -> openim.user.clientConfig
-	4,  // 34: openim.user.user.getDesignateUsers:input_type -> openim.user.getDesignateUsersReq
-	6,  // 35: openim.user.user.updateUserInfo:input_type -> openim.user.updateUserInfoReq
-	8,  // 36: openim.user.user.updateUserInfoEx:input_type -> openim.user.updateUserInfoExReq
-	10, // 37: openim.user.user.setGlobalRecvMessageOpt:input_type -> openim.user.setGlobalRecvMessageOptReq
-	28, // 38: openim.user.user.getGlobalRecvMessageOpt:input_type -> openim.user.getGlobalRecvMessageOptReq
-	2,  // 39: openim.user.user.accountCheck:input_type -> openim.user.accountCheckReq
-	24, // 40: openim.user.user.getPaginationUsers:input_type -> openim.user.getPaginationUsersReq
-	26, // 41: openim.user.user.userRegister:input_type -> openim.user.userRegisterReq
-	0,  // 42: openim.user.user.getAllUserID:input_type -> openim.user.getAllUserIDReq
-	30, // 43: openim.user.user.userRegisterCount:input_type -> openim.user.userRegisterCountReq
-	32, // 44: openim.user.user.subscribeOrCancelUsersStatus:input_type -> openim.user.subscribeOrCancelUsersStatusReq
-	34, // 45: openim.user.user.getSubscribeUsersStatus:input_type -> openim.user.getSubscribeUsersStatusReq
-	37, // 46: openim.user.user.getUserStatus:input_type -> openim.user.getUserStatusReq
-	39, // 47: openim.user.user.setUserStatus:input_type -> openim.user.setUserStatusReq
-	44, // 48: openim.user.user.processUserCommandAdd:input_type -> openim.user.processUserCommandAddReq
-	48, // 49: openim.user.user.processUserCommandUpdate:input_type -> openim.user.processUserCommandUpdateReq
-	46, // 50: openim.user.user.processUserCommandDelete:input_type -> openim.user.processUserCommandDeleteReq
-	50, // 51: openim.user.user.processUserCommandGet:input_type -> openim.user.processUserCommandGetReq
-	53, // 52: openim.user.user.processUserCommandGetAll:input_type -> openim.user.processUserCommandGetAllReq
-	56, // 53: openim.user.user.addNotificationAccount:input_type -> openim.user.addNotificationAccountReq
-	58, // 54: openim.user.user.updateNotificationAccountInfo:input_type -> openim.user.updateNotificationAccountInfoReq
-	60, // 55: openim.user.user.searchNotificationAccount:input_type -> openim.user.searchNotificationAccountReq
-	63, // 56: openim.user.user.getNotificationAccount:input_type -> openim.user.getNotificationAccountReq
-	65, // 57: openim.user.user.sortQuery:input_type -> openim.user.sortQueryReq
-	42, // 58: openim.user.user.setUserOnlineStatus:input_type -> openim.user.setUserOnlineStatusReq
-	67, // 59: openim.user.user.getAllOnlineUsers:input_type -> openim.user.getAllOnlineUsersReq
-	69, // 60: openim.user.user.getUserClientConfig:input_type -> openim.user.getUserClientConfigReq
-	71, // 61: openim.user.user.setUserClientConfig:input_type -> openim.user.setUserClientConfigReq
-	73, // 62: openim.user.user.delUserClientConfig:input_type -> openim.user.delUserClientConfigReq
-	75, // 63: openim.user.user.pageUserClientConfig:input_type -> openim.user.pageUserClientConfigReq
-	5,  // 64: openim.user.user.getDesignateUsers:output_type -> openim.user.getDesignateUsersResp
-	7,  // 65: openim.user.user.updateUserInfo:output_type -> openim.user.updateUserInfoResp
-	9,  // 66: openim.user.user.updateUserInfoEx:output_type -> openim.user.updateUserInfoExResp
-	11, // 67: openim.user.user.setGlobalRecvMessageOpt:output_type -> openim.user.setGlobalRecvMessageOptResp
-	29, // 68: openim.user.user.getGlobalRecvMessageOpt:output_type -> openim.user.getGlobalRecvMessageOptResp
-	3,  // 69: openim.user.user.accountCheck:output_type -> openim.user.accountCheckResp
-	25, // 70: openim.user.user.getPaginationUsers:output_type -> openim.user.getPaginationUsersResp
-	27, // 71: openim.user.user.userRegister:output_type -> openim.user.userRegisterResp
-	1,  // 72: openim.user.user.getAllUserID:output_type -> openim.user.getAllUserIDResp
-	31, // 73: openim.user.user.userRegisterCount:output_type -> openim.user.userRegisterCountResp
-	33, // 74: openim.user.user.subscribeOrCancelUsersStatus:output_type -> openim.user.subscribeOrCancelUsersStatusResp
-	35, // 75: openim.user.user.getSubscribeUsersStatus:output_type -> openim.user.getSubscribeUsersStatusResp
-	38, // 76: openim.user.user.getUserStatus:output_type -> openim.user.getUserStatusResp
-	40, // 77: openim.user.user.setUserStatus:output_type -> openim.user.setUserStatusResp
-	45, // 78: openim.user.user.processUserCommandAdd:output_type -> openim.user.processUserCommandAddResp
-	49, // 79: openim.user.user.processUserCommandUpdate:output_type -> openim.user.processUserCommandUpdateResp
-	47, // 80: openim.user.user.processUserCommandDelete:output_type -> openim.user.processUserCommandDeleteResp
-	52, // 81: openim.user.user.processUserCommandGet:output_type -> openim.user.processUserCommandGetResp
-	55, // 82: openim.user.user.processUserCommandGetAll:output_type -> openim.user.processUserCommandGetAllResp
-	57, // 83: openim.user.user.addNotificationAccount:output_type -> openim.user.addNotificationAccountResp
-	59, // 84: openim.user.user.updateNotificationAccountInfo:output_type -> openim.user.updateNotificationAccountInfoResp
-	62, // 85: openim.user.user.searchNotificationAccount:output_type -> openim.user.searchNotificationAccountResp
-	64, // 86: openim.user.user.getNotificationAccount:output_type -> openim.user.getNotificationAccountResp
-	66, // 87: openim.user.user.sortQuery:output_type -> openim.user.sortQueryResp
-	43, // 88: openim.user.user.setUserOnlineStatus:output_type -> openim.user.setUserOnlineStatusResp
-	68, // 89: openim.user.user.getAllOnlineUsers:output_type -> openim.user.getAllOnlineUsersResp
-	70, // 90: openim.user.user.getUserClientConfig:output_type -> openim.user.getUserClientConfigResp
-	72, // 91: openim.user.user.setUserClientConfig:output_type -> openim.user.setUserClientConfigResp
-	74, // 92: openim.user.user.delUserClientConfig:output_type -> openim.user.delUserClientConfigResp
-	76, // 93: openim.user.user.pageUserClientConfig:output_type -> openim.user.pageUserClientConfigResp
-	64, // [64:94] is the sub-list for method output_type
-	34, // [34:64] is the sub-list for method input_type
-	34, // [34:34] is the sub-list for extension type_name
-	34, // [34:34] is the sub-list for extension extendee
-	0,  // [0:34] is the sub-list for field type_name
+	83, // 34: openim.user.getAllUserEmojisResp.emojis:type_name -> openim.user.getUserEmojiResp
+	4,  // 35: openim.user.user.getDesignateUsers:input_type -> openim.user.getDesignateUsersReq
+	6,  // 36: openim.user.user.updateUserInfo:input_type -> openim.user.updateUserInfoReq
+	8,  // 37: openim.user.user.updateUserInfoEx:input_type -> openim.user.updateUserInfoExReq
+	10, // 38: openim.user.user.setGlobalRecvMessageOpt:input_type -> openim.user.setGlobalRecvMessageOptReq
+	28, // 39: openim.user.user.getGlobalRecvMessageOpt:input_type -> openim.user.getGlobalRecvMessageOptReq
+	2,  // 40: openim.user.user.accountCheck:input_type -> openim.user.accountCheckReq
+	24, // 41: openim.user.user.getPaginationUsers:input_type -> openim.user.getPaginationUsersReq
+	26, // 42: openim.user.user.userRegister:input_type -> openim.user.userRegisterReq
+	0,  // 43: openim.user.user.getAllUserID:input_type -> openim.user.getAllUserIDReq
+	30, // 44: openim.user.user.userRegisterCount:input_type -> openim.user.userRegisterCountReq
+	32, // 45: openim.user.user.subscribeOrCancelUsersStatus:input_type -> openim.user.subscribeOrCancelUsersStatusReq
+	34, // 46: openim.user.user.getSubscribeUsersStatus:input_type -> openim.user.getSubscribeUsersStatusReq
+	37, // 47: openim.user.user.getUserStatus:input_type -> openim.user.getUserStatusReq
+	39, // 48: openim.user.user.setUserStatus:input_type -> openim.user.setUserStatusReq
+	44, // 49: openim.user.user.processUserCommandAdd:input_type -> openim.user.processUserCommandAddReq
+	48, // 50: openim.user.user.processUserCommandUpdate:input_type -> openim.user.processUserCommandUpdateReq
+	46, // 51: openim.user.user.processUserCommandDelete:input_type -> openim.user.processUserCommandDeleteReq
+	50, // 52: openim.user.user.processUserCommandGet:input_type -> openim.user.processUserCommandGetReq
+	53, // 53: openim.user.user.processUserCommandGetAll:input_type -> openim.user.processUserCommandGetAllReq
+	56, // 54: openim.user.user.addNotificationAccount:input_type -> openim.user.addNotificationAccountReq
+	58, // 55: openim.user.user.updateNotificationAccountInfo:input_type -> openim.user.updateNotificationAccountInfoReq
+	60, // 56: openim.user.user.searchNotificationAccount:input_type -> openim.user.searchNotificationAccountReq
+	63, // 57: openim.user.user.getNotificationAccount:input_type -> openim.user.getNotificationAccountReq
+	65, // 58: openim.user.user.sortQuery:input_type -> openim.user.sortQueryReq
+	42, // 59: openim.user.user.setUserOnlineStatus:input_type -> openim.user.setUserOnlineStatusReq
+	67, // 60: openim.user.user.getAllOnlineUsers:input_type -> openim.user.getAllOnlineUsersReq
+	69, // 61: openim.user.user.getUserClientConfig:input_type -> openim.user.getUserClientConfigReq
+	71, // 62: openim.user.user.setUserClientConfig:input_type -> openim.user.setUserClientConfigReq
+	73, // 63: openim.user.user.delUserClientConfig:input_type -> openim.user.delUserClientConfigReq
+	75, // 64: openim.user.user.pageUserClientConfig:input_type -> openim.user.pageUserClientConfigReq
+	78, // 65: openim.user.user.saveUserEmoji:input_type -> openim.user.saveUserEmojiReq
+	80, // 66: openim.user.user.deleteUserEmoji:input_type -> openim.user.deleteUserEmojiReq
+	82, // 67: openim.user.user.getUserEmoji:input_type -> openim.user.getUserEmojiReq
+	84, // 68: openim.user.user.getAllUserEmojis:input_type -> openim.user.getAllUserEmojisReq
+	5,  // 69: openim.user.user.getDesignateUsers:output_type -> openim.user.getDesignateUsersResp
+	7,  // 70: openim.user.user.updateUserInfo:output_type -> openim.user.updateUserInfoResp
+	9,  // 71: openim.user.user.updateUserInfoEx:output_type -> openim.user.updateUserInfoExResp
+	11, // 72: openim.user.user.setGlobalRecvMessageOpt:output_type -> openim.user.setGlobalRecvMessageOptResp
+	29, // 73: openim.user.user.getGlobalRecvMessageOpt:output_type -> openim.user.getGlobalRecvMessageOptResp
+	3,  // 74: openim.user.user.accountCheck:output_type -> openim.user.accountCheckResp
+	25, // 75: openim.user.user.getPaginationUsers:output_type -> openim.user.getPaginationUsersResp
+	27, // 76: openim.user.user.userRegister:output_type -> openim.user.userRegisterResp
+	1,  // 77: openim.user.user.getAllUserID:output_type -> openim.user.getAllUserIDResp
+	31, // 78: openim.user.user.userRegisterCount:output_type -> openim.user.userRegisterCountResp
+	33, // 79: openim.user.user.subscribeOrCancelUsersStatus:output_type -> openim.user.subscribeOrCancelUsersStatusResp
+	35, // 80: openim.user.user.getSubscribeUsersStatus:output_type -> openim.user.getSubscribeUsersStatusResp
+	38, // 81: openim.user.user.getUserStatus:output_type -> openim.user.getUserStatusResp
+	40, // 82: openim.user.user.setUserStatus:output_type -> openim.user.setUserStatusResp
+	45, // 83: openim.user.user.processUserCommandAdd:output_type -> openim.user.processUserCommandAddResp
+	49, // 84: openim.user.user.processUserCommandUpdate:output_type -> openim.user.processUserCommandUpdateResp
+	47, // 85: openim.user.user.processUserCommandDelete:output_type -> openim.user.processUserCommandDeleteResp
+	52, // 86: openim.user.user.processUserCommandGet:output_type -> openim.user.processUserCommandGetResp
+	55, // 87: openim.user.user.processUserCommandGetAll:output_type -> openim.user.processUserCommandGetAllResp
+	57, // 88: openim.user.user.addNotificationAccount:output_type -> openim.user.addNotificationAccountResp
+	59, // 89: openim.user.user.updateNotificationAccountInfo:output_type -> openim.user.updateNotificationAccountInfoResp
+	62, // 90: openim.user.user.searchNotificationAccount:output_type -> openim.user.searchNotificationAccountResp
+	64, // 91: openim.user.user.getNotificationAccount:output_type -> openim.user.getNotificationAccountResp
+	66, // 92: openim.user.user.sortQuery:output_type -> openim.user.sortQueryResp
+	43, // 93: openim.user.user.setUserOnlineStatus:output_type -> openim.user.setUserOnlineStatusResp
+	68, // 94: openim.user.user.getAllOnlineUsers:output_type -> openim.user.getAllOnlineUsersResp
+	70, // 95: openim.user.user.getUserClientConfig:output_type -> openim.user.getUserClientConfigResp
+	72, // 96: openim.user.user.setUserClientConfig:output_type -> openim.user.setUserClientConfigResp
+	74, // 97: openim.user.user.delUserClientConfig:output_type -> openim.user.delUserClientConfigResp
+	76, // 98: openim.user.user.pageUserClientConfig:output_type -> openim.user.pageUserClientConfigResp
+	79, // 99: openim.user.user.saveUserEmoji:output_type -> openim.user.saveUserEmojiResp
+	81, // 100: openim.user.user.deleteUserEmoji:output_type -> openim.user.deleteUserEmojiResp
+	83, // 101: openim.user.user.getUserEmoji:output_type -> openim.user.getUserEmojiResp
+	85, // 102: openim.user.user.getAllUserEmojis:output_type -> openim.user.getAllUserEmojisResp
+	69, // [69:103] is the sub-list for method output_type
+	35, // [35:69] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_user_user_proto_init() }
@@ -4544,7 +5163,7 @@ func file_user_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_user_proto_rawDesc), len(file_user_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   83,
+			NumMessages:   91,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
