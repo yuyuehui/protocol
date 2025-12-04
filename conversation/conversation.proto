@@ -39,6 +39,7 @@ message Conversation {
   int64 latestMsgDestructTime = 16;
   bool isMsgDestruct = 17;
   bool isMark = 18;
+  int32 unreadCount = 19;  // 手动设置的未读数，用于多设备同步
 }
 
 message ConversationReq {
@@ -58,6 +59,7 @@ message ConversationReq {
   openim.protobuf.Int64Value msgDestructTime = 14;
   openim.protobuf.BoolValue isMsgDestruct = 15;
   openim.protobuf.BoolValue isMark = 16;
+  openim.protobuf.Int32Value unreadCount = 17;  // 手动设置的未读数
 }
 
 message SetConversationReq {
@@ -310,6 +312,14 @@ message MarkConversationResp {
   string message = 2;
 }
 
+message MarkConversationAsUnreadReq {
+  string userID = 1;
+  string conversationID = 2;
+  int32 unreadCount = 3;  // 设置的未读数
+}
+
+message MarkConversationAsUnreadResp {}
+
 message ClearUserConversationMsgReq {
   int64 timestamp = 1;
   int32 limit = 2;
@@ -357,6 +367,7 @@ service conversation {
   rpc GetNotNotifyConversationIDs(GetNotNotifyConversationIDsReq) returns (GetNotNotifyConversationIDsResp);
   rpc GetPinnedConversationIDs(GetPinnedConversationIDsReq) returns (GetPinnedConversationIDsResp);
   rpc MarkConversation(MarkConversationReq) returns (MarkConversationResp);
+  rpc MarkConversationAsUnread(MarkConversationAsUnreadReq) returns (MarkConversationAsUnreadResp);
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);

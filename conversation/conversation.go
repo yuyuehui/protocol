@@ -224,3 +224,17 @@ func (x *ClearUserConversationMsgReq) Check() error {
 	}
 	return nil
 }
+
+func (x *MarkConversationAsUnreadReq) Check() error {
+	// userID 允许为空，可以从 token 中自动获取
+	// if x.UserID == "" {
+	// 	return errors.New("userID is empty")
+	// }
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	if x.UnreadCount < 0 {
+		return errors.New("unreadCount is invalid")
+	}
+	return nil
+}

@@ -145,7 +145,8 @@ func (x *MarkConversationAsReadReq) Check() error {
 	if x.UserID == "" {
 		return errors.New("userID is empty")
 	}
-	if x.HasReadSeq < 1 {
+	// Allow hasReadSeq >= 0 (0 means all messages are unread)
+	if x.HasReadSeq < 0 {
 		return errors.New("hasReadSeq is invalid")
 	}
 	for _, seq := range x.Seqs {
@@ -163,7 +164,8 @@ func (x *SetConversationHasReadSeqReq) Check() error {
 	if x.UserID == "" {
 		return errors.New("userID is empty")
 	}
-	if x.HasReadSeq < 1 {
+	// Allow hasReadSeq >= 0 (0 means all messages are unread)
+	if x.HasReadSeq < 0 {
 		return errors.New("hasReadSeq is invalid")
 	}
 	return nil
