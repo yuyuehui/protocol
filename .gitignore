@@ -3,7 +3,9 @@ logs
 components
 out-test
 Dockerfile.cross
-
+node_modules
+pub
+package-lock.json
 ### Makefile ###
 tmp/
 bin/

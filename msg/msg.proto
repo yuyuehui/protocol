@@ -414,6 +414,35 @@ message LikeMsgResp {
   
 }
 
+// 群消息已读成员信息
+message GroupMsgReadUser {
+  string userID = 1;        // 用户ID
+  string nickname = 2;      // 昵称
+  string faceURL = 3;       // 头像URL
+  int64 readTime = 4;       // 已读时间（毫秒时间戳）
+  bool isRead = 5;          // 是否已读
+  string signature = 6;     // 用户签名
+}
+
+// 获取群消息已读/未读成员列表请求
+message GetGroupMessageReaderListReq {
+  string conversationID = 1;  // 会话ID
+  int64 seq = 2;              // 消息序列号
+  string userID = 3;          // 请求者用户ID（消息发送者）
+  int32 filter = 4;           // 过滤类型：0=全部，1=已读，2=未读
+  int32 offset = 5;           // 分页偏移量
+  int32 count = 6;            // 每页数量
+}
+
+// 获取群消息已读/未读成员列表响应
+message GetGroupMessageReaderListResp {
+  int32 hasReadCount = 1;                   // 已读数量
+  int32 unreadCount = 2;                    // 未读数量
+  int32 groupMemberCount = 3;               // 群成员总数
+  repeated GroupMsgReadUser hasReadList = 4;  // 已读成员列表
+  repeated GroupMsgReadUser unreadList = 5;   // 未读成员列表
+}
+
 service msg {
   //获取最小最大seq（包括用户的，以及指定群组的）
   rpc GetMaxSeq(sdkws.GetMaxSeqReq) returns (sdkws.GetMaxSeqResp);
@@ -472,4 +501,6 @@ service msg {
   rpc GetLastMessage(GetLastMessageReq) returns (GetLastMessageResp);
   rpc LikeMessage(LikeMsgReq) returns (LikeMsgResp);
   rpc UnLikeMessage(LikeMsgReq) returns (LikeMsgResp);
+  // 获取群消息已读/未读成员列表
+  rpc GetGroupMessageReaderList(GetGroupMessageReaderListReq) returns (GetGroupMessageReaderListResp);
 }
