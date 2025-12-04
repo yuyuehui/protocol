@@ -1196,6 +1196,7 @@ type GetPaginationUsersReq struct {
 	UserID        string                   `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
 	NickName      string                   `protobuf:"bytes,4,opt,name=nickName,proto3" json:"nickName"`
 	Status        []string                 `protobuf:"bytes,5,rep,name=status,proto3" json:"status"`
+	Pinyin        string                   `protobuf:"bytes,6,opt,name=pinyin,proto3" json:"pinyin"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1256,6 +1257,13 @@ func (x *GetPaginationUsersReq) GetStatus() []string {
 		return x.Status
 	}
 	return nil
+}
+
+func (x *GetPaginationUsersReq) GetPinyin() string {
+	if x != nil {
+		return x.Pinyin
+	}
+	return ""
 }
 
 type GetPaginationUsersResp struct {
@@ -4649,14 +4657,15 @@ const file_user_user_proto_rawDesc = "" +
 	"\vOperationID\x18\x04 \x01(\tR\vOperationID\"M\n" +
 	"\x19batchSetConversationsResp\x12\x18\n" +
 	"\aSuccess\x18\x02 \x03(\tR\aSuccess\x12\x16\n" +
-	"\x06Failed\x18\x03 \x03(\tR\x06Failed\"\xa4\x01\n" +
+	"\x06Failed\x18\x03 \x03(\tR\x06Failed\"\xbc\x01\n" +
 	"\x15getPaginationUsersReq\x12?\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\x12\x16\n" +
 	"\x06userID\x18\x03 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickName\x18\x04 \x01(\tR\bnickName\x12\x16\n" +
-	"\x06status\x18\x05 \x03(\tR\x06status\"\\\n" +
+	"\x06status\x18\x05 \x03(\tR\x06status\x12\x16\n" +
+	"\x06pinyin\x18\x06 \x01(\tR\x06pinyin\"\\\n" +
 	"\x16getPaginationUsersResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12,\n" +
 	"\x05users\x18\x02 \x03(\v2\x16.openim.sdkws.UserInfoR\x05users\"?\n" +
