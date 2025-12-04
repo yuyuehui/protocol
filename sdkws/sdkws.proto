@@ -83,6 +83,7 @@ message UserInfo {
   int64 createTime = 5;
   int32 appMangerLevel = 6;
   int32 globalRecvMsgOpt = 7;
+  string pinyin = 8;
 }
 
 message UserInfoWithEx {
