@@ -344,6 +344,99 @@ message DeleteConversationsReq {
 }
 message DeleteConversationsResp {}
 
+// 会话分组
+message ConversationGroup {
+    string groupID = 1;
+    string ownerUserID = 2;
+    string groupName = 3;
+    int32 groupType = 4;
+    int32 sortOrder = 5;
+    bool isVisible = 6;
+    int64 createTime = 7;
+    int64 updateTime = 8;
+    string ex = 9;
+}
+
+message GroupOrder {
+    string groupID = 1;
+    int32 sortOrder = 2;
+}
+
+// 请求/响应消息
+message InitConversationGroupsReq {
+  string ownerUserID = 1;
+}
+message InitConversationGroupsResp {}
+
+message GetAllConversationGroupsReq {
+  string ownerUserID = 1;
+}
+message GetAllConversationGroupsResp {
+  repeated ConversationGroup groups = 1;
+}
+
+message GetVisibleConversationGroupsReq {
+  string ownerUserID = 1;
+}
+message GetVisibleConversationGroupsResp {
+  repeated ConversationGroup groups = 1;
+}
+
+message CreateConversationGroupReq {
+    string ownerUserID = 1;
+    string groupName = 2;
+    string ex = 3;
+}
+message CreateConversationGroupResp {
+  ConversationGroup group = 1;
+}
+
+message UpdateConversationGroupReq {
+    string groupID = 1;
+    string groupName = 2;
+    bool isVisible = 3;
+    string ex = 4;
+}
+message UpdateConversationGroupResp {}
+
+message DeleteConversationGroupReq {
+  string groupID = 1;
+}
+message DeleteConversationGroupResp {}
+
+message UpdateConversationGroupSortReq {
+    string ownerUserID = 1;
+    repeated GroupOrder groupOrders = 2;
+}
+message UpdateConversationGroupSortResp {}
+
+message SetConversationGroupVisibilityReq {
+    string groupID = 1;
+    bool isVisible = 2;
+}
+message SetConversationGroupVisibilityResp {}
+
+message AddConversationsToGroupReq {
+    string ownerUserID = 1;
+    string groupID = 2;
+    repeated string conversationIDs = 3;
+}
+message AddConversationsToGroupResp {}
+
+message RemoveConversationsFromGroupReq {
+    string groupID = 1;
+    repeated string conversationIDs = 2;
+}
+message RemoveConversationsFromGroupResp {}
+
+message GetConversationIDsByGroupIDReq {
+  string groupID = 1;
+}
+message GetConversationIDsByGroupIDResp {
+  repeated string conversationIDs = 1;
+}
+
+
 service conversation {
   rpc GetConversation(GetConversationReq) returns (GetConversationResp);
   rpc GetSortedConversationList(GetSortedConversationListReq) returns (GetSortedConversationListResp);
@@ -373,4 +466,15 @@ service conversation {
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
+  rpc InitConversationGroups(InitConversationGroupsReq) returns (InitConversationGroupsResp);
+  rpc GetAllConversationGroups(GetAllConversationGroupsReq) returns (GetAllConversationGroupsResp);
+  rpc GetVisibleConversationGroups(GetVisibleConversationGroupsReq) returns (GetVisibleConversationGroupsResp);
+  rpc CreateConversationGroup(CreateConversationGroupReq) returns (CreateConversationGroupResp);
+  rpc UpdateConversationGroup(UpdateConversationGroupReq) returns (UpdateConversationGroupResp);
+  rpc DeleteConversationGroup(DeleteConversationGroupReq) returns (DeleteConversationGroupResp);
+  rpc UpdateConversationGroupSort(UpdateConversationGroupSortReq) returns (UpdateConversationGroupSortResp);
+  rpc SetConversationGroupVisibility(SetConversationGroupVisibilityReq) returns (SetConversationGroupVisibilityResp);
+  rpc AddConversationsToGroup(AddConversationsToGroupReq) returns (AddConversationsToGroupResp);
+  rpc RemoveConversationsFromGroup(RemoveConversationsFromGroupReq) returns (RemoveConversationsFromGroupResp);
+  rpc GetConversationIDsByGroupID(GetConversationIDsByGroupIDReq) returns (GetConversationIDsByGroupIDResp);
 }
