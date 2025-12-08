@@ -125,6 +125,8 @@ message getPaginationUsersReq {
   sdkws.RequestPagination pagination = 2;
   string userID = 3;
   string nickName = 4;
+  repeated string status = 5;
+  string pinyin = 6;
 }
 
 message getPaginationUsersResp {

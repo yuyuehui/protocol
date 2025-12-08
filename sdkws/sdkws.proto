@@ -83,6 +83,9 @@ message UserInfo {
   int64 createTime = 5;
   int32 appMangerLevel = 6;
   int32 globalRecvMsgOpt = 7;
+  string pinyin = 8;
+  string status = 9;
+  string signature = 10;  // 用户签名
 }
 
 message UserInfoWithEx {
@@ -91,6 +94,9 @@ message UserInfoWithEx {
   openim.protobuf.StringValue faceURL = 3;
   openim.protobuf.StringValue ex = 4;
   openim.protobuf.Int32Value globalRecvMsgOpt = 7;
+  openim.protobuf.StringValue pinyin = 8;
+  openim.protobuf.StringValue status = 9;
+  openim.protobuf.StringValue signature = 10;  // 用户签名
 }
 
 message FriendInfo {
@@ -606,6 +612,16 @@ message MarkAsReadTips {
   string conversationID = 2;
   repeated int64 seqs = 3;
   int64 hasReadSeq = 4;
+}
+
+// 群消息已读成员信息
+message GroupMsgReadUser {
+  string userID = 1;        // 用户ID
+  string nickname = 2;      // 昵称
+  string faceURL = 3;       // 头像URL
+  int64 readTime = 4;       // 已读时间（毫秒时间戳）
+  bool isRead = 5;          // 是否已读
+  string signature = 6;     // 用户签名
 }
 
 message SetAppBackgroundStatusReq {
