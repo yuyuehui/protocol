@@ -40,6 +40,7 @@ message Conversation {
   bool isMsgDestruct = 17;
   bool isMark = 18;
   int32 unreadCount = 19;  // 手动设置的未读数，用于多设备同步
+  int64 updateUnreadCountTime = 20;  // 手动更新未读数的时间戳（毫秒），用于多端同步时判断最新值
 }
 
 message ConversationReq {
@@ -60,6 +61,7 @@ message ConversationReq {
   openim.protobuf.BoolValue isMsgDestruct = 15;
   openim.protobuf.BoolValue isMark = 16;
   openim.protobuf.Int32Value unreadCount = 17;  // 手动设置的未读数
+  openim.protobuf.Int64Value updateUnreadCountTime = 18;  // 手动更新未读数的时间戳
 }
 
 message SetConversationReq {
