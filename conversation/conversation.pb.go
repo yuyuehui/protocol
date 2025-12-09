@@ -3875,7 +3875,8 @@ type CreateConversationGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	OwnerUserID   string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID"`
 	GroupName     string                 `protobuf:"bytes,2,opt,name=groupName,proto3" json:"groupName"`
-	Ex            string                 `protobuf:"bytes,3,opt,name=ex,proto3" json:"ex"`
+	GroupID       string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID"`
+	Ex            string                 `protobuf:"bytes,4,opt,name=ex,proto3" json:"ex"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3920,6 +3921,13 @@ func (x *CreateConversationGroupReq) GetOwnerUserID() string {
 func (x *CreateConversationGroupReq) GetGroupName() string {
 	if x != nil {
 		return x.GroupName
+	}
+	return ""
+}
+
+func (x *CreateConversationGroupReq) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
 	}
 	return ""
 }
@@ -4875,11 +4883,12 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x1fGetVisibleConversationGroupsReq\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\"b\n" +
 	" GetVisibleConversationGroupsResp\x12>\n" +
-	"\x06groups\x18\x01 \x03(\v2&.openim.conversation.ConversationGroupR\x06groups\"l\n" +
+	"\x06groups\x18\x01 \x03(\v2&.openim.conversation.ConversationGroupR\x06groups\"\x86\x01\n" +
 	"\x1aCreateConversationGroupReq\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\x12\x1c\n" +
-	"\tgroupName\x18\x02 \x01(\tR\tgroupName\x12\x0e\n" +
-	"\x02ex\x18\x03 \x01(\tR\x02ex\"[\n" +
+	"\tgroupName\x18\x02 \x01(\tR\tgroupName\x12\x18\n" +
+	"\agroupID\x18\x03 \x01(\tR\agroupID\x12\x0e\n" +
+	"\x02ex\x18\x04 \x01(\tR\x02ex\"[\n" +
 	"\x1bCreateConversationGroupResp\x12<\n" +
 	"\x05group\x18\x01 \x01(\v2&.openim.conversation.ConversationGroupR\x05group\"\x82\x01\n" +
 	"\x1aUpdateConversationGroupReq\x12\x18\n" +

@@ -385,7 +385,8 @@ message GetVisibleConversationGroupsResp {
 message CreateConversationGroupReq {
     string ownerUserID = 1;
     string groupName = 2;
-    string ex = 3;
+    string groupID = 3;
+    string ex = 4;
 }
 message CreateConversationGroupResp {
   ConversationGroup group = 1;
