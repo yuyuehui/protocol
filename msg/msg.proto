@@ -422,6 +422,135 @@ message LikeMsgResp {
   
 }
 
+// 收藏消息相关定义
+message FavoriteMessage {
+  string id = 1;                    // 收藏ID（保留字段，向后兼容）
+  string userID = 2;                // 收藏用户ID
+  string conversationID = 3;        // 会话ID
+  string clientMsgID = 4;            // 客户端消息ID（client_msg_id）
+  string serverMsgID = 5;           // 服务端消息ID
+  int64 seq = 6;                    // 消息序列号
+  string sendID = 7;                // 发送者ID
+  string recvID = 8;                // 接收者ID
+  string groupID = 9;               // 群ID（群消息时使用）
+  string groupName = 10;            // 群名称（群消息时使用）
+  string senderNickname = 11;       // 发送者昵称
+  string senderFaceURL = 12;        // 发送者头像
+  int32 sessionType = 13;           // 会话类型
+  int32 contentType = 14;          // 消息类型
+  string content = 15;              // 消息内容
+  string contentPreview = 16;       // 内容预览
+  string attachedInfo = 17;         // 附加信息
+  int64 sendTime = 18;              // 消息发送时间
+  string remark = 19;               // 备注
+  repeated string tags = 20;        // 标签列表
+  int64 createTime = 21;            // 创建时间
+  int64 updateTime = 22;            // 更新时间
+  string favoriteID = 23;           // 收藏唯一ID
+
+}
+
+// AddFavoriteReq 添加收藏请求
+message AddFavoriteReq {
+  string conversationID = 1;        // 会话ID
+  string clientMsgID = 2;            // 客户端消息ID（client_msg_id）
+  string remark = 3;                // 备注（可选）
+  repeated string tags = 4;         // 标签列表（可选）
+  // 消息详情字段（客户端传递）
+  string serverMsgID = 5;           // 服务器消息ID
+  int64 seq = 6;                    // 消息序列号
+  string sendID = 7;                // 发送者ID
+  string recvID = 8;                // 接收者ID
+  string groupID = 9;               // 群ID（群聊时有值）
+  string groupName = 10;            // 群名称
+  string senderNickname = 11;       // 发送者昵称
+  string senderFaceURL = 12;        // 发送者头像
+  int32 sessionType = 13;           // 会话类型
+  int32 contentType = 14;           // 内容类型
+  string content = 15;              // 消息内容
+  string attachedInfo = 16;         // 附加信息
+  int64 sendTime = 17;              // 发送时间
+}
+
+// AddFavoriteResp 添加收藏响应
+message AddFavoriteResp {
+  string favoriteID = 1;            // 收藏ID
+}
+
+// DeleteFavoriteReq 取消收藏请求
+message DeleteFavoriteReq {
+  string favoriteID = 1;            // 收藏ID（可选，如果为空则通过clientMsgID查找）
+  string clientMsgID = 2;           // 客户端消息ID（可选）
+}
+
+// DeleteFavoriteResp 取消收藏响应
+message DeleteFavoriteResp {
+}
+
+// GetFavoriteListReq 获取收藏列表请求
+message GetFavoriteListReq {
+  int32 contentType = 1;            // 消息类型筛选（0=全部）
+  string keyword = 2;                // 关键词搜索（可选）
+  int64 startTime = 3;               // 开始时间（毫秒，可选）
+  int64 endTime = 4;                 // 结束时间（毫秒，可选）
+  int32 offset = 5;                  // 分页偏移量
+  int32 count = 6;                   // 每页数量
+  int32 sortOrder = 7;               // 排序方式：0=按收藏时间倒序（最新在前），1=按收藏时间正序（最旧在前）
+}
+
+// GetFavoriteListResp 获取收藏列表响应
+message GetFavoriteListResp {
+  repeated FavoriteMessage favorites = 1;  // 收藏列表
+  int32 total = 2;                         // 总数
+}
+
+// UpdateFavoriteReq 更新收藏请求（更新备注、标签、内容）
+message UpdateFavoriteReq {
+  string favoriteID = 1;            // 收藏ID
+  string remark = 2;                // 备注（可选）
+  repeated string tags = 3;         // 标签列表（可选）
+  string content = 4;               // 消息内容（可选，更新时会自动生成内容预览）
+}
+
+// UpdateFavoriteResp 更新收藏响应
+message UpdateFavoriteResp {
+}
+
+// CheckFavoriteReq 检查消息是否已收藏
+message CheckFavoriteReq {
+  string clientMsgID = 1;           // 客户端消息ID
+}
+
+// CheckFavoriteResp 检查收藏响应
+message CheckFavoriteResp {
+  bool isFavorite = 1;               // 是否已收藏
+  string favoriteID = 2;            // 收藏ID（如果已收藏）
+}
+
+// BatchCheckFavoriteReq 批量检查收藏状态请求
+message BatchCheckFavoriteReq {
+  repeated string clientMsgIDs = 1; // 客户端消息ID列表
+}
+
+// BatchCheckFavoriteResp 批量检查收藏状态响应
+message BatchCheckFavoriteResp {
+  map<string, string> favoriteMap = 1; // key=clientMsgID, value=favoriteID（如果已收藏则为收藏ID，否则为空）
+}
+
+// SearchFavoritesReq 搜索收藏请求
+message SearchFavoritesReq {
+  string keyword = 1;               // 关键词
+  int32 contentType = 2;            // 消息类型筛选（0=全部）
+  int32 offset = 3;                 // 分页偏移量
+  int32 count = 4;                  // 每页数量
+}
+
+// SearchFavoritesResp 搜索收藏响应
+message SearchFavoritesResp {
+  repeated FavoriteMessage favorites = 1;  // 搜索结果
+  int32 total = 2;                         // 总数
+}
+
 // 群消息已读成员信息
 message GroupMsgReadUser {
   string userID = 1;        // 用户ID
@@ -512,4 +641,13 @@ service msg {
   rpc UnLikeMessage(LikeMsgReq) returns (LikeMsgResp);
   // 获取群消息已读/未读成员列表
   rpc GetGroupMessageReaderList(GetGroupMessageReaderListReq) returns (GetGroupMessageReaderListResp);
+  
+  // 收藏消息相关接口
+  rpc AddFavorite(AddFavoriteReq) returns (AddFavoriteResp);
+  rpc DeleteFavorite(DeleteFavoriteReq) returns (DeleteFavoriteResp);
+  rpc GetFavoriteList(GetFavoriteListReq) returns (GetFavoriteListResp);
+  rpc SearchFavorites(SearchFavoritesReq) returns (SearchFavoritesResp);
+  rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp);
+  rpc CheckFavorite(CheckFavoriteReq) returns (CheckFavoriteResp);
+  rpc BatchCheckFavorite(BatchCheckFavoriteReq) returns (BatchCheckFavoriteResp);
 }
