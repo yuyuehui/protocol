@@ -163,8 +163,9 @@ const (
 	PCAndOther = 5 // PC端可同时在线，其他终端只能一个端点登录
 
 	// 在线状态
-	Online  = 1 // 在线
 	Offline = 0 // 离线
+	Online  = 1 // 在线
+	Away    = 2 // 离开
 
 	// 注册状态
 	Registered   = 1 // 已注册
