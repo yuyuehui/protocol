@@ -681,5 +681,6 @@ message ConversationGroupChangeTips {
   string groupID = 2;
   string action = 3;
   string groupName = 4;
-  int64 updateTime = 5;
+  repeated string conversationIDs = 5;
+  int64 updateTime = 6;
 }

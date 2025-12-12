@@ -6112,14 +6112,15 @@ func (x *ConversationDeleteTips) GetConversationIDs() []string {
 }
 
 type ConversationGroupChangeTips struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	GroupID       string                 `protobuf:"bytes,2,opt,name=groupID,proto3" json:"groupID"`
-	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`
-	GroupName     string                 `protobuf:"bytes,4,opt,name=groupName,proto3" json:"groupName"`
-	UpdateTime    int64                  `protobuf:"varint,5,opt,name=updateTime,proto3" json:"updateTime"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	UserID          string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	GroupID         string                 `protobuf:"bytes,2,opt,name=groupID,proto3" json:"groupID"`
+	Action          string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`
+	GroupName       string                 `protobuf:"bytes,4,opt,name=groupName,proto3" json:"groupName"`
+	ConversationIDs []string               `protobuf:"bytes,5,rep,name=conversationIDs,proto3" json:"conversationIDs"`
+	UpdateTime      int64                  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ConversationGroupChangeTips) Reset() {
@@ -6178,6 +6179,13 @@ func (x *ConversationGroupChangeTips) GetGroupName() string {
 		return x.GroupName
 	}
 	return ""
+}
+
+func (x *ConversationGroupChangeTips) GetConversationIDs() []string {
+	if x != nil {
+		return x.ConversationIDs
+	}
+	return nil
 }
 
 func (x *ConversationGroupChangeTips) GetUpdateTime() int64 {
@@ -6761,14 +6769,15 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x03end\x18\x05 \x01(\bR\x03end\"Z\n" +
 	"\x16ConversationDeleteTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12(\n" +
-	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\"\xa5\x01\n" +
+	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\"\xcf\x01\n" +
 	"\x1bConversationGroupChangeTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
 	"\agroupID\x18\x02 \x01(\tR\agroupID\x12\x16\n" +
 	"\x06action\x18\x03 \x01(\tR\x06action\x12\x1c\n" +
-	"\tgroupName\x18\x04 \x01(\tR\tgroupName\x12\x1e\n" +
+	"\tgroupName\x18\x04 \x01(\tR\tgroupName\x12(\n" +
+	"\x0fconversationIDs\x18\x05 \x03(\tR\x0fconversationIDs\x12\x1e\n" +
 	"\n" +
-	"updateTime\x18\x05 \x01(\x03R\n" +
+	"updateTime\x18\x06 \x01(\x03R\n" +
 	"updateTime*0\n" +
 	"\tPullOrder\x12\x10\n" +
 	"\fPullOrderAsc\x10\x00\x12\x11\n" +
