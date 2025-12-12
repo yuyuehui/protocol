@@ -118,6 +118,7 @@ const (
 	ConversationUnreadNotification      = 1702 // 会话未读通知
 	ClearConversationNotification       = 1703 // 清空会话通知
 	ConversationDeleteNotification      = 1704 // 删除会话通知
+    ConversationGroupChangeNotification = 1705 // 会话分组变更通知
 
 	// 业务通知
 	BusinessNotificationBegin = 2000

@@ -675,3 +675,11 @@ message ConversationDeleteTips {
   string userID = 1;
   repeated string conversationIDs = 2;
 }
+
+message ConversationGroupChangeTips {
+  string userID = 1;
+  string groupID = 2;
+  string action = 3;
+  string groupName = 4;
+  int64 updateTime = 5;
+}
