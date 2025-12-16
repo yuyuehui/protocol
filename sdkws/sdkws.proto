@@ -537,10 +537,44 @@ message UserEmojiDeleteTips {
   string toUserID = 2;
 }
 
+// 快捷回复刷新完成通知（常用回复统计完成后发送）
 message UserQuickReplyUpdateTips {
   string fromUserID = 1;
   string toUserID = 2;
   int64 refreshTime = 3;  // 刷新时间
+}
+
+// 快捷回复新增通知
+message UserQuickReplyAddTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string replyID = 3;     // 回复ID
+  string content = 4;     // 回复内容
+  int32 replyType = 5;    // 回复类型
+}
+
+// 快捷回复删除通知
+message UserQuickReplyDeleteTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string replyID = 3;     // 回复ID
+}
+
+// 快捷回复修改通知
+message UserQuickReplyModifyTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string replyID = 3;     // 回复ID
+  string content = 4;     // 回复内容
+}
+
+// 快捷回复置顶/取消置顶通知
+message UserQuickReplyPinTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  string replyID = 3;     // 回复ID
+  bool isPinned = 4;      // 是否置顶
+  int64 pinTime = 5;      // 置顶时间
 }
 
 //////////////////////conversation/////////////////////
