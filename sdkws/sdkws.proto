@@ -537,6 +537,12 @@ message UserEmojiDeleteTips {
   string toUserID = 2;
 }
 
+message UserQuickReplyUpdateTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  int64 refreshTime = 3;  // 刷新时间
+}
+
 //////////////////////conversation/////////////////////
 message ConversationUpdateTips {
   string userID = 1;
