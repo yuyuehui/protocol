@@ -4534,6 +4534,985 @@ func (x *GetAllUserEmojisResp) GetEmojis() []*GetUserEmojiResp {
 	return nil
 }
 
+// 快捷回复信息
+type QuickReplyInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ReplyID       string                 `protobuf:"bytes,1,opt,name=replyID,proto3" json:"replyID"`         // 回复ID
+	OwnerUserID   string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID"` // 用户ID
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content"`         // 回复内容
+	ReplyType     int32                  `protobuf:"varint,4,opt,name=replyType,proto3" json:"replyType"`    // 回复类型: 0-常用, 1-AI推荐, 2-自定义
+	UseCount      int64                  `protobuf:"varint,5,opt,name=useCount,proto3" json:"useCount"`      // 使用次数
+	IsPinned      bool                   `protobuf:"varint,6,opt,name=isPinned,proto3" json:"isPinned"`      // 是否置顶
+	PinTime       int64                  `protobuf:"varint,7,opt,name=pinTime,proto3" json:"pinTime"`        // 置顶时间
+	SortOrder     int32                  `protobuf:"varint,8,opt,name=sortOrder,proto3" json:"sortOrder"`    // 排序顺序
+	CreateTime    int64                  `protobuf:"varint,9,opt,name=createTime,proto3" json:"createTime"`  // 创建时间
+	UpdateTime    int64                  `protobuf:"varint,10,opt,name=updateTime,proto3" json:"updateTime"` // 更新时间
+	Ex            string                 `protobuf:"bytes,11,opt,name=ex,proto3" json:"ex"`                  // 扩展字段
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *QuickReplyInfo) Reset() {
+	*x = QuickReplyInfo{}
+	mi := &file_user_user_proto_msgTypes[86]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QuickReplyInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuickReplyInfo) ProtoMessage() {}
+
+func (x *QuickReplyInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[86]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuickReplyInfo.ProtoReflect.Descriptor instead.
+func (*QuickReplyInfo) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{86}
+}
+
+func (x *QuickReplyInfo) GetReplyID() string {
+	if x != nil {
+		return x.ReplyID
+	}
+	return ""
+}
+
+func (x *QuickReplyInfo) GetOwnerUserID() string {
+	if x != nil {
+		return x.OwnerUserID
+	}
+	return ""
+}
+
+func (x *QuickReplyInfo) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *QuickReplyInfo) GetReplyType() int32 {
+	if x != nil {
+		return x.ReplyType
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetUseCount() int64 {
+	if x != nil {
+		return x.UseCount
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetIsPinned() bool {
+	if x != nil {
+		return x.IsPinned
+	}
+	return false
+}
+
+func (x *QuickReplyInfo) GetPinTime() int64 {
+	if x != nil {
+		return x.PinTime
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetSortOrder() int32 {
+	if x != nil {
+		return x.SortOrder
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetCreateTime() int64 {
+	if x != nil {
+		return x.CreateTime
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
+func (x *QuickReplyInfo) GetEx() string {
+	if x != nil {
+		return x.Ex
+	}
+	return ""
+}
+
+// 快捷回复刷新状态
+type QuickReplyRefreshStatus struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	UserID            string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                       // 用户ID
+	IsRefreshing      bool                   `protobuf:"varint,2,opt,name=isRefreshing,proto3" json:"isRefreshing"`          // 是否正在刷新
+	LastRefreshTime   int64                  `protobuf:"varint,3,opt,name=lastRefreshTime,proto3" json:"lastRefreshTime"`    // 上次刷新时间（Unix毫秒）
+	RefreshByPlatform string                 `protobuf:"bytes,4,opt,name=refreshByPlatform,proto3" json:"refreshByPlatform"` // 正在刷新的平台
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *QuickReplyRefreshStatus) Reset() {
+	*x = QuickReplyRefreshStatus{}
+	mi := &file_user_user_proto_msgTypes[87]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QuickReplyRefreshStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuickReplyRefreshStatus) ProtoMessage() {}
+
+func (x *QuickReplyRefreshStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[87]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuickReplyRefreshStatus.ProtoReflect.Descriptor instead.
+func (*QuickReplyRefreshStatus) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{87}
+}
+
+func (x *QuickReplyRefreshStatus) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *QuickReplyRefreshStatus) GetIsRefreshing() bool {
+	if x != nil {
+		return x.IsRefreshing
+	}
+	return false
+}
+
+func (x *QuickReplyRefreshStatus) GetLastRefreshTime() int64 {
+	if x != nil {
+		return x.LastRefreshTime
+	}
+	return 0
+}
+
+func (x *QuickReplyRefreshStatus) GetRefreshByPlatform() string {
+	if x != nil {
+		return x.RefreshByPlatform
+	}
+	return ""
+}
+
+// 获取快捷回复列表请求
+type GetQuickRepliesReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	ReplyType     int32                  `protobuf:"varint,2,opt,name=replyType,proto3" json:"replyType"` // 可选，-1表示获取所有类型
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetQuickRepliesReq) Reset() {
+	*x = GetQuickRepliesReq{}
+	mi := &file_user_user_proto_msgTypes[88]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetQuickRepliesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetQuickRepliesReq) ProtoMessage() {}
+
+func (x *GetQuickRepliesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[88]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetQuickRepliesReq.ProtoReflect.Descriptor instead.
+func (*GetQuickRepliesReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{88}
+}
+
+func (x *GetQuickRepliesReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *GetQuickRepliesReq) GetReplyType() int32 {
+	if x != nil {
+		return x.ReplyType
+	}
+	return 0
+}
+
+type GetQuickRepliesResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Replies         []*QuickReplyInfo      `protobuf:"bytes,1,rep,name=replies,proto3" json:"replies"`
+	LastRefreshTime int64                  `protobuf:"varint,2,opt,name=lastRefreshTime,proto3" json:"lastRefreshTime"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *GetQuickRepliesResp) Reset() {
+	*x = GetQuickRepliesResp{}
+	mi := &file_user_user_proto_msgTypes[89]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetQuickRepliesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetQuickRepliesResp) ProtoMessage() {}
+
+func (x *GetQuickRepliesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[89]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetQuickRepliesResp.ProtoReflect.Descriptor instead.
+func (*GetQuickRepliesResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{89}
+}
+
+func (x *GetQuickRepliesResp) GetReplies() []*QuickReplyInfo {
+	if x != nil {
+		return x.Replies
+	}
+	return nil
+}
+
+func (x *GetQuickRepliesResp) GetLastRefreshTime() int64 {
+	if x != nil {
+		return x.LastRefreshTime
+	}
+	return 0
+}
+
+// 同步快捷回复请求（SDK调用）
+type SyncQuickRepliesReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SyncQuickRepliesReq) Reset() {
+	*x = SyncQuickRepliesReq{}
+	mi := &file_user_user_proto_msgTypes[90]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SyncQuickRepliesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncQuickRepliesReq) ProtoMessage() {}
+
+func (x *SyncQuickRepliesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[90]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncQuickRepliesReq.ProtoReflect.Descriptor instead.
+func (*SyncQuickRepliesReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{90}
+}
+
+func (x *SyncQuickRepliesReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+type SyncQuickRepliesResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Replies         []*QuickReplyInfo      `protobuf:"bytes,1,rep,name=replies,proto3" json:"replies"`
+	LastRefreshTime int64                  `protobuf:"varint,2,opt,name=lastRefreshTime,proto3" json:"lastRefreshTime"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *SyncQuickRepliesResp) Reset() {
+	*x = SyncQuickRepliesResp{}
+	mi := &file_user_user_proto_msgTypes[91]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SyncQuickRepliesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncQuickRepliesResp) ProtoMessage() {}
+
+func (x *SyncQuickRepliesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[91]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncQuickRepliesResp.ProtoReflect.Descriptor instead.
+func (*SyncQuickRepliesResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{91}
+}
+
+func (x *SyncQuickRepliesResp) GetReplies() []*QuickReplyInfo {
+	if x != nil {
+		return x.Replies
+	}
+	return nil
+}
+
+func (x *SyncQuickRepliesResp) GetLastRefreshTime() int64 {
+	if x != nil {
+		return x.LastRefreshTime
+	}
+	return 0
+}
+
+// 添加/更新快捷回复请求
+type UpsertQuickReplyReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Reply         *QuickReplyInfo        `protobuf:"bytes,1,opt,name=reply,proto3" json:"reply"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpsertQuickReplyReq) Reset() {
+	*x = UpsertQuickReplyReq{}
+	mi := &file_user_user_proto_msgTypes[92]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpsertQuickReplyReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpsertQuickReplyReq) ProtoMessage() {}
+
+func (x *UpsertQuickReplyReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[92]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpsertQuickReplyReq.ProtoReflect.Descriptor instead.
+func (*UpsertQuickReplyReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{92}
+}
+
+func (x *UpsertQuickReplyReq) GetReply() *QuickReplyInfo {
+	if x != nil {
+		return x.Reply
+	}
+	return nil
+}
+
+type UpsertQuickReplyResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Reply         *QuickReplyInfo        `protobuf:"bytes,1,opt,name=reply,proto3" json:"reply"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpsertQuickReplyResp) Reset() {
+	*x = UpsertQuickReplyResp{}
+	mi := &file_user_user_proto_msgTypes[93]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpsertQuickReplyResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpsertQuickReplyResp) ProtoMessage() {}
+
+func (x *UpsertQuickReplyResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[93]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpsertQuickReplyResp.ProtoReflect.Descriptor instead.
+func (*UpsertQuickReplyResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{93}
+}
+
+func (x *UpsertQuickReplyResp) GetReply() *QuickReplyInfo {
+	if x != nil {
+		return x.Reply
+	}
+	return nil
+}
+
+// 删除快捷回复请求
+type DeleteQuickReplyReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	ReplyID       string                 `protobuf:"bytes,2,opt,name=replyID,proto3" json:"replyID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteQuickReplyReq) Reset() {
+	*x = DeleteQuickReplyReq{}
+	mi := &file_user_user_proto_msgTypes[94]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteQuickReplyReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteQuickReplyReq) ProtoMessage() {}
+
+func (x *DeleteQuickReplyReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[94]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteQuickReplyReq.ProtoReflect.Descriptor instead.
+func (*DeleteQuickReplyReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{94}
+}
+
+func (x *DeleteQuickReplyReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *DeleteQuickReplyReq) GetReplyID() string {
+	if x != nil {
+		return x.ReplyID
+	}
+	return ""
+}
+
+type DeleteQuickReplyResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteQuickReplyResp) Reset() {
+	*x = DeleteQuickReplyResp{}
+	mi := &file_user_user_proto_msgTypes[95]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteQuickReplyResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteQuickReplyResp) ProtoMessage() {}
+
+func (x *DeleteQuickReplyResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[95]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteQuickReplyResp.ProtoReflect.Descriptor instead.
+func (*DeleteQuickReplyResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{95}
+}
+
+// 置顶快捷回复请求
+type PinQuickReplyReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	ReplyID       string                 `protobuf:"bytes,2,opt,name=replyID,proto3" json:"replyID"`
+	IsPinned      bool                   `protobuf:"varint,3,opt,name=isPinned,proto3" json:"isPinned"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PinQuickReplyReq) Reset() {
+	*x = PinQuickReplyReq{}
+	mi := &file_user_user_proto_msgTypes[96]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PinQuickReplyReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PinQuickReplyReq) ProtoMessage() {}
+
+func (x *PinQuickReplyReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[96]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PinQuickReplyReq.ProtoReflect.Descriptor instead.
+func (*PinQuickReplyReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{96}
+}
+
+func (x *PinQuickReplyReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *PinQuickReplyReq) GetReplyID() string {
+	if x != nil {
+		return x.ReplyID
+	}
+	return ""
+}
+
+func (x *PinQuickReplyReq) GetIsPinned() bool {
+	if x != nil {
+		return x.IsPinned
+	}
+	return false
+}
+
+type PinQuickReplyResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PinQuickReplyResp) Reset() {
+	*x = PinQuickReplyResp{}
+	mi := &file_user_user_proto_msgTypes[97]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PinQuickReplyResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PinQuickReplyResp) ProtoMessage() {}
+
+func (x *PinQuickReplyResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[97]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PinQuickReplyResp.ProtoReflect.Descriptor instead.
+func (*PinQuickReplyResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{97}
+}
+
+// 刷新常用回复请求
+// 一周刷新一次，一端刷新其他端等待同步
+type RefreshFrequentRepliesReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	PlatformID    int32                  `protobuf:"varint,2,opt,name=platformID,proto3" json:"platformID"` // 发起刷新的平台ID
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshFrequentRepliesReq) Reset() {
+	*x = RefreshFrequentRepliesReq{}
+	mi := &file_user_user_proto_msgTypes[98]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshFrequentRepliesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshFrequentRepliesReq) ProtoMessage() {}
+
+func (x *RefreshFrequentRepliesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[98]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshFrequentRepliesReq.ProtoReflect.Descriptor instead.
+func (*RefreshFrequentRepliesReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{98}
+}
+
+func (x *RefreshFrequentRepliesReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *RefreshFrequentRepliesReq) GetPlatformID() int32 {
+	if x != nil {
+		return x.PlatformID
+	}
+	return 0
+}
+
+type RefreshFrequentRepliesResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	NeedRefresh     bool                   `protobuf:"varint,1,opt,name=needRefresh,proto3" json:"needRefresh"`         // 是否需要刷新（false表示其他端正在刷新或未到刷新周期）
+	IsRefreshing    bool                   `protobuf:"varint,2,opt,name=isRefreshing,proto3" json:"isRefreshing"`       // 是否有其他端正在刷新
+	LastRefreshTime int64                  `protobuf:"varint,3,opt,name=lastRefreshTime,proto3" json:"lastRefreshTime"` // 上次刷新时间
+	Replies         []*QuickReplyInfo      `protobuf:"bytes,4,rep,name=replies,proto3" json:"replies"`                  // 如果不需要刷新，返回当前列表
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *RefreshFrequentRepliesResp) Reset() {
+	*x = RefreshFrequentRepliesResp{}
+	mi := &file_user_user_proto_msgTypes[99]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshFrequentRepliesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshFrequentRepliesResp) ProtoMessage() {}
+
+func (x *RefreshFrequentRepliesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[99]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshFrequentRepliesResp.ProtoReflect.Descriptor instead.
+func (*RefreshFrequentRepliesResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{99}
+}
+
+func (x *RefreshFrequentRepliesResp) GetNeedRefresh() bool {
+	if x != nil {
+		return x.NeedRefresh
+	}
+	return false
+}
+
+func (x *RefreshFrequentRepliesResp) GetIsRefreshing() bool {
+	if x != nil {
+		return x.IsRefreshing
+	}
+	return false
+}
+
+func (x *RefreshFrequentRepliesResp) GetLastRefreshTime() int64 {
+	if x != nil {
+		return x.LastRefreshTime
+	}
+	return 0
+}
+
+func (x *RefreshFrequentRepliesResp) GetReplies() []*QuickReplyInfo {
+	if x != nil {
+		return x.Replies
+	}
+	return nil
+}
+
+// 提交刷新结果请求（刷新完成后调用）
+type SubmitRefreshResultReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	Replies       []*QuickReplyInfo      `protobuf:"bytes,2,rep,name=replies,proto3" json:"replies"` // 刷新后的常用回复列表
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitRefreshResultReq) Reset() {
+	*x = SubmitRefreshResultReq{}
+	mi := &file_user_user_proto_msgTypes[100]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitRefreshResultReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitRefreshResultReq) ProtoMessage() {}
+
+func (x *SubmitRefreshResultReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[100]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitRefreshResultReq.ProtoReflect.Descriptor instead.
+func (*SubmitRefreshResultReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{100}
+}
+
+func (x *SubmitRefreshResultReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *SubmitRefreshResultReq) GetReplies() []*QuickReplyInfo {
+	if x != nil {
+		return x.Replies
+	}
+	return nil
+}
+
+type SubmitRefreshResultResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshTime   int64                  `protobuf:"varint,1,opt,name=refreshTime,proto3" json:"refreshTime"` // 刷新完成时间
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitRefreshResultResp) Reset() {
+	*x = SubmitRefreshResultResp{}
+	mi := &file_user_user_proto_msgTypes[101]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitRefreshResultResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitRefreshResultResp) ProtoMessage() {}
+
+func (x *SubmitRefreshResultResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[101]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitRefreshResultResp.ProtoReflect.Descriptor instead.
+func (*SubmitRefreshResultResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{101}
+}
+
+func (x *SubmitRefreshResultResp) GetRefreshTime() int64 {
+	if x != nil {
+		return x.RefreshTime
+	}
+	return 0
+}
+
+// 获取刷新状态请求
+type GetRefreshStatusReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRefreshStatusReq) Reset() {
+	*x = GetRefreshStatusReq{}
+	mi := &file_user_user_proto_msgTypes[102]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRefreshStatusReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRefreshStatusReq) ProtoMessage() {}
+
+func (x *GetRefreshStatusReq) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[102]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRefreshStatusReq.ProtoReflect.Descriptor instead.
+func (*GetRefreshStatusReq) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{102}
+}
+
+func (x *GetRefreshStatusReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+type GetRefreshStatusResp struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	Status        *QuickReplyRefreshStatus `protobuf:"bytes,1,opt,name=status,proto3" json:"status"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRefreshStatusResp) Reset() {
+	*x = GetRefreshStatusResp{}
+	mi := &file_user_user_proto_msgTypes[103]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRefreshStatusResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRefreshStatusResp) ProtoMessage() {}
+
+func (x *GetRefreshStatusResp) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[103]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRefreshStatusResp.ProtoReflect.Descriptor instead.
+func (*GetRefreshStatusResp) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{103}
+}
+
+func (x *GetRefreshStatusResp) GetStatus() *QuickReplyRefreshStatus {
+	if x != nil {
+		return x.Status
+	}
+	return nil
+}
+
 type AccountCheckRespSingleUserStatus struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
@@ -4544,7 +5523,7 @@ type AccountCheckRespSingleUserStatus struct {
 
 func (x *AccountCheckRespSingleUserStatus) Reset() {
 	*x = AccountCheckRespSingleUserStatus{}
-	mi := &file_user_user_proto_msgTypes[86]
+	mi := &file_user_user_proto_msgTypes[104]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4556,7 +5535,7 @@ func (x *AccountCheckRespSingleUserStatus) String() string {
 func (*AccountCheckRespSingleUserStatus) ProtoMessage() {}
 
 func (x *AccountCheckRespSingleUserStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_user_user_proto_msgTypes[86]
+	mi := &file_user_user_proto_msgTypes[104]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4910,7 +5889,72 @@ const file_user_user_proto_rawDesc = "" +
 	"\x13getAllUserEmojisReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\"M\n" +
 	"\x14getAllUserEmojisResp\x125\n" +
-	"\x06emojis\x18\x01 \x03(\v2\x1d.openim.user.getUserEmojiRespR\x06emojis2\xdd\x19\n" +
+	"\x06emojis\x18\x01 \x03(\v2\x1d.openim.user.getUserEmojiRespR\x06emojis\"\xc4\x02\n" +
+	"\x0eQuickReplyInfo\x12\x18\n" +
+	"\areplyID\x18\x01 \x01(\tR\areplyID\x12 \n" +
+	"\vownerUserID\x18\x02 \x01(\tR\vownerUserID\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1c\n" +
+	"\treplyType\x18\x04 \x01(\x05R\treplyType\x12\x1a\n" +
+	"\buseCount\x18\x05 \x01(\x03R\buseCount\x12\x1a\n" +
+	"\bisPinned\x18\x06 \x01(\bR\bisPinned\x12\x18\n" +
+	"\apinTime\x18\a \x01(\x03R\apinTime\x12\x1c\n" +
+	"\tsortOrder\x18\b \x01(\x05R\tsortOrder\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\t \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\n" +
+	" \x01(\x03R\n" +
+	"updateTime\x12\x0e\n" +
+	"\x02ex\x18\v \x01(\tR\x02ex\"\xad\x01\n" +
+	"\x17QuickReplyRefreshStatus\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\"\n" +
+	"\fisRefreshing\x18\x02 \x01(\bR\fisRefreshing\x12(\n" +
+	"\x0flastRefreshTime\x18\x03 \x01(\x03R\x0flastRefreshTime\x12,\n" +
+	"\x11refreshByPlatform\x18\x04 \x01(\tR\x11refreshByPlatform\"J\n" +
+	"\x12getQuickRepliesReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1c\n" +
+	"\treplyType\x18\x02 \x01(\x05R\treplyType\"v\n" +
+	"\x13getQuickRepliesResp\x125\n" +
+	"\areplies\x18\x01 \x03(\v2\x1b.openim.user.QuickReplyInfoR\areplies\x12(\n" +
+	"\x0flastRefreshTime\x18\x02 \x01(\x03R\x0flastRefreshTime\"-\n" +
+	"\x13syncQuickRepliesReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\"w\n" +
+	"\x14syncQuickRepliesResp\x125\n" +
+	"\areplies\x18\x01 \x03(\v2\x1b.openim.user.QuickReplyInfoR\areplies\x12(\n" +
+	"\x0flastRefreshTime\x18\x02 \x01(\x03R\x0flastRefreshTime\"H\n" +
+	"\x13upsertQuickReplyReq\x121\n" +
+	"\x05reply\x18\x01 \x01(\v2\x1b.openim.user.QuickReplyInfoR\x05reply\"I\n" +
+	"\x14upsertQuickReplyResp\x121\n" +
+	"\x05reply\x18\x01 \x01(\v2\x1b.openim.user.QuickReplyInfoR\x05reply\"G\n" +
+	"\x13deleteQuickReplyReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
+	"\areplyID\x18\x02 \x01(\tR\areplyID\"\x16\n" +
+	"\x14deleteQuickReplyResp\"`\n" +
+	"\x10pinQuickReplyReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
+	"\areplyID\x18\x02 \x01(\tR\areplyID\x12\x1a\n" +
+	"\bisPinned\x18\x03 \x01(\bR\bisPinned\"\x13\n" +
+	"\x11pinQuickReplyResp\"S\n" +
+	"\x19refreshFrequentRepliesReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1e\n" +
+	"\n" +
+	"platformID\x18\x02 \x01(\x05R\n" +
+	"platformID\"\xc3\x01\n" +
+	"\x1arefreshFrequentRepliesResp\x12 \n" +
+	"\vneedRefresh\x18\x01 \x01(\bR\vneedRefresh\x12\"\n" +
+	"\fisRefreshing\x18\x02 \x01(\bR\fisRefreshing\x12(\n" +
+	"\x0flastRefreshTime\x18\x03 \x01(\x03R\x0flastRefreshTime\x125\n" +
+	"\areplies\x18\x04 \x03(\v2\x1b.openim.user.QuickReplyInfoR\areplies\"g\n" +
+	"\x16submitRefreshResultReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x125\n" +
+	"\areplies\x18\x02 \x03(\v2\x1b.openim.user.QuickReplyInfoR\areplies\";\n" +
+	"\x17submitRefreshResultResp\x12 \n" +
+	"\vrefreshTime\x18\x01 \x01(\x03R\vrefreshTime\"-\n" +
+	"\x13getRefreshStatusReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\"T\n" +
+	"\x14getRefreshStatusResp\x12<\n" +
+	"\x06status\x18\x01 \x01(\v2$.openim.user.QuickReplyRefreshStatusR\x06status2\xb4\x1f\n" +
 	"\x04user\x12Z\n" +
 	"\x11getDesignateUsers\x12!.openim.user.getDesignateUsersReq\x1a\".openim.user.getDesignateUsersResp\x12Q\n" +
 	"\x0eupdateUserInfo\x12\x1e.openim.user.updateUserInfoReq\x1a\x1f.openim.user.updateUserInfoResp\x12W\n" +
@@ -4945,7 +5989,15 @@ const file_user_user_proto_rawDesc = "" +
 	"\rsaveUserEmoji\x12\x1d.openim.user.saveUserEmojiReq\x1a\x1e.openim.user.saveUserEmojiResp\x12T\n" +
 	"\x0fdeleteUserEmoji\x12\x1f.openim.user.deleteUserEmojiReq\x1a .openim.user.deleteUserEmojiResp\x12K\n" +
 	"\fgetUserEmoji\x12\x1c.openim.user.getUserEmojiReq\x1a\x1d.openim.user.getUserEmojiResp\x12W\n" +
-	"\x10getAllUserEmojis\x12 .openim.user.getAllUserEmojisReq\x1a!.openim.user.getAllUserEmojisRespB$Z\"github.com/openimsdk/protocol/userb\x06proto3"
+	"\x10getAllUserEmojis\x12 .openim.user.getAllUserEmojisReq\x1a!.openim.user.getAllUserEmojisResp\x12T\n" +
+	"\x0fgetQuickReplies\x12\x1f.openim.user.getQuickRepliesReq\x1a .openim.user.getQuickRepliesResp\x12W\n" +
+	"\x10syncQuickReplies\x12 .openim.user.syncQuickRepliesReq\x1a!.openim.user.syncQuickRepliesResp\x12W\n" +
+	"\x10upsertQuickReply\x12 .openim.user.upsertQuickReplyReq\x1a!.openim.user.upsertQuickReplyResp\x12W\n" +
+	"\x10deleteQuickReply\x12 .openim.user.deleteQuickReplyReq\x1a!.openim.user.deleteQuickReplyResp\x12N\n" +
+	"\rpinQuickReply\x12\x1d.openim.user.pinQuickReplyReq\x1a\x1e.openim.user.pinQuickReplyResp\x12i\n" +
+	"\x16refreshFrequentReplies\x12&.openim.user.refreshFrequentRepliesReq\x1a'.openim.user.refreshFrequentRepliesResp\x12`\n" +
+	"\x13submitRefreshResult\x12#.openim.user.submitRefreshResultReq\x1a$.openim.user.submitRefreshResultResp\x12W\n" +
+	"\x10getRefreshStatus\x12 .openim.user.getRefreshStatusReq\x1a!.openim.user.getRefreshStatusRespB$Z\"github.com/openimsdk/protocol/userb\x06proto3"
 
 var (
 	file_user_user_proto_rawDescOnce sync.Once
@@ -4959,7 +6011,7 @@ func file_user_user_proto_rawDescGZIP() []byte {
 	return file_user_user_proto_rawDescData
 }
 
-var file_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 91)
+var file_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 109)
 var file_user_user_proto_goTypes = []any{
 	(*GetAllUserIDReq)(nil),                   // 0: openim.user.getAllUserIDReq
 	(*GetAllUserIDResp)(nil),                  // 1: openim.user.getAllUserIDResp
@@ -5047,126 +6099,167 @@ var file_user_user_proto_goTypes = []any{
 	(*GetUserEmojiResp)(nil),                  // 83: openim.user.getUserEmojiResp
 	(*GetAllUserEmojisReq)(nil),               // 84: openim.user.getAllUserEmojisReq
 	(*GetAllUserEmojisResp)(nil),              // 85: openim.user.getAllUserEmojisResp
-	(*AccountCheckRespSingleUserStatus)(nil),  // 86: openim.user.accountCheckResp.singleUserStatus
-	nil,                                       // 87: openim.user.userRegisterCountResp.CountEntry
-	nil,                                       // 88: openim.user.sortQueryReq.UserIDNameEntry
-	nil,                                       // 89: openim.user.getUserClientConfigResp.ConfigsEntry
-	nil,                                       // 90: openim.user.setUserClientConfigReq.ConfigsEntry
-	(*sdkws.RequestPagination)(nil),           // 91: openim.sdkws.RequestPagination
-	(*sdkws.UserInfo)(nil),                    // 92: openim.sdkws.UserInfo
-	(*sdkws.UserInfoWithEx)(nil),              // 93: openim.sdkws.UserInfoWithEx
-	(*conversation.Conversation)(nil),         // 94: openim.conversation.Conversation
-	(*wrapperspb.StringValue)(nil),            // 95: openim.protobuf.StringValue
+	(*QuickReplyInfo)(nil),                    // 86: openim.user.QuickReplyInfo
+	(*QuickReplyRefreshStatus)(nil),           // 87: openim.user.QuickReplyRefreshStatus
+	(*GetQuickRepliesReq)(nil),                // 88: openim.user.getQuickRepliesReq
+	(*GetQuickRepliesResp)(nil),               // 89: openim.user.getQuickRepliesResp
+	(*SyncQuickRepliesReq)(nil),               // 90: openim.user.syncQuickRepliesReq
+	(*SyncQuickRepliesResp)(nil),              // 91: openim.user.syncQuickRepliesResp
+	(*UpsertQuickReplyReq)(nil),               // 92: openim.user.upsertQuickReplyReq
+	(*UpsertQuickReplyResp)(nil),              // 93: openim.user.upsertQuickReplyResp
+	(*DeleteQuickReplyReq)(nil),               // 94: openim.user.deleteQuickReplyReq
+	(*DeleteQuickReplyResp)(nil),              // 95: openim.user.deleteQuickReplyResp
+	(*PinQuickReplyReq)(nil),                  // 96: openim.user.pinQuickReplyReq
+	(*PinQuickReplyResp)(nil),                 // 97: openim.user.pinQuickReplyResp
+	(*RefreshFrequentRepliesReq)(nil),         // 98: openim.user.refreshFrequentRepliesReq
+	(*RefreshFrequentRepliesResp)(nil),        // 99: openim.user.refreshFrequentRepliesResp
+	(*SubmitRefreshResultReq)(nil),            // 100: openim.user.submitRefreshResultReq
+	(*SubmitRefreshResultResp)(nil),           // 101: openim.user.submitRefreshResultResp
+	(*GetRefreshStatusReq)(nil),               // 102: openim.user.getRefreshStatusReq
+	(*GetRefreshStatusResp)(nil),              // 103: openim.user.getRefreshStatusResp
+	(*AccountCheckRespSingleUserStatus)(nil),  // 104: openim.user.accountCheckResp.singleUserStatus
+	nil,                                       // 105: openim.user.userRegisterCountResp.CountEntry
+	nil,                                       // 106: openim.user.sortQueryReq.UserIDNameEntry
+	nil,                                       // 107: openim.user.getUserClientConfigResp.ConfigsEntry
+	nil,                                       // 108: openim.user.setUserClientConfigReq.ConfigsEntry
+	(*sdkws.RequestPagination)(nil),           // 109: openim.sdkws.RequestPagination
+	(*sdkws.UserInfo)(nil),                    // 110: openim.sdkws.UserInfo
+	(*sdkws.UserInfoWithEx)(nil),              // 111: openim.sdkws.UserInfoWithEx
+	(*conversation.Conversation)(nil),         // 112: openim.conversation.Conversation
+	(*wrapperspb.StringValue)(nil),            // 113: openim.protobuf.StringValue
 }
 var file_user_user_proto_depIdxs = []int32{
-	91, // 0: openim.user.getAllUserIDReq.pagination:type_name -> openim.sdkws.RequestPagination
-	86, // 1: openim.user.accountCheckResp.results:type_name -> openim.user.accountCheckResp.singleUserStatus
-	92, // 2: openim.user.getDesignateUsersResp.usersInfo:type_name -> openim.sdkws.UserInfo
-	92, // 3: openim.user.updateUserInfoReq.userInfo:type_name -> openim.sdkws.UserInfo
-	93, // 4: openim.user.updateUserInfoExReq.userInfo:type_name -> openim.sdkws.UserInfoWithEx
-	94, // 5: openim.user.setConversationReq.conversation:type_name -> openim.conversation.Conversation
-	94, // 6: openim.user.getConversationResp.conversation:type_name -> openim.conversation.Conversation
-	94, // 7: openim.user.getConversationsResp.conversations:type_name -> openim.conversation.Conversation
-	94, // 8: openim.user.getAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
-	94, // 9: openim.user.batchSetConversationsReq.conversations:type_name -> openim.conversation.Conversation
-	91, // 10: openim.user.getPaginationUsersReq.pagination:type_name -> openim.sdkws.RequestPagination
-	92, // 11: openim.user.getPaginationUsersResp.users:type_name -> openim.sdkws.UserInfo
-	92, // 12: openim.user.userRegisterReq.users:type_name -> openim.sdkws.UserInfo
-	87, // 13: openim.user.userRegisterCountResp.count:type_name -> openim.user.userRegisterCountResp.CountEntry
-	36, // 14: openim.user.subscribeOrCancelUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
-	36, // 15: openim.user.getSubscribeUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
-	36, // 16: openim.user.getUserStatusResp.statusList:type_name -> openim.user.onlineStatus
-	41, // 17: openim.user.setUserOnlineStatusReq.status:type_name -> openim.user.userOnlineStatus
-	95, // 18: openim.user.processUserCommandAddReq.value:type_name -> openim.protobuf.StringValue
-	95, // 19: openim.user.processUserCommandAddReq.ex:type_name -> openim.protobuf.StringValue
-	95, // 20: openim.user.processUserCommandUpdateReq.value:type_name -> openim.protobuf.StringValue
-	95, // 21: openim.user.processUserCommandUpdateReq.ex:type_name -> openim.protobuf.StringValue
-	51, // 22: openim.user.processUserCommandGetResp.CommandResp:type_name -> openim.user.CommandInfoResp
-	54, // 23: openim.user.processUserCommandGetAllResp.CommandResp:type_name -> openim.user.AllCommandInfoResp
-	91, // 24: openim.user.searchNotificationAccountReq.pagination:type_name -> openim.sdkws.RequestPagination
-	61, // 25: openim.user.searchNotificationAccountResp.notificationAccounts:type_name -> openim.user.notificationAccountInfo
-	61, // 26: openim.user.getNotificationAccountResp.account:type_name -> openim.user.notificationAccountInfo
-	88, // 27: openim.user.sortQueryReq.userIDName:type_name -> openim.user.sortQueryReq.UserIDNameEntry
-	92, // 28: openim.user.sortQueryResp.users:type_name -> openim.sdkws.UserInfo
-	36, // 29: openim.user.getAllOnlineUsersResp.StatusList:type_name -> openim.user.onlineStatus
-	89, // 30: openim.user.getUserClientConfigResp.configs:type_name -> openim.user.getUserClientConfigResp.ConfigsEntry
-	90, // 31: openim.user.setUserClientConfigReq.configs:type_name -> openim.user.setUserClientConfigReq.ConfigsEntry
-	91, // 32: openim.user.pageUserClientConfigReq.pagination:type_name -> openim.sdkws.RequestPagination
-	77, // 33: openim.user.pageUserClientConfigResp.configs:type_name -> openim.user.clientConfig
-	83, // 34: openim.user.getAllUserEmojisResp.emojis:type_name -> openim.user.getUserEmojiResp
-	4,  // 35: openim.user.user.getDesignateUsers:input_type -> openim.user.getDesignateUsersReq
-	6,  // 36: openim.user.user.updateUserInfo:input_type -> openim.user.updateUserInfoReq
-	8,  // 37: openim.user.user.updateUserInfoEx:input_type -> openim.user.updateUserInfoExReq
-	10, // 38: openim.user.user.setGlobalRecvMessageOpt:input_type -> openim.user.setGlobalRecvMessageOptReq
-	28, // 39: openim.user.user.getGlobalRecvMessageOpt:input_type -> openim.user.getGlobalRecvMessageOptReq
-	2,  // 40: openim.user.user.accountCheck:input_type -> openim.user.accountCheckReq
-	24, // 41: openim.user.user.getPaginationUsers:input_type -> openim.user.getPaginationUsersReq
-	26, // 42: openim.user.user.userRegister:input_type -> openim.user.userRegisterReq
-	0,  // 43: openim.user.user.getAllUserID:input_type -> openim.user.getAllUserIDReq
-	30, // 44: openim.user.user.userRegisterCount:input_type -> openim.user.userRegisterCountReq
-	32, // 45: openim.user.user.subscribeOrCancelUsersStatus:input_type -> openim.user.subscribeOrCancelUsersStatusReq
-	34, // 46: openim.user.user.getSubscribeUsersStatus:input_type -> openim.user.getSubscribeUsersStatusReq
-	37, // 47: openim.user.user.getUserStatus:input_type -> openim.user.getUserStatusReq
-	39, // 48: openim.user.user.setUserStatus:input_type -> openim.user.setUserStatusReq
-	44, // 49: openim.user.user.processUserCommandAdd:input_type -> openim.user.processUserCommandAddReq
-	48, // 50: openim.user.user.processUserCommandUpdate:input_type -> openim.user.processUserCommandUpdateReq
-	46, // 51: openim.user.user.processUserCommandDelete:input_type -> openim.user.processUserCommandDeleteReq
-	50, // 52: openim.user.user.processUserCommandGet:input_type -> openim.user.processUserCommandGetReq
-	53, // 53: openim.user.user.processUserCommandGetAll:input_type -> openim.user.processUserCommandGetAllReq
-	56, // 54: openim.user.user.addNotificationAccount:input_type -> openim.user.addNotificationAccountReq
-	58, // 55: openim.user.user.updateNotificationAccountInfo:input_type -> openim.user.updateNotificationAccountInfoReq
-	60, // 56: openim.user.user.searchNotificationAccount:input_type -> openim.user.searchNotificationAccountReq
-	63, // 57: openim.user.user.getNotificationAccount:input_type -> openim.user.getNotificationAccountReq
-	65, // 58: openim.user.user.sortQuery:input_type -> openim.user.sortQueryReq
-	42, // 59: openim.user.user.setUserOnlineStatus:input_type -> openim.user.setUserOnlineStatusReq
-	67, // 60: openim.user.user.getAllOnlineUsers:input_type -> openim.user.getAllOnlineUsersReq
-	69, // 61: openim.user.user.getUserClientConfig:input_type -> openim.user.getUserClientConfigReq
-	71, // 62: openim.user.user.setUserClientConfig:input_type -> openim.user.setUserClientConfigReq
-	73, // 63: openim.user.user.delUserClientConfig:input_type -> openim.user.delUserClientConfigReq
-	75, // 64: openim.user.user.pageUserClientConfig:input_type -> openim.user.pageUserClientConfigReq
-	78, // 65: openim.user.user.saveUserEmoji:input_type -> openim.user.saveUserEmojiReq
-	80, // 66: openim.user.user.deleteUserEmoji:input_type -> openim.user.deleteUserEmojiReq
-	82, // 67: openim.user.user.getUserEmoji:input_type -> openim.user.getUserEmojiReq
-	84, // 68: openim.user.user.getAllUserEmojis:input_type -> openim.user.getAllUserEmojisReq
-	5,  // 69: openim.user.user.getDesignateUsers:output_type -> openim.user.getDesignateUsersResp
-	7,  // 70: openim.user.user.updateUserInfo:output_type -> openim.user.updateUserInfoResp
-	9,  // 71: openim.user.user.updateUserInfoEx:output_type -> openim.user.updateUserInfoExResp
-	11, // 72: openim.user.user.setGlobalRecvMessageOpt:output_type -> openim.user.setGlobalRecvMessageOptResp
-	29, // 73: openim.user.user.getGlobalRecvMessageOpt:output_type -> openim.user.getGlobalRecvMessageOptResp
-	3,  // 74: openim.user.user.accountCheck:output_type -> openim.user.accountCheckResp
-	25, // 75: openim.user.user.getPaginationUsers:output_type -> openim.user.getPaginationUsersResp
-	27, // 76: openim.user.user.userRegister:output_type -> openim.user.userRegisterResp
-	1,  // 77: openim.user.user.getAllUserID:output_type -> openim.user.getAllUserIDResp
-	31, // 78: openim.user.user.userRegisterCount:output_type -> openim.user.userRegisterCountResp
-	33, // 79: openim.user.user.subscribeOrCancelUsersStatus:output_type -> openim.user.subscribeOrCancelUsersStatusResp
-	35, // 80: openim.user.user.getSubscribeUsersStatus:output_type -> openim.user.getSubscribeUsersStatusResp
-	38, // 81: openim.user.user.getUserStatus:output_type -> openim.user.getUserStatusResp
-	40, // 82: openim.user.user.setUserStatus:output_type -> openim.user.setUserStatusResp
-	45, // 83: openim.user.user.processUserCommandAdd:output_type -> openim.user.processUserCommandAddResp
-	49, // 84: openim.user.user.processUserCommandUpdate:output_type -> openim.user.processUserCommandUpdateResp
-	47, // 85: openim.user.user.processUserCommandDelete:output_type -> openim.user.processUserCommandDeleteResp
-	52, // 86: openim.user.user.processUserCommandGet:output_type -> openim.user.processUserCommandGetResp
-	55, // 87: openim.user.user.processUserCommandGetAll:output_type -> openim.user.processUserCommandGetAllResp
-	57, // 88: openim.user.user.addNotificationAccount:output_type -> openim.user.addNotificationAccountResp
-	59, // 89: openim.user.user.updateNotificationAccountInfo:output_type -> openim.user.updateNotificationAccountInfoResp
-	62, // 90: openim.user.user.searchNotificationAccount:output_type -> openim.user.searchNotificationAccountResp
-	64, // 91: openim.user.user.getNotificationAccount:output_type -> openim.user.getNotificationAccountResp
-	66, // 92: openim.user.user.sortQuery:output_type -> openim.user.sortQueryResp
-	43, // 93: openim.user.user.setUserOnlineStatus:output_type -> openim.user.setUserOnlineStatusResp
-	68, // 94: openim.user.user.getAllOnlineUsers:output_type -> openim.user.getAllOnlineUsersResp
-	70, // 95: openim.user.user.getUserClientConfig:output_type -> openim.user.getUserClientConfigResp
-	72, // 96: openim.user.user.setUserClientConfig:output_type -> openim.user.setUserClientConfigResp
-	74, // 97: openim.user.user.delUserClientConfig:output_type -> openim.user.delUserClientConfigResp
-	76, // 98: openim.user.user.pageUserClientConfig:output_type -> openim.user.pageUserClientConfigResp
-	79, // 99: openim.user.user.saveUserEmoji:output_type -> openim.user.saveUserEmojiResp
-	81, // 100: openim.user.user.deleteUserEmoji:output_type -> openim.user.deleteUserEmojiResp
-	83, // 101: openim.user.user.getUserEmoji:output_type -> openim.user.getUserEmojiResp
-	85, // 102: openim.user.user.getAllUserEmojis:output_type -> openim.user.getAllUserEmojisResp
-	69, // [69:103] is the sub-list for method output_type
-	35, // [35:69] is the sub-list for method input_type
-	35, // [35:35] is the sub-list for extension type_name
-	35, // [35:35] is the sub-list for extension extendee
-	0,  // [0:35] is the sub-list for field type_name
+	109, // 0: openim.user.getAllUserIDReq.pagination:type_name -> openim.sdkws.RequestPagination
+	104, // 1: openim.user.accountCheckResp.results:type_name -> openim.user.accountCheckResp.singleUserStatus
+	110, // 2: openim.user.getDesignateUsersResp.usersInfo:type_name -> openim.sdkws.UserInfo
+	110, // 3: openim.user.updateUserInfoReq.userInfo:type_name -> openim.sdkws.UserInfo
+	111, // 4: openim.user.updateUserInfoExReq.userInfo:type_name -> openim.sdkws.UserInfoWithEx
+	112, // 5: openim.user.setConversationReq.conversation:type_name -> openim.conversation.Conversation
+	112, // 6: openim.user.getConversationResp.conversation:type_name -> openim.conversation.Conversation
+	112, // 7: openim.user.getConversationsResp.conversations:type_name -> openim.conversation.Conversation
+	112, // 8: openim.user.getAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
+	112, // 9: openim.user.batchSetConversationsReq.conversations:type_name -> openim.conversation.Conversation
+	109, // 10: openim.user.getPaginationUsersReq.pagination:type_name -> openim.sdkws.RequestPagination
+	110, // 11: openim.user.getPaginationUsersResp.users:type_name -> openim.sdkws.UserInfo
+	110, // 12: openim.user.userRegisterReq.users:type_name -> openim.sdkws.UserInfo
+	105, // 13: openim.user.userRegisterCountResp.count:type_name -> openim.user.userRegisterCountResp.CountEntry
+	36,  // 14: openim.user.subscribeOrCancelUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
+	36,  // 15: openim.user.getSubscribeUsersStatusResp.statusList:type_name -> openim.user.onlineStatus
+	36,  // 16: openim.user.getUserStatusResp.statusList:type_name -> openim.user.onlineStatus
+	41,  // 17: openim.user.setUserOnlineStatusReq.status:type_name -> openim.user.userOnlineStatus
+	113, // 18: openim.user.processUserCommandAddReq.value:type_name -> openim.protobuf.StringValue
+	113, // 19: openim.user.processUserCommandAddReq.ex:type_name -> openim.protobuf.StringValue
+	113, // 20: openim.user.processUserCommandUpdateReq.value:type_name -> openim.protobuf.StringValue
+	113, // 21: openim.user.processUserCommandUpdateReq.ex:type_name -> openim.protobuf.StringValue
+	51,  // 22: openim.user.processUserCommandGetResp.CommandResp:type_name -> openim.user.CommandInfoResp
+	54,  // 23: openim.user.processUserCommandGetAllResp.CommandResp:type_name -> openim.user.AllCommandInfoResp
+	109, // 24: openim.user.searchNotificationAccountReq.pagination:type_name -> openim.sdkws.RequestPagination
+	61,  // 25: openim.user.searchNotificationAccountResp.notificationAccounts:type_name -> openim.user.notificationAccountInfo
+	61,  // 26: openim.user.getNotificationAccountResp.account:type_name -> openim.user.notificationAccountInfo
+	106, // 27: openim.user.sortQueryReq.userIDName:type_name -> openim.user.sortQueryReq.UserIDNameEntry
+	110, // 28: openim.user.sortQueryResp.users:type_name -> openim.sdkws.UserInfo
+	36,  // 29: openim.user.getAllOnlineUsersResp.StatusList:type_name -> openim.user.onlineStatus
+	107, // 30: openim.user.getUserClientConfigResp.configs:type_name -> openim.user.getUserClientConfigResp.ConfigsEntry
+	108, // 31: openim.user.setUserClientConfigReq.configs:type_name -> openim.user.setUserClientConfigReq.ConfigsEntry
+	109, // 32: openim.user.pageUserClientConfigReq.pagination:type_name -> openim.sdkws.RequestPagination
+	77,  // 33: openim.user.pageUserClientConfigResp.configs:type_name -> openim.user.clientConfig
+	83,  // 34: openim.user.getAllUserEmojisResp.emojis:type_name -> openim.user.getUserEmojiResp
+	86,  // 35: openim.user.getQuickRepliesResp.replies:type_name -> openim.user.QuickReplyInfo
+	86,  // 36: openim.user.syncQuickRepliesResp.replies:type_name -> openim.user.QuickReplyInfo
+	86,  // 37: openim.user.upsertQuickReplyReq.reply:type_name -> openim.user.QuickReplyInfo
+	86,  // 38: openim.user.upsertQuickReplyResp.reply:type_name -> openim.user.QuickReplyInfo
+	86,  // 39: openim.user.refreshFrequentRepliesResp.replies:type_name -> openim.user.QuickReplyInfo
+	86,  // 40: openim.user.submitRefreshResultReq.replies:type_name -> openim.user.QuickReplyInfo
+	87,  // 41: openim.user.getRefreshStatusResp.status:type_name -> openim.user.QuickReplyRefreshStatus
+	4,   // 42: openim.user.user.getDesignateUsers:input_type -> openim.user.getDesignateUsersReq
+	6,   // 43: openim.user.user.updateUserInfo:input_type -> openim.user.updateUserInfoReq
+	8,   // 44: openim.user.user.updateUserInfoEx:input_type -> openim.user.updateUserInfoExReq
+	10,  // 45: openim.user.user.setGlobalRecvMessageOpt:input_type -> openim.user.setGlobalRecvMessageOptReq
+	28,  // 46: openim.user.user.getGlobalRecvMessageOpt:input_type -> openim.user.getGlobalRecvMessageOptReq
+	2,   // 47: openim.user.user.accountCheck:input_type -> openim.user.accountCheckReq
+	24,  // 48: openim.user.user.getPaginationUsers:input_type -> openim.user.getPaginationUsersReq
+	26,  // 49: openim.user.user.userRegister:input_type -> openim.user.userRegisterReq
+	0,   // 50: openim.user.user.getAllUserID:input_type -> openim.user.getAllUserIDReq
+	30,  // 51: openim.user.user.userRegisterCount:input_type -> openim.user.userRegisterCountReq
+	32,  // 52: openim.user.user.subscribeOrCancelUsersStatus:input_type -> openim.user.subscribeOrCancelUsersStatusReq
+	34,  // 53: openim.user.user.getSubscribeUsersStatus:input_type -> openim.user.getSubscribeUsersStatusReq
+	37,  // 54: openim.user.user.getUserStatus:input_type -> openim.user.getUserStatusReq
+	39,  // 55: openim.user.user.setUserStatus:input_type -> openim.user.setUserStatusReq
+	44,  // 56: openim.user.user.processUserCommandAdd:input_type -> openim.user.processUserCommandAddReq
+	48,  // 57: openim.user.user.processUserCommandUpdate:input_type -> openim.user.processUserCommandUpdateReq
+	46,  // 58: openim.user.user.processUserCommandDelete:input_type -> openim.user.processUserCommandDeleteReq
+	50,  // 59: openim.user.user.processUserCommandGet:input_type -> openim.user.processUserCommandGetReq
+	53,  // 60: openim.user.user.processUserCommandGetAll:input_type -> openim.user.processUserCommandGetAllReq
+	56,  // 61: openim.user.user.addNotificationAccount:input_type -> openim.user.addNotificationAccountReq
+	58,  // 62: openim.user.user.updateNotificationAccountInfo:input_type -> openim.user.updateNotificationAccountInfoReq
+	60,  // 63: openim.user.user.searchNotificationAccount:input_type -> openim.user.searchNotificationAccountReq
+	63,  // 64: openim.user.user.getNotificationAccount:input_type -> openim.user.getNotificationAccountReq
+	65,  // 65: openim.user.user.sortQuery:input_type -> openim.user.sortQueryReq
+	42,  // 66: openim.user.user.setUserOnlineStatus:input_type -> openim.user.setUserOnlineStatusReq
+	67,  // 67: openim.user.user.getAllOnlineUsers:input_type -> openim.user.getAllOnlineUsersReq
+	69,  // 68: openim.user.user.getUserClientConfig:input_type -> openim.user.getUserClientConfigReq
+	71,  // 69: openim.user.user.setUserClientConfig:input_type -> openim.user.setUserClientConfigReq
+	73,  // 70: openim.user.user.delUserClientConfig:input_type -> openim.user.delUserClientConfigReq
+	75,  // 71: openim.user.user.pageUserClientConfig:input_type -> openim.user.pageUserClientConfigReq
+	78,  // 72: openim.user.user.saveUserEmoji:input_type -> openim.user.saveUserEmojiReq
+	80,  // 73: openim.user.user.deleteUserEmoji:input_type -> openim.user.deleteUserEmojiReq
+	82,  // 74: openim.user.user.getUserEmoji:input_type -> openim.user.getUserEmojiReq
+	84,  // 75: openim.user.user.getAllUserEmojis:input_type -> openim.user.getAllUserEmojisReq
+	88,  // 76: openim.user.user.getQuickReplies:input_type -> openim.user.getQuickRepliesReq
+	90,  // 77: openim.user.user.syncQuickReplies:input_type -> openim.user.syncQuickRepliesReq
+	92,  // 78: openim.user.user.upsertQuickReply:input_type -> openim.user.upsertQuickReplyReq
+	94,  // 79: openim.user.user.deleteQuickReply:input_type -> openim.user.deleteQuickReplyReq
+	96,  // 80: openim.user.user.pinQuickReply:input_type -> openim.user.pinQuickReplyReq
+	98,  // 81: openim.user.user.refreshFrequentReplies:input_type -> openim.user.refreshFrequentRepliesReq
+	100, // 82: openim.user.user.submitRefreshResult:input_type -> openim.user.submitRefreshResultReq
+	102, // 83: openim.user.user.getRefreshStatus:input_type -> openim.user.getRefreshStatusReq
+	5,   // 84: openim.user.user.getDesignateUsers:output_type -> openim.user.getDesignateUsersResp
+	7,   // 85: openim.user.user.updateUserInfo:output_type -> openim.user.updateUserInfoResp
+	9,   // 86: openim.user.user.updateUserInfoEx:output_type -> openim.user.updateUserInfoExResp
+	11,  // 87: openim.user.user.setGlobalRecvMessageOpt:output_type -> openim.user.setGlobalRecvMessageOptResp
+	29,  // 88: openim.user.user.getGlobalRecvMessageOpt:output_type -> openim.user.getGlobalRecvMessageOptResp
+	3,   // 89: openim.user.user.accountCheck:output_type -> openim.user.accountCheckResp
+	25,  // 90: openim.user.user.getPaginationUsers:output_type -> openim.user.getPaginationUsersResp
+	27,  // 91: openim.user.user.userRegister:output_type -> openim.user.userRegisterResp
+	1,   // 92: openim.user.user.getAllUserID:output_type -> openim.user.getAllUserIDResp
+	31,  // 93: openim.user.user.userRegisterCount:output_type -> openim.user.userRegisterCountResp
+	33,  // 94: openim.user.user.subscribeOrCancelUsersStatus:output_type -> openim.user.subscribeOrCancelUsersStatusResp
+	35,  // 95: openim.user.user.getSubscribeUsersStatus:output_type -> openim.user.getSubscribeUsersStatusResp
+	38,  // 96: openim.user.user.getUserStatus:output_type -> openim.user.getUserStatusResp
+	40,  // 97: openim.user.user.setUserStatus:output_type -> openim.user.setUserStatusResp
+	45,  // 98: openim.user.user.processUserCommandAdd:output_type -> openim.user.processUserCommandAddResp
+	49,  // 99: openim.user.user.processUserCommandUpdate:output_type -> openim.user.processUserCommandUpdateResp
+	47,  // 100: openim.user.user.processUserCommandDelete:output_type -> openim.user.processUserCommandDeleteResp
+	52,  // 101: openim.user.user.processUserCommandGet:output_type -> openim.user.processUserCommandGetResp
+	55,  // 102: openim.user.user.processUserCommandGetAll:output_type -> openim.user.processUserCommandGetAllResp
+	57,  // 103: openim.user.user.addNotificationAccount:output_type -> openim.user.addNotificationAccountResp
+	59,  // 104: openim.user.user.updateNotificationAccountInfo:output_type -> openim.user.updateNotificationAccountInfoResp
+	62,  // 105: openim.user.user.searchNotificationAccount:output_type -> openim.user.searchNotificationAccountResp
+	64,  // 106: openim.user.user.getNotificationAccount:output_type -> openim.user.getNotificationAccountResp
+	66,  // 107: openim.user.user.sortQuery:output_type -> openim.user.sortQueryResp
+	43,  // 108: openim.user.user.setUserOnlineStatus:output_type -> openim.user.setUserOnlineStatusResp
+	68,  // 109: openim.user.user.getAllOnlineUsers:output_type -> openim.user.getAllOnlineUsersResp
+	70,  // 110: openim.user.user.getUserClientConfig:output_type -> openim.user.getUserClientConfigResp
+	72,  // 111: openim.user.user.setUserClientConfig:output_type -> openim.user.setUserClientConfigResp
+	74,  // 112: openim.user.user.delUserClientConfig:output_type -> openim.user.delUserClientConfigResp
+	76,  // 113: openim.user.user.pageUserClientConfig:output_type -> openim.user.pageUserClientConfigResp
+	79,  // 114: openim.user.user.saveUserEmoji:output_type -> openim.user.saveUserEmojiResp
+	81,  // 115: openim.user.user.deleteUserEmoji:output_type -> openim.user.deleteUserEmojiResp
+	83,  // 116: openim.user.user.getUserEmoji:output_type -> openim.user.getUserEmojiResp
+	85,  // 117: openim.user.user.getAllUserEmojis:output_type -> openim.user.getAllUserEmojisResp
+	89,  // 118: openim.user.user.getQuickReplies:output_type -> openim.user.getQuickRepliesResp
+	91,  // 119: openim.user.user.syncQuickReplies:output_type -> openim.user.syncQuickRepliesResp
+	93,  // 120: openim.user.user.upsertQuickReply:output_type -> openim.user.upsertQuickReplyResp
+	95,  // 121: openim.user.user.deleteQuickReply:output_type -> openim.user.deleteQuickReplyResp
+	97,  // 122: openim.user.user.pinQuickReply:output_type -> openim.user.pinQuickReplyResp
+	99,  // 123: openim.user.user.refreshFrequentReplies:output_type -> openim.user.refreshFrequentRepliesResp
+	101, // 124: openim.user.user.submitRefreshResult:output_type -> openim.user.submitRefreshResultResp
+	103, // 125: openim.user.user.getRefreshStatus:output_type -> openim.user.getRefreshStatusResp
+	84,  // [84:126] is the sub-list for method output_type
+	42,  // [42:84] is the sub-list for method input_type
+	42,  // [42:42] is the sub-list for extension type_name
+	42,  // [42:42] is the sub-list for extension extendee
+	0,   // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_user_user_proto_init() }
@@ -5181,7 +6274,7 @@ func file_user_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_user_proto_rawDesc), len(file_user_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   91,
+			NumMessages:   109,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

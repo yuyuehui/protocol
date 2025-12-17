@@ -439,6 +439,111 @@ message getAllUserEmojisResp {
   repeated getUserEmojiResp emojis = 1;
 }
 
+// ==================== 快捷回复相关 ====================
+
+// 快捷回复信息
+message QuickReplyInfo {
+  string replyID = 1;       // 回复ID
+  string ownerUserID = 2;   // 用户ID
+  string content = 3;       // 回复内容
+  int32 replyType = 4;      // 回复类型: 0-常用, 1-AI推荐, 2-自定义
+  int64 useCount = 5;       // 使用次数
+  bool isPinned = 6;        // 是否置顶
+  int64 pinTime = 7;        // 置顶时间
+  int32 sortOrder = 8;      // 排序顺序
+  int64 createTime = 9;     // 创建时间
+  int64 updateTime = 10;    // 更新时间
+  string ex = 11;           // 扩展字段
+}
+
+// 快捷回复刷新状态
+message QuickReplyRefreshStatus {
+  string userID = 1;           // 用户ID
+  bool isRefreshing = 2;       // 是否正在刷新
+  int64 lastRefreshTime = 3;   // 上次刷新时间（Unix毫秒）
+  string refreshByPlatform = 4;// 正在刷新的平台
+}
+
+// 获取快捷回复列表请求
+message getQuickRepliesReq {
+  string userID = 1;
+  int32 replyType = 2;  // 可选，-1表示获取所有类型
+}
+
+message getQuickRepliesResp {
+  repeated QuickReplyInfo replies = 1;
+  int64 lastRefreshTime = 2;
+}
+
+// 同步快捷回复请求（SDK调用）
+message syncQuickRepliesReq {
+  string userID = 1;
+}
+
+message syncQuickRepliesResp {
+  repeated QuickReplyInfo replies = 1;
+  int64 lastRefreshTime = 2;
+}
+
+// 添加/更新快捷回复请求
+message upsertQuickReplyReq {
+  QuickReplyInfo reply = 1;
+}
+
+message upsertQuickReplyResp {
+  QuickReplyInfo reply = 1;
+}
+
+// 删除快捷回复请求
+message deleteQuickReplyReq {
+  string userID = 1;
+  string replyID = 2;
+}
+
+message deleteQuickReplyResp {}
+
+// 置顶快捷回复请求
+message pinQuickReplyReq {
+  string userID = 1;
+  string replyID = 2;
+  bool isPinned = 3;
+}
+
+message pinQuickReplyResp {}
+
+// 刷新常用回复请求
+// 一周刷新一次，一端刷新其他端等待同步
+message refreshFrequentRepliesReq {
+  string userID = 1;
+  int32 platformID = 2;  // 发起刷新的平台ID
+}
+
+message refreshFrequentRepliesResp {
+  bool needRefresh = 1;         // 是否需要刷新（false表示其他端正在刷新或未到刷新周期）
+  bool isRefreshing = 2;        // 是否有其他端正在刷新
+  int64 lastRefreshTime = 3;    // 上次刷新时间
+  repeated QuickReplyInfo replies = 4;  // 如果不需要刷新，返回当前列表
+}
+
+// 提交刷新结果请求（刷新完成后调用）
+message submitRefreshResultReq {
+  string userID = 1;
+  repeated QuickReplyInfo replies = 2;  // 刷新后的常用回复列表
+}
+
+message submitRefreshResultResp {
+  int64 refreshTime = 1;  // 刷新完成时间
+}
+
+// 获取刷新状态请求
+message getRefreshStatusReq {
+  string userID = 1;
+}
+
+message getRefreshStatusResp {
+  QuickReplyRefreshStatus status = 1;
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -507,4 +612,22 @@ service user {
   rpc getUserEmoji(getUserEmojiReq) returns (getUserEmojiResp);
 
   rpc getAllUserEmojis(getAllUserEmojisReq) returns (getAllUserEmojisResp);
+
+  // 快捷回复相关RPC
+  // 获取快捷回复列表
+  rpc getQuickReplies(getQuickRepliesReq) returns (getQuickRepliesResp);
+  // 同步快捷回复（多端同步）
+  rpc syncQuickReplies(syncQuickRepliesReq) returns (syncQuickRepliesResp);
+  // 添加/更新快捷回复
+  rpc upsertQuickReply(upsertQuickReplyReq) returns (upsertQuickReplyResp);
+  // 删除快捷回复
+  rpc deleteQuickReply(deleteQuickReplyReq) returns (deleteQuickReplyResp);
+  // 置顶快捷回复
+  rpc pinQuickReply(pinQuickReplyReq) returns (pinQuickReplyResp);
+  // 刷新常用回复（一周一次，带锁）
+  rpc refreshFrequentReplies(refreshFrequentRepliesReq) returns (refreshFrequentRepliesResp);
+  // 提交刷新结果
+  rpc submitRefreshResult(submitRefreshResultReq) returns (submitRefreshResultResp);
+  // 获取刷新状态
+  rpc getRefreshStatus(getRefreshStatusReq) returns (getRefreshStatusResp);
 }

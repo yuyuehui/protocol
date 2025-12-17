@@ -67,6 +67,14 @@ const (
 	User_DeleteUserEmoji_FullMethodName               = "/openim.user.user/deleteUserEmoji"
 	User_GetUserEmoji_FullMethodName                  = "/openim.user.user/getUserEmoji"
 	User_GetAllUserEmojis_FullMethodName              = "/openim.user.user/getAllUserEmojis"
+	User_GetQuickReplies_FullMethodName               = "/openim.user.user/getQuickReplies"
+	User_SyncQuickReplies_FullMethodName              = "/openim.user.user/syncQuickReplies"
+	User_UpsertQuickReply_FullMethodName              = "/openim.user.user/upsertQuickReply"
+	User_DeleteQuickReply_FullMethodName              = "/openim.user.user/deleteQuickReply"
+	User_PinQuickReply_FullMethodName                 = "/openim.user.user/pinQuickReply"
+	User_RefreshFrequentReplies_FullMethodName        = "/openim.user.user/refreshFrequentReplies"
+	User_SubmitRefreshResult_FullMethodName           = "/openim.user.user/submitRefreshResult"
+	User_GetRefreshStatus_FullMethodName              = "/openim.user.user/getRefreshStatus"
 )
 
 // UserClient is the client API for User service.
@@ -130,6 +138,23 @@ type UserClient interface {
 	DeleteUserEmoji(ctx context.Context, in *DeleteUserEmojiReq, opts ...grpc.CallOption) (*DeleteUserEmojiResp, error)
 	GetUserEmoji(ctx context.Context, in *GetUserEmojiReq, opts ...grpc.CallOption) (*GetUserEmojiResp, error)
 	GetAllUserEmojis(ctx context.Context, in *GetAllUserEmojisReq, opts ...grpc.CallOption) (*GetAllUserEmojisResp, error)
+	// 快捷回复相关RPC
+	// 获取快捷回复列表
+	GetQuickReplies(ctx context.Context, in *GetQuickRepliesReq, opts ...grpc.CallOption) (*GetQuickRepliesResp, error)
+	// 同步快捷回复（多端同步）
+	SyncQuickReplies(ctx context.Context, in *SyncQuickRepliesReq, opts ...grpc.CallOption) (*SyncQuickRepliesResp, error)
+	// 添加/更新快捷回复
+	UpsertQuickReply(ctx context.Context, in *UpsertQuickReplyReq, opts ...grpc.CallOption) (*UpsertQuickReplyResp, error)
+	// 删除快捷回复
+	DeleteQuickReply(ctx context.Context, in *DeleteQuickReplyReq, opts ...grpc.CallOption) (*DeleteQuickReplyResp, error)
+	// 置顶快捷回复
+	PinQuickReply(ctx context.Context, in *PinQuickReplyReq, opts ...grpc.CallOption) (*PinQuickReplyResp, error)
+	// 刷新常用回复（一周一次，带锁）
+	RefreshFrequentReplies(ctx context.Context, in *RefreshFrequentRepliesReq, opts ...grpc.CallOption) (*RefreshFrequentRepliesResp, error)
+	// 提交刷新结果
+	SubmitRefreshResult(ctx context.Context, in *SubmitRefreshResultReq, opts ...grpc.CallOption) (*SubmitRefreshResultResp, error)
+	// 获取刷新状态
+	GetRefreshStatus(ctx context.Context, in *GetRefreshStatusReq, opts ...grpc.CallOption) (*GetRefreshStatusResp, error)
 }
 
 type userClient struct {
@@ -480,6 +505,86 @@ func (c *userClient) GetAllUserEmojis(ctx context.Context, in *GetAllUserEmojisR
 	return out, nil
 }
 
+func (c *userClient) GetQuickReplies(ctx context.Context, in *GetQuickRepliesReq, opts ...grpc.CallOption) (*GetQuickRepliesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetQuickRepliesResp)
+	err := c.cc.Invoke(ctx, User_GetQuickReplies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) SyncQuickReplies(ctx context.Context, in *SyncQuickRepliesReq, opts ...grpc.CallOption) (*SyncQuickRepliesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncQuickRepliesResp)
+	err := c.cc.Invoke(ctx, User_SyncQuickReplies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpsertQuickReply(ctx context.Context, in *UpsertQuickReplyReq, opts ...grpc.CallOption) (*UpsertQuickReplyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpsertQuickReplyResp)
+	err := c.cc.Invoke(ctx, User_UpsertQuickReply_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteQuickReply(ctx context.Context, in *DeleteQuickReplyReq, opts ...grpc.CallOption) (*DeleteQuickReplyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteQuickReplyResp)
+	err := c.cc.Invoke(ctx, User_DeleteQuickReply_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) PinQuickReply(ctx context.Context, in *PinQuickReplyReq, opts ...grpc.CallOption) (*PinQuickReplyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PinQuickReplyResp)
+	err := c.cc.Invoke(ctx, User_PinQuickReply_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) RefreshFrequentReplies(ctx context.Context, in *RefreshFrequentRepliesReq, opts ...grpc.CallOption) (*RefreshFrequentRepliesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RefreshFrequentRepliesResp)
+	err := c.cc.Invoke(ctx, User_RefreshFrequentReplies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) SubmitRefreshResult(ctx context.Context, in *SubmitRefreshResultReq, opts ...grpc.CallOption) (*SubmitRefreshResultResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SubmitRefreshResultResp)
+	err := c.cc.Invoke(ctx, User_SubmitRefreshResult_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetRefreshStatus(ctx context.Context, in *GetRefreshStatusReq, opts ...grpc.CallOption) (*GetRefreshStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRefreshStatusResp)
+	err := c.cc.Invoke(ctx, User_GetRefreshStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -541,6 +646,23 @@ type UserServer interface {
 	DeleteUserEmoji(context.Context, *DeleteUserEmojiReq) (*DeleteUserEmojiResp, error)
 	GetUserEmoji(context.Context, *GetUserEmojiReq) (*GetUserEmojiResp, error)
 	GetAllUserEmojis(context.Context, *GetAllUserEmojisReq) (*GetAllUserEmojisResp, error)
+	// 快捷回复相关RPC
+	// 获取快捷回复列表
+	GetQuickReplies(context.Context, *GetQuickRepliesReq) (*GetQuickRepliesResp, error)
+	// 同步快捷回复（多端同步）
+	SyncQuickReplies(context.Context, *SyncQuickRepliesReq) (*SyncQuickRepliesResp, error)
+	// 添加/更新快捷回复
+	UpsertQuickReply(context.Context, *UpsertQuickReplyReq) (*UpsertQuickReplyResp, error)
+	// 删除快捷回复
+	DeleteQuickReply(context.Context, *DeleteQuickReplyReq) (*DeleteQuickReplyResp, error)
+	// 置顶快捷回复
+	PinQuickReply(context.Context, *PinQuickReplyReq) (*PinQuickReplyResp, error)
+	// 刷新常用回复（一周一次，带锁）
+	RefreshFrequentReplies(context.Context, *RefreshFrequentRepliesReq) (*RefreshFrequentRepliesResp, error)
+	// 提交刷新结果
+	SubmitRefreshResult(context.Context, *SubmitRefreshResultReq) (*SubmitRefreshResultResp, error)
+	// 获取刷新状态
+	GetRefreshStatus(context.Context, *GetRefreshStatusReq) (*GetRefreshStatusResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -652,6 +774,30 @@ func (UnimplementedUserServer) GetUserEmoji(context.Context, *GetUserEmojiReq) (
 }
 func (UnimplementedUserServer) GetAllUserEmojis(context.Context, *GetAllUserEmojisReq) (*GetAllUserEmojisResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllUserEmojis not implemented")
+}
+func (UnimplementedUserServer) GetQuickReplies(context.Context, *GetQuickRepliesReq) (*GetQuickRepliesResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuickReplies not implemented")
+}
+func (UnimplementedUserServer) SyncQuickReplies(context.Context, *SyncQuickRepliesReq) (*SyncQuickRepliesResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncQuickReplies not implemented")
+}
+func (UnimplementedUserServer) UpsertQuickReply(context.Context, *UpsertQuickReplyReq) (*UpsertQuickReplyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertQuickReply not implemented")
+}
+func (UnimplementedUserServer) DeleteQuickReply(context.Context, *DeleteQuickReplyReq) (*DeleteQuickReplyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteQuickReply not implemented")
+}
+func (UnimplementedUserServer) PinQuickReply(context.Context, *PinQuickReplyReq) (*PinQuickReplyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PinQuickReply not implemented")
+}
+func (UnimplementedUserServer) RefreshFrequentReplies(context.Context, *RefreshFrequentRepliesReq) (*RefreshFrequentRepliesResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshFrequentReplies not implemented")
+}
+func (UnimplementedUserServer) SubmitRefreshResult(context.Context, *SubmitRefreshResultReq) (*SubmitRefreshResultResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubmitRefreshResult not implemented")
+}
+func (UnimplementedUserServer) GetRefreshStatus(context.Context, *GetRefreshStatusReq) (*GetRefreshStatusResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRefreshStatus not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1286,6 +1432,150 @@ func _User_GetAllUserEmojis_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetQuickReplies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuickRepliesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetQuickReplies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetQuickReplies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetQuickReplies(ctx, req.(*GetQuickRepliesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_SyncQuickReplies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncQuickRepliesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SyncQuickReplies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SyncQuickReplies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SyncQuickReplies(ctx, req.(*SyncQuickRepliesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpsertQuickReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertQuickReplyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpsertQuickReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpsertQuickReply_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpsertQuickReply(ctx, req.(*UpsertQuickReplyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteQuickReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteQuickReplyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteQuickReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteQuickReply_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteQuickReply(ctx, req.(*DeleteQuickReplyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_PinQuickReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PinQuickReplyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).PinQuickReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_PinQuickReply_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).PinQuickReply(ctx, req.(*PinQuickReplyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_RefreshFrequentReplies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshFrequentRepliesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RefreshFrequentReplies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RefreshFrequentReplies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RefreshFrequentReplies(ctx, req.(*RefreshFrequentRepliesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_SubmitRefreshResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitRefreshResultReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SubmitRefreshResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SubmitRefreshResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SubmitRefreshResult(ctx, req.(*SubmitRefreshResultReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetRefreshStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRefreshStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetRefreshStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetRefreshStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetRefreshStatus(ctx, req.(*GetRefreshStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1428,6 +1718,38 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getAllUserEmojis",
 			Handler:    _User_GetAllUserEmojis_Handler,
+		},
+		{
+			MethodName: "getQuickReplies",
+			Handler:    _User_GetQuickReplies_Handler,
+		},
+		{
+			MethodName: "syncQuickReplies",
+			Handler:    _User_SyncQuickReplies_Handler,
+		},
+		{
+			MethodName: "upsertQuickReply",
+			Handler:    _User_UpsertQuickReply_Handler,
+		},
+		{
+			MethodName: "deleteQuickReply",
+			Handler:    _User_DeleteQuickReply_Handler,
+		},
+		{
+			MethodName: "pinQuickReply",
+			Handler:    _User_PinQuickReply_Handler,
+		},
+		{
+			MethodName: "refreshFrequentReplies",
+			Handler:    _User_RefreshFrequentReplies_Handler,
+		},
+		{
+			MethodName: "submitRefreshResult",
+			Handler:    _User_SubmitRefreshResult_Handler,
+		},
+		{
+			MethodName: "getRefreshStatus",
+			Handler:    _User_GetRefreshStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
