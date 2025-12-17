@@ -651,7 +651,8 @@ message FriendsInfoUpdateTips {
 
 message SubUserOnlineStatusElem {
   string userID = 1;
-  repeated int32 onlinePlatformIDs = 2;
+  repeated int32 onlinePlatformIDs = 2;  // 兼容旧版本：平台ID列表
+  map<int32, int32> platformDetails = 3;  // 新增：平台详细状态 map[platformID]status
 }
 
 message SubUserOnlineStatusTips {

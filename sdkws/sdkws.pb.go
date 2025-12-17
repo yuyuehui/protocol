@@ -1,4 +1,4 @@
-﻿// Copyright © 2023 OpenIM. All rights reserved.
+// Copyright © 2023 OpenIM. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -5838,7 +5838,8 @@ func (x *FriendsInfoUpdateTips) GetFriendVersionID() string {
 type SubUserOnlineStatusElem struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	UserID            string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	OnlinePlatformIDs []int32                `protobuf:"varint,2,rep,packed,name=onlinePlatformIDs,proto3" json:"onlinePlatformIDs"`
+	OnlinePlatformIDs []int32                `protobuf:"varint,2,rep,packed,name=onlinePlatformIDs,proto3" json:"onlinePlatformIDs"`                                                                 // 兼容旧版本：平台ID列表
+	PlatformDetails   map[int32]int32        `protobuf:"bytes,3,rep,name=platformDetails,proto3" json:"platformDetails,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // 新增：平台详细状态 map[platformID]status
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -5883,6 +5884,13 @@ func (x *SubUserOnlineStatusElem) GetUserID() string {
 func (x *SubUserOnlineStatusElem) GetOnlinePlatformIDs() []int32 {
 	if x != nil {
 		return x.OnlinePlatformIDs
+	}
+	return nil
+}
+
+func (x *SubUserOnlineStatusElem) GetPlatformDetails() map[int32]int32 {
+	if x != nil {
+		return x.PlatformDetails
 	}
 	return nil
 }
@@ -6742,10 +6750,14 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\ffromToUserID\x18\x01 \x01(\v2\x1a.openim.sdkws.FromToUserIDR\ffromToUserID\x12\x1c\n" +
 	"\tfriendIDs\x18\x02 \x03(\tR\tfriendIDs\x12$\n" +
 	"\rfriendVersion\x18\x03 \x01(\x04R\rfriendVersion\x12(\n" +
-	"\x0ffriendVersionID\x18\x04 \x01(\tR\x0ffriendVersionID\"_\n" +
+	"\x0ffriendVersionID\x18\x04 \x01(\tR\x0ffriendVersionID\"\x89\x02\n" +
 	"\x17SubUserOnlineStatusElem\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12,\n" +
-	"\x11onlinePlatformIDs\x18\x02 \x03(\x05R\x11onlinePlatformIDs\"b\n" +
+	"\x11onlinePlatformIDs\x18\x02 \x03(\x05R\x11onlinePlatformIDs\x12d\n" +
+	"\x0fplatformDetails\x18\x03 \x03(\v2:.openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntryR\x0fplatformDetails\x1aB\n" +
+	"\x14PlatformDetailsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"b\n" +
 	"\x17SubUserOnlineStatusTips\x12G\n" +
 	"\vsubscribers\x18\x01 \x03(\v2%.openim.sdkws.SubUserOnlineStatusElemR\vsubscribers\"m\n" +
 	"\x13SubUserOnlineStatus\x12(\n" +
@@ -6787,7 +6799,7 @@ func file_sdkws_sdkws_proto_rawDescGZIP() []byte {
 }
 
 var file_sdkws_sdkws_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 89)
+var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 90)
 var file_sdkws_sdkws_proto_goTypes = []any{
 	(PullOrder)(0),                        // 0: openim.sdkws.PullOrder
 	(*GroupInfo)(nil),                     // 1: openim.sdkws.GroupInfo
@@ -6879,21 +6891,22 @@ var file_sdkws_sdkws_proto_goTypes = []any{
 	nil,                                   // 87: openim.sdkws.MsgData.OptionsEntry
 	nil,                                   // 88: openim.sdkws.PushMessages.MsgsEntry
 	nil,                                   // 89: openim.sdkws.PushMessages.NotificationMsgsEntry
-	(*wrapperspb.StringValue)(nil),        // 90: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),         // 91: openim.protobuf.Int32Value
+	nil,                                   // 90: openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	(*wrapperspb.StringValue)(nil),        // 91: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),         // 92: openim.protobuf.Int32Value
 }
 var file_sdkws_sdkws_proto_depIdxs = []int32{
-	90, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
-	91, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
-	91, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
-	91, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
-	90, // 4: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
-	90, // 5: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
-	90, // 6: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
-	91, // 7: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
-	90, // 8: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
-	90, // 9: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
-	90, // 10: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
+	91, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
+	92, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
+	92, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
+	92, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
+	91, // 4: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
+	91, // 5: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
+	91, // 6: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
+	92, // 7: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
+	91, // 8: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
+	91, // 9: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
+	91, // 10: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
 	5,  // 11: openim.sdkws.FriendInfo.friendUser:type_name -> openim.sdkws.UserInfo
 	4,  // 12: openim.sdkws.BlackInfo.blackUserInfo:type_name -> openim.sdkws.PublicUserInfo
 	4,  // 13: openim.sdkws.GroupRequest.userInfo:type_name -> openim.sdkws.PublicUserInfo
@@ -6973,16 +6986,17 @@ var file_sdkws_sdkws_proto_depIdxs = []int32{
 	44, // 87: openim.sdkws.BlackDeletedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
 	44, // 88: openim.sdkws.FriendInfoChangedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
 	44, // 89: openim.sdkws.FriendsInfoUpdateTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	77, // 90: openim.sdkws.SubUserOnlineStatusTips.subscribers:type_name -> openim.sdkws.SubUserOnlineStatusElem
-	13, // 91: openim.sdkws.PullMessageBySeqsResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	13, // 92: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	13, // 93: openim.sdkws.PushMessages.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	13, // 94: openim.sdkws.PushMessages.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	95, // [95:95] is the sub-list for method output_type
-	95, // [95:95] is the sub-list for method input_type
-	95, // [95:95] is the sub-list for extension type_name
-	95, // [95:95] is the sub-list for extension extendee
-	0,  // [0:95] is the sub-list for field type_name
+	90, // 90: openim.sdkws.SubUserOnlineStatusElem.platformDetails:type_name -> openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	77, // 91: openim.sdkws.SubUserOnlineStatusTips.subscribers:type_name -> openim.sdkws.SubUserOnlineStatusElem
+	13, // 92: openim.sdkws.PullMessageBySeqsResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	13, // 93: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	13, // 94: openim.sdkws.PushMessages.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	13, // 95: openim.sdkws.PushMessages.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	96, // [96:96] is the sub-list for method output_type
+	96, // [96:96] is the sub-list for method input_type
+	96, // [96:96] is the sub-list for extension type_name
+	96, // [96:96] is the sub-list for extension extendee
+	0,  // [0:96] is the sub-list for field type_name
 }
 
 func init() { file_sdkws_sdkws_proto_init() }
@@ -6996,7 +7010,7 @@ func file_sdkws_sdkws_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sdkws_sdkws_proto_rawDesc), len(file_sdkws_sdkws_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   89,
+			NumMessages:   90,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

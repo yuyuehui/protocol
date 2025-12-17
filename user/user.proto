@@ -176,10 +176,17 @@ message getSubscribeUsersStatusResp {
   repeated onlineStatus statusList = 1;
 }
 
+// platformDetail 平台详细状态信息
+message platformDetail {
+  int32 platformID = 1;  // 平台ID
+  int32 status = 2;      // 该平台的状态：0=离线, 1=在线, 2=离开
+}
+
 message onlineStatus {
   string userID = 1;
-  int32 status = 2;
-  repeated int32 platformIDs = 3;
+  int32 status = 2;                        // 整体状态（兼容旧版本）
+  repeated int32 platformIDs = 3;          // 平台ID列表（兼容旧版本）
+  repeated platformDetail detailPlatformStatus = 4;  // 每个平台的详细状态（新增）
 }
 
 message getUserStatusReq {
