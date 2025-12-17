@@ -41,9 +41,17 @@ const (
 	ReactionMessageDeleter       = 122 // 消息反应删除器
 	Common                       = 200 // 通用消息
 	GroupMsg                     = 201 // 群组消息
-	SignalMsg                    = 202 // 信令消息
-	CustomNotification           = 203 // 自定义通知
-	MixedTextPicture             = 204 // 混合文本图片消息
+
+	// FavoriteType 收藏类型
+	FavoriteTypeText         = 1 // 文本
+	FavoriteTypePictureVideo = 2 // 图片与视频
+	FavoriteTypeFile         = 3 // 文件
+	FavoriteTypeNote         = 4 // 笔记
+
+	SignalMsg          = 202 // 信令消息
+	CustomNotification = 203 // 自定义通知
+	MixedTextPicture   = 204 // 混合文本图片消息
+	Code               = 205 // 代码消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -72,6 +80,13 @@ const (
 	UserCommandUpdateNotification = 1307 // 用户命令更新通知
 	UserEmojiAddNotification      = 1310 // 用户表情添加通知
 	UserEmojiDeleteNotification   = 1309 // 用户表情删除通知
+
+	// 快捷回复相关通知
+	UserQuickReplyUpdateNotification = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
+	UserQuickReplyAddNotification    = 1312 // 用户快捷回复新增通知
+	UserQuickReplyDeleteNotification = 1313 // 用户快捷回复删除通知
+	UserQuickReplyModifyNotification = 1314 // 用户快捷回复修改通知
+	UserQuickReplyPinNotification    = 1315 // 用户快捷回复置顶/取消置顶通知
 
 	UserSubscribeOnlineStatusNotification = 1308 // 用户在线状态订阅通知
 
@@ -118,7 +133,7 @@ const (
 	ConversationUnreadNotification      = 1702 // 会话未读通知
 	ClearConversationNotification       = 1703 // 清空会话通知
 	ConversationDeleteNotification      = 1704 // 删除会话通知
-    ConversationGroupChangeNotification = 1705 // 会话分组变更通知
+	ConversationGroupChangeNotification = 1705 // 会话分组变更通知
 
 	// 业务通知
 	BusinessNotificationBegin = 2000
@@ -279,17 +294,17 @@ const (
 
 // 内容类型到推送内容的映射
 var ContentType2PushContent = map[int64]string{
-	Picture:   "[PICTURE]",      // 图片
-	Voice:     "[VOICE]",        // 语音
-	Video:     "[VIDEO]",        // 视频
-	File:      "[File]",         // 文件
-	Text:      "[TEXT]",         // 文本
-	AtText:    "[@TEXT]",        // @文本
-	Emoji:     "[EMOJI]",        // 表情包
+	Picture:          "[PICTURE]",          // 图片
+	Voice:            "[VOICE]",            // 语音
+	Video:            "[VIDEO]",            // 视频
+	File:             "[File]",             // 文件
+	Text:             "[TEXT]",             // 文本
+	AtText:           "[@TEXT]",            // @文本
+	Emoji:            "[EMOJI]",            // 表情包
 	MixedTextPicture: "[MIXEDTEXTPICTURE]", // 图片和文字混合消息
-	GroupMsg:  "[GROUPMSG]]",    // 群组消息
-	Common:    "[NEWMSG]",       // 通用消息
-	SignalMsg: "[SIGNALINVITE]", // 信令邀请
+	GroupMsg:         "[GROUPMSG]]",        // 群组消息
+	Common:           "[NEWMSG]",           // 通用消息
+	SignalMsg:        "[SIGNALINVITE]",     // 信令邀请
 }
 
 const (
