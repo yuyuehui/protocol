@@ -551,6 +551,16 @@ message getRefreshStatusResp {
   QuickReplyRefreshStatus status = 1;
 }
 
+// 批量更新AI快捷回复请求
+message batchUpsertAIQuickRepliesReq {
+  string userID = 1;
+  repeated QuickReplyInfo replies = 2;  // AI生成的快捷回复列表
+}
+
+message batchUpsertAIQuickRepliesResp {
+  int64 updateTime = 1;  // 更新完成时间
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -637,4 +647,6 @@ service user {
   rpc submitRefreshResult(submitRefreshResultReq) returns (submitRefreshResultResp);
   // 获取刷新状态
   rpc getRefreshStatus(getRefreshStatusReq) returns (getRefreshStatusResp);
+  // 批量更新AI快捷回复（AI生成后调用）
+  rpc batchUpsertAIQuickReplies(batchUpsertAIQuickRepliesReq) returns (batchUpsertAIQuickRepliesResp);
 }
