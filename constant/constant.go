@@ -83,6 +83,7 @@ const (
 
 	// 快捷回复相关通知
 	UserQuickReplyUpdateNotification = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
+	UserAIQuickReplyUpdateNotification = 1316 // 用户AI快捷回复刷新更新通知（AI生成完成后实时发送）
 	UserQuickReplyAddNotification    = 1312 // 用户快捷回复新增通知
 	UserQuickReplyDeleteNotification = 1313 // 用户快捷回复删除通知
 	UserQuickReplyModifyNotification = 1314 // 用户快捷回复修改通知
