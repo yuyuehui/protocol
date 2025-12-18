@@ -544,6 +544,13 @@ message UserQuickReplyUpdateTips {
   int64 refreshTime = 3;  // 刷新时间
 }
 
+// AI快捷回复更新通知（AI生成完成后发送）
+message UserAIQuickReplyUpdateTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  int64 updateTime = 3;  // 更新时间
+}
+
 // 快捷回复新增通知
 message UserQuickReplyAddTips {
   string fromUserID = 1;
