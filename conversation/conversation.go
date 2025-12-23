@@ -238,3 +238,132 @@ func (x *MarkConversationAsUnreadReq) Check() error {
 	}
 	return nil
 }
+
+// SetConversationFoldReq 验证
+func (x *SetConversationFoldReq) Check() error {
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	return nil
+}
+
+// GetFoldConversationListReq 验证
+func (x *GetFoldConversationListReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	if x.Pagination == nil {
+		return errors.New("pagination is empty")
+	}
+	if x.Pagination.PageNumber < 1 {
+		return errors.New("pageNumber is invalid")
+	}
+	return nil
+}
+
+// GetAllFoldsReq 验证
+func (x *GetAllFoldsReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldType < 0 || x.FoldType > 2 {
+		return errors.New("foldType is invalid, should be 0(all), 1(normal), or 2(notification)")
+	}
+	return nil
+}
+
+// GetFoldDetailReq 验证
+func (x *GetFoldDetailReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	if x.Pagination == nil {
+		return errors.New("pagination is empty")
+	}
+	if x.Pagination.PageNumber < 1 {
+		return errors.New("pageNumber is invalid")
+	}
+	return nil
+}
+
+// PinFoldReq 验证
+func (x *PinFoldReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	return nil
+}
+
+// SetFoldRecvMsgOptReq 验证
+func (x *SetFoldRecvMsgOptReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	if x.RecvMsgOpt < 0 || x.RecvMsgOpt > 2 {
+		return errors.New("recvMsgOpt is invalid, should be 0(receive), 1(not receive), or 2(receive but not notify)")
+	}
+	return nil
+}
+
+// RemoveFoldReq 验证
+func (x *RemoveFoldReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	return nil
+}
+
+// CreateFoldConversationReq 验证
+func (x *CreateFoldConversationReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldName == "" {
+		return errors.New("foldName is empty")
+	}
+	if x.FoldType != constant.FoldTypeNormal && x.FoldType != constant.FoldTypeNotification {
+		return errors.New("foldType is invalid, should be 1(normal) or 2(notification)")
+	}
+	// 通知类型折叠只能由系统创建
+	if x.FoldType == constant.FoldTypeNotification {
+		return errors.New("notification type fold can only be created by system")
+	}
+	return nil
+}
+
+// UpdateFoldInfoReq 验证
+func (x *UpdateFoldInfoReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	return nil
+}
+
+// GetFoldInfoReq 验证
+func (x *GetFoldInfoReq) Check() error {
+	if x.UserID == "" {
+		return errors.New("userID is empty")
+	}
+	if x.FoldConversationID == "" {
+		return errors.New("foldConversationID is empty")
+	}
+	return nil
+}

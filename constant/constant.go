@@ -82,12 +82,12 @@ const (
 	UserEmojiDeleteNotification   = 1309 // 用户表情删除通知
 
 	// 快捷回复相关通知
-	UserQuickReplyUpdateNotification = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
-	UserAIQuickReplyUpdateNotification = 1316 // 用户AI快捷回复刷新更新通知（AI生成完成后实时发送）
-	UserQuickReplyAddNotification    = 1312 // 用户快捷回复新增通知
-	UserQuickReplyDeleteNotification = 1313 // 用户快捷回复删除通知
-	UserQuickReplyModifyNotification = 1314 // 用户快捷回复修改通知
-	UserQuickReplyPinNotification    = 1315 // 用户快捷回复置顶/取消置顶通知
+	UserQuickReplyUpdateNotification   = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
+	UserAIQuickReplyUpdateNotification = 1316 // AI快捷回复更新通知（AI生成完成后实时发送）
+	UserQuickReplyAddNotification      = 1312 // 用户快捷回复新增通知
+	UserQuickReplyDeleteNotification   = 1313 // 用户快捷回复删除通知
+	UserQuickReplyModifyNotification   = 1314 // 用户快捷回复修改通知
+	UserQuickReplyPinNotification      = 1315 // 用户快捷回复置顶/取消置顶通知
 
 	UserSubscribeOnlineStatusNotification = 1308 // 用户在线状态订阅通知
 
@@ -158,11 +158,22 @@ const (
 	SysMsgType  = 200 // 系统消息
 
 	// 会话类型
-	SingleChatType = 1 // 单聊
-	// WriteGroupChatType Not enabled temporarily
-	WriteGroupChatType   = 2 // 群聊(写权限)
+	SingleChatType       = 1 // 单聊
+	WriteGroupChatType   = 2 // 群聊(写权限) - Not enabled temporarily
 	ReadGroupChatType    = 3 // 群聊(读权限)
 	NotificationChatType = 4 // 通知会话
+	FoldChatType         = 5 // 折叠会话（虚拟会话，用于折叠其他会话）
+
+	// 折叠类型
+	FoldTypeNormal       = 1 // 普通折叠（单聊、群聊）
+	FoldTypeNotification = 2 // 通知折叠
+
+	// 折叠数量限制
+	MaxNormalFoldCount = 5 // 每个用户最多可创建的普通折叠数量（不包括系统默认折叠）
+
+	// 会话折叠分组前缀
+	DefaultFoldPrefix             = "fold_"              // 默认折叠会话ID前缀（普通折叠）
+	NotificationDefaultFoldPrefix = "fold_notification_" // 通知默认折叠会话ID前缀
 	// Token状态
 	NormalToken  = 0 // 正常Token
 	InValidToken = 1 // 无效Token
