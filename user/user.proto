@@ -561,6 +561,29 @@ message batchUpsertAIQuickRepliesResp {
   int64 updateTime = 1;  // 更新完成时间
 }
 
+// ==================== 签名列表相关 ====================
+
+// SignatureInfo 签名信息
+message SignatureInfo {
+  string id = 1;           // 签名ID
+  string icon = 2;         // 图标URL或表情
+  string text = 3;          // 签名文本
+  int64 createTime = 4;    // 创建时间（Unix毫秒时间戳）
+  int64 updateTime = 5;    // 更新时间（Unix毫秒时间戳）
+}
+
+// GetSignatureListReq 获取签名列表请求
+message GetSignatureListReq {
+  // 可选：分页参数
+  optional sdkws.RequestPagination pagination = 1;
+}
+
+// GetSignatureListResp 获取签名列表响应
+message GetSignatureListResp {
+  repeated SignatureInfo signatures = 1;  // 签名列表
+  int32 total = 2;                        // 总数（如果分页）
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -649,4 +672,6 @@ service user {
   rpc getRefreshStatus(getRefreshStatusReq) returns (getRefreshStatusResp);
   // 批量更新AI快捷回复（AI生成后调用）
   rpc batchUpsertAIQuickReplies(batchUpsertAIQuickRepliesReq) returns (batchUpsertAIQuickRepliesResp);
+  // 获取签名列表
+  rpc getSignatureList(GetSignatureListReq) returns (GetSignatureListResp);
 }
