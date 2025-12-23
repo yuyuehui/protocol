@@ -21,12 +21,13 @@
 package sdkws
 
 import (
-	wrapperspb "github.com/openimsdk/protocol/wrapperspb"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	wrapperspb "github.com/openimsdk/protocol/wrapperspb"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -5102,6 +5103,67 @@ func (x *UserQuickReplyPinTips) GetPinTime() int64 {
 	return 0
 }
 
+// AI快捷回复更新通知（AI生成完成后实时发送）
+type UserAIQuickReplyUpdateTips struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FromUserID    string                 `protobuf:"bytes,1,opt,name=fromUserID,proto3" json:"fromUserID"`
+	ToUserID      string                 `protobuf:"bytes,2,opt,name=toUserID,proto3" json:"toUserID"`
+	UpdateTime    int64                  `protobuf:"varint,3,opt,name=updateTime,proto3" json:"updateTime"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserAIQuickReplyUpdateTips) Reset() {
+	*x = UserAIQuickReplyUpdateTips{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserAIQuickReplyUpdateTips) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserAIQuickReplyUpdateTips) ProtoMessage() {}
+
+func (x *UserAIQuickReplyUpdateTips) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserAIQuickReplyUpdateTips.ProtoReflect.Descriptor instead.
+func (*UserAIQuickReplyUpdateTips) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *UserAIQuickReplyUpdateTips) GetFromUserID() string {
+	if x != nil {
+		return x.FromUserID
+	}
+	return ""
+}
+
+func (x *UserAIQuickReplyUpdateTips) GetToUserID() string {
+	if x != nil {
+		return x.ToUserID
+	}
+	return ""
+}
+
+func (x *UserAIQuickReplyUpdateTips) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
 // ////////////////////conversation/////////////////////
 type ConversationUpdateTips struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
@@ -5113,7 +5175,7 @@ type ConversationUpdateTips struct {
 
 func (x *ConversationUpdateTips) Reset() {
 	*x = ConversationUpdateTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[64]
+	mi := &file_sdkws_sdkws_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5125,7 +5187,7 @@ func (x *ConversationUpdateTips) String() string {
 func (*ConversationUpdateTips) ProtoMessage() {}
 
 func (x *ConversationUpdateTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[64]
+	mi := &file_sdkws_sdkws_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5138,7 +5200,7 @@ func (x *ConversationUpdateTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationUpdateTips.ProtoReflect.Descriptor instead.
 func (*ConversationUpdateTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{64}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *ConversationUpdateTips) GetUserID() string {
@@ -6209,6 +6271,7 @@ type SubUserOnlineStatusElem struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	UserID            string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	OnlinePlatformIDs []int32                `protobuf:"varint,2,rep,packed,name=onlinePlatformIDs,proto3" json:"onlinePlatformIDs"`
+	PlatformDetails   map[int32]int32        `protobuf:"bytes,3,rep,name=platformDetails,proto3" json:"platformDetails"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -6253,6 +6316,13 @@ func (x *SubUserOnlineStatusElem) GetUserID() string {
 func (x *SubUserOnlineStatusElem) GetOnlinePlatformIDs() []int32 {
 	if x != nil {
 		return x.OnlinePlatformIDs
+	}
+	return nil
+}
+
+func (x *SubUserOnlineStatusElem) GetPlatformDetails() map[int32]int32 {
+	if x != nil {
+		return x.PlatformDetails
 	}
 	return nil
 }

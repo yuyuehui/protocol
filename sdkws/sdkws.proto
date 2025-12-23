@@ -546,6 +546,13 @@ message UserQuickReplyUpdateTips {
   int64 refreshTime = 3;  // 刷新时间
 }
 
+// AI快捷回复更新通知（AI生成完成后实时发送）
+message UserAIQuickReplyUpdateTips {
+  string fromUserID = 1;
+  string toUserID = 2;
+  int64 updateTime = 3;  // 更新时间
+}
+
 // 快捷回复新增通知
 message UserQuickReplyAddTips {
   string fromUserID = 1;
@@ -694,6 +701,7 @@ message FriendsInfoUpdateTips {
 message SubUserOnlineStatusElem {
   string userID = 1;
   repeated int32 onlinePlatformIDs = 2;
+  map<int32, int32> platformDetails = 3;  // 平台详细状态 platformID -> status
 }
 
 message SubUserOnlineStatusTips {

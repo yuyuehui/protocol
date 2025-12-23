@@ -82,11 +82,12 @@ const (
 	UserEmojiDeleteNotification   = 1309 // 用户表情删除通知
 
 	// 快捷回复相关通知
-	UserQuickReplyUpdateNotification = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
-	UserQuickReplyAddNotification    = 1312 // 用户快捷回复新增通知
-	UserQuickReplyDeleteNotification = 1313 // 用户快捷回复删除通知
-	UserQuickReplyModifyNotification = 1314 // 用户快捷回复修改通知
-	UserQuickReplyPinNotification    = 1315 // 用户快捷回复置顶/取消置顶通知
+	UserQuickReplyUpdateNotification   = 1311 // 用户快捷回复刷新更新通知（常用回复刷新完成）
+	UserAIQuickReplyUpdateNotification = 1316 // AI快捷回复更新通知（AI生成完成后实时发送）
+	UserQuickReplyAddNotification      = 1312 // 用户快捷回复新增通知
+	UserQuickReplyDeleteNotification   = 1313 // 用户快捷回复删除通知
+	UserQuickReplyModifyNotification   = 1314 // 用户快捷回复修改通知
+	UserQuickReplyPinNotification      = 1315 // 用户快捷回复置顶/取消置顶通知
 
 	UserSubscribeOnlineStatusNotification = 1308 // 用户在线状态订阅通知
 
