@@ -86,6 +86,8 @@ message UserInfo {
   string pinyin = 8;
   string status = 9;
   string signature = 10;  // 用户签名
+  int32 onlineStatus = 11; // 在线状态：1-在线，0-离线
+  string jobName = 12;   // 职位名称
 }
 
 message UserInfoWithEx {
@@ -544,13 +546,6 @@ message UserQuickReplyUpdateTips {
   int64 refreshTime = 3;  // 刷新时间
 }
 
-// AI快捷回复更新通知（AI生成完成后发送）
-message UserAIQuickReplyUpdateTips {
-  string fromUserID = 1;
-  string toUserID = 2;
-  int64 updateTime = 3;  // 更新时间
-}
-
 // 快捷回复新增通知
 message UserQuickReplyAddTips {
   string fromUserID = 1;
@@ -698,8 +693,7 @@ message FriendsInfoUpdateTips {
 
 message SubUserOnlineStatusElem {
   string userID = 1;
-  repeated int32 onlinePlatformIDs = 2;  // 兼容旧版本：平台ID列表
-  map<int32, int32> platformDetails = 3;  // 新增：平台详细状态 map[platformID]status
+  repeated int32 onlinePlatformIDs = 2;
 }
 
 message SubUserOnlineStatusTips {
