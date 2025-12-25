@@ -86,8 +86,14 @@ message UserInfo {
   string pinyin = 8;
   string status = 9;
   string signature = 10;  // 用户签名
-  int32 onlineStatus = 11; // 在线状态：1-在线，0-离线
+  repeated PlatformDetail onlineStatus = 11; // 平台详细状态列表（包含平台ID和在线状态）
   string jobName = 12;   // 职位名称
+}
+
+// PlatformDetail 平台详细状态信息（与 user.proto 中的 platformDetail 保持一致）
+message PlatformDetail {
+  int32 platformID = 1;  // 平台ID
+  int32 status = 2;      // 该平台的状态：0=离线, 1=在线, 2=离开
 }
 
 message UserInfoWithEx {
