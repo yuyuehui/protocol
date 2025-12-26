@@ -14,6 +14,7 @@ PROTO_NAMES=(
     "user"
     "statistics"
     "wrapperspb"
+    "oa"
 )
 
 for name in "${PROTO_NAMES[@]}"; do
