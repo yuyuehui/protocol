@@ -24,13 +24,13 @@ option go_package = "github.com/openimsdk/protocol/oa";
 
 // CompanyInfo 公司信息
 message CompanyInfo {
-  int32 company_id = 1;                // 公司ID（主键，对应 _subcompanyid 或 id）
-  string company_code = 2;             // 公司编码（对应 _code）
-  string company_name = 3;             // 公司全称（对应 _fullname 或 name）
-  string company_short_name = 4;       // 公司简称（对应 _shortname）
-  int32 parent_company_id = 5;       // 上级公司ID（对应 _supsubcompanyid）
-  int32 member_count = 15;            // 企业总人数
-  bool has_departments = 17;          // 是否有部门（用于懒加载判断）
+  int32 company_id = 1 [json_name = "companyID"];                // 公司ID（主键，对应 _subcompanyid 或 id）
+  string company_code = 2 [json_name = "companyCode"];             // 公司编码（对应 _code）
+  string company_name = 3 [json_name = "companyName"];             // 公司全称（对应 _fullname 或 name）
+  string company_short_name = 4 [json_name = "companyShortName"];       // 公司简称（对应 _shortname）
+  int32 parent_company_id = 5 [json_name = "parentCompanyID"];       // 上级公司ID（对应 _supsubcompanyid）
+  int32 member_count = 15 [json_name = "memberCount"];            // 企业总人数
+  bool has_departments = 17 [json_name = "hasDepartments"];          // 是否有部门（用于懒加载判断）
 }
 
 // CreateCompanyReq 创建公司请求
@@ -144,8 +144,8 @@ message GetMyJoinedCompaniesResp {
 
 // GetDepartmentTreeReq 获取部门树请求（统一接口）
 message GetDepartmentTreeReq {
-  int32 company_id = 1;     // 企业ID（必填）
-  int32 department_id = 2;  // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
+  int32 company_id = 1 [json_name = "companyID"];     // 企业ID（必填）
+  int32 department_id = 2 [json_name = "departmentID"];  // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
 }
 
 // GetDepartmentTreeResp 获取部门树响应
@@ -155,22 +155,22 @@ message GetDepartmentTreeResp {
 
 // DepartmentTreeItem 部门树列表项（人员和部门的统一类型）
 message DepartmentTreeItem {
-  int32 type = 1;  // 类型：1=人员，2=部门
-  MemberInfo member = 2;           // 人员信息（type=1 时有效）
-  DepartmentItem department = 3;   // 部门信息（type=2 时有效）
+  int32 type = 1 [json_name = "type"];  // 类型：1=人员，2=部门
+  MemberInfo member = 2 [json_name = "member"];           // 人员信息（type=1 时有效）
+  DepartmentItem department = 3 [json_name = "department"];   // 部门信息（type=2 时有效）
 }
 
 // DepartmentItem 部门信息（用于 DepartmentTreeItem，简化版）
 message DepartmentItem {
-  int32 department_id = 1;             // 部门ID
-  string department_code = 2;           // 部门编码
-  string department_name = 3;           // 部门名称
-  string department_short_name = 4;     // 部门简称
-  int32 company_id = 5;                 // 公司ID
-  int32 parent_department_id = 6;       // 上级部门ID
-  int32 member_count = 7;               // 部门人数（包含所有子部门）
-  bool has_sub_departments = 8;         // 是否有子部门（用于懒加载判断）
-  bool has_members = 9;                 // 是否有成员（用于懒加载判断）
+  int32 department_id = 1 [json_name = "departmentID"];             // 部门ID
+  string department_code = 2 [json_name = "departmentCode"];           // 部门编码
+  string department_name = 3 [json_name = "departmentName"];           // 部门名称
+  string department_short_name = 4 [json_name = "departmentShortName"];     // 部门简称
+  int32 company_id = 5 [json_name = "companyID"];                 // 公司ID
+  int32 parent_department_id = 6 [json_name = "parentDepartmentID"];       // 上级部门ID
+  int32 member_count = 7 [json_name = "memberCount"];               // 部门人数（包含所有子部门）
+  bool has_sub_departments = 8 [json_name = "hasSubDepartments"];         // 是否有子部门（用于懒加载判断）
+  bool has_members = 9 [json_name = "hasMembers"];                 // 是否有成员（用于懒加载判断）
 }
 
 // ==================== 部门相关 ====================
@@ -205,25 +205,25 @@ message DepartmentInfo {
 
 // PlatformDetail 平台详细状态信息（与 user.proto 中的 platformDetail 保持一致）
 message PlatformDetail {
-  int32 platformID = 1;  // 平台ID
-  int32 status = 2;      // 该平台的状态：0=离线, 1=在线, 2=离开
+  int32 platformID = 1 [json_name = "platformID"];  // 平台ID
+  int32 status = 2 [json_name = "status"];      // 该平台的状态：0=离线, 1=在线, 2=离开
 }
 
 // MemberInfo 成员信息
 message MemberInfo {
-  string user_id = 1;                  // 用户ID
-  string nickname = 2;                 // 昵称
-  string face_url = 3;                 // 头像URL
-  int32 department_id = 4;            // 所属部门ID
-  string department_name = 5;          // 所属部门名称
-  string job_title = 6;                // 职位
-  int32 job_title_id = 7;             // 职位ID
-  string phone_number = 8;             // 手机号
-  string email = 9;                    // 邮箱
-  string work_code = 10;                // 工号
-  string status = 11;                  // 状态
-  int32 gender = 12;                   // 性别：0-未知，1-男，2-女
-  repeated PlatformDetail onlineStatus = 13 ;  // 在线状态列表（包含 status 和 platformID）
+  string user_id = 1 [json_name = "userID"];                  // 用户ID
+  string nickname = 2 [json_name = "nickname"];                 // 昵称
+  string face_url = 3 [json_name = "faceUrl"];                 // 头像URL
+  int32 department_id = 4 [json_name = "departmentID"];            // 所属部门ID
+  string department_name = 5 [json_name = "departmentName"];          // 所属部门名称
+  string job_title = 6 [json_name = "jobTitle"];                // 职位
+  int32 job_title_id = 7 [json_name = "jobTitleID"];             // 职位ID
+  string phone_number = 8 [json_name = "phoneNumber"];             // 手机号
+  string email = 9 [json_name = "email"];                    // 邮箱
+  string work_code = 10 [json_name = "workCode"];                // 工号
+  string status = 11 [json_name = "status"];                  // 状态
+  int32 gender = 12 [json_name = "gender"];                   // 性别：0-未知，1-男，2-女
+  repeated PlatformDetail onlineStatus = 13 [json_name = "onlineStatus"];  // 在线状态列表（包含 status 和 platformID）
 }
 
 // CreateDepartmentReq 创建部门请求
