@@ -150,24 +150,30 @@ message GetDepartmentTreeReq {
 
 // GetDepartmentTreeResp 获取部门树响应
 message GetDepartmentTreeResp {
-  repeated DepartmentInfoLite departments = 1;  // 部门列表（简化版，只包含必要字段）
+  repeated DepartmentTreeItem items = 1;        // 统一列表项（人员和部门混合，人员在前）
 }
 
-// ==================== 部门相关 ====================
+// DepartmentTreeItem 部门树列表项（人员和部门的统一类型）
+message DepartmentTreeItem {
+  int32 type = 1;  // 类型：1=人员，2=部门
+  MemberInfo member = 2;           // 人员信息（type=1 时有效）
+  DepartmentItem department = 3;   // 部门信息（type=2 时有效）
+}
 
-// DepartmentInfoLite 部门信息（简化版，只包含必要字段，用于 GetDepartmentTree 接口）
-message DepartmentInfoLite {
+// DepartmentItem 部门信息（用于 DepartmentTreeItem，简化版）
+message DepartmentItem {
   int32 department_id = 1;             // 部门ID
   string department_code = 2;           // 部门编码
   string department_name = 3;           // 部门名称
   string department_short_name = 4;     // 部门简称
-  int32 company_id = 5;                // 公司ID
-  int32 parent_department_id = 6;      // 上级部门ID
+  int32 company_id = 5;                 // 公司ID
+  int32 parent_department_id = 6;       // 上级部门ID
   int32 member_count = 7;               // 部门人数（包含所有子部门）
-  repeated MemberInfo members = 8;      // 部门直属成员列表
-  bool has_sub_departments = 9;         // 是否有子部门（用于懒加载判断）
-  bool has_members = 10;                // 是否有成员（用于懒加载判断）
+  bool has_sub_departments = 8;         // 是否有子部门（用于懒加载判断）
+  bool has_members = 9;                 // 是否有成员（用于懒加载判断）
 }
+
+// ==================== 部门相关 ====================
 
 // DepartmentInfo 部门信息（完整版，包含所有字段）
 message DepartmentInfo {

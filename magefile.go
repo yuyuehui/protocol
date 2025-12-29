@@ -58,6 +58,7 @@ var protoModules = []string{
 	"jssdk",
 	"msg",
 	"msggateway",
+	"oa",
 	"push",
 	"relation",
 	"rtc",
