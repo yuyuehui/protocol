@@ -1915,8 +1915,8 @@ func (x *MsgData) GetLikeInfo() *LikeInfo {
 // 点赞信息
 type LikeInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LikeCount     int64                  `protobuf:"varint,1,opt,name=like_count,json=likeCount,proto3" json:"likeCount"`
-	LikeUsers     []*LikeUser            `protobuf:"bytes,2,rep,name=like_users,json=likeUsers,proto3" json:"likeUsers"`
+	LikeCount     int64                  `protobuf:"varint,1,opt,name=like_count,json=likeCount,proto3" json:"like_count"`
+	LikeUsers     []*LikeUser            `protobuf:"bytes,2,rep,name=like_users,json=likeUsers,proto3" json:"like_users"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1968,11 +1968,11 @@ func (x *LikeInfo) GetLikeUsers() []*LikeUser {
 // 点赞用户信息
 type LikeUser struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"userId"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id"`
 	EmojiInfo     string                 `protobuf:"bytes,2,opt,name=emojiInfo,proto3" json:"emojiInfo"`
-	LikeTime      int64                  `protobuf:"varint,3,opt,name=like_time,json=likeTime,proto3" json:"likeTime"`
+	LikeTime      int64                  `protobuf:"varint,3,opt,name=like_time,json=likeTime,proto3" json:"like_time"`
 	Nickname      string                 `protobuf:"bytes,4,opt,name=nickname,proto3" json:"nickname"`
-	FaceUrl       string                 `protobuf:"bytes,5,opt,name=face_url,json=faceUrl,proto3" json:"faceUrl"`
+	FaceUrl       string                 `protobuf:"bytes,5,opt,name=face_url,json=faceUrl,proto3" json:"face_url"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

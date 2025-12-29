@@ -24,45 +24,45 @@ option go_package = "github.com/openimsdk/protocol/oa";
 
 // CompanyInfo 公司信息
 message CompanyInfo {
-  int32 company_id = 1 [json_name = "companyID"];                // 公司ID（主键，对应 _subcompanyid 或 id）
-  string company_code = 2 [json_name = "companyCode"];             // 公司编码（对应 _code）
-  string company_name = 3 [json_name = "companyName"];             // 公司全称（对应 _fullname 或 name）
-  string company_short_name = 4 [json_name = "companyShortName"];       // 公司简称（对应 _shortname）
-  int32 parent_company_id = 5 [json_name = "parentCompanyID"];       // 上级公司ID（对应 _supsubcompanyid）
-  int32 member_count = 15 [json_name = "memberCount"];            // 企业总人数
-  bool has_departments = 17 [json_name = "hasDepartments"];          // 是否有部门（用于懒加载判断）
+  int32 companyID = 1;                // 公司ID（主键，对应 _subcompanyid 或 id）
+  string companyCode = 2;             // 公司编码（对应 _code）
+  string companyName = 3;             // 公司全称（对应 _fullname 或 name）
+  string companyShortName = 4;       // 公司简称（对应 _shortname）
+  int32 parentCompanyID = 5;       // 上级公司ID（对应 _supsubcompanyid）
+  int32 memberCount = 15;            // 企业总人数
+  bool hasDepartments = 17;          // 是否有部门（用于懒加载判断）
 }
 
 // CreateCompanyReq 创建公司请求
 message CreateCompanyReq {
-  string company_code = 1;            // 公司编码
-  string company_name = 2;            // 公司全称
-  string company_short_name = 3;      // 公司简称
-  int32 parent_company_id = 4;       // 上级公司ID
+  string companyCode = 1;            // 公司编码
+  string companyName = 2;            // 公司全称
+  string companyShortName = 3;      // 公司简称
+  int32 parentCompanyID = 4;       // 上级公司ID
   string website = 5;                // 网站
-  bool is_main_company = 6;           // 是否主公司
-  bool is_effect = 7;                // 是否有效
-  bool is_draw_back = 8;             // 是否撤回
-  int32 show_order = 9;              // 显示顺序
+  bool isMainCompany = 6;           // 是否主公司
+  bool isEffect = 7;                // 是否有效
+  bool isDrawBack = 8;             // 是否撤回
+  int32 showOrder = 9;              // 显示顺序
 }
 
 // CreateCompanyResp 创建公司响应
 message CreateCompanyResp {
-  int32 company_id = 1;              // 公司ID
+  int32 companyID = 1;              // 公司ID
 }
 
 // UpdateCompanyReq 更新公司请求
 message UpdateCompanyReq {
-  int32 company_id = 1;              // 公司ID（必填）
-  openim.protobuf.StringValue company_code = 2;
-  openim.protobuf.StringValue company_name = 3;
-  openim.protobuf.StringValue company_short_name = 4;
-  openim.protobuf.Int32Value parent_company_id = 5;
+  int32 companyID = 1;              // 公司ID（必填）
+  openim.protobuf.StringValue companyCode = 2;
+  openim.protobuf.StringValue companyName = 3;
+  openim.protobuf.StringValue companyShortName = 4;
+  openim.protobuf.Int32Value parentCompanyID = 5;
   openim.protobuf.StringValue website = 6;
-  openim.protobuf.BoolValue is_main_company = 7;
-  openim.protobuf.BoolValue is_effect = 8;
-  openim.protobuf.BoolValue is_draw_back = 9;
-  openim.protobuf.Int32Value show_order = 10;
+  openim.protobuf.BoolValue isMainCompany = 7;
+  openim.protobuf.BoolValue isEffect = 8;
+  openim.protobuf.BoolValue isDrawBack = 9;
+  openim.protobuf.Int32Value showOrder = 10;
   openim.protobuf.BoolValue canceled = 11;
 }
 
@@ -71,7 +71,7 @@ message UpdateCompanyResp {}
 
 // DeleteCompanyReq 删除公司请求
 message DeleteCompanyReq {
-  repeated int32 company_ids = 1;     // 公司ID列表
+  repeated int32 companyIDs = 1;     // 公司ID列表
 }
 
 // DeleteCompanyResp 删除公司响应
@@ -79,7 +79,7 @@ message DeleteCompanyResp {}
 
 // GetCompanyReq 获取公司请求
 message GetCompanyReq {
-  int32 company_id = 1;               // 公司ID
+  int32 companyID = 1;               // 公司ID
 }
 
 // GetCompanyResp 获取公司响应
@@ -89,7 +89,7 @@ message GetCompanyResp {
 
 // GetCompaniesReq 批量获取公司请求
 message GetCompaniesReq {
-  repeated int32 company_ids = 1;     // 公司ID列表
+  repeated int32 companyIDs = 1;     // 公司ID列表
 }
 
 // GetCompaniesResp 批量获取公司响应
@@ -100,9 +100,9 @@ message GetCompaniesResp {
 // SearchCompanyReq 搜索公司请求
 message SearchCompanyReq {
   string keyword = 1;                  // 关键词（公司名称、编码）
-  int32 parent_company_id = 2;       // 上级公司ID（可选）
-  bool is_main_company = 3;           // 是否主公司（可选）
-  bool is_effect = 4;                 // 是否有效（可选）
+  int32 parentCompanyID = 2;       // 上级公司ID（可选）
+  bool isMainCompany = 3;           // 是否主公司（可选）
+  bool isEffect = 4;                 // 是否有效（可选）
   openim.sdkws.RequestPagination pagination = 5;
 }
 
@@ -114,7 +114,7 @@ message SearchCompanyResp {
 
 // GetChildCompaniesReq 获取子公司请求
 message GetChildCompaniesReq {
-  int32 parent_company_id = 1;       // 上级公司ID
+  int32 parentCompanyID = 1;       // 上级公司ID
   openim.sdkws.RequestPagination pagination = 2;
 }
 
@@ -126,7 +126,7 @@ message GetChildCompaniesResp {
 
 // GetUserJoinedCompaniesReq 获取用户加入的企业请求
 message GetUserJoinedCompaniesReq {
-  string user_id = 1;  // 用户ID（可选，如果不传则从上下文获取）
+  string userID = 1;  // 用户ID（可选，如果不传则从上下文获取）
 }
 
 // GetUserJoinedCompaniesResp 获取用户加入的企业响应
@@ -144,8 +144,8 @@ message GetMyJoinedCompaniesResp {
 
 // GetDepartmentTreeReq 获取部门树请求（统一接口）
 message GetDepartmentTreeReq {
-  int32 company_id = 1 [json_name = "companyID"];     // 企业ID（必填）
-  int32 department_id = 2 [json_name = "departmentID"];  // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
+  int32 companyID = 1;     // 企业ID（必填）
+  int32 departmentID = 2;  // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
 }
 
 // GetDepartmentTreeResp 获取部门树响应
@@ -155,119 +155,119 @@ message GetDepartmentTreeResp {
 
 // DepartmentTreeItem 部门树列表项（人员和部门的统一类型）
 message DepartmentTreeItem {
-  int32 type = 1 [json_name = "type"];  // 类型：1=人员，2=部门
-  MemberInfo member = 2 [json_name = "member"];           // 人员信息（type=1 时有效）
-  DepartmentItem department = 3 [json_name = "department"];   // 部门信息（type=2 时有效）
+  int32 type = 1;  // 类型：1=人员，2=部门
+  MemberInfo member = 2;           // 人员信息（type=1 时有效）
+  DepartmentItem department = 3;   // 部门信息（type=2 时有效）
 }
 
 // DepartmentItem 部门信息（用于 DepartmentTreeItem，简化版）
 message DepartmentItem {
-  int32 department_id = 1 [json_name = "departmentID"];             // 部门ID
-  string department_code = 2 [json_name = "departmentCode"];           // 部门编码
-  string department_name = 3 [json_name = "departmentName"];           // 部门名称
-  string department_short_name = 4 [json_name = "departmentShortName"];     // 部门简称
-  int32 company_id = 5 [json_name = "companyID"];                 // 公司ID
-  int32 parent_department_id = 6 [json_name = "parentDepartmentID"];       // 上级部门ID
-  int32 member_count = 7 [json_name = "memberCount"];               // 部门人数（包含所有子部门）
-  bool has_sub_departments = 8 [json_name = "hasSubDepartments"];         // 是否有子部门（用于懒加载判断）
-  bool has_members = 9 [json_name = "hasMembers"];                 // 是否有成员（用于懒加载判断）
+  int32 departmentID = 1;             // 部门ID
+  string departmentCode = 2;           // 部门编码
+  string departmentName = 3;           // 部门名称
+  string departmentShortName = 4;     // 部门简称
+  int32 companyID = 5;                 // 公司ID
+  int32 parentDepartmentID = 6;       // 上级部门ID
+  int32 memberCount = 7;               // 部门人数（包含所有子部门）
+  bool hasSubDepartments = 8;         // 是否有子部门（用于懒加载判断）
+  bool hasMembers = 9;                 // 是否有成员（用于懒加载判断）
 }
 
 // ==================== 部门相关 ====================
 
 // DepartmentInfo 部门信息（完整版，包含所有字段）
 message DepartmentInfo {
-  int32 department_id = 1;            // 部门ID（主键，对应 _departmentid）
-  string department_code = 2;          // 部门编码（对应 _code）
-  string department_name = 3;           // 部门全称（对应 _fullname）
-  string department_short_name = 4;    // 部门简称（对应 _shortname）
-  int32 company_id = 5;               // 公司ID（对应 _subcompanyid）
-  int32 parent_department_id = 6;     // 上级部门ID（对应 _supdepartmentid）
-  string manager_id = 7;               // 部门经理ID（对应 _managerId）
-  string director_id = 8;              // 部门总监ID（对应 _directorId）
-  string assistant_id = 9;             // 助理ID（对应 _assistantId）
-  string leaders_id = 10;              // 领导ID（对应 _leadersId）
-  string senior_director_id = 11;      // 高级总监ID（对应 _seniorDirectorId）
-  string hrm_leaders_id = 12;          // HRM领导ID（对应 _hrmLeadersId）
-  int32 wx_dept_id = 13;              // 微信部门ID（对应 _wxdeptid）
-  bool is_dept = 14;                   // 是否部门（对应 _isdept）
-  int32 show_order = 15;               // 显示顺序（对应 _showorder）
+  int32 departmentID = 1;            // 部门ID（主键，对应 _departmentid）
+  string departmentCode = 2;          // 部门编码（对应 _code）
+  string departmentName = 3;           // 部门全称（对应 _fullname）
+  string departmentShortName = 4;    // 部门简称（对应 _shortname）
+  int32 companyID = 5;               // 公司ID（对应 _subcompanyid）
+  int32 parentDepartmentID = 6;     // 上级部门ID（对应 _supdepartmentid）
+  string managerID = 7;                // 部门经理ID（对应 _managerId）
+  string directorID = 8;              // 部门总监ID（对应 _directorId）
+  string assistantID = 9;             // 助理ID（对应 _assistantId）
+  string leadersID = 10;              // 领导ID（对应 _leadersId）
+  string seniorDirectorID = 11;      // 高级总监ID（对应 _seniorDirectorId）
+  string hrmLeadersID = 12;          // HRM领导ID（对应 _hrmLeadersId）
+  int32 wxDeptID = 13;              // 微信部门ID（对应 _wxdeptid）
+  bool isDept = 14;                   // 是否部门（对应 _isdept）
+  int32 showOrder = 15;               // 显示顺序（对应 _showorder）
   bool canceled = 16;                  // 是否已取消（对应 _canceled）
-  int64 canceled_date = 17;            // 取消日期（对应 _canceleddate）
-  int64 create_time = 18;              // 创建时间
-  int64 update_time = 19;              // 更新时间
-  int32 member_count = 20;            // 部门人数
-  repeated DepartmentInfo sub_departments = 21;  // 子部门列表
+  int64 canceledDate = 17;            // 取消日期（对应 _canceleddate）
+  int64 createTime = 18;              // 创建时间
+  int64 updateTime = 19;              // 更新时间
+  int32 memberCount = 20;            // 部门人数
+  repeated DepartmentInfo subDepartments = 21;  // 子部门列表
   repeated MemberInfo members = 22;              // 部门成员列表
-  bool has_sub_departments = 23;       // 是否有子部门（用于懒加载判断）
-  bool has_members = 24;               // 是否有成员（用于懒加载判断）
+  bool hasSubDepartments = 23;       // 是否有子部门（用于懒加载判断）
+  bool hasMembers = 24;               // 是否有成员（用于懒加载判断）
 }
 
 // PlatformDetail 平台详细状态信息（与 user.proto 中的 platformDetail 保持一致）
 message PlatformDetail {
-  int32 platformID = 1 [json_name = "platformID"];  // 平台ID
-  int32 status = 2 [json_name = "status"];      // 该平台的状态：0=离线, 1=在线, 2=离开
+  int32 platformID = 1;  // 平台ID
+  int32 status = 2;      // 该平台的状态：0=离线, 1=在线, 2=离开
 }
 
 // MemberInfo 成员信息
 message MemberInfo {
-  string user_id = 1 [json_name = "userID"];                  // 用户ID
-  string nickname = 2 [json_name = "nickname"];                 // 昵称
-  string face_url = 3 [json_name = "faceUrl"];                 // 头像URL
-  int32 department_id = 4 [json_name = "departmentID"];            // 所属部门ID
-  string department_name = 5 [json_name = "departmentName"];          // 所属部门名称
-  string job_title = 6 [json_name = "jobTitle"];                // 职位
-  int32 job_title_id = 7 [json_name = "jobTitleID"];             // 职位ID
-  string phone_number = 8 [json_name = "phoneNumber"];             // 手机号
-  string email = 9 [json_name = "email"];                    // 邮箱
-  string work_code = 10 [json_name = "workCode"];                // 工号
-  string status = 11 [json_name = "status"];                  // 状态
-  int32 gender = 12 [json_name = "gender"];                   // 性别：0-未知，1-男，2-女
-  repeated PlatformDetail onlineStatus = 13 [json_name = "onlineStatus"];  // 在线状态列表（包含 status 和 platformID）
+  string userID = 1;                  // 用户ID
+  string nickname = 2;                 // 昵称
+  string faceURL = 3;                 // 头像URL
+  int32 departmentID = 4;            // 所属部门ID
+  string departmentName = 5;          // 所属部门名称
+  string jobTitle = 6;                // 职位
+  int32 jobTitleID = 7;             // 职位ID
+  string phoneNumber = 8;             // 手机号
+  string email = 9;                    // 邮箱
+  string workCode = 10;                // 工号
+  string status = 11;                  // 状态
+  int32 gender = 12;                   // 性别：0-未知，1-男，2-女
+  repeated PlatformDetail onlineStatus = 13;  // 在线状态列表（包含 status 和 platformID）
 }
 
 // CreateDepartmentReq 创建部门请求
 message CreateDepartmentReq {
-  string department_code = 1;          // 部门编码
-  string department_name = 2;          // 部门全称
-  string department_short_name = 3;    // 部门简称
-  int32 company_id = 4;               // 公司ID
-  int32 parent_department_id = 5;    // 上级部门ID
-  string manager_id = 6;               // 部门经理ID
-  string director_id = 7;              // 部门总监ID
-  string assistant_id = 8;             // 助理ID
-  string leaders_id = 9;               // 领导ID
-  string senior_director_id = 10;      // 高级总监ID
-  string hrm_leaders_id = 11;          // HRM领导ID
-  int32 wx_dept_id = 12;              // 微信部门ID
-  bool is_dept = 13;                   // 是否部门
-  int32 show_order = 14;              // 显示顺序
+  string departmentCode = 1;          // 部门编码
+  string departmentName = 2;          // 部门全称
+  string departmentShortName = 3;    // 部门简称
+  int32 companyID = 4;               // 公司ID
+  int32 parentDepartmentID = 5;    // 上级部门ID
+  string managerID = 6;               // 部门经理ID
+  string directorID = 7;              // 部门总监ID
+  string assistantID = 8;             // 助理ID
+  string leadersID = 9;               // 领导ID
+  string seniorDirectorID = 10;      // 高级总监ID
+  string hrmLeadersID = 11;          // HRM领导ID
+  int32 wxDeptID = 12;              // 微信部门ID
+  bool isDept = 13;                   // 是否部门
+  int32 showOrder = 14;              // 显示顺序
 }
 
 // CreateDepartmentResp 创建部门响应
 message CreateDepartmentResp {
-  int32 department_id = 1;            // 部门ID
+  int32 departmentID = 1;            // 部门ID
 }
 
 // UpdateDepartmentReq 更新部门请求
 message UpdateDepartmentReq {
-  int32 department_id = 1;            // 部门ID（必填）
-  openim.protobuf.StringValue department_code = 2;
-  openim.protobuf.StringValue department_name = 3;
-  openim.protobuf.StringValue department_short_name = 4;
-  openim.protobuf.Int32Value company_id = 5;
-  openim.protobuf.Int32Value parent_department_id = 6;
-  openim.protobuf.StringValue manager_id = 7;
-  openim.protobuf.StringValue director_id = 8;
-  openim.protobuf.StringValue assistant_id = 9;
-  openim.protobuf.StringValue leaders_id = 10;
-  openim.protobuf.StringValue senior_director_id = 11;
-  openim.protobuf.StringValue hrm_leaders_id = 12;
-  openim.protobuf.Int32Value wx_dept_id = 13;
-  openim.protobuf.BoolValue is_dept = 14;
-  openim.protobuf.Int32Value show_order = 15;
+  int32 departmentID = 1;            // 部门ID（必填）
+  openim.protobuf.StringValue departmentCode = 2;
+  openim.protobuf.StringValue departmentName = 3;
+  openim.protobuf.StringValue departmentShortName = 4;
+  openim.protobuf.Int32Value companyID = 5;
+  openim.protobuf.Int32Value parentDepartmentID = 6;
+  openim.protobuf.StringValue managerID = 7;
+  openim.protobuf.StringValue directorID = 8;
+  openim.protobuf.StringValue assistantID = 9;
+  openim.protobuf.StringValue leadersID = 10;
+  openim.protobuf.StringValue seniorDirectorID = 11;
+  openim.protobuf.StringValue hrmLeadersID = 12;
+  openim.protobuf.Int32Value wxDeptID = 13;
+  openim.protobuf.BoolValue isDept = 14;
+  openim.protobuf.Int32Value showOrder = 15;
   openim.protobuf.BoolValue canceled = 16;
-  openim.protobuf.Int64Value canceled_date = 17;  // 取消日期（时间戳，毫秒）
+  openim.protobuf.Int64Value canceledDate = 17;  // 取消日期（时间戳，毫秒）
 }
 
 // UpdateDepartmentResp 更新部门响应
@@ -275,7 +275,7 @@ message UpdateDepartmentResp {}
 
 // DeleteDepartmentReq 删除部门请求
 message DeleteDepartmentReq {
-  repeated int32 department_ids = 1;   // 部门ID列表
+  repeated int32 departmentIDs = 1;   // 部门ID列表
 }
 
 // DeleteDepartmentResp 删除部门响应
@@ -283,7 +283,7 @@ message DeleteDepartmentResp {}
 
 // GetDepartmentReq 获取部门请求
 message GetDepartmentReq {
-  int32 department_id = 1;             // 部门ID
+  int32 departmentID = 1;             // 部门ID
 }
 
 // GetDepartmentResp 获取部门响应
@@ -293,7 +293,7 @@ message GetDepartmentResp {
 
 // GetDepartmentsReq 批量获取部门请求
 message GetDepartmentsReq {
-  repeated int32 department_ids = 1;   // 部门ID列表
+  repeated int32 departmentIDs = 1;   // 部门ID列表
 }
 
 // GetDepartmentsResp 批量获取部门响应
@@ -304,9 +304,9 @@ message GetDepartmentsResp {
 // SearchDepartmentReq 搜索部门请求
 message SearchDepartmentReq {
   string keyword = 1;                   // 关键词（部门名称、编码）
-  int32 company_id = 2;               // 公司ID（可选）
-  int32 parent_department_id = 3;    // 上级部门ID（可选）
-  bool is_dept = 4;                    // 是否部门（可选）
+  int32 companyID = 2;               // 公司ID（可选）
+  int32 parentDepartmentID = 3;    // 上级部门ID（可选）
+  bool isDept = 4;                    // 是否部门（可选）
   openim.sdkws.RequestPagination pagination = 5;
 }
 
@@ -318,7 +318,7 @@ message SearchDepartmentResp {
 
 // GetDepartmentsByCompanyReq 根据公司获取部门请求
 message GetDepartmentsByCompanyReq {
-  int32 company_id = 1;               // 公司ID
+  int32 companyID = 1;               // 公司ID
   openim.sdkws.RequestPagination pagination = 2;
 }
 
@@ -330,7 +330,7 @@ message GetDepartmentsByCompanyResp {
 
 // GetChildDepartmentsReq 获取子部门请求
 message GetChildDepartmentsReq {
-  int32 parent_department_id = 1;     // 上级部门ID
+  int32 parentDepartmentID = 1;     // 上级部门ID
   openim.sdkws.RequestPagination pagination = 2;
 }
 
@@ -344,63 +344,63 @@ message GetChildDepartmentsResp {
 
 // JobInfo 职位信息
 message JobInfo {
-  int32 job_title_id = 1;             // 职位ID（主键，对应 _jobtitleid 或 id）
-  string job_code = 2;                 // 职位编码（对应 _code）
-  string job_name = 3;                 // 职位全称（对应 _fullname）
-  string job_short_name = 4;           // 职位简称（对应 _shortname）
-  int32 department_id = 5;            // 部门ID（对应 _departmentid）
-  string department_name = 6;          // 部门名称（对应 deptname）
-  string job_competency = 7;           // 职位能力要求（对应 _jobcompetency）
-  string job_responsibility = 8;       // 职位职责（对应 _jobresponsibility）
-  string job_doc = 9;                  // 职位文档（对应 _jobdoc）
-  string job_remark = 10;              // 职位备注（对应 _jobtitleremark）
+  int32 jobTitleID = 1;             // 职位ID（主键，对应 _jobtitleid 或 id）
+  string jobCode = 2;                 // 职位编码（对应 _code）
+  string jobName = 3;                 // 职位全称（对应 _fullname）
+  string jobShortName = 4;           // 职位简称（对应 _shortname）
+  int32 departmentID = 5;            // 部门ID（对应 _departmentid）
+  string departmentName = 6;          // 部门名称（对应 deptname）
+  string jobCompetency = 7;           // 职位能力要求（对应 _jobcompetency）
+  string jobResponsibility = 8;       // 职位职责（对应 _jobresponsibility）
+  string jobDoc = 9;                  // 职位文档（对应 _jobdoc）
+  string jobRemark = 10;              // 职位备注（对应 _jobtitleremark）
   string status = 11;                  // 状态（对应 status）
-  string safe_level = 12;              // 安全级别（对应 safelevel）
-  bool is_head = 13;                   // 是否负责人（对应 is_head）
-  int64 create_time = 14;              // 创建时间
-  int64 update_time = 15;              // 更新时间
-  bool is_new = 16;                    // 是否新职位（对应 isnew）
-  bool is_turn = 17;                   // 是否轮岗（对应 isturn）
-  int32 company_id = 18;              // 公司ID（对应 comid）
-  int32 job_id = 19;                  // 职位ID（对应OA的jobid）
+  string safeLevel = 12;              // 安全级别（对应 safelevel）
+  bool isHead = 13;                   // 是否负责人（对应 is_head）
+  int64 createTime = 14;              // 创建时间
+  int64 updateTime = 15;              // 更新时间
+  bool isNew = 16;                    // 是否新职位（对应 isnew）
+  bool isTurn = 17;                   // 是否轮岗（对应 isturn）
+  int32 companyID = 18;              // 公司ID（对应 comid）
+  int32 jobID = 19;                  // 职位ID（对应OA的jobid）
   string explain = 20;                 // 说明（对应 explain）
   string ppath = 21;                   // 汇报路径（对应 ppath）
 }
 
 // CreateJobTitleReq 创建职位请求
 message CreateJobTitleReq {
-  string job_code = 1;                 // 职位编码
-  string job_name = 2;                 // 职位全称
-  string job_short_name = 3;          // 职位简称
-  int32 department_id = 4;            // 部门ID
-  string job_competency = 5;           // 职位能力要求
-  string job_responsibility = 6;       // 职位职责
-  string job_doc = 7;                  // 职位文档
-  string job_remark = 8;               // 职位备注
+  string jobCode = 1;                 // 职位编码
+  string jobName = 2;                 // 职位全称
+  string jobShortName = 3;          // 职位简称
+  int32 departmentID = 4;            // 部门ID
+  string jobCompetency = 5;           // 职位能力要求
+  string jobResponsibility = 6;       // 职位职责
+  string jobDoc = 7;                  // 职位文档
+  string jobRemark = 8;               // 职位备注
   string status = 9;                   // 状态
-  string safe_level = 10;              // 安全级别
-  bool is_head = 11;                   // 是否负责人
+  string safeLevel = 10;              // 安全级别
+  bool isHead = 11;                   // 是否负责人
 }
 
 // CreateJobTitleResp 创建职位响应
 message CreateJobTitleResp {
-  int32 job_title_id = 1;             // 职位ID
+  int32 jobTitleID = 1;             // 职位ID
 }
 
 // UpdateJobTitleReq 更新职位请求
 message UpdateJobTitleReq {
-  int32 job_title_id = 1;             // 职位ID（必填）
-  openim.protobuf.StringValue job_code = 2;
-  openim.protobuf.StringValue job_name = 3;
-  openim.protobuf.StringValue job_short_name = 4;
-  openim.protobuf.Int32Value department_id = 5;
-  openim.protobuf.StringValue job_competency = 6;
-  openim.protobuf.StringValue job_responsibility = 7;
-  openim.protobuf.StringValue job_doc = 8;
-  openim.protobuf.StringValue job_remark = 9;
+  int32 jobTitleID = 1;             // 职位ID（必填）
+  openim.protobuf.StringValue jobCode = 2;
+  openim.protobuf.StringValue jobName = 3;
+  openim.protobuf.StringValue jobShortName = 4;
+  openim.protobuf.Int32Value departmentID = 5;
+  openim.protobuf.StringValue jobCompetency = 6;
+  openim.protobuf.StringValue jobResponsibility = 7;
+  openim.protobuf.StringValue jobDoc = 8;
+  openim.protobuf.StringValue jobRemark = 9;
   openim.protobuf.StringValue status = 10;
-  openim.protobuf.StringValue safe_level = 11;
-  openim.protobuf.BoolValue is_head = 12;
+  openim.protobuf.StringValue safeLevel = 11;
+  openim.protobuf.BoolValue isHead = 12;
 }
 
 // UpdateJobTitleResp 更新职位响应
@@ -408,7 +408,7 @@ message UpdateJobTitleResp {}
 
 // DeleteJobTitleReq 删除职位请求
 message DeleteJobTitleReq {
-  repeated int32 job_title_ids = 1;    // 职位ID列表
+  repeated int32 jobTitleIDs = 1;    // 职位ID列表
 }
 
 // DeleteJobTitleResp 删除职位响应
@@ -416,28 +416,28 @@ message DeleteJobTitleResp {}
 
 // GetJobTitleReq 获取职位请求
 message GetJobTitleReq {
-  int32 job_title_id = 1;             // 职位ID
+  int32 jobTitleID = 1;             // 职位ID
 }
 
 // GetJobTitleResp 获取职位响应
 message GetJobTitleResp {
-  JobInfo job_title = 1;
+  JobInfo jobTitle = 1;
 }
 
 // GetJobTitlesReq 批量获取职位请求
 message GetJobTitlesReq {
-  repeated int32 job_title_ids = 1;    // 职位ID列表
+  repeated int32 jobTitleIDs = 1;    // 职位ID列表
 }
 
 // GetJobTitlesResp 批量获取职位响应
 message GetJobTitlesResp {
-  repeated JobInfo job_titles = 1;
+  repeated JobInfo jobTitles = 1;
 }
 
 // SearchJobTitleReq 搜索职位请求
 message SearchJobTitleReq {
   string keyword = 1;                  // 关键词（职位名称、编码）
-  int32 department_id = 2;            // 部门ID（可选）
+  int32 departmentID = 2;            // 部门ID（可选）
   string status = 3;                   // 状态（可选）
   openim.sdkws.RequestPagination pagination = 4;
 }
@@ -445,37 +445,37 @@ message SearchJobTitleReq {
 // SearchJobTitleResp 搜索职位响应
 message SearchJobTitleResp {
   uint32 total = 1;                   // 总数
-  repeated JobInfo job_titles = 2;     // 职位列表
+  repeated JobInfo jobTitles = 2;     // 职位列表
 }
 
 // GetJobTitlesByDepartmentReq 根据部门获取职位请求
 message GetJobTitlesByDepartmentReq {
-  int32 department_id = 1;            // 部门ID
+  int32 departmentID = 1;            // 部门ID
   openim.sdkws.RequestPagination pagination = 2;
 }
 
 // GetJobTitlesByDepartmentResp 根据部门获取职位响应
 message GetJobTitlesByDepartmentResp {
   uint32 total = 1;
-  repeated JobInfo job_titles = 2;
+  repeated JobInfo jobTitles = 2;
 }
 
 // ==================== Job 表相关消息 ====================
 
 // Job 职位信息（简化版，从 job_title 同步）
 message Job {
-  int32 job_id = 1;         // 职位ID（主键，唯一）
-  string job_name = 2;       // 职位全称
-  string job_short_name = 3; // 职位简称
-  int64 create_time = 4;     // 创建时间
-  int64 update_time = 5;     // 更新时间
+  int32 jobID = 1;         // 职位ID（主键，唯一）
+  string jobName = 2;       // 职位全称
+  string jobShortName = 3; // 职位简称
+  int64 createTime = 4;     // 创建时间
+  int64 updateTime = 5;     // 更新时间
 }
 
 // CreateJobReq 创建职位请求
 message CreateJobReq {
-  int32 job_id = 1;         // 职位ID（必填，唯一）
-  string job_name = 2;       // 职位全称
-  string job_short_name = 3; // 职位简称
+  int32 jobID = 1;         // 职位ID（必填，唯一）
+  string jobName = 2;       // 职位全称
+  string jobShortName = 3; // 职位简称
 }
 
 // CreateJobResp 创建职位响应
@@ -483,9 +483,9 @@ message CreateJobResp {}
 
 // UpdateJobReq 更新职位请求
 message UpdateJobReq {
-  int32 job_id = 1;                              // 职位ID（必填）
-  openim.protobuf.StringValue job_name = 2;       // 职位全称
-  openim.protobuf.StringValue job_short_name = 3; // 职位简称
+  int32 jobID = 1;                              // 职位ID（必填）
+  openim.protobuf.StringValue jobName = 2;       // 职位全称
+  openim.protobuf.StringValue jobShortName = 3; // 职位简称
 }
 
 // UpdateJobResp 更新职位响应
@@ -493,7 +493,7 @@ message UpdateJobResp {}
 
 // DeleteJobReq 删除职位请求
 message DeleteJobReq {
-  repeated int32 job_ids = 1; // 职位ID列表
+  repeated int32 jobIDs = 1; // 职位ID列表
 }
 
 // DeleteJobResp 删除职位响应
@@ -501,7 +501,7 @@ message DeleteJobResp {}
 
 // GetJobReq 获取职位请求
 message GetJobReq {
-  int32 job_id = 1; // 职位ID
+  int32 jobID = 1; // 职位ID
 }
 
 // GetJobResp 获取职位响应
@@ -511,7 +511,7 @@ message GetJobResp {
 
 // GetJobsReq 批量获取职位请求
 message GetJobsReq {
-  repeated int32 job_ids = 1; // 职位ID列表
+  repeated int32 jobIDs = 1; // 职位ID列表
 }
 
 // GetJobsResp 批量获取职位响应
@@ -536,8 +536,8 @@ message SearchJobResp {
 
 // SyncOADataToChatReq 同步外部 OA 数据到 Chat 系统请求（统一请求类型）
 message SyncOADataToChatReq {
-  bool create_if_not_exist = 1;  // 如果用户不存在，是否创建新用户（仅用于用户同步，默认 true）
-  int32 batch_size = 2;          // 批次大小（默认 50）
+  bool createIfNotExist = 1;  // 如果用户不存在，是否创建新用户（仅用于用户同步，默认 true）
+  int32 batchSize = 2;          // 批次大小（默认 50）
 }
 
 // SyncOADataToChatResp 同步外部 OA 数据到 Chat 系统响应（统一响应类型）
@@ -547,9 +547,9 @@ message SyncOADataToChatResp {
   uint32 created = 3;     // 创建数
   uint32 updated = 4;     // 更新数
   uint32 errors = 5;      // 错误数
-  int32 mongo_db_count = 6; // MongoDB 中的记录数
+  int32 mongoDBCount = 6; // MongoDB 中的记录数
   string message = 7;     // 消息
-  repeated string error_details = 8; // 错误详情
+  repeated string errorDetails = 8; // 错误详情
 }
 
 // ==================== RPC 服务 ====================

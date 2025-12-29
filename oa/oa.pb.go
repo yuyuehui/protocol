@@ -40,13 +40,13 @@ const (
 // CompanyInfo 公司信息
 type CompanyInfo struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	CompanyId        int32                  `protobuf:"varint,1,opt,name=company_id,json=companyID,proto3" json:"companyID"`                      // 公司ID（主键，对应 _subcompanyid 或 id）
-	CompanyCode      string                 `protobuf:"bytes,2,opt,name=company_code,json=companyCode,proto3" json:"companyCode"`                 // 公司编码（对应 _code）
-	CompanyName      string                 `protobuf:"bytes,3,opt,name=company_name,json=companyName,proto3" json:"companyName"`                 // 公司全称（对应 _fullname 或 name）
-	CompanyShortName string                 `protobuf:"bytes,4,opt,name=company_short_name,json=companyShortName,proto3" json:"companyShortName"` // 公司简称（对应 _shortname）
-	ParentCompanyId  int32                  `protobuf:"varint,5,opt,name=parent_company_id,json=parentCompanyID,proto3" json:"parentCompanyID"`   // 上级公司ID（对应 _supsubcompanyid）
-	MemberCount      int32                  `protobuf:"varint,15,opt,name=member_count,json=memberCount,proto3" json:"memberCount"`               // 企业总人数
-	HasDepartments   bool                   `protobuf:"varint,17,opt,name=has_departments,json=hasDepartments,proto3" json:"hasDepartments"`      // 是否有部门（用于懒加载判断）
+	CompanyID        int32                  `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"`              // 公司ID（主键，对应 _subcompanyid 或 id）
+	CompanyCode      string                 `protobuf:"bytes,2,opt,name=companyCode,proto3" json:"companyCode"`           // 公司编码（对应 _code）
+	CompanyName      string                 `protobuf:"bytes,3,opt,name=companyName,proto3" json:"companyName"`           // 公司全称（对应 _fullname 或 name）
+	CompanyShortName string                 `protobuf:"bytes,4,opt,name=companyShortName,proto3" json:"companyShortName"` // 公司简称（对应 _shortname）
+	ParentCompanyID  int32                  `protobuf:"varint,5,opt,name=parentCompanyID,proto3" json:"parentCompanyID"`  // 上级公司ID（对应 _supsubcompanyid）
+	MemberCount      int32                  `protobuf:"varint,15,opt,name=memberCount,proto3" json:"memberCount"`         // 企业总人数
+	HasDepartments   bool                   `protobuf:"varint,17,opt,name=hasDepartments,proto3" json:"hasDepartments"`   // 是否有部门（用于懒加载判断）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -81,9 +81,9 @@ func (*CompanyInfo) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CompanyInfo) GetCompanyId() int32 {
+func (x *CompanyInfo) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
@@ -109,9 +109,9 @@ func (x *CompanyInfo) GetCompanyShortName() string {
 	return ""
 }
 
-func (x *CompanyInfo) GetParentCompanyId() int32 {
+func (x *CompanyInfo) GetParentCompanyID() int32 {
 	if x != nil {
-		return x.ParentCompanyId
+		return x.ParentCompanyID
 	}
 	return 0
 }
@@ -133,15 +133,15 @@ func (x *CompanyInfo) GetHasDepartments() bool {
 // CreateCompanyReq 创建公司请求
 type CreateCompanyReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	CompanyCode      string                 `protobuf:"bytes,1,opt,name=company_code,json=companyCode,proto3" json:"companyCode"`                 // 公司编码
-	CompanyName      string                 `protobuf:"bytes,2,opt,name=company_name,json=companyName,proto3" json:"companyName"`                 // 公司全称
-	CompanyShortName string                 `protobuf:"bytes,3,opt,name=company_short_name,json=companyShortName,proto3" json:"companyShortName"` // 公司简称
-	ParentCompanyId  int32                  `protobuf:"varint,4,opt,name=parent_company_id,json=parentCompanyId,proto3" json:"parentCompanyID"`   // 上级公司ID
-	Website          string                 `protobuf:"bytes,5,opt,name=website,proto3" json:"website"`                                           // 网站
-	IsMainCompany    bool                   `protobuf:"varint,6,opt,name=is_main_company,json=isMainCompany,proto3" json:"isMainCompany"`         // 是否主公司
-	IsEffect         bool                   `protobuf:"varint,7,opt,name=is_effect,json=isEffect,proto3" json:"isEffect"`                         // 是否有效
-	IsDrawBack       bool                   `protobuf:"varint,8,opt,name=is_draw_back,json=isDrawBack,proto3" json:"isDrawBack"`                  // 是否撤回
-	ShowOrder        int32                  `protobuf:"varint,9,opt,name=show_order,json=showOrder,proto3" json:"showOrder"`                      // 显示顺序
+	CompanyCode      string                 `protobuf:"bytes,1,opt,name=companyCode,proto3" json:"companyCode"`           // 公司编码
+	CompanyName      string                 `protobuf:"bytes,2,opt,name=companyName,proto3" json:"companyName"`           // 公司全称
+	CompanyShortName string                 `protobuf:"bytes,3,opt,name=companyShortName,proto3" json:"companyShortName"` // 公司简称
+	ParentCompanyID  int32                  `protobuf:"varint,4,opt,name=parentCompanyID,proto3" json:"parentCompanyID"`  // 上级公司ID
+	Website          string                 `protobuf:"bytes,5,opt,name=website,proto3" json:"website"`                   // 网站
+	IsMainCompany    bool                   `protobuf:"varint,6,opt,name=isMainCompany,proto3" json:"isMainCompany"`      // 是否主公司
+	IsEffect         bool                   `protobuf:"varint,7,opt,name=isEffect,proto3" json:"isEffect"`                // 是否有效
+	IsDrawBack       bool                   `protobuf:"varint,8,opt,name=isDrawBack,proto3" json:"isDrawBack"`            // 是否撤回
+	ShowOrder        int32                  `protobuf:"varint,9,opt,name=showOrder,proto3" json:"showOrder"`              // 显示顺序
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -197,9 +197,9 @@ func (x *CreateCompanyReq) GetCompanyShortName() string {
 	return ""
 }
 
-func (x *CreateCompanyReq) GetParentCompanyId() int32 {
+func (x *CreateCompanyReq) GetParentCompanyID() int32 {
 	if x != nil {
-		return x.ParentCompanyId
+		return x.ParentCompanyID
 	}
 	return 0
 }
@@ -242,7 +242,7 @@ func (x *CreateCompanyReq) GetShowOrder() int32 {
 // CreateCompanyResp 创建公司响应
 type CreateCompanyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyId     int32                  `protobuf:"varint,1,opt,name=company_id,json=companyId,proto3" json:"companyID"` // 公司ID
+	CompanyID     int32                  `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"` // 公司ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -277,9 +277,9 @@ func (*CreateCompanyResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CreateCompanyResp) GetCompanyId() int32 {
+func (x *CreateCompanyResp) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
@@ -287,16 +287,16 @@ func (x *CreateCompanyResp) GetCompanyId() int32 {
 // UpdateCompanyReq 更新公司请求
 type UpdateCompanyReq struct {
 	state            protoimpl.MessageState  `protogen:"open.v1"`
-	CompanyId        int32                   `protobuf:"varint,1,opt,name=company_id,json=companyId,proto3" json:"companyID"` // 公司ID（必填）
-	CompanyCode      *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=company_code,json=companyCode,proto3" json:"companyCode"`
-	CompanyName      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=company_name,json=companyName,proto3" json:"companyName"`
-	CompanyShortName *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=company_short_name,json=companyShortName,proto3" json:"companyShortName"`
-	ParentCompanyId  *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=parent_company_id,json=parentCompanyId,proto3" json:"parentCompanyID"`
+	CompanyID        int32                   `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"` // 公司ID（必填）
+	CompanyCode      *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=companyCode,proto3" json:"companyCode"`
+	CompanyName      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=companyName,proto3" json:"companyName"`
+	CompanyShortName *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=companyShortName,proto3" json:"companyShortName"`
+	ParentCompanyID  *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=parentCompanyID,proto3" json:"parentCompanyID"`
 	Website          *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=website,proto3" json:"website"`
-	IsMainCompany    *wrapperspb.BoolValue   `protobuf:"bytes,7,opt,name=is_main_company,json=isMainCompany,proto3" json:"isMainCompany"`
-	IsEffect         *wrapperspb.BoolValue   `protobuf:"bytes,8,opt,name=is_effect,json=isEffect,proto3" json:"isEffect"`
-	IsDrawBack       *wrapperspb.BoolValue   `protobuf:"bytes,9,opt,name=is_draw_back,json=isDrawBack,proto3" json:"isDrawBack"`
-	ShowOrder        *wrapperspb.Int32Value  `protobuf:"bytes,10,opt,name=show_order,json=showOrder,proto3" json:"showOrder"`
+	IsMainCompany    *wrapperspb.BoolValue   `protobuf:"bytes,7,opt,name=isMainCompany,proto3" json:"isMainCompany"`
+	IsEffect         *wrapperspb.BoolValue   `protobuf:"bytes,8,opt,name=isEffect,proto3" json:"isEffect"`
+	IsDrawBack       *wrapperspb.BoolValue   `protobuf:"bytes,9,opt,name=isDrawBack,proto3" json:"isDrawBack"`
+	ShowOrder        *wrapperspb.Int32Value  `protobuf:"bytes,10,opt,name=showOrder,proto3" json:"showOrder"`
 	Canceled         *wrapperspb.BoolValue   `protobuf:"bytes,11,opt,name=canceled,proto3" json:"canceled"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -332,9 +332,9 @@ func (*UpdateCompanyReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UpdateCompanyReq) GetCompanyId() int32 {
+func (x *UpdateCompanyReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
@@ -360,9 +360,9 @@ func (x *UpdateCompanyReq) GetCompanyShortName() *wrapperspb.StringValue {
 	return nil
 }
 
-func (x *UpdateCompanyReq) GetParentCompanyId() *wrapperspb.Int32Value {
+func (x *UpdateCompanyReq) GetParentCompanyID() *wrapperspb.Int32Value {
 	if x != nil {
-		return x.ParentCompanyId
+		return x.ParentCompanyID
 	}
 	return nil
 }
@@ -449,7 +449,7 @@ func (*UpdateCompanyResp) Descriptor() ([]byte, []int) {
 // DeleteCompanyReq 删除公司请求
 type DeleteCompanyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyIds    []int32                `protobuf:"varint,1,rep,packed,name=company_ids,json=companyIds,proto3" json:"companyIds"` // 公司ID列表
+	CompanyIDs    []int32                `protobuf:"varint,1,rep,packed,name=companyIDs,proto3" json:"companyIDs"` // 公司ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -484,9 +484,9 @@ func (*DeleteCompanyReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *DeleteCompanyReq) GetCompanyIds() []int32 {
+func (x *DeleteCompanyReq) GetCompanyIDs() []int32 {
 	if x != nil {
-		return x.CompanyIds
+		return x.CompanyIDs
 	}
 	return nil
 }
@@ -531,7 +531,7 @@ func (*DeleteCompanyResp) Descriptor() ([]byte, []int) {
 // GetCompanyReq 获取公司请求
 type GetCompanyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyId     int32                  `protobuf:"varint,1,opt,name=company_id,json=companyId,proto3" json:"companyID"` // 公司ID
+	CompanyID     int32                  `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"` // 公司ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -566,9 +566,9 @@ func (*GetCompanyReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetCompanyReq) GetCompanyId() int32 {
+func (x *GetCompanyReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
@@ -621,7 +621,7 @@ func (x *GetCompanyResp) GetCompany() *CompanyInfo {
 // GetCompaniesReq 批量获取公司请求
 type GetCompaniesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyIds    []int32                `protobuf:"varint,1,rep,packed,name=company_ids,json=companyIds,proto3" json:"companyIds"` // 公司ID列表
+	CompanyIDs    []int32                `protobuf:"varint,1,rep,packed,name=companyIDs,proto3" json:"companyIDs"` // 公司ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -656,9 +656,9 @@ func (*GetCompaniesReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetCompaniesReq) GetCompanyIds() []int32 {
+func (x *GetCompaniesReq) GetCompanyIDs() []int32 {
 	if x != nil {
-		return x.CompanyIds
+		return x.CompanyIDs
 	}
 	return nil
 }
@@ -711,10 +711,10 @@ func (x *GetCompaniesResp) GetCompanies() []*CompanyInfo {
 // SearchCompanyReq 搜索公司请求
 type SearchCompanyReq struct {
 	state           protoimpl.MessageState   `protogen:"open.v1"`
-	Keyword         string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                                         // 关键词（公司名称、编码）
-	ParentCompanyId int32                    `protobuf:"varint,2,opt,name=parent_company_id,json=parentCompanyId,proto3" json:"parentCompanyID"` // 上级公司ID（可选）
-	IsMainCompany   bool                     `protobuf:"varint,3,opt,name=is_main_company,json=isMainCompany,proto3" json:"isMainCompany"`       // 是否主公司（可选）
-	IsEffect        bool                     `protobuf:"varint,4,opt,name=is_effect,json=isEffect,proto3" json:"isEffect"`                       // 是否有效（可选）
+	Keyword         string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                  // 关键词（公司名称、编码）
+	ParentCompanyID int32                    `protobuf:"varint,2,opt,name=parentCompanyID,proto3" json:"parentCompanyID"` // 上级公司ID（可选）
+	IsMainCompany   bool                     `protobuf:"varint,3,opt,name=isMainCompany,proto3" json:"isMainCompany"`     // 是否主公司（可选）
+	IsEffect        bool                     `protobuf:"varint,4,opt,name=isEffect,proto3" json:"isEffect"`               // 是否有效（可选）
 	Pagination      *sdkws.RequestPagination `protobuf:"bytes,5,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -757,9 +757,9 @@ func (x *SearchCompanyReq) GetKeyword() string {
 	return ""
 }
 
-func (x *SearchCompanyReq) GetParentCompanyId() int32 {
+func (x *SearchCompanyReq) GetParentCompanyID() int32 {
 	if x != nil {
-		return x.ParentCompanyId
+		return x.ParentCompanyID
 	}
 	return 0
 }
@@ -841,7 +841,7 @@ func (x *SearchCompanyResp) GetCompanies() []*CompanyInfo {
 // GetChildCompaniesReq 获取子公司请求
 type GetChildCompaniesReq struct {
 	state           protoimpl.MessageState   `protogen:"open.v1"`
-	ParentCompanyId int32                    `protobuf:"varint,1,opt,name=parent_company_id,json=parentCompanyId,proto3" json:"parentCompanyID"` // 上级公司ID
+	ParentCompanyID int32                    `protobuf:"varint,1,opt,name=parentCompanyID,proto3" json:"parentCompanyID"` // 上级公司ID
 	Pagination      *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -877,9 +877,9 @@ func (*GetChildCompaniesReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetChildCompaniesReq) GetParentCompanyId() int32 {
+func (x *GetChildCompaniesReq) GetParentCompanyID() int32 {
 	if x != nil {
-		return x.ParentCompanyId
+		return x.ParentCompanyID
 	}
 	return 0
 }
@@ -947,7 +947,7 @@ func (x *GetChildCompaniesResp) GetCompanies() []*CompanyInfo {
 // GetUserJoinedCompaniesReq 获取用户加入的企业请求
 type GetUserJoinedCompaniesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"userId"` // 用户ID（可选，如果不传则从上下文获取）
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"` // 用户ID（可选，如果不传则从上下文获取）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -982,9 +982,9 @@ func (*GetUserJoinedCompaniesReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *GetUserJoinedCompaniesReq) GetUserId() string {
+func (x *GetUserJoinedCompaniesReq) GetUserID() string {
 	if x != nil {
-		return x.UserId
+		return x.UserID
 	}
 	return ""
 }
@@ -1119,8 +1119,8 @@ func (x *GetMyJoinedCompaniesResp) GetCompanies() []*CompanyInfo {
 // GetDepartmentTreeReq 获取部门树请求（统一接口）
 type GetDepartmentTreeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyId     int32                  `protobuf:"varint,1,opt,name=company_id,json=companyID,proto3" json:"companyID"`          // 企业ID（必填）
-	DepartmentId  int32                  `protobuf:"varint,2,opt,name=department_id,json=departmentID,proto3" json:"departmentID"` // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
+	CompanyID     int32                  `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"`       // 企业ID（必填）
+	DepartmentID  int32                  `protobuf:"varint,2,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID（可选，如果为空则返回企业的根部门列表，否则返回该部门的子部门列表）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1155,16 +1155,16 @@ func (*GetDepartmentTreeReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *GetDepartmentTreeReq) GetCompanyId() int32 {
+func (x *GetDepartmentTreeReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *GetDepartmentTreeReq) GetDepartmentId() int32 {
+func (x *GetDepartmentTreeReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -1278,15 +1278,15 @@ func (x *DepartmentTreeItem) GetDepartment() *DepartmentItem {
 // DepartmentItem 部门信息（用于 DepartmentTreeItem，简化版）
 type DepartmentItem struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentId        int32                  `protobuf:"varint,1,opt,name=department_id,json=departmentID,proto3" json:"departmentID"`                      // 部门ID
-	DepartmentCode      string                 `protobuf:"bytes,2,opt,name=department_code,json=departmentCode,proto3" json:"departmentCode"`                 // 部门编码
-	DepartmentName      string                 `protobuf:"bytes,3,opt,name=department_name,json=departmentName,proto3" json:"departmentName"`                 // 部门名称
-	DepartmentShortName string                 `protobuf:"bytes,4,opt,name=department_short_name,json=departmentShortName,proto3" json:"departmentShortName"` // 部门简称
-	CompanyId           int32                  `protobuf:"varint,5,opt,name=company_id,json=companyID,proto3" json:"companyID"`                               // 公司ID
-	ParentDepartmentId  int32                  `protobuf:"varint,6,opt,name=parent_department_id,json=parentDepartmentID,proto3" json:"parentDepartmentID"`   // 上级部门ID
-	MemberCount         int32                  `protobuf:"varint,7,opt,name=member_count,json=memberCount,proto3" json:"memberCount"`                         // 部门人数（包含所有子部门）
-	HasSubDepartments   bool                   `protobuf:"varint,8,opt,name=has_sub_departments,json=hasSubDepartments,proto3" json:"hasSubDepartments"`      // 是否有子部门（用于懒加载判断）
-	HasMembers          bool                   `protobuf:"varint,9,opt,name=has_members,json=hasMembers,proto3" json:"hasMembers"`                            // 是否有成员（用于懒加载判断）
+	DepartmentID        int32                  `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"`              // 部门ID
+	DepartmentCode      string                 `protobuf:"bytes,2,opt,name=departmentCode,proto3" json:"departmentCode"`           // 部门编码
+	DepartmentName      string                 `protobuf:"bytes,3,opt,name=departmentName,proto3" json:"departmentName"`           // 部门名称
+	DepartmentShortName string                 `protobuf:"bytes,4,opt,name=departmentShortName,proto3" json:"departmentShortName"` // 部门简称
+	CompanyID           int32                  `protobuf:"varint,5,opt,name=companyID,proto3" json:"companyID"`                    // 公司ID
+	ParentDepartmentID  int32                  `protobuf:"varint,6,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"`  // 上级部门ID
+	MemberCount         int32                  `protobuf:"varint,7,opt,name=memberCount,proto3" json:"memberCount"`                // 部门人数（包含所有子部门）
+	HasSubDepartments   bool                   `protobuf:"varint,8,opt,name=hasSubDepartments,proto3" json:"hasSubDepartments"`    // 是否有子部门（用于懒加载判断）
+	HasMembers          bool                   `protobuf:"varint,9,opt,name=hasMembers,proto3" json:"hasMembers"`                  // 是否有成员（用于懒加载判断）
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1321,9 +1321,9 @@ func (*DepartmentItem) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *DepartmentItem) GetDepartmentId() int32 {
+func (x *DepartmentItem) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -1349,16 +1349,16 @@ func (x *DepartmentItem) GetDepartmentShortName() string {
 	return ""
 }
 
-func (x *DepartmentItem) GetCompanyId() int32 {
+func (x *DepartmentItem) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *DepartmentItem) GetParentDepartmentId() int32 {
+func (x *DepartmentItem) GetParentDepartmentID() int32 {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return 0
 }
@@ -1387,30 +1387,30 @@ func (x *DepartmentItem) GetHasMembers() bool {
 // DepartmentInfo 部门信息（完整版，包含所有字段）
 type DepartmentInfo struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentId        int32                  `protobuf:"varint,1,opt,name=department_id,json=departmentId,proto3" json:"departmentID"`                      // 部门ID（主键，对应 _departmentid）
-	DepartmentCode      string                 `protobuf:"bytes,2,opt,name=department_code,json=departmentCode,proto3" json:"departmentCode"`                 // 部门编码（对应 _code）
-	DepartmentName      string                 `protobuf:"bytes,3,opt,name=department_name,json=departmentName,proto3" json:"departmentName"`                 // 部门全称（对应 _fullname）
-	DepartmentShortName string                 `protobuf:"bytes,4,opt,name=department_short_name,json=departmentShortName,proto3" json:"departmentShortName"` // 部门简称（对应 _shortname）
-	CompanyId           int32                  `protobuf:"varint,5,opt,name=company_id,json=companyId,proto3" json:"companyID"`                               // 公司ID（对应 _subcompanyid）
-	ParentDepartmentId  int32                  `protobuf:"varint,6,opt,name=parent_department_id,json=parentDepartmentId,proto3" json:"parentDepartmentID"`   // 上级部门ID（对应 _supdepartmentid）
-	ManagerId           string                 `protobuf:"bytes,7,opt,name=manager_id,json=managerId,proto3" json:"managerId"`                                // 部门经理ID（对应 _managerId）
-	DirectorId          string                 `protobuf:"bytes,8,opt,name=director_id,json=directorId,proto3" json:"directorId"`                             // 部门总监ID（对应 _directorId）
-	AssistantId         string                 `protobuf:"bytes,9,opt,name=assistant_id,json=assistantId,proto3" json:"assistantId"`                          // 助理ID（对应 _assistantId）
-	LeadersId           string                 `protobuf:"bytes,10,opt,name=leaders_id,json=leadersId,proto3" json:"leadersId"`                               // 领导ID（对应 _leadersId）
-	SeniorDirectorId    string                 `protobuf:"bytes,11,opt,name=senior_director_id,json=seniorDirectorId,proto3" json:"seniorDirectorId"`         // 高级总监ID（对应 _seniorDirectorId）
-	HrmLeadersId        string                 `protobuf:"bytes,12,opt,name=hrm_leaders_id,json=hrmLeadersId,proto3" json:"hrmLeadersId"`                     // HRM领导ID（对应 _hrmLeadersId）
-	WxDeptId            int32                  `protobuf:"varint,13,opt,name=wx_dept_id,json=wxDeptId,proto3" json:"wxDeptId"`                                // 微信部门ID（对应 _wxdeptid）
-	IsDept              bool                   `protobuf:"varint,14,opt,name=is_dept,json=isDept,proto3" json:"isDept"`                                       // 是否部门（对应 _isdept）
-	ShowOrder           int32                  `protobuf:"varint,15,opt,name=show_order,json=showOrder,proto3" json:"showOrder"`                              // 显示顺序（对应 _showorder）
-	Canceled            bool                   `protobuf:"varint,16,opt,name=canceled,proto3" json:"canceled"`                                                // 是否已取消（对应 _canceled）
-	CanceledDate        int64                  `protobuf:"varint,17,opt,name=canceled_date,json=canceledDate,proto3" json:"canceledDate"`                     // 取消日期（对应 _canceleddate）
-	CreateTime          int64                  `protobuf:"varint,18,opt,name=create_time,json=createTime,proto3" json:"createTime"`                           // 创建时间
-	UpdateTime          int64                  `protobuf:"varint,19,opt,name=update_time,json=updateTime,proto3" json:"updateTime"`                           // 更新时间
-	MemberCount         int32                  `protobuf:"varint,20,opt,name=member_count,json=memberCount,proto3" json:"memberCount"`                        // 部门人数
-	SubDepartments      []*DepartmentInfo      `protobuf:"bytes,21,rep,name=sub_departments,json=subDepartments,proto3" json:"subDepartments"`                // 子部门列表
-	Members             []*MemberInfo          `protobuf:"bytes,22,rep,name=members,proto3" json:"members"`                                                   // 部门成员列表
-	HasSubDepartments   bool                   `protobuf:"varint,23,opt,name=has_sub_departments,json=hasSubDepartments,proto3" json:"hasSubDepartments"`     // 是否有子部门（用于懒加载判断）
-	HasMembers          bool                   `protobuf:"varint,24,opt,name=has_members,json=hasMembers,proto3" json:"hasMembers"`                           // 是否有成员（用于懒加载判断）
+	DepartmentID        int32                  `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"`              // 部门ID（主键，对应 _departmentid）
+	DepartmentCode      string                 `protobuf:"bytes,2,opt,name=departmentCode,proto3" json:"departmentCode"`           // 部门编码（对应 _code）
+	DepartmentName      string                 `protobuf:"bytes,3,opt,name=departmentName,proto3" json:"departmentName"`           // 部门全称（对应 _fullname）
+	DepartmentShortName string                 `protobuf:"bytes,4,opt,name=departmentShortName,proto3" json:"departmentShortName"` // 部门简称（对应 _shortname）
+	CompanyID           int32                  `protobuf:"varint,5,opt,name=companyID,proto3" json:"companyID"`                    // 公司ID（对应 _subcompanyid）
+	ParentDepartmentID  int32                  `protobuf:"varint,6,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"`  // 上级部门ID（对应 _supdepartmentid）
+	ManagerID           string                 `protobuf:"bytes,7,opt,name=managerID,proto3" json:"managerID"`                     // 部门经理ID（对应 _managerId）
+	DirectorID          string                 `protobuf:"bytes,8,opt,name=directorID,proto3" json:"directorID"`                   // 部门总监ID（对应 _directorId）
+	AssistantID         string                 `protobuf:"bytes,9,opt,name=assistantID,proto3" json:"assistantID"`                 // 助理ID（对应 _assistantId）
+	LeadersID           string                 `protobuf:"bytes,10,opt,name=leadersID,proto3" json:"leadersID"`                    // 领导ID（对应 _leadersId）
+	SeniorDirectorID    string                 `protobuf:"bytes,11,opt,name=seniorDirectorID,proto3" json:"seniorDirectorID"`      // 高级总监ID（对应 _seniorDirectorId）
+	HrmLeadersID        string                 `protobuf:"bytes,12,opt,name=hrmLeadersID,proto3" json:"hrmLeadersID"`              // HRM领导ID（对应 _hrmLeadersId）
+	WxDeptID            int32                  `protobuf:"varint,13,opt,name=wxDeptID,proto3" json:"wxDeptID"`                     // 微信部门ID（对应 _wxdeptid）
+	IsDept              bool                   `protobuf:"varint,14,opt,name=isDept,proto3" json:"isDept"`                         // 是否部门（对应 _isdept）
+	ShowOrder           int32                  `protobuf:"varint,15,opt,name=showOrder,proto3" json:"showOrder"`                   // 显示顺序（对应 _showorder）
+	Canceled            bool                   `protobuf:"varint,16,opt,name=canceled,proto3" json:"canceled"`                     // 是否已取消（对应 _canceled）
+	CanceledDate        int64                  `protobuf:"varint,17,opt,name=canceledDate,proto3" json:"canceledDate"`             // 取消日期（对应 _canceleddate）
+	CreateTime          int64                  `protobuf:"varint,18,opt,name=createTime,proto3" json:"createTime"`                 // 创建时间
+	UpdateTime          int64                  `protobuf:"varint,19,opt,name=updateTime,proto3" json:"updateTime"`                 // 更新时间
+	MemberCount         int32                  `protobuf:"varint,20,opt,name=memberCount,proto3" json:"memberCount"`               // 部门人数
+	SubDepartments      []*DepartmentInfo      `protobuf:"bytes,21,rep,name=subDepartments,proto3" json:"subDepartments"`          // 子部门列表
+	Members             []*MemberInfo          `protobuf:"bytes,22,rep,name=members,proto3" json:"members"`                        // 部门成员列表
+	HasSubDepartments   bool                   `protobuf:"varint,23,opt,name=hasSubDepartments,proto3" json:"hasSubDepartments"`   // 是否有子部门（用于懒加载判断）
+	HasMembers          bool                   `protobuf:"varint,24,opt,name=hasMembers,proto3" json:"hasMembers"`                 // 是否有成员（用于懒加载判断）
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1445,9 +1445,9 @@ func (*DepartmentInfo) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *DepartmentInfo) GetDepartmentId() int32 {
+func (x *DepartmentInfo) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -1473,65 +1473,65 @@ func (x *DepartmentInfo) GetDepartmentShortName() string {
 	return ""
 }
 
-func (x *DepartmentInfo) GetCompanyId() int32 {
+func (x *DepartmentInfo) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *DepartmentInfo) GetParentDepartmentId() int32 {
+func (x *DepartmentInfo) GetParentDepartmentID() int32 {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return 0
 }
 
-func (x *DepartmentInfo) GetManagerId() string {
+func (x *DepartmentInfo) GetManagerID() string {
 	if x != nil {
-		return x.ManagerId
+		return x.ManagerID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetDirectorId() string {
+func (x *DepartmentInfo) GetDirectorID() string {
 	if x != nil {
-		return x.DirectorId
+		return x.DirectorID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetAssistantId() string {
+func (x *DepartmentInfo) GetAssistantID() string {
 	if x != nil {
-		return x.AssistantId
+		return x.AssistantID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetLeadersId() string {
+func (x *DepartmentInfo) GetLeadersID() string {
 	if x != nil {
-		return x.LeadersId
+		return x.LeadersID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetSeniorDirectorId() string {
+func (x *DepartmentInfo) GetSeniorDirectorID() string {
 	if x != nil {
-		return x.SeniorDirectorId
+		return x.SeniorDirectorID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetHrmLeadersId() string {
+func (x *DepartmentInfo) GetHrmLeadersID() string {
 	if x != nil {
-		return x.HrmLeadersId
+		return x.HrmLeadersID
 	}
 	return ""
 }
 
-func (x *DepartmentInfo) GetWxDeptId() int32 {
+func (x *DepartmentInfo) GetWxDeptID() int32 {
 	if x != nil {
-		return x.WxDeptId
+		return x.WxDeptID
 	}
 	return 0
 }
@@ -1669,19 +1669,19 @@ func (x *PlatformDetail) GetStatus() int32 {
 // MemberInfo 成员信息
 type MemberInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userID,proto3" json:"userId"`                         // 用户ID
-	Nickname       string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`                                  // 昵称
-	FaceUrl        string                 `protobuf:"bytes,3,opt,name=face_url,json=faceUrl,proto3" json:"faceUrl"`                      // 头像URL
-	DepartmentId   int32                  `protobuf:"varint,4,opt,name=department_id,json=departmentID,proto3" json:"departmentID"`      // 所属部门ID
-	DepartmentName string                 `protobuf:"bytes,5,opt,name=department_name,json=departmentName,proto3" json:"departmentName"` // 所属部门名称
-	JobTitle       string                 `protobuf:"bytes,6,opt,name=job_title,json=jobTitle,proto3" json:"jobTitle"`                   // 职位
-	JobTitleId     int32                  `protobuf:"varint,7,opt,name=job_title_id,json=jobTitleID,proto3" json:"jobTitleID"`           // 职位ID
-	PhoneNumber    string                 `protobuf:"bytes,8,opt,name=phone_number,json=phoneNumber,proto3" json:"phoneNumber"`          // 手机号
-	Email          string                 `protobuf:"bytes,9,opt,name=email,proto3" json:"email"`                                        // 邮箱
-	WorkCode       string                 `protobuf:"bytes,10,opt,name=work_code,json=workCode,proto3" json:"workCode"`                  // 工号
-	Status         string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status"`                                     // 状态
-	Gender         int32                  `protobuf:"varint,12,opt,name=gender,proto3" json:"gender"`                                    // 性别：0-未知，1-男，2-女
-	OnlineStatus   []*PlatformDetail      `protobuf:"bytes,13,rep,name=onlineStatus,proto3" json:"onlineStatus"`                         // 在线状态列表（包含 status 和 platformID）
+	UserID         string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                 // 用户ID
+	Nickname       string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`             // 昵称
+	FaceURL        string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`               // 头像URL
+	DepartmentID   int32                  `protobuf:"varint,4,opt,name=departmentID,proto3" json:"departmentID"`    // 所属部门ID
+	DepartmentName string                 `protobuf:"bytes,5,opt,name=departmentName,proto3" json:"departmentName"` // 所属部门名称
+	JobTitle       string                 `protobuf:"bytes,6,opt,name=jobTitle,proto3" json:"jobTitle"`             // 职位
+	JobTitleID     int32                  `protobuf:"varint,7,opt,name=jobTitleID,proto3" json:"jobTitleID"`        // 职位ID
+	PhoneNumber    string                 `protobuf:"bytes,8,opt,name=phoneNumber,proto3" json:"phoneNumber"`       // 手机号
+	Email          string                 `protobuf:"bytes,9,opt,name=email,proto3" json:"email"`                   // 邮箱
+	WorkCode       string                 `protobuf:"bytes,10,opt,name=workCode,proto3" json:"workCode"`            // 工号
+	Status         string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status"`                // 状态
+	Gender         int32                  `protobuf:"varint,12,opt,name=gender,proto3" json:"gender"`               // 性别：0-未知，1-男，2-女
+	OnlineStatus   []*PlatformDetail      `protobuf:"bytes,13,rep,name=onlineStatus,proto3" json:"onlineStatus"`    // 在线状态列表（包含 status 和 platformID）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1716,9 +1716,9 @@ func (*MemberInfo) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *MemberInfo) GetUserId() string {
+func (x *MemberInfo) GetUserID() string {
 	if x != nil {
-		return x.UserId
+		return x.UserID
 	}
 	return ""
 }
@@ -1730,16 +1730,16 @@ func (x *MemberInfo) GetNickname() string {
 	return ""
 }
 
-func (x *MemberInfo) GetFaceUrl() string {
+func (x *MemberInfo) GetFaceURL() string {
 	if x != nil {
-		return x.FaceUrl
+		return x.FaceURL
 	}
 	return ""
 }
 
-func (x *MemberInfo) GetDepartmentId() int32 {
+func (x *MemberInfo) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -1758,9 +1758,9 @@ func (x *MemberInfo) GetJobTitle() string {
 	return ""
 }
 
-func (x *MemberInfo) GetJobTitleId() int32 {
+func (x *MemberInfo) GetJobTitleID() int32 {
 	if x != nil {
-		return x.JobTitleId
+		return x.JobTitleID
 	}
 	return 0
 }
@@ -1810,20 +1810,20 @@ func (x *MemberInfo) GetOnlineStatus() []*PlatformDetail {
 // CreateDepartmentReq 创建部门请求
 type CreateDepartmentReq struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentCode      string                 `protobuf:"bytes,1,opt,name=department_code,json=departmentCode,proto3" json:"departmentCode"`                 // 部门编码
-	DepartmentName      string                 `protobuf:"bytes,2,opt,name=department_name,json=departmentName,proto3" json:"departmentName"`                 // 部门全称
-	DepartmentShortName string                 `protobuf:"bytes,3,opt,name=department_short_name,json=departmentShortName,proto3" json:"departmentShortName"` // 部门简称
-	CompanyId           int32                  `protobuf:"varint,4,opt,name=company_id,json=companyId,proto3" json:"companyID"`                               // 公司ID
-	ParentDepartmentId  int32                  `protobuf:"varint,5,opt,name=parent_department_id,json=parentDepartmentId,proto3" json:"parentDepartmentID"`   // 上级部门ID
-	ManagerId           string                 `protobuf:"bytes,6,opt,name=manager_id,json=managerId,proto3" json:"managerId"`                                // 部门经理ID
-	DirectorId          string                 `protobuf:"bytes,7,opt,name=director_id,json=directorId,proto3" json:"directorId"`                             // 部门总监ID
-	AssistantId         string                 `protobuf:"bytes,8,opt,name=assistant_id,json=assistantId,proto3" json:"assistantId"`                          // 助理ID
-	LeadersId           string                 `protobuf:"bytes,9,opt,name=leaders_id,json=leadersId,proto3" json:"leadersId"`                                // 领导ID
-	SeniorDirectorId    string                 `protobuf:"bytes,10,opt,name=senior_director_id,json=seniorDirectorId,proto3" json:"seniorDirectorId"`         // 高级总监ID
-	HrmLeadersId        string                 `protobuf:"bytes,11,opt,name=hrm_leaders_id,json=hrmLeadersId,proto3" json:"hrmLeadersId"`                     // HRM领导ID
-	WxDeptId            int32                  `protobuf:"varint,12,opt,name=wx_dept_id,json=wxDeptId,proto3" json:"wxDeptId"`                                // 微信部门ID
-	IsDept              bool                   `protobuf:"varint,13,opt,name=is_dept,json=isDept,proto3" json:"isDept"`                                       // 是否部门
-	ShowOrder           int32                  `protobuf:"varint,14,opt,name=show_order,json=showOrder,proto3" json:"showOrder"`                              // 显示顺序
+	DepartmentCode      string                 `protobuf:"bytes,1,opt,name=departmentCode,proto3" json:"departmentCode"`           // 部门编码
+	DepartmentName      string                 `protobuf:"bytes,2,opt,name=departmentName,proto3" json:"departmentName"`           // 部门全称
+	DepartmentShortName string                 `protobuf:"bytes,3,opt,name=departmentShortName,proto3" json:"departmentShortName"` // 部门简称
+	CompanyID           int32                  `protobuf:"varint,4,opt,name=companyID,proto3" json:"companyID"`                    // 公司ID
+	ParentDepartmentID  int32                  `protobuf:"varint,5,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"`  // 上级部门ID
+	ManagerID           string                 `protobuf:"bytes,6,opt,name=managerID,proto3" json:"managerID"`                     // 部门经理ID
+	DirectorID          string                 `protobuf:"bytes,7,opt,name=directorID,proto3" json:"directorID"`                   // 部门总监ID
+	AssistantID         string                 `protobuf:"bytes,8,opt,name=assistantID,proto3" json:"assistantID"`                 // 助理ID
+	LeadersID           string                 `protobuf:"bytes,9,opt,name=leadersID,proto3" json:"leadersID"`                     // 领导ID
+	SeniorDirectorID    string                 `protobuf:"bytes,10,opt,name=seniorDirectorID,proto3" json:"seniorDirectorID"`      // 高级总监ID
+	HrmLeadersID        string                 `protobuf:"bytes,11,opt,name=hrmLeadersID,proto3" json:"hrmLeadersID"`              // HRM领导ID
+	WxDeptID            int32                  `protobuf:"varint,12,opt,name=wxDeptID,proto3" json:"wxDeptID"`                     // 微信部门ID
+	IsDept              bool                   `protobuf:"varint,13,opt,name=isDept,proto3" json:"isDept"`                         // 是否部门
+	ShowOrder           int32                  `protobuf:"varint,14,opt,name=showOrder,proto3" json:"showOrder"`                   // 显示顺序
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1879,65 +1879,65 @@ func (x *CreateDepartmentReq) GetDepartmentShortName() string {
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetCompanyId() int32 {
+func (x *CreateDepartmentReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *CreateDepartmentReq) GetParentDepartmentId() int32 {
+func (x *CreateDepartmentReq) GetParentDepartmentID() int32 {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return 0
 }
 
-func (x *CreateDepartmentReq) GetManagerId() string {
+func (x *CreateDepartmentReq) GetManagerID() string {
 	if x != nil {
-		return x.ManagerId
+		return x.ManagerID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetDirectorId() string {
+func (x *CreateDepartmentReq) GetDirectorID() string {
 	if x != nil {
-		return x.DirectorId
+		return x.DirectorID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetAssistantId() string {
+func (x *CreateDepartmentReq) GetAssistantID() string {
 	if x != nil {
-		return x.AssistantId
+		return x.AssistantID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetLeadersId() string {
+func (x *CreateDepartmentReq) GetLeadersID() string {
 	if x != nil {
-		return x.LeadersId
+		return x.LeadersID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetSeniorDirectorId() string {
+func (x *CreateDepartmentReq) GetSeniorDirectorID() string {
 	if x != nil {
-		return x.SeniorDirectorId
+		return x.SeniorDirectorID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetHrmLeadersId() string {
+func (x *CreateDepartmentReq) GetHrmLeadersID() string {
 	if x != nil {
-		return x.HrmLeadersId
+		return x.HrmLeadersID
 	}
 	return ""
 }
 
-func (x *CreateDepartmentReq) GetWxDeptId() int32 {
+func (x *CreateDepartmentReq) GetWxDeptID() int32 {
 	if x != nil {
-		return x.WxDeptId
+		return x.WxDeptID
 	}
 	return 0
 }
@@ -1959,7 +1959,7 @@ func (x *CreateDepartmentReq) GetShowOrder() int32 {
 // CreateDepartmentResp 创建部门响应
 type CreateDepartmentResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentId  int32                  `protobuf:"varint,1,opt,name=department_id,json=departmentId,proto3" json:"departmentID"` // 部门ID
+	DepartmentID  int32                  `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1994,9 +1994,9 @@ func (*CreateDepartmentResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *CreateDepartmentResp) GetDepartmentId() int32 {
+func (x *CreateDepartmentResp) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -2004,23 +2004,23 @@ func (x *CreateDepartmentResp) GetDepartmentId() int32 {
 // UpdateDepartmentReq 更新部门请求
 type UpdateDepartmentReq struct {
 	state               protoimpl.MessageState  `protogen:"open.v1"`
-	DepartmentId        int32                   `protobuf:"varint,1,opt,name=department_id,json=departmentId,proto3" json:"departmentID"` // 部门ID（必填）
-	DepartmentCode      *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=department_code,json=departmentCode,proto3" json:"departmentCode"`
-	DepartmentName      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=department_name,json=departmentName,proto3" json:"departmentName"`
-	DepartmentShortName *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=department_short_name,json=departmentShortName,proto3" json:"departmentShortName"`
-	CompanyId           *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=company_id,json=companyId,proto3" json:"companyID"`
-	ParentDepartmentId  *wrapperspb.Int32Value  `protobuf:"bytes,6,opt,name=parent_department_id,json=parentDepartmentId,proto3" json:"parentDepartmentID"`
-	ManagerId           *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=manager_id,json=managerId,proto3" json:"managerId"`
-	DirectorId          *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=director_id,json=directorId,proto3" json:"directorId"`
-	AssistantId         *wrapperspb.StringValue `protobuf:"bytes,9,opt,name=assistant_id,json=assistantId,proto3" json:"assistantId"`
-	LeadersId           *wrapperspb.StringValue `protobuf:"bytes,10,opt,name=leaders_id,json=leadersId,proto3" json:"leadersId"`
-	SeniorDirectorId    *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=senior_director_id,json=seniorDirectorId,proto3" json:"seniorDirectorId"`
-	HrmLeadersId        *wrapperspb.StringValue `protobuf:"bytes,12,opt,name=hrm_leaders_id,json=hrmLeadersId,proto3" json:"hrmLeadersId"`
-	WxDeptId            *wrapperspb.Int32Value  `protobuf:"bytes,13,opt,name=wx_dept_id,json=wxDeptId,proto3" json:"wxDeptId"`
-	IsDept              *wrapperspb.BoolValue   `protobuf:"bytes,14,opt,name=is_dept,json=isDept,proto3" json:"isDept"`
-	ShowOrder           *wrapperspb.Int32Value  `protobuf:"bytes,15,opt,name=show_order,json=showOrder,proto3" json:"showOrder"`
+	DepartmentID        int32                   `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID（必填）
+	DepartmentCode      *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=departmentCode,proto3" json:"departmentCode"`
+	DepartmentName      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=departmentName,proto3" json:"departmentName"`
+	DepartmentShortName *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=departmentShortName,proto3" json:"departmentShortName"`
+	CompanyID           *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=companyID,proto3" json:"companyID"`
+	ParentDepartmentID  *wrapperspb.Int32Value  `protobuf:"bytes,6,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"`
+	ManagerID           *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=managerID,proto3" json:"managerID"`
+	DirectorID          *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=directorID,proto3" json:"directorID"`
+	AssistantID         *wrapperspb.StringValue `protobuf:"bytes,9,opt,name=assistantID,proto3" json:"assistantID"`
+	LeadersID           *wrapperspb.StringValue `protobuf:"bytes,10,opt,name=leadersID,proto3" json:"leadersID"`
+	SeniorDirectorID    *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=seniorDirectorID,proto3" json:"seniorDirectorID"`
+	HrmLeadersID        *wrapperspb.StringValue `protobuf:"bytes,12,opt,name=hrmLeadersID,proto3" json:"hrmLeadersID"`
+	WxDeptID            *wrapperspb.Int32Value  `protobuf:"bytes,13,opt,name=wxDeptID,proto3" json:"wxDeptID"`
+	IsDept              *wrapperspb.BoolValue   `protobuf:"bytes,14,opt,name=isDept,proto3" json:"isDept"`
+	ShowOrder           *wrapperspb.Int32Value  `protobuf:"bytes,15,opt,name=showOrder,proto3" json:"showOrder"`
 	Canceled            *wrapperspb.BoolValue   `protobuf:"bytes,16,opt,name=canceled,proto3" json:"canceled"`
-	CanceledDate        *wrapperspb.Int64Value  `protobuf:"bytes,17,opt,name=canceled_date,json=canceledDate,proto3" json:"canceledDate"` // 取消日期（时间戳，毫秒）
+	CanceledDate        *wrapperspb.Int64Value  `protobuf:"bytes,17,opt,name=canceledDate,proto3" json:"canceledDate"` // 取消日期（时间戳，毫秒）
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -2055,9 +2055,9 @@ func (*UpdateDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{28}
 }
 
-func (x *UpdateDepartmentReq) GetDepartmentId() int32 {
+func (x *UpdateDepartmentReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -2083,65 +2083,65 @@ func (x *UpdateDepartmentReq) GetDepartmentShortName() *wrapperspb.StringValue {
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetCompanyId() *wrapperspb.Int32Value {
+func (x *UpdateDepartmentReq) GetCompanyID() *wrapperspb.Int32Value {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetParentDepartmentId() *wrapperspb.Int32Value {
+func (x *UpdateDepartmentReq) GetParentDepartmentID() *wrapperspb.Int32Value {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetManagerId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetManagerID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.ManagerId
+		return x.ManagerID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetDirectorId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetDirectorID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.DirectorId
+		return x.DirectorID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetAssistantId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetAssistantID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.AssistantId
+		return x.AssistantID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetLeadersId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetLeadersID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.LeadersId
+		return x.LeadersID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetSeniorDirectorId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetSeniorDirectorID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.SeniorDirectorId
+		return x.SeniorDirectorID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetHrmLeadersId() *wrapperspb.StringValue {
+func (x *UpdateDepartmentReq) GetHrmLeadersID() *wrapperspb.StringValue {
 	if x != nil {
-		return x.HrmLeadersId
+		return x.HrmLeadersID
 	}
 	return nil
 }
 
-func (x *UpdateDepartmentReq) GetWxDeptId() *wrapperspb.Int32Value {
+func (x *UpdateDepartmentReq) GetWxDeptID() *wrapperspb.Int32Value {
 	if x != nil {
-		return x.WxDeptId
+		return x.WxDeptID
 	}
 	return nil
 }
@@ -2214,7 +2214,7 @@ func (*UpdateDepartmentResp) Descriptor() ([]byte, []int) {
 // DeleteDepartmentReq 删除部门请求
 type DeleteDepartmentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentIds []int32                `protobuf:"varint,1,rep,packed,name=department_ids,json=departmentIds,proto3" json:"departmentIds"` // 部门ID列表
+	DepartmentIDs []int32                `protobuf:"varint,1,rep,packed,name=departmentIDs,proto3" json:"departmentIDs"` // 部门ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2249,9 +2249,9 @@ func (*DeleteDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{30}
 }
 
-func (x *DeleteDepartmentReq) GetDepartmentIds() []int32 {
+func (x *DeleteDepartmentReq) GetDepartmentIDs() []int32 {
 	if x != nil {
-		return x.DepartmentIds
+		return x.DepartmentIDs
 	}
 	return nil
 }
@@ -2296,7 +2296,7 @@ func (*DeleteDepartmentResp) Descriptor() ([]byte, []int) {
 // GetDepartmentReq 获取部门请求
 type GetDepartmentReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentId  int32                  `protobuf:"varint,1,opt,name=department_id,json=departmentId,proto3" json:"departmentID"` // 部门ID
+	DepartmentID  int32                  `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2331,9 +2331,9 @@ func (*GetDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *GetDepartmentReq) GetDepartmentId() int32 {
+func (x *GetDepartmentReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -2386,7 +2386,7 @@ func (x *GetDepartmentResp) GetDepartment() *DepartmentInfo {
 // GetDepartmentsReq 批量获取部门请求
 type GetDepartmentsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentIds []int32                `protobuf:"varint,1,rep,packed,name=department_ids,json=departmentIds,proto3" json:"departmentIds"` // 部门ID列表
+	DepartmentIDs []int32                `protobuf:"varint,1,rep,packed,name=departmentIDs,proto3" json:"departmentIDs"` // 部门ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2421,9 +2421,9 @@ func (*GetDepartmentsReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{34}
 }
 
-func (x *GetDepartmentsReq) GetDepartmentIds() []int32 {
+func (x *GetDepartmentsReq) GetDepartmentIDs() []int32 {
 	if x != nil {
-		return x.DepartmentIds
+		return x.DepartmentIDs
 	}
 	return nil
 }
@@ -2476,10 +2476,10 @@ func (x *GetDepartmentsResp) GetDepartments() []*DepartmentInfo {
 // SearchDepartmentReq 搜索部门请求
 type SearchDepartmentReq struct {
 	state              protoimpl.MessageState   `protogen:"open.v1"`
-	Keyword            string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                                                  // 关键词（部门名称、编码）
-	CompanyId          int32                    `protobuf:"varint,2,opt,name=company_id,json=companyId,proto3" json:"companyID"`                             // 公司ID（可选）
-	ParentDepartmentId int32                    `protobuf:"varint,3,opt,name=parent_department_id,json=parentDepartmentId,proto3" json:"parentDepartmentID"` // 上级部门ID（可选）
-	IsDept             bool                     `protobuf:"varint,4,opt,name=is_dept,json=isDept,proto3" json:"isDept"`                                      // 是否部门（可选）
+	Keyword            string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                        // 关键词（部门名称、编码）
+	CompanyID          int32                    `protobuf:"varint,2,opt,name=companyID,proto3" json:"companyID"`                   // 公司ID（可选）
+	ParentDepartmentID int32                    `protobuf:"varint,3,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"` // 上级部门ID（可选）
+	IsDept             bool                     `protobuf:"varint,4,opt,name=isDept,proto3" json:"isDept"`                         // 是否部门（可选）
 	Pagination         *sdkws.RequestPagination `protobuf:"bytes,5,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -2522,16 +2522,16 @@ func (x *SearchDepartmentReq) GetKeyword() string {
 	return ""
 }
 
-func (x *SearchDepartmentReq) GetCompanyId() int32 {
+func (x *SearchDepartmentReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *SearchDepartmentReq) GetParentDepartmentId() int32 {
+func (x *SearchDepartmentReq) GetParentDepartmentID() int32 {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return 0
 }
@@ -2606,7 +2606,7 @@ func (x *SearchDepartmentResp) GetDepartments() []*DepartmentInfo {
 // GetDepartmentsByCompanyReq 根据公司获取部门请求
 type GetDepartmentsByCompanyReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	CompanyId     int32                    `protobuf:"varint,1,opt,name=company_id,json=companyId,proto3" json:"companyID"` // 公司ID
+	CompanyID     int32                    `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"` // 公司ID
 	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2642,9 +2642,9 @@ func (*GetDepartmentsByCompanyReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *GetDepartmentsByCompanyReq) GetCompanyId() int32 {
+func (x *GetDepartmentsByCompanyReq) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
@@ -2712,7 +2712,7 @@ func (x *GetDepartmentsByCompanyResp) GetDepartments() []*DepartmentInfo {
 // GetChildDepartmentsReq 获取子部门请求
 type GetChildDepartmentsReq struct {
 	state              protoimpl.MessageState   `protogen:"open.v1"`
-	ParentDepartmentId int32                    `protobuf:"varint,1,opt,name=parent_department_id,json=parentDepartmentId,proto3" json:"parentDepartmentID"` // 上级部门ID
+	ParentDepartmentID int32                    `protobuf:"varint,1,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"` // 上级部门ID
 	Pagination         *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -2748,9 +2748,9 @@ func (*GetChildDepartmentsReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{40}
 }
 
-func (x *GetChildDepartmentsReq) GetParentDepartmentId() int32 {
+func (x *GetChildDepartmentsReq) GetParentDepartmentID() int32 {
 	if x != nil {
-		return x.ParentDepartmentId
+		return x.ParentDepartmentID
 	}
 	return 0
 }
@@ -2818,27 +2818,27 @@ func (x *GetChildDepartmentsResp) GetDepartments() []*DepartmentInfo {
 // JobInfo 职位信息
 type JobInfo struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	JobTitleId        int32                  `protobuf:"varint,1,opt,name=job_title_id,json=jobTitleId,proto3" json:"jobTitleID"`                    // 职位ID（主键，对应 _jobtitleid 或 id）
-	JobCode           string                 `protobuf:"bytes,2,opt,name=job_code,json=jobCode,proto3" json:"jobCode"`                               // 职位编码（对应 _code）
-	JobName           string                 `protobuf:"bytes,3,opt,name=job_name,json=jobName,proto3" json:"jobName"`                               // 职位全称（对应 _fullname）
-	JobShortName      string                 `protobuf:"bytes,4,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"`               // 职位简称（对应 _shortname）
-	DepartmentId      int32                  `protobuf:"varint,5,opt,name=department_id,json=departmentId,proto3" json:"departmentID"`               // 部门ID（对应 _departmentid）
-	DepartmentName    string                 `protobuf:"bytes,6,opt,name=department_name,json=departmentName,proto3" json:"departmentName"`          // 部门名称（对应 deptname）
-	JobCompetency     string                 `protobuf:"bytes,7,opt,name=job_competency,json=jobCompetency,proto3" json:"jobCompetency"`             // 职位能力要求（对应 _jobcompetency）
-	JobResponsibility string                 `protobuf:"bytes,8,opt,name=job_responsibility,json=jobResponsibility,proto3" json:"jobResponsibility"` // 职位职责（对应 _jobresponsibility）
-	JobDoc            string                 `protobuf:"bytes,9,opt,name=job_doc,json=jobDoc,proto3" json:"jobDoc"`                                  // 职位文档（对应 _jobdoc）
-	JobRemark         string                 `protobuf:"bytes,10,opt,name=job_remark,json=jobRemark,proto3" json:"jobRemark"`                        // 职位备注（对应 _jobtitleremark）
-	Status            string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status"`                                              // 状态（对应 status）
-	SafeLevel         string                 `protobuf:"bytes,12,opt,name=safe_level,json=safeLevel,proto3" json:"safeLevel"`                        // 安全级别（对应 safelevel）
-	IsHead            bool                   `protobuf:"varint,13,opt,name=is_head,json=isHead,proto3" json:"isHead"`                                // 是否负责人（对应 is_head）
-	CreateTime        int64                  `protobuf:"varint,14,opt,name=create_time,json=createTime,proto3" json:"createTime"`                    // 创建时间
-	UpdateTime        int64                  `protobuf:"varint,15,opt,name=update_time,json=updateTime,proto3" json:"updateTime"`                    // 更新时间
-	IsNew             bool                   `protobuf:"varint,16,opt,name=is_new,json=isNew,proto3" json:"isNew"`                                   // 是否新职位（对应 isnew）
-	IsTurn            bool                   `protobuf:"varint,17,opt,name=is_turn,json=isTurn,proto3" json:"isTurn"`                                // 是否轮岗（对应 isturn）
-	CompanyId         int32                  `protobuf:"varint,18,opt,name=company_id,json=companyId,proto3" json:"companyID"`                       // 公司ID（对应 comid）
-	JobId             int32                  `protobuf:"varint,19,opt,name=job_id,json=jobId,proto3" json:"jobId"`                                   // 职位ID（对应OA的jobid）
-	Explain           string                 `protobuf:"bytes,20,opt,name=explain,proto3" json:"explain"`                                            // 说明（对应 explain）
-	Ppath             string                 `protobuf:"bytes,21,opt,name=ppath,proto3" json:"ppath"`                                                // 汇报路径（对应 ppath）
+	JobTitleID        int32                  `protobuf:"varint,1,opt,name=jobTitleID,proto3" json:"jobTitleID"`              // 职位ID（主键，对应 _jobtitleid 或 id）
+	JobCode           string                 `protobuf:"bytes,2,opt,name=jobCode,proto3" json:"jobCode"`                     // 职位编码（对应 _code）
+	JobName           string                 `protobuf:"bytes,3,opt,name=jobName,proto3" json:"jobName"`                     // 职位全称（对应 _fullname）
+	JobShortName      string                 `protobuf:"bytes,4,opt,name=jobShortName,proto3" json:"jobShortName"`           // 职位简称（对应 _shortname）
+	DepartmentID      int32                  `protobuf:"varint,5,opt,name=departmentID,proto3" json:"departmentID"`          // 部门ID（对应 _departmentid）
+	DepartmentName    string                 `protobuf:"bytes,6,opt,name=departmentName,proto3" json:"departmentName"`       // 部门名称（对应 deptname）
+	JobCompetency     string                 `protobuf:"bytes,7,opt,name=jobCompetency,proto3" json:"jobCompetency"`         // 职位能力要求（对应 _jobcompetency）
+	JobResponsibility string                 `protobuf:"bytes,8,opt,name=jobResponsibility,proto3" json:"jobResponsibility"` // 职位职责（对应 _jobresponsibility）
+	JobDoc            string                 `protobuf:"bytes,9,opt,name=jobDoc,proto3" json:"jobDoc"`                       // 职位文档（对应 _jobdoc）
+	JobRemark         string                 `protobuf:"bytes,10,opt,name=jobRemark,proto3" json:"jobRemark"`                // 职位备注（对应 _jobtitleremark）
+	Status            string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status"`                      // 状态（对应 status）
+	SafeLevel         string                 `protobuf:"bytes,12,opt,name=safeLevel,proto3" json:"safeLevel"`                // 安全级别（对应 safelevel）
+	IsHead            bool                   `protobuf:"varint,13,opt,name=isHead,proto3" json:"isHead"`                     // 是否负责人（对应 is_head）
+	CreateTime        int64                  `protobuf:"varint,14,opt,name=createTime,proto3" json:"createTime"`             // 创建时间
+	UpdateTime        int64                  `protobuf:"varint,15,opt,name=updateTime,proto3" json:"updateTime"`             // 更新时间
+	IsNew             bool                   `protobuf:"varint,16,opt,name=isNew,proto3" json:"isNew"`                       // 是否新职位（对应 isnew）
+	IsTurn            bool                   `protobuf:"varint,17,opt,name=isTurn,proto3" json:"isTurn"`                     // 是否轮岗（对应 isturn）
+	CompanyID         int32                  `protobuf:"varint,18,opt,name=companyID,proto3" json:"companyID"`               // 公司ID（对应 comid）
+	JobID             int32                  `protobuf:"varint,19,opt,name=jobID,proto3" json:"jobID"`                       // 职位ID（对应OA的jobid）
+	Explain           string                 `protobuf:"bytes,20,opt,name=explain,proto3" json:"explain"`                    // 说明（对应 explain）
+	Ppath             string                 `protobuf:"bytes,21,opt,name=ppath,proto3" json:"ppath"`                        // 汇报路径（对应 ppath）
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -2873,9 +2873,9 @@ func (*JobInfo) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{42}
 }
 
-func (x *JobInfo) GetJobTitleId() int32 {
+func (x *JobInfo) GetJobTitleID() int32 {
 	if x != nil {
-		return x.JobTitleId
+		return x.JobTitleID
 	}
 	return 0
 }
@@ -2901,9 +2901,9 @@ func (x *JobInfo) GetJobShortName() string {
 	return ""
 }
 
-func (x *JobInfo) GetDepartmentId() int32 {
+func (x *JobInfo) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -2992,16 +2992,16 @@ func (x *JobInfo) GetIsTurn() bool {
 	return false
 }
 
-func (x *JobInfo) GetCompanyId() int32 {
+func (x *JobInfo) GetCompanyID() int32 {
 	if x != nil {
-		return x.CompanyId
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *JobInfo) GetJobId() int32 {
+func (x *JobInfo) GetJobID() int32 {
 	if x != nil {
-		return x.JobId
+		return x.JobID
 	}
 	return 0
 }
@@ -3023,17 +3023,17 @@ func (x *JobInfo) GetPpath() string {
 // CreateJobTitleReq 创建职位请求
 type CreateJobTitleReq struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	JobCode           string                 `protobuf:"bytes,1,opt,name=job_code,json=jobCode,proto3" json:"jobCode"`                               // 职位编码
-	JobName           string                 `protobuf:"bytes,2,opt,name=job_name,json=jobName,proto3" json:"jobName"`                               // 职位全称
-	JobShortName      string                 `protobuf:"bytes,3,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"`               // 职位简称
-	DepartmentId      int32                  `protobuf:"varint,4,opt,name=department_id,json=departmentId,proto3" json:"departmentID"`               // 部门ID
-	JobCompetency     string                 `protobuf:"bytes,5,opt,name=job_competency,json=jobCompetency,proto3" json:"jobCompetency"`             // 职位能力要求
-	JobResponsibility string                 `protobuf:"bytes,6,opt,name=job_responsibility,json=jobResponsibility,proto3" json:"jobResponsibility"` // 职位职责
-	JobDoc            string                 `protobuf:"bytes,7,opt,name=job_doc,json=jobDoc,proto3" json:"jobDoc"`                                  // 职位文档
-	JobRemark         string                 `protobuf:"bytes,8,opt,name=job_remark,json=jobRemark,proto3" json:"jobRemark"`                         // 职位备注
-	Status            string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status"`                                               // 状态
-	SafeLevel         string                 `protobuf:"bytes,10,opt,name=safe_level,json=safeLevel,proto3" json:"safeLevel"`                        // 安全级别
-	IsHead            bool                   `protobuf:"varint,11,opt,name=is_head,json=isHead,proto3" json:"isHead"`                                // 是否负责人
+	JobCode           string                 `protobuf:"bytes,1,opt,name=jobCode,proto3" json:"jobCode"`                     // 职位编码
+	JobName           string                 `protobuf:"bytes,2,opt,name=jobName,proto3" json:"jobName"`                     // 职位全称
+	JobShortName      string                 `protobuf:"bytes,3,opt,name=jobShortName,proto3" json:"jobShortName"`           // 职位简称
+	DepartmentID      int32                  `protobuf:"varint,4,opt,name=departmentID,proto3" json:"departmentID"`          // 部门ID
+	JobCompetency     string                 `protobuf:"bytes,5,opt,name=jobCompetency,proto3" json:"jobCompetency"`         // 职位能力要求
+	JobResponsibility string                 `protobuf:"bytes,6,opt,name=jobResponsibility,proto3" json:"jobResponsibility"` // 职位职责
+	JobDoc            string                 `protobuf:"bytes,7,opt,name=jobDoc,proto3" json:"jobDoc"`                       // 职位文档
+	JobRemark         string                 `protobuf:"bytes,8,opt,name=jobRemark,proto3" json:"jobRemark"`                 // 职位备注
+	Status            string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status"`                       // 状态
+	SafeLevel         string                 `protobuf:"bytes,10,opt,name=safeLevel,proto3" json:"safeLevel"`                // 安全级别
+	IsHead            bool                   `protobuf:"varint,11,opt,name=isHead,proto3" json:"isHead"`                     // 是否负责人
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -3089,9 +3089,9 @@ func (x *CreateJobTitleReq) GetJobShortName() string {
 	return ""
 }
 
-func (x *CreateJobTitleReq) GetDepartmentId() int32 {
+func (x *CreateJobTitleReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -3148,7 +3148,7 @@ func (x *CreateJobTitleReq) GetIsHead() bool {
 // CreateJobTitleResp 创建职位响应
 type CreateJobTitleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitleId    int32                  `protobuf:"varint,1,opt,name=job_title_id,json=jobTitleId,proto3" json:"jobTitleID"` // 职位ID
+	JobTitleID    int32                  `protobuf:"varint,1,opt,name=jobTitleID,proto3" json:"jobTitleID"` // 职位ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3183,9 +3183,9 @@ func (*CreateJobTitleResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{44}
 }
 
-func (x *CreateJobTitleResp) GetJobTitleId() int32 {
+func (x *CreateJobTitleResp) GetJobTitleID() int32 {
 	if x != nil {
-		return x.JobTitleId
+		return x.JobTitleID
 	}
 	return 0
 }
@@ -3193,18 +3193,18 @@ func (x *CreateJobTitleResp) GetJobTitleId() int32 {
 // UpdateJobTitleReq 更新职位请求
 type UpdateJobTitleReq struct {
 	state             protoimpl.MessageState  `protogen:"open.v1"`
-	JobTitleId        int32                   `protobuf:"varint,1,opt,name=job_title_id,json=jobTitleId,proto3" json:"jobTitleID"` // 职位ID（必填）
-	JobCode           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=job_code,json=jobCode,proto3" json:"jobCode"`
-	JobName           *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=job_name,json=jobName,proto3" json:"jobName"`
-	JobShortName      *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"`
-	DepartmentId      *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=department_id,json=departmentId,proto3" json:"departmentID"`
-	JobCompetency     *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=job_competency,json=jobCompetency,proto3" json:"jobCompetency"`
-	JobResponsibility *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=job_responsibility,json=jobResponsibility,proto3" json:"jobResponsibility"`
-	JobDoc            *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=job_doc,json=jobDoc,proto3" json:"jobDoc"`
-	JobRemark         *wrapperspb.StringValue `protobuf:"bytes,9,opt,name=job_remark,json=jobRemark,proto3" json:"jobRemark"`
+	JobTitleID        int32                   `protobuf:"varint,1,opt,name=jobTitleID,proto3" json:"jobTitleID"` // 职位ID（必填）
+	JobCode           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=jobCode,proto3" json:"jobCode"`
+	JobName           *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=jobName,proto3" json:"jobName"`
+	JobShortName      *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=jobShortName,proto3" json:"jobShortName"`
+	DepartmentID      *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=departmentID,proto3" json:"departmentID"`
+	JobCompetency     *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=jobCompetency,proto3" json:"jobCompetency"`
+	JobResponsibility *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=jobResponsibility,proto3" json:"jobResponsibility"`
+	JobDoc            *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=jobDoc,proto3" json:"jobDoc"`
+	JobRemark         *wrapperspb.StringValue `protobuf:"bytes,9,opt,name=jobRemark,proto3" json:"jobRemark"`
 	Status            *wrapperspb.StringValue `protobuf:"bytes,10,opt,name=status,proto3" json:"status"`
-	SafeLevel         *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=safe_level,json=safeLevel,proto3" json:"safeLevel"`
-	IsHead            *wrapperspb.BoolValue   `protobuf:"bytes,12,opt,name=is_head,json=isHead,proto3" json:"isHead"`
+	SafeLevel         *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=safeLevel,proto3" json:"safeLevel"`
+	IsHead            *wrapperspb.BoolValue   `protobuf:"bytes,12,opt,name=isHead,proto3" json:"isHead"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -3239,9 +3239,9 @@ func (*UpdateJobTitleReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *UpdateJobTitleReq) GetJobTitleId() int32 {
+func (x *UpdateJobTitleReq) GetJobTitleID() int32 {
 	if x != nil {
-		return x.JobTitleId
+		return x.JobTitleID
 	}
 	return 0
 }
@@ -3267,9 +3267,9 @@ func (x *UpdateJobTitleReq) GetJobShortName() *wrapperspb.StringValue {
 	return nil
 }
 
-func (x *UpdateJobTitleReq) GetDepartmentId() *wrapperspb.Int32Value {
+func (x *UpdateJobTitleReq) GetDepartmentID() *wrapperspb.Int32Value {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return nil
 }
@@ -3363,7 +3363,7 @@ func (*UpdateJobTitleResp) Descriptor() ([]byte, []int) {
 // DeleteJobTitleReq 删除职位请求
 type DeleteJobTitleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitleIds   []int32                `protobuf:"varint,1,rep,packed,name=job_title_ids,json=jobTitleIds,proto3" json:"jobTitleIds"` // 职位ID列表
+	JobTitleIDs   []int32                `protobuf:"varint,1,rep,packed,name=jobTitleIDs,proto3" json:"jobTitleIDs"` // 职位ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3398,9 +3398,9 @@ func (*DeleteJobTitleReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{47}
 }
 
-func (x *DeleteJobTitleReq) GetJobTitleIds() []int32 {
+func (x *DeleteJobTitleReq) GetJobTitleIDs() []int32 {
 	if x != nil {
-		return x.JobTitleIds
+		return x.JobTitleIDs
 	}
 	return nil
 }
@@ -3445,7 +3445,7 @@ func (*DeleteJobTitleResp) Descriptor() ([]byte, []int) {
 // GetJobTitleReq 获取职位请求
 type GetJobTitleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitleId    int32                  `protobuf:"varint,1,opt,name=job_title_id,json=jobTitleId,proto3" json:"jobTitleID"` // 职位ID
+	JobTitleID    int32                  `protobuf:"varint,1,opt,name=jobTitleID,proto3" json:"jobTitleID"` // 职位ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3480,9 +3480,9 @@ func (*GetJobTitleReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{49}
 }
 
-func (x *GetJobTitleReq) GetJobTitleId() int32 {
+func (x *GetJobTitleReq) GetJobTitleID() int32 {
 	if x != nil {
-		return x.JobTitleId
+		return x.JobTitleID
 	}
 	return 0
 }
@@ -3490,7 +3490,7 @@ func (x *GetJobTitleReq) GetJobTitleId() int32 {
 // GetJobTitleResp 获取职位响应
 type GetJobTitleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitle      *JobInfo               `protobuf:"bytes,1,opt,name=job_title,json=jobTitle,proto3" json:"jobTitle"`
+	JobTitle      *JobInfo               `protobuf:"bytes,1,opt,name=jobTitle,proto3" json:"jobTitle"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3535,7 +3535,7 @@ func (x *GetJobTitleResp) GetJobTitle() *JobInfo {
 // GetJobTitlesReq 批量获取职位请求
 type GetJobTitlesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitleIds   []int32                `protobuf:"varint,1,rep,packed,name=job_title_ids,json=jobTitleIds,proto3" json:"jobTitleIds"` // 职位ID列表
+	JobTitleIDs   []int32                `protobuf:"varint,1,rep,packed,name=jobTitleIDs,proto3" json:"jobTitleIDs"` // 职位ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3570,9 +3570,9 @@ func (*GetJobTitlesReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{51}
 }
 
-func (x *GetJobTitlesReq) GetJobTitleIds() []int32 {
+func (x *GetJobTitlesReq) GetJobTitleIDs() []int32 {
 	if x != nil {
-		return x.JobTitleIds
+		return x.JobTitleIDs
 	}
 	return nil
 }
@@ -3580,7 +3580,7 @@ func (x *GetJobTitlesReq) GetJobTitleIds() []int32 {
 // GetJobTitlesResp 批量获取职位响应
 type GetJobTitlesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobTitles     []*JobInfo             `protobuf:"bytes,1,rep,name=job_titles,json=jobTitles,proto3" json:"jobTitles"`
+	JobTitles     []*JobInfo             `protobuf:"bytes,1,rep,name=jobTitles,proto3" json:"jobTitles"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3625,9 +3625,9 @@ func (x *GetJobTitlesResp) GetJobTitles() []*JobInfo {
 // SearchJobTitleReq 搜索职位请求
 type SearchJobTitleReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Keyword       string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                               // 关键词（职位名称、编码）
-	DepartmentId  int32                    `protobuf:"varint,2,opt,name=department_id,json=departmentId,proto3" json:"departmentID"` // 部门ID（可选）
-	Status        string                   `protobuf:"bytes,3,opt,name=status,proto3" json:"status"`                                 // 状态（可选）
+	Keyword       string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`            // 关键词（职位名称、编码）
+	DepartmentID  int32                    `protobuf:"varint,2,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID（可选）
+	Status        string                   `protobuf:"bytes,3,opt,name=status,proto3" json:"status"`              // 状态（可选）
 	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3670,9 +3670,9 @@ func (x *SearchJobTitleReq) GetKeyword() string {
 	return ""
 }
 
-func (x *SearchJobTitleReq) GetDepartmentId() int32 {
+func (x *SearchJobTitleReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -3694,8 +3694,8 @@ func (x *SearchJobTitleReq) GetPagination() *sdkws.RequestPagination {
 // SearchJobTitleResp 搜索职位响应
 type SearchJobTitleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`                        // 总数
-	JobTitles     []*JobInfo             `protobuf:"bytes,2,rep,name=job_titles,json=jobTitles,proto3" json:"jobTitles"` // 职位列表
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`        // 总数
+	JobTitles     []*JobInfo             `protobuf:"bytes,2,rep,name=jobTitles,proto3" json:"jobTitles"` // 职位列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3747,7 +3747,7 @@ func (x *SearchJobTitleResp) GetJobTitles() []*JobInfo {
 // GetJobTitlesByDepartmentReq 根据部门获取职位请求
 type GetJobTitlesByDepartmentReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	DepartmentId  int32                    `protobuf:"varint,1,opt,name=department_id,json=departmentId,proto3" json:"departmentID"` // 部门ID
+	DepartmentID  int32                    `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID
 	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3783,9 +3783,9 @@ func (*GetJobTitlesByDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{55}
 }
 
-func (x *GetJobTitlesByDepartmentReq) GetDepartmentId() int32 {
+func (x *GetJobTitlesByDepartmentReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentId
+		return x.DepartmentID
 	}
 	return 0
 }
@@ -3801,7 +3801,7 @@ func (x *GetJobTitlesByDepartmentReq) GetPagination() *sdkws.RequestPagination {
 type GetJobTitlesByDepartmentResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	JobTitles     []*JobInfo             `protobuf:"bytes,2,rep,name=job_titles,json=jobTitles,proto3" json:"jobTitles"`
+	JobTitles     []*JobInfo             `protobuf:"bytes,2,rep,name=jobTitles,proto3" json:"jobTitles"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3853,11 +3853,11 @@ func (x *GetJobTitlesByDepartmentResp) GetJobTitles() []*JobInfo {
 // Job 职位信息（简化版，从 job_title 同步）
 type Job struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobId         int32                  `protobuf:"varint,1,opt,name=job_id,json=jobId,proto3" json:"jobId"`                      // 职位ID（主键，唯一）
-	JobName       string                 `protobuf:"bytes,2,opt,name=job_name,json=jobName,proto3" json:"jobName"`                 // 职位全称
-	JobShortName  string                 `protobuf:"bytes,3,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"` // 职位简称
-	CreateTime    int64                  `protobuf:"varint,4,opt,name=create_time,json=createTime,proto3" json:"createTime"`       // 创建时间
-	UpdateTime    int64                  `protobuf:"varint,5,opt,name=update_time,json=updateTime,proto3" json:"updateTime"`       // 更新时间
+	JobID         int32                  `protobuf:"varint,1,opt,name=jobID,proto3" json:"jobID"`              // 职位ID（主键，唯一）
+	JobName       string                 `protobuf:"bytes,2,opt,name=jobName,proto3" json:"jobName"`           // 职位全称
+	JobShortName  string                 `protobuf:"bytes,3,opt,name=jobShortName,proto3" json:"jobShortName"` // 职位简称
+	CreateTime    int64                  `protobuf:"varint,4,opt,name=createTime,proto3" json:"createTime"`    // 创建时间
+	UpdateTime    int64                  `protobuf:"varint,5,opt,name=updateTime,proto3" json:"updateTime"`    // 更新时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3892,9 +3892,9 @@ func (*Job) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *Job) GetJobId() int32 {
+func (x *Job) GetJobID() int32 {
 	if x != nil {
-		return x.JobId
+		return x.JobID
 	}
 	return 0
 }
@@ -3930,9 +3930,9 @@ func (x *Job) GetUpdateTime() int64 {
 // CreateJobReq 创建职位请求
 type CreateJobReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobId         int32                  `protobuf:"varint,1,opt,name=job_id,json=jobId,proto3" json:"jobId"`                      // 职位ID（必填，唯一）
-	JobName       string                 `protobuf:"bytes,2,opt,name=job_name,json=jobName,proto3" json:"jobName"`                 // 职位全称
-	JobShortName  string                 `protobuf:"bytes,3,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"` // 职位简称
+	JobID         int32                  `protobuf:"varint,1,opt,name=jobID,proto3" json:"jobID"`              // 职位ID（必填，唯一）
+	JobName       string                 `protobuf:"bytes,2,opt,name=jobName,proto3" json:"jobName"`           // 职位全称
+	JobShortName  string                 `protobuf:"bytes,3,opt,name=jobShortName,proto3" json:"jobShortName"` // 职位简称
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3967,9 +3967,9 @@ func (*CreateJobReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{58}
 }
 
-func (x *CreateJobReq) GetJobId() int32 {
+func (x *CreateJobReq) GetJobID() int32 {
 	if x != nil {
-		return x.JobId
+		return x.JobID
 	}
 	return 0
 }
@@ -4028,9 +4028,9 @@ func (*CreateJobResp) Descriptor() ([]byte, []int) {
 // UpdateJobReq 更新职位请求
 type UpdateJobReq struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	JobId         int32                   `protobuf:"varint,1,opt,name=job_id,json=jobId,proto3" json:"jobId"`                      // 职位ID（必填）
-	JobName       *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=job_name,json=jobName,proto3" json:"jobName"`                 // 职位全称
-	JobShortName  *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=job_short_name,json=jobShortName,proto3" json:"jobShortName"` // 职位简称
+	JobID         int32                   `protobuf:"varint,1,opt,name=jobID,proto3" json:"jobID"`              // 职位ID（必填）
+	JobName       *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=jobName,proto3" json:"jobName"`           // 职位全称
+	JobShortName  *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=jobShortName,proto3" json:"jobShortName"` // 职位简称
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4065,9 +4065,9 @@ func (*UpdateJobReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{60}
 }
 
-func (x *UpdateJobReq) GetJobId() int32 {
+func (x *UpdateJobReq) GetJobID() int32 {
 	if x != nil {
-		return x.JobId
+		return x.JobID
 	}
 	return 0
 }
@@ -4126,7 +4126,7 @@ func (*UpdateJobResp) Descriptor() ([]byte, []int) {
 // DeleteJobReq 删除职位请求
 type DeleteJobReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobIds        []int32                `protobuf:"varint,1,rep,packed,name=job_ids,json=jobIds,proto3" json:"jobIds"` // 职位ID列表
+	JobIDs        []int32                `protobuf:"varint,1,rep,packed,name=jobIDs,proto3" json:"jobIDs"` // 职位ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4161,9 +4161,9 @@ func (*DeleteJobReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{62}
 }
 
-func (x *DeleteJobReq) GetJobIds() []int32 {
+func (x *DeleteJobReq) GetJobIDs() []int32 {
 	if x != nil {
-		return x.JobIds
+		return x.JobIDs
 	}
 	return nil
 }
@@ -4208,7 +4208,7 @@ func (*DeleteJobResp) Descriptor() ([]byte, []int) {
 // GetJobReq 获取职位请求
 type GetJobReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobId         int32                  `protobuf:"varint,1,opt,name=job_id,json=jobId,proto3" json:"jobId"` // 职位ID
+	JobID         int32                  `protobuf:"varint,1,opt,name=jobID,proto3" json:"jobID"` // 职位ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4243,9 +4243,9 @@ func (*GetJobReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{64}
 }
 
-func (x *GetJobReq) GetJobId() int32 {
+func (x *GetJobReq) GetJobID() int32 {
 	if x != nil {
-		return x.JobId
+		return x.JobID
 	}
 	return 0
 }
@@ -4298,7 +4298,7 @@ func (x *GetJobResp) GetJob() *Job {
 // GetJobsReq 批量获取职位请求
 type GetJobsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	JobIds        []int32                `protobuf:"varint,1,rep,packed,name=job_ids,json=jobIds,proto3" json:"jobIds"` // 职位ID列表
+	JobIDs        []int32                `protobuf:"varint,1,rep,packed,name=jobIDs,proto3" json:"jobIDs"` // 职位ID列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4333,9 +4333,9 @@ func (*GetJobsReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{66}
 }
 
-func (x *GetJobsReq) GetJobIds() []int32 {
+func (x *GetJobsReq) GetJobIDs() []int32 {
 	if x != nil {
-		return x.JobIds
+		return x.JobIDs
 	}
 	return nil
 }
@@ -4494,8 +4494,8 @@ func (x *SearchJobResp) GetJobs() []*Job {
 // SyncOADataToChatReq 同步外部 OA 数据到 Chat 系统请求（统一请求类型）
 type SyncOADataToChatReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	CreateIfNotExist bool                   `protobuf:"varint,1,opt,name=create_if_not_exist,json=createIfNotExist,proto3" json:"createIfNotExist"` // 如果用户不存在，是否创建新用户（仅用于用户同步，默认 true）
-	BatchSize        int32                  `protobuf:"varint,2,opt,name=batch_size,json=batchSize,proto3" json:"batchSize"`                        // 批次大小（默认 50）
+	CreateIfNotExist bool                   `protobuf:"varint,1,opt,name=createIfNotExist,proto3" json:"createIfNotExist"` // 如果用户不存在，是否创建新用户（仅用于用户同步，默认 true）
+	BatchSize        int32                  `protobuf:"varint,2,opt,name=batchSize,proto3" json:"batchSize"`               // 批次大小（默认 50）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -4547,14 +4547,14 @@ func (x *SyncOADataToChatReq) GetBatchSize() int32 {
 // SyncOADataToChatResp 同步外部 OA 数据到 Chat 系统响应（统一响应类型）
 type SyncOADataToChatResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`                                   // 总数
-	Success       uint32                 `protobuf:"varint,2,opt,name=success,proto3" json:"success"`                               // 成功数
-	Created       uint32                 `protobuf:"varint,3,opt,name=created,proto3" json:"created"`                               // 创建数
-	Updated       uint32                 `protobuf:"varint,4,opt,name=updated,proto3" json:"updated"`                               // 更新数
-	Errors        uint32                 `protobuf:"varint,5,opt,name=errors,proto3" json:"errors"`                                 // 错误数
-	MongoDbCount  int32                  `protobuf:"varint,6,opt,name=mongo_db_count,json=mongoDbCount,proto3" json:"mongoDbCount"` // MongoDB 中的记录数
-	Message       string                 `protobuf:"bytes,7,opt,name=message,proto3" json:"message"`                                // 消息
-	ErrorDetails  []string               `protobuf:"bytes,8,rep,name=error_details,json=errorDetails,proto3" json:"errorDetails"`   // 错误详情
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`               // 总数
+	Success       uint32                 `protobuf:"varint,2,opt,name=success,proto3" json:"success"`           // 成功数
+	Created       uint32                 `protobuf:"varint,3,opt,name=created,proto3" json:"created"`           // 创建数
+	Updated       uint32                 `protobuf:"varint,4,opt,name=updated,proto3" json:"updated"`           // 更新数
+	Errors        uint32                 `protobuf:"varint,5,opt,name=errors,proto3" json:"errors"`             // 错误数
+	MongoDBCount  int32                  `protobuf:"varint,6,opt,name=mongoDBCount,proto3" json:"mongoDBCount"` // MongoDB 中的记录数
+	Message       string                 `protobuf:"bytes,7,opt,name=message,proto3" json:"message"`            // 消息
+	ErrorDetails  []string               `protobuf:"bytes,8,rep,name=errorDetails,proto3" json:"errorDetails"`  // 错误详情
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4624,9 +4624,9 @@ func (x *SyncOADataToChatResp) GetErrors() uint32 {
 	return 0
 }
 
-func (x *SyncOADataToChatResp) GetMongoDbCount() int32 {
+func (x *SyncOADataToChatResp) GetMongoDBCount() int32 {
 	if x != nil {
-		return x.MongoDbCount
+		return x.MongoDBCount
 	}
 	return 0
 }
@@ -4649,92 +4649,89 @@ var File_oa_oa_proto protoreflect.FileDescriptor
 
 const file_oa_oa_proto_rawDesc = "" +
 	"\n" +
-	"\voa/oa.proto\x12\topenim.oa\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\x98\x02\n" +
-	"\vCompanyInfo\x12\x1d\n" +
+	"\voa/oa.proto\x12\topenim.oa\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\x8f\x02\n" +
+	"\vCompanyInfo\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12 \n" +
+	"\vcompanyCode\x18\x02 \x01(\tR\vcompanyCode\x12 \n" +
+	"\vcompanyName\x18\x03 \x01(\tR\vcompanyName\x12*\n" +
+	"\x10companyShortName\x18\x04 \x01(\tR\x10companyShortName\x12(\n" +
+	"\x0fparentCompanyID\x18\x05 \x01(\x05R\x0fparentCompanyID\x12 \n" +
+	"\vmemberCount\x18\x0f \x01(\x05R\vmemberCount\x12&\n" +
+	"\x0ehasDepartments\x18\x11 \x01(\bR\x0ehasDepartments\"\xc6\x02\n" +
+	"\x10CreateCompanyReq\x12 \n" +
+	"\vcompanyCode\x18\x01 \x01(\tR\vcompanyCode\x12 \n" +
+	"\vcompanyName\x18\x02 \x01(\tR\vcompanyName\x12*\n" +
+	"\x10companyShortName\x18\x03 \x01(\tR\x10companyShortName\x12(\n" +
+	"\x0fparentCompanyID\x18\x04 \x01(\x05R\x0fparentCompanyID\x12\x18\n" +
+	"\awebsite\x18\x05 \x01(\tR\awebsite\x12$\n" +
+	"\risMainCompany\x18\x06 \x01(\bR\risMainCompany\x12\x1a\n" +
+	"\bisEffect\x18\a \x01(\bR\bisEffect\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyID\x12!\n" +
-	"\fcompany_code\x18\x02 \x01(\tR\vcompanyCode\x12!\n" +
-	"\fcompany_name\x18\x03 \x01(\tR\vcompanyName\x12,\n" +
-	"\x12company_short_name\x18\x04 \x01(\tR\x10companyShortName\x12*\n" +
-	"\x11parent_company_id\x18\x05 \x01(\x05R\x0fparentCompanyID\x12!\n" +
-	"\fmember_count\x18\x0f \x01(\x05R\vmemberCount\x12'\n" +
-	"\x0fhas_departments\x18\x11 \x01(\bR\x0ehasDepartments\"\xd2\x02\n" +
-	"\x10CreateCompanyReq\x12!\n" +
-	"\fcompany_code\x18\x01 \x01(\tR\vcompanyCode\x12!\n" +
-	"\fcompany_name\x18\x02 \x01(\tR\vcompanyName\x12,\n" +
-	"\x12company_short_name\x18\x03 \x01(\tR\x10companyShortName\x12*\n" +
-	"\x11parent_company_id\x18\x04 \x01(\x05R\x0fparentCompanyId\x12\x18\n" +
-	"\awebsite\x18\x05 \x01(\tR\awebsite\x12&\n" +
-	"\x0fis_main_company\x18\x06 \x01(\bR\risMainCompany\x12\x1b\n" +
-	"\tis_effect\x18\a \x01(\bR\bisEffect\x12 \n" +
-	"\fis_draw_back\x18\b \x01(\bR\n" +
-	"isDrawBack\x12\x1d\n" +
+	"isDrawBack\x18\b \x01(\bR\n" +
+	"isDrawBack\x12\x1c\n" +
+	"\tshowOrder\x18\t \x01(\x05R\tshowOrder\"1\n" +
+	"\x11CreateCompanyResp\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\"\xa2\x05\n" +
+	"\x10UpdateCompanyReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12>\n" +
+	"\vcompanyCode\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\vcompanyCode\x12>\n" +
+	"\vcompanyName\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\vcompanyName\x12H\n" +
+	"\x10companyShortName\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\x10companyShortName\x12E\n" +
+	"\x0fparentCompanyID\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\x0fparentCompanyID\x126\n" +
+	"\awebsite\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\awebsite\x12@\n" +
+	"\risMainCompany\x18\a \x01(\v2\x1a.openim.protobuf.BoolValueR\risMainCompany\x126\n" +
+	"\bisEffect\x18\b \x01(\v2\x1a.openim.protobuf.BoolValueR\bisEffect\x12:\n" +
 	"\n" +
-	"show_order\x18\t \x01(\x05R\tshowOrder\"2\n" +
-	"\x11CreateCompanyResp\x12\x1d\n" +
-	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyId\"\xaf\x05\n" +
-	"\x10UpdateCompanyReq\x12\x1d\n" +
-	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyId\x12?\n" +
-	"\fcompany_code\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\vcompanyCode\x12?\n" +
-	"\fcompany_name\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\vcompanyName\x12J\n" +
-	"\x12company_short_name\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\x10companyShortName\x12G\n" +
-	"\x11parent_company_id\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\x0fparentCompanyId\x126\n" +
-	"\awebsite\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\awebsite\x12B\n" +
-	"\x0fis_main_company\x18\a \x01(\v2\x1a.openim.protobuf.BoolValueR\risMainCompany\x127\n" +
-	"\tis_effect\x18\b \x01(\v2\x1a.openim.protobuf.BoolValueR\bisEffect\x12<\n" +
-	"\fis_draw_back\x18\t \x01(\v2\x1a.openim.protobuf.BoolValueR\n" +
-	"isDrawBack\x12:\n" +
-	"\n" +
-	"show_order\x18\n" +
+	"isDrawBack\x18\t \x01(\v2\x1a.openim.protobuf.BoolValueR\n" +
+	"isDrawBack\x129\n" +
+	"\tshowOrder\x18\n" +
 	" \x01(\v2\x1b.openim.protobuf.Int32ValueR\tshowOrder\x126\n" +
 	"\bcanceled\x18\v \x01(\v2\x1a.openim.protobuf.BoolValueR\bcanceled\"\x13\n" +
-	"\x11UpdateCompanyResp\"3\n" +
-	"\x10DeleteCompanyReq\x12\x1f\n" +
-	"\vcompany_ids\x18\x01 \x03(\x05R\n" +
-	"companyIds\"\x13\n" +
-	"\x11DeleteCompanyResp\".\n" +
-	"\rGetCompanyReq\x12\x1d\n" +
+	"\x11UpdateCompanyResp\"2\n" +
+	"\x10DeleteCompanyReq\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyId\"B\n" +
+	"companyIDs\x18\x01 \x03(\x05R\n" +
+	"companyIDs\"\x13\n" +
+	"\x11DeleteCompanyResp\"-\n" +
+	"\rGetCompanyReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\"B\n" +
 	"\x0eGetCompanyResp\x120\n" +
-	"\acompany\x18\x01 \x01(\v2\x16.openim.oa.CompanyInfoR\acompany\"2\n" +
-	"\x0fGetCompaniesReq\x12\x1f\n" +
-	"\vcompany_ids\x18\x01 \x03(\x05R\n" +
-	"companyIds\"H\n" +
+	"\acompany\x18\x01 \x01(\v2\x16.openim.oa.CompanyInfoR\acompany\"1\n" +
+	"\x0fGetCompaniesReq\x12\x1e\n" +
+	"\n" +
+	"companyIDs\x18\x01 \x03(\x05R\n" +
+	"companyIDs\"H\n" +
 	"\x10GetCompaniesResp\x124\n" +
-	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\xde\x01\n" +
+	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\xd9\x01\n" +
 	"\x10SearchCompanyReq\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeyword\x12*\n" +
-	"\x11parent_company_id\x18\x02 \x01(\x05R\x0fparentCompanyId\x12&\n" +
-	"\x0fis_main_company\x18\x03 \x01(\bR\risMainCompany\x12\x1b\n" +
-	"\tis_effect\x18\x04 \x01(\bR\bisEffect\x12?\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeyword\x12(\n" +
+	"\x0fparentCompanyID\x18\x02 \x01(\x05R\x0fparentCompanyID\x12$\n" +
+	"\risMainCompany\x18\x03 \x01(\bR\risMainCompany\x12\x1a\n" +
+	"\bisEffect\x18\x04 \x01(\bR\bisEffect\x12?\n" +
 	"\n" +
 	"pagination\x18\x05 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\"_\n" +
 	"\x11SearchCompanyResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
-	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\x83\x01\n" +
-	"\x14GetChildCompaniesReq\x12*\n" +
-	"\x11parent_company_id\x18\x01 \x01(\x05R\x0fparentCompanyId\x12?\n" +
+	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\x81\x01\n" +
+	"\x14GetChildCompaniesReq\x12(\n" +
+	"\x0fparentCompanyID\x18\x01 \x01(\x05R\x0fparentCompanyID\x12?\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\"c\n" +
 	"\x15GetChildCompaniesResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
-	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"4\n" +
-	"\x19GetUserJoinedCompaniesReq\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"R\n" +
+	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"3\n" +
+	"\x19GetUserJoinedCompaniesReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\"R\n" +
 	"\x1aGetUserJoinedCompaniesResp\x124\n" +
 	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\x19\n" +
 	"\x17GetMyJoinedCompaniesReq\"P\n" +
 	"\x18GetMyJoinedCompaniesResp\x124\n" +
-	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"Z\n" +
-	"\x14GetDepartmentTreeReq\x12\x1d\n" +
-	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyID\x12#\n" +
-	"\rdepartment_id\x18\x02 \x01(\x05R\fdepartmentID\"L\n" +
+	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"X\n" +
+	"\x14GetDepartmentTreeReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12\"\n" +
+	"\fdepartmentID\x18\x02 \x01(\x05R\fdepartmentID\"L\n" +
 	"\x15GetDepartmentTreeResp\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.openim.oa.DepartmentTreeItemR\x05items\"\x92\x01\n" +
 	"\x12DepartmentTreeItem\x12\x12\n" +
@@ -4742,295 +4739,283 @@ const file_oa_oa_proto_rawDesc = "" +
 	"\x06member\x18\x02 \x01(\v2\x15.openim.oa.MemberInfoR\x06member\x129\n" +
 	"\n" +
 	"department\x18\x03 \x01(\v2\x19.openim.oa.DepartmentItemR\n" +
-	"department\"\x80\x03\n" +
-	"\x0eDepartmentItem\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentID\x12'\n" +
-	"\x0fdepartment_code\x18\x02 \x01(\tR\x0edepartmentCode\x12'\n" +
-	"\x0fdepartment_name\x18\x03 \x01(\tR\x0edepartmentName\x122\n" +
-	"\x15department_short_name\x18\x04 \x01(\tR\x13departmentShortName\x12\x1d\n" +
+	"department\"\xf4\x02\n" +
+	"\x0eDepartmentItem\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\x12&\n" +
+	"\x0edepartmentCode\x18\x02 \x01(\tR\x0edepartmentCode\x12&\n" +
+	"\x0edepartmentName\x18\x03 \x01(\tR\x0edepartmentName\x120\n" +
+	"\x13departmentShortName\x18\x04 \x01(\tR\x13departmentShortName\x12\x1c\n" +
+	"\tcompanyID\x18\x05 \x01(\x05R\tcompanyID\x12.\n" +
+	"\x12parentDepartmentID\x18\x06 \x01(\x05R\x12parentDepartmentID\x12 \n" +
+	"\vmemberCount\x18\a \x01(\x05R\vmemberCount\x12,\n" +
+	"\x11hasSubDepartments\x18\b \x01(\bR\x11hasSubDepartments\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x05 \x01(\x05R\tcompanyID\x120\n" +
-	"\x14parent_department_id\x18\x06 \x01(\x05R\x12parentDepartmentID\x12!\n" +
-	"\fmember_count\x18\a \x01(\x05R\vmemberCount\x12.\n" +
-	"\x13has_sub_departments\x18\b \x01(\bR\x11hasSubDepartments\x12\x1f\n" +
-	"\vhas_members\x18\t \x01(\bR\n" +
-	"hasMembers\"\xa4\a\n" +
-	"\x0eDepartmentInfo\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentId\x12'\n" +
-	"\x0fdepartment_code\x18\x02 \x01(\tR\x0edepartmentCode\x12'\n" +
-	"\x0fdepartment_name\x18\x03 \x01(\tR\x0edepartmentName\x122\n" +
-	"\x15department_short_name\x18\x04 \x01(\tR\x13departmentShortName\x12\x1d\n" +
+	"hasMembers\x18\t \x01(\bR\n" +
+	"hasMembers\"\x88\a\n" +
+	"\x0eDepartmentInfo\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\x12&\n" +
+	"\x0edepartmentCode\x18\x02 \x01(\tR\x0edepartmentCode\x12&\n" +
+	"\x0edepartmentName\x18\x03 \x01(\tR\x0edepartmentName\x120\n" +
+	"\x13departmentShortName\x18\x04 \x01(\tR\x13departmentShortName\x12\x1c\n" +
+	"\tcompanyID\x18\x05 \x01(\x05R\tcompanyID\x12.\n" +
+	"\x12parentDepartmentID\x18\x06 \x01(\x05R\x12parentDepartmentID\x12\x1c\n" +
+	"\tmanagerID\x18\a \x01(\tR\tmanagerID\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x05 \x01(\x05R\tcompanyId\x120\n" +
-	"\x14parent_department_id\x18\x06 \x01(\x05R\x12parentDepartmentId\x12\x1d\n" +
+	"directorID\x18\b \x01(\tR\n" +
+	"directorID\x12 \n" +
+	"\vassistantID\x18\t \x01(\tR\vassistantID\x12\x1c\n" +
+	"\tleadersID\x18\n" +
+	" \x01(\tR\tleadersID\x12*\n" +
+	"\x10seniorDirectorID\x18\v \x01(\tR\x10seniorDirectorID\x12\"\n" +
+	"\fhrmLeadersID\x18\f \x01(\tR\fhrmLeadersID\x12\x1a\n" +
+	"\bwxDeptID\x18\r \x01(\x05R\bwxDeptID\x12\x16\n" +
+	"\x06isDept\x18\x0e \x01(\bR\x06isDept\x12\x1c\n" +
+	"\tshowOrder\x18\x0f \x01(\x05R\tshowOrder\x12\x1a\n" +
+	"\bcanceled\x18\x10 \x01(\bR\bcanceled\x12\"\n" +
+	"\fcanceledDate\x18\x11 \x01(\x03R\fcanceledDate\x12\x1e\n" +
 	"\n" +
-	"manager_id\x18\a \x01(\tR\tmanagerId\x12\x1f\n" +
-	"\vdirector_id\x18\b \x01(\tR\n" +
-	"directorId\x12!\n" +
-	"\fassistant_id\x18\t \x01(\tR\vassistantId\x12\x1d\n" +
+	"createTime\x18\x12 \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
 	"\n" +
-	"leaders_id\x18\n" +
-	" \x01(\tR\tleadersId\x12,\n" +
-	"\x12senior_director_id\x18\v \x01(\tR\x10seniorDirectorId\x12$\n" +
-	"\x0ehrm_leaders_id\x18\f \x01(\tR\fhrmLeadersId\x12\x1c\n" +
+	"updateTime\x18\x13 \x01(\x03R\n" +
+	"updateTime\x12 \n" +
+	"\vmemberCount\x18\x14 \x01(\x05R\vmemberCount\x12A\n" +
+	"\x0esubDepartments\x18\x15 \x03(\v2\x19.openim.oa.DepartmentInfoR\x0esubDepartments\x12/\n" +
+	"\amembers\x18\x16 \x03(\v2\x15.openim.oa.MemberInfoR\amembers\x12,\n" +
+	"\x11hasSubDepartments\x18\x17 \x01(\bR\x11hasSubDepartments\x12\x1e\n" +
 	"\n" +
-	"wx_dept_id\x18\r \x01(\x05R\bwxDeptId\x12\x17\n" +
-	"\ais_dept\x18\x0e \x01(\bR\x06isDept\x12\x1d\n" +
-	"\n" +
-	"show_order\x18\x0f \x01(\x05R\tshowOrder\x12\x1a\n" +
-	"\bcanceled\x18\x10 \x01(\bR\bcanceled\x12#\n" +
-	"\rcanceled_date\x18\x11 \x01(\x03R\fcanceledDate\x12\x1f\n" +
-	"\vcreate_time\x18\x12 \x01(\x03R\n" +
-	"createTime\x12\x1f\n" +
-	"\vupdate_time\x18\x13 \x01(\x03R\n" +
-	"updateTime\x12!\n" +
-	"\fmember_count\x18\x14 \x01(\x05R\vmemberCount\x12B\n" +
-	"\x0fsub_departments\x18\x15 \x03(\v2\x19.openim.oa.DepartmentInfoR\x0esubDepartments\x12/\n" +
-	"\amembers\x18\x16 \x03(\v2\x15.openim.oa.MemberInfoR\amembers\x12.\n" +
-	"\x13has_sub_departments\x18\x17 \x01(\bR\x11hasSubDepartments\x12\x1f\n" +
-	"\vhas_members\x18\x18 \x01(\bR\n" +
+	"hasMembers\x18\x18 \x01(\bR\n" +
 	"hasMembers\"H\n" +
 	"\x0ePlatformDetail\x12\x1e\n" +
 	"\n" +
 	"platformID\x18\x01 \x01(\x05R\n" +
 	"platformID\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\x05R\x06status\"\xae\x03\n" +
+	"\x06status\x18\x02 \x01(\x05R\x06status\"\xa5\x03\n" +
 	"\n" +
-	"MemberInfo\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x19\n" +
-	"\bface_url\x18\x03 \x01(\tR\afaceUrl\x12#\n" +
-	"\rdepartment_id\x18\x04 \x01(\x05R\fdepartmentID\x12'\n" +
-	"\x0fdepartment_name\x18\x05 \x01(\tR\x0edepartmentName\x12\x1b\n" +
-	"\tjob_title\x18\x06 \x01(\tR\bjobTitle\x12 \n" +
-	"\fjob_title_id\x18\a \x01(\x05R\n" +
-	"jobTitleID\x12!\n" +
-	"\fphone_number\x18\b \x01(\tR\vphoneNumber\x12\x14\n" +
-	"\x05email\x18\t \x01(\tR\x05email\x12\x1b\n" +
-	"\twork_code\x18\n" +
+	"MemberInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\"\n" +
+	"\fdepartmentID\x18\x04 \x01(\x05R\fdepartmentID\x12&\n" +
+	"\x0edepartmentName\x18\x05 \x01(\tR\x0edepartmentName\x12\x1a\n" +
+	"\bjobTitle\x18\x06 \x01(\tR\bjobTitle\x12\x1e\n" +
+	"\n" +
+	"jobTitleID\x18\a \x01(\x05R\n" +
+	"jobTitleID\x12 \n" +
+	"\vphoneNumber\x18\b \x01(\tR\vphoneNumber\x12\x14\n" +
+	"\x05email\x18\t \x01(\tR\x05email\x12\x1a\n" +
+	"\bworkCode\x18\n" +
 	" \x01(\tR\bworkCode\x12\x16\n" +
 	"\x06status\x18\v \x01(\tR\x06status\x12\x16\n" +
 	"\x06gender\x18\f \x01(\x05R\x06gender\x12=\n" +
-	"\fonlineStatus\x18\r \x03(\v2\x19.openim.oa.PlatformDetailR\fonlineStatus\"\x98\x04\n" +
-	"\x13CreateDepartmentReq\x12'\n" +
-	"\x0fdepartment_code\x18\x01 \x01(\tR\x0edepartmentCode\x12'\n" +
-	"\x0fdepartment_name\x18\x02 \x01(\tR\x0edepartmentName\x122\n" +
-	"\x15department_short_name\x18\x03 \x01(\tR\x13departmentShortName\x12\x1d\n" +
+	"\fonlineStatus\x18\r \x03(\v2\x19.openim.oa.PlatformDetailR\fonlineStatus\"\x85\x04\n" +
+	"\x13CreateDepartmentReq\x12&\n" +
+	"\x0edepartmentCode\x18\x01 \x01(\tR\x0edepartmentCode\x12&\n" +
+	"\x0edepartmentName\x18\x02 \x01(\tR\x0edepartmentName\x120\n" +
+	"\x13departmentShortName\x18\x03 \x01(\tR\x13departmentShortName\x12\x1c\n" +
+	"\tcompanyID\x18\x04 \x01(\x05R\tcompanyID\x12.\n" +
+	"\x12parentDepartmentID\x18\x05 \x01(\x05R\x12parentDepartmentID\x12\x1c\n" +
+	"\tmanagerID\x18\x06 \x01(\tR\tmanagerID\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x04 \x01(\x05R\tcompanyId\x120\n" +
-	"\x14parent_department_id\x18\x05 \x01(\x05R\x12parentDepartmentId\x12\x1d\n" +
+	"directorID\x18\a \x01(\tR\n" +
+	"directorID\x12 \n" +
+	"\vassistantID\x18\b \x01(\tR\vassistantID\x12\x1c\n" +
+	"\tleadersID\x18\t \x01(\tR\tleadersID\x12*\n" +
+	"\x10seniorDirectorID\x18\n" +
+	" \x01(\tR\x10seniorDirectorID\x12\"\n" +
+	"\fhrmLeadersID\x18\v \x01(\tR\fhrmLeadersID\x12\x1a\n" +
+	"\bwxDeptID\x18\f \x01(\x05R\bwxDeptID\x12\x16\n" +
+	"\x06isDept\x18\r \x01(\bR\x06isDept\x12\x1c\n" +
+	"\tshowOrder\x18\x0e \x01(\x05R\tshowOrder\":\n" +
+	"\x14CreateDepartmentResp\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\"\xc0\b\n" +
+	"\x13UpdateDepartmentReq\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\x12D\n" +
+	"\x0edepartmentCode\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\x0edepartmentCode\x12D\n" +
+	"\x0edepartmentName\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\x0edepartmentName\x12N\n" +
+	"\x13departmentShortName\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\x13departmentShortName\x129\n" +
+	"\tcompanyID\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\tcompanyID\x12K\n" +
+	"\x12parentDepartmentID\x18\x06 \x01(\v2\x1b.openim.protobuf.Int32ValueR\x12parentDepartmentID\x12:\n" +
+	"\tmanagerID\x18\a \x01(\v2\x1c.openim.protobuf.StringValueR\tmanagerID\x12<\n" +
 	"\n" +
-	"manager_id\x18\x06 \x01(\tR\tmanagerId\x12\x1f\n" +
-	"\vdirector_id\x18\a \x01(\tR\n" +
-	"directorId\x12!\n" +
-	"\fassistant_id\x18\b \x01(\tR\vassistantId\x12\x1d\n" +
-	"\n" +
-	"leaders_id\x18\t \x01(\tR\tleadersId\x12,\n" +
-	"\x12senior_director_id\x18\n" +
-	" \x01(\tR\x10seniorDirectorId\x12$\n" +
-	"\x0ehrm_leaders_id\x18\v \x01(\tR\fhrmLeadersId\x12\x1c\n" +
-	"\n" +
-	"wx_dept_id\x18\f \x01(\x05R\bwxDeptId\x12\x17\n" +
-	"\ais_dept\x18\r \x01(\bR\x06isDept\x12\x1d\n" +
-	"\n" +
-	"show_order\x18\x0e \x01(\x05R\tshowOrder\";\n" +
-	"\x14CreateDepartmentResp\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentId\"\xd5\b\n" +
-	"\x13UpdateDepartmentReq\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentId\x12E\n" +
-	"\x0fdepartment_code\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\x0edepartmentCode\x12E\n" +
-	"\x0fdepartment_name\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\x0edepartmentName\x12P\n" +
-	"\x15department_short_name\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\x13departmentShortName\x12:\n" +
-	"\n" +
-	"company_id\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\tcompanyId\x12M\n" +
-	"\x14parent_department_id\x18\x06 \x01(\v2\x1b.openim.protobuf.Int32ValueR\x12parentDepartmentId\x12;\n" +
-	"\n" +
-	"manager_id\x18\a \x01(\v2\x1c.openim.protobuf.StringValueR\tmanagerId\x12=\n" +
-	"\vdirector_id\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\n" +
-	"directorId\x12?\n" +
-	"\fassistant_id\x18\t \x01(\v2\x1c.openim.protobuf.StringValueR\vassistantId\x12;\n" +
-	"\n" +
-	"leaders_id\x18\n" +
-	" \x01(\v2\x1c.openim.protobuf.StringValueR\tleadersId\x12J\n" +
-	"\x12senior_director_id\x18\v \x01(\v2\x1c.openim.protobuf.StringValueR\x10seniorDirectorId\x12B\n" +
-	"\x0ehrm_leaders_id\x18\f \x01(\v2\x1c.openim.protobuf.StringValueR\fhrmLeadersId\x129\n" +
-	"\n" +
-	"wx_dept_id\x18\r \x01(\v2\x1b.openim.protobuf.Int32ValueR\bwxDeptId\x123\n" +
-	"\ais_dept\x18\x0e \x01(\v2\x1a.openim.protobuf.BoolValueR\x06isDept\x12:\n" +
-	"\n" +
-	"show_order\x18\x0f \x01(\v2\x1b.openim.protobuf.Int32ValueR\tshowOrder\x126\n" +
-	"\bcanceled\x18\x10 \x01(\v2\x1a.openim.protobuf.BoolValueR\bcanceled\x12@\n" +
-	"\rcanceled_date\x18\x11 \x01(\v2\x1b.openim.protobuf.Int64ValueR\fcanceledDate\"\x16\n" +
-	"\x14UpdateDepartmentResp\"<\n" +
-	"\x13DeleteDepartmentReq\x12%\n" +
-	"\x0edepartment_ids\x18\x01 \x03(\x05R\rdepartmentIds\"\x16\n" +
-	"\x14DeleteDepartmentResp\"7\n" +
-	"\x10GetDepartmentReq\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentId\"N\n" +
+	"directorID\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\n" +
+	"directorID\x12>\n" +
+	"\vassistantID\x18\t \x01(\v2\x1c.openim.protobuf.StringValueR\vassistantID\x12:\n" +
+	"\tleadersID\x18\n" +
+	" \x01(\v2\x1c.openim.protobuf.StringValueR\tleadersID\x12H\n" +
+	"\x10seniorDirectorID\x18\v \x01(\v2\x1c.openim.protobuf.StringValueR\x10seniorDirectorID\x12@\n" +
+	"\fhrmLeadersID\x18\f \x01(\v2\x1c.openim.protobuf.StringValueR\fhrmLeadersID\x127\n" +
+	"\bwxDeptID\x18\r \x01(\v2\x1b.openim.protobuf.Int32ValueR\bwxDeptID\x122\n" +
+	"\x06isDept\x18\x0e \x01(\v2\x1a.openim.protobuf.BoolValueR\x06isDept\x129\n" +
+	"\tshowOrder\x18\x0f \x01(\v2\x1b.openim.protobuf.Int32ValueR\tshowOrder\x126\n" +
+	"\bcanceled\x18\x10 \x01(\v2\x1a.openim.protobuf.BoolValueR\bcanceled\x12?\n" +
+	"\fcanceledDate\x18\x11 \x01(\v2\x1b.openim.protobuf.Int64ValueR\fcanceledDate\"\x16\n" +
+	"\x14UpdateDepartmentResp\";\n" +
+	"\x13DeleteDepartmentReq\x12$\n" +
+	"\rdepartmentIDs\x18\x01 \x03(\x05R\rdepartmentIDs\"\x16\n" +
+	"\x14DeleteDepartmentResp\"6\n" +
+	"\x10GetDepartmentReq\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\"N\n" +
 	"\x11GetDepartmentResp\x129\n" +
 	"\n" +
 	"department\x18\x01 \x01(\v2\x19.openim.oa.DepartmentInfoR\n" +
-	"department\":\n" +
-	"\x11GetDepartmentsReq\x12%\n" +
-	"\x0edepartment_ids\x18\x01 \x03(\x05R\rdepartmentIds\"Q\n" +
+	"department\"9\n" +
+	"\x11GetDepartmentsReq\x12$\n" +
+	"\rdepartmentIDs\x18\x01 \x03(\x05R\rdepartmentIDs\"Q\n" +
 	"\x12GetDepartmentsResp\x12;\n" +
-	"\vdepartments\x18\x01 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xda\x01\n" +
+	"\vdepartments\x18\x01 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xd6\x01\n" +
 	"\x13SearchDepartmentReq\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x1d\n" +
-	"\n" +
-	"company_id\x18\x02 \x01(\x05R\tcompanyId\x120\n" +
-	"\x14parent_department_id\x18\x03 \x01(\x05R\x12parentDepartmentId\x12\x17\n" +
-	"\ais_dept\x18\x04 \x01(\bR\x06isDept\x12?\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x1c\n" +
+	"\tcompanyID\x18\x02 \x01(\x05R\tcompanyID\x12.\n" +
+	"\x12parentDepartmentID\x18\x03 \x01(\x05R\x12parentDepartmentID\x12\x16\n" +
+	"\x06isDept\x18\x04 \x01(\bR\x06isDept\x12?\n" +
 	"\n" +
 	"pagination\x18\x05 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\"i\n" +
 	"\x14SearchDepartmentResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"|\n" +
-	"\x1aGetDepartmentsByCompanyReq\x12\x1d\n" +
-	"\n" +
-	"company_id\x18\x01 \x01(\x05R\tcompanyId\x12?\n" +
+	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"{\n" +
+	"\x1aGetDepartmentsByCompanyReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12?\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\"p\n" +
 	"\x1bGetDepartmentsByCompanyResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\x8b\x01\n" +
-	"\x16GetChildDepartmentsReq\x120\n" +
-	"\x14parent_department_id\x18\x01 \x01(\x05R\x12parentDepartmentId\x12?\n" +
+	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\x89\x01\n" +
+	"\x16GetChildDepartmentsReq\x12.\n" +
+	"\x12parentDepartmentID\x18\x01 \x01(\x05R\x12parentDepartmentID\x12?\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
 	"pagination\"l\n" +
 	"\x17GetChildDepartmentsResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\x8b\x05\n" +
-	"\aJobInfo\x12 \n" +
-	"\fjob_title_id\x18\x01 \x01(\x05R\n" +
-	"jobTitleId\x12\x19\n" +
-	"\bjob_code\x18\x02 \x01(\tR\ajobCode\x12\x19\n" +
-	"\bjob_name\x18\x03 \x01(\tR\ajobName\x12$\n" +
-	"\x0ejob_short_name\x18\x04 \x01(\tR\fjobShortName\x12#\n" +
-	"\rdepartment_id\x18\x05 \x01(\x05R\fdepartmentId\x12'\n" +
-	"\x0fdepartment_name\x18\x06 \x01(\tR\x0edepartmentName\x12%\n" +
-	"\x0ejob_competency\x18\a \x01(\tR\rjobCompetency\x12-\n" +
-	"\x12job_responsibility\x18\b \x01(\tR\x11jobResponsibility\x12\x17\n" +
-	"\ajob_doc\x18\t \x01(\tR\x06jobDoc\x12\x1d\n" +
+	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xf7\x04\n" +
+	"\aJobInfo\x12\x1e\n" +
 	"\n" +
-	"job_remark\x18\n" +
+	"jobTitleID\x18\x01 \x01(\x05R\n" +
+	"jobTitleID\x12\x18\n" +
+	"\ajobCode\x18\x02 \x01(\tR\ajobCode\x12\x18\n" +
+	"\ajobName\x18\x03 \x01(\tR\ajobName\x12\"\n" +
+	"\fjobShortName\x18\x04 \x01(\tR\fjobShortName\x12\"\n" +
+	"\fdepartmentID\x18\x05 \x01(\x05R\fdepartmentID\x12&\n" +
+	"\x0edepartmentName\x18\x06 \x01(\tR\x0edepartmentName\x12$\n" +
+	"\rjobCompetency\x18\a \x01(\tR\rjobCompetency\x12,\n" +
+	"\x11jobResponsibility\x18\b \x01(\tR\x11jobResponsibility\x12\x16\n" +
+	"\x06jobDoc\x18\t \x01(\tR\x06jobDoc\x12\x1c\n" +
+	"\tjobRemark\x18\n" +
 	" \x01(\tR\tjobRemark\x12\x16\n" +
-	"\x06status\x18\v \x01(\tR\x06status\x12\x1d\n" +
+	"\x06status\x18\v \x01(\tR\x06status\x12\x1c\n" +
+	"\tsafeLevel\x18\f \x01(\tR\tsafeLevel\x12\x16\n" +
+	"\x06isHead\x18\r \x01(\bR\x06isHead\x12\x1e\n" +
 	"\n" +
-	"safe_level\x18\f \x01(\tR\tsafeLevel\x12\x17\n" +
-	"\ais_head\x18\r \x01(\bR\x06isHead\x12\x1f\n" +
-	"\vcreate_time\x18\x0e \x01(\x03R\n" +
-	"createTime\x12\x1f\n" +
-	"\vupdate_time\x18\x0f \x01(\x03R\n" +
-	"updateTime\x12\x15\n" +
-	"\x06is_new\x18\x10 \x01(\bR\x05isNew\x12\x17\n" +
-	"\ais_turn\x18\x11 \x01(\bR\x06isTurn\x12\x1d\n" +
+	"createTime\x18\x0e \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
 	"\n" +
-	"company_id\x18\x12 \x01(\x05R\tcompanyId\x12\x15\n" +
-	"\x06job_id\x18\x13 \x01(\x05R\x05jobId\x12\x18\n" +
+	"updateTime\x18\x0f \x01(\x03R\n" +
+	"updateTime\x12\x14\n" +
+	"\x05isNew\x18\x10 \x01(\bR\x05isNew\x12\x16\n" +
+	"\x06isTurn\x18\x11 \x01(\bR\x06isTurn\x12\x1c\n" +
+	"\tcompanyID\x18\x12 \x01(\x05R\tcompanyID\x12\x14\n" +
+	"\x05jobID\x18\x13 \x01(\x05R\x05jobID\x12\x18\n" +
 	"\aexplain\x18\x14 \x01(\tR\aexplain\x12\x14\n" +
-	"\x05ppath\x18\x15 \x01(\tR\x05ppath\"\xf2\x02\n" +
-	"\x11CreateJobTitleReq\x12\x19\n" +
-	"\bjob_code\x18\x01 \x01(\tR\ajobCode\x12\x19\n" +
-	"\bjob_name\x18\x02 \x01(\tR\ajobName\x12$\n" +
-	"\x0ejob_short_name\x18\x03 \x01(\tR\fjobShortName\x12#\n" +
-	"\rdepartment_id\x18\x04 \x01(\x05R\fdepartmentId\x12%\n" +
-	"\x0ejob_competency\x18\x05 \x01(\tR\rjobCompetency\x12-\n" +
-	"\x12job_responsibility\x18\x06 \x01(\tR\x11jobResponsibility\x12\x17\n" +
-	"\ajob_doc\x18\a \x01(\tR\x06jobDoc\x12\x1d\n" +
+	"\x05ppath\x18\x15 \x01(\tR\x05ppath\"\xe7\x02\n" +
+	"\x11CreateJobTitleReq\x12\x18\n" +
+	"\ajobCode\x18\x01 \x01(\tR\ajobCode\x12\x18\n" +
+	"\ajobName\x18\x02 \x01(\tR\ajobName\x12\"\n" +
+	"\fjobShortName\x18\x03 \x01(\tR\fjobShortName\x12\"\n" +
+	"\fdepartmentID\x18\x04 \x01(\x05R\fdepartmentID\x12$\n" +
+	"\rjobCompetency\x18\x05 \x01(\tR\rjobCompetency\x12,\n" +
+	"\x11jobResponsibility\x18\x06 \x01(\tR\x11jobResponsibility\x12\x16\n" +
+	"\x06jobDoc\x18\a \x01(\tR\x06jobDoc\x12\x1c\n" +
+	"\tjobRemark\x18\b \x01(\tR\tjobRemark\x12\x16\n" +
+	"\x06status\x18\t \x01(\tR\x06status\x12\x1c\n" +
+	"\tsafeLevel\x18\n" +
+	" \x01(\tR\tsafeLevel\x12\x16\n" +
+	"\x06isHead\x18\v \x01(\bR\x06isHead\"4\n" +
+	"\x12CreateJobTitleResp\x12\x1e\n" +
 	"\n" +
-	"job_remark\x18\b \x01(\tR\tjobRemark\x12\x16\n" +
-	"\x06status\x18\t \x01(\tR\x06status\x12\x1d\n" +
+	"jobTitleID\x18\x01 \x01(\x05R\n" +
+	"jobTitleID\"\xce\x05\n" +
+	"\x11UpdateJobTitleReq\x12\x1e\n" +
 	"\n" +
-	"safe_level\x18\n" +
-	" \x01(\tR\tsafeLevel\x12\x17\n" +
-	"\ais_head\x18\v \x01(\bR\x06isHead\"6\n" +
-	"\x12CreateJobTitleResp\x12 \n" +
-	"\fjob_title_id\x18\x01 \x01(\x05R\n" +
-	"jobTitleId\"\xdb\x05\n" +
-	"\x11UpdateJobTitleReq\x12 \n" +
-	"\fjob_title_id\x18\x01 \x01(\x05R\n" +
-	"jobTitleId\x127\n" +
-	"\bjob_code\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobCode\x127\n" +
-	"\bjob_name\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobName\x12B\n" +
-	"\x0ejob_short_name\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\fjobShortName\x12@\n" +
-	"\rdepartment_id\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\fdepartmentId\x12C\n" +
-	"\x0ejob_competency\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\rjobCompetency\x12K\n" +
-	"\x12job_responsibility\x18\a \x01(\v2\x1c.openim.protobuf.StringValueR\x11jobResponsibility\x125\n" +
-	"\ajob_doc\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\x06jobDoc\x12;\n" +
-	"\n" +
-	"job_remark\x18\t \x01(\v2\x1c.openim.protobuf.StringValueR\tjobRemark\x124\n" +
+	"jobTitleID\x18\x01 \x01(\x05R\n" +
+	"jobTitleID\x126\n" +
+	"\ajobCode\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobCode\x126\n" +
+	"\ajobName\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobName\x12@\n" +
+	"\fjobShortName\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\fjobShortName\x12?\n" +
+	"\fdepartmentID\x18\x05 \x01(\v2\x1b.openim.protobuf.Int32ValueR\fdepartmentID\x12B\n" +
+	"\rjobCompetency\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\rjobCompetency\x12J\n" +
+	"\x11jobResponsibility\x18\a \x01(\v2\x1c.openim.protobuf.StringValueR\x11jobResponsibility\x124\n" +
+	"\x06jobDoc\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\x06jobDoc\x12:\n" +
+	"\tjobRemark\x18\t \x01(\v2\x1c.openim.protobuf.StringValueR\tjobRemark\x124\n" +
 	"\x06status\x18\n" +
-	" \x01(\v2\x1c.openim.protobuf.StringValueR\x06status\x12;\n" +
+	" \x01(\v2\x1c.openim.protobuf.StringValueR\x06status\x12:\n" +
+	"\tsafeLevel\x18\v \x01(\v2\x1c.openim.protobuf.StringValueR\tsafeLevel\x122\n" +
+	"\x06isHead\x18\f \x01(\v2\x1a.openim.protobuf.BoolValueR\x06isHead\"\x14\n" +
+	"\x12UpdateJobTitleResp\"5\n" +
+	"\x11DeleteJobTitleReq\x12 \n" +
+	"\vjobTitleIDs\x18\x01 \x03(\x05R\vjobTitleIDs\"\x14\n" +
+	"\x12DeleteJobTitleResp\"0\n" +
+	"\x0eGetJobTitleReq\x12\x1e\n" +
 	"\n" +
-	"safe_level\x18\v \x01(\v2\x1c.openim.protobuf.StringValueR\tsafeLevel\x123\n" +
-	"\ais_head\x18\f \x01(\v2\x1a.openim.protobuf.BoolValueR\x06isHead\"\x14\n" +
-	"\x12UpdateJobTitleResp\"7\n" +
-	"\x11DeleteJobTitleReq\x12\"\n" +
-	"\rjob_title_ids\x18\x01 \x03(\x05R\vjobTitleIds\"\x14\n" +
-	"\x12DeleteJobTitleResp\"2\n" +
-	"\x0eGetJobTitleReq\x12 \n" +
-	"\fjob_title_id\x18\x01 \x01(\x05R\n" +
-	"jobTitleId\"B\n" +
-	"\x0fGetJobTitleResp\x12/\n" +
-	"\tjob_title\x18\x01 \x01(\v2\x12.openim.oa.JobInfoR\bjobTitle\"5\n" +
-	"\x0fGetJobTitlesReq\x12\"\n" +
-	"\rjob_title_ids\x18\x01 \x03(\x05R\vjobTitleIds\"E\n" +
-	"\x10GetJobTitlesResp\x121\n" +
-	"\n" +
-	"job_titles\x18\x01 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\xab\x01\n" +
+	"jobTitleID\x18\x01 \x01(\x05R\n" +
+	"jobTitleID\"A\n" +
+	"\x0fGetJobTitleResp\x12.\n" +
+	"\bjobTitle\x18\x01 \x01(\v2\x12.openim.oa.JobInfoR\bjobTitle\"3\n" +
+	"\x0fGetJobTitlesReq\x12 \n" +
+	"\vjobTitleIDs\x18\x01 \x03(\x05R\vjobTitleIDs\"D\n" +
+	"\x10GetJobTitlesResp\x120\n" +
+	"\tjobTitles\x18\x01 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\xaa\x01\n" +
 	"\x11SearchJobTitleReq\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeyword\x12#\n" +
-	"\rdepartment_id\x18\x02 \x01(\x05R\fdepartmentId\x12\x16\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\"\n" +
+	"\fdepartmentID\x18\x02 \x01(\x05R\fdepartmentID\x12\x16\n" +
 	"\x06status\x18\x03 \x01(\tR\x06status\x12?\n" +
 	"\n" +
 	"pagination\x18\x04 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"]\n" +
+	"pagination\"\\\n" +
 	"\x12SearchJobTitleResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\rR\x05total\x121\n" +
-	"\n" +
-	"job_titles\x18\x02 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\x83\x01\n" +
-	"\x1bGetJobTitlesByDepartmentReq\x12#\n" +
-	"\rdepartment_id\x18\x01 \x01(\x05R\fdepartmentId\x12?\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x120\n" +
+	"\tjobTitles\x18\x02 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\x82\x01\n" +
+	"\x1bGetJobTitlesByDepartmentReq\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\x12?\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"g\n" +
+	"pagination\"f\n" +
 	"\x1cGetJobTitlesByDepartmentResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\rR\x05total\x121\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x120\n" +
+	"\tjobTitles\x18\x02 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\x99\x01\n" +
+	"\x03Job\x12\x14\n" +
+	"\x05jobID\x18\x01 \x01(\x05R\x05jobID\x12\x18\n" +
+	"\ajobName\x18\x02 \x01(\tR\ajobName\x12\"\n" +
+	"\fjobShortName\x18\x03 \x01(\tR\fjobShortName\x12\x1e\n" +
 	"\n" +
-	"job_titles\x18\x02 \x03(\v2\x12.openim.oa.JobInfoR\tjobTitles\"\x9f\x01\n" +
-	"\x03Job\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\x05R\x05jobId\x12\x19\n" +
-	"\bjob_name\x18\x02 \x01(\tR\ajobName\x12$\n" +
-	"\x0ejob_short_name\x18\x03 \x01(\tR\fjobShortName\x12\x1f\n" +
-	"\vcreate_time\x18\x04 \x01(\x03R\n" +
-	"createTime\x12\x1f\n" +
-	"\vupdate_time\x18\x05 \x01(\x03R\n" +
-	"updateTime\"f\n" +
-	"\fCreateJobReq\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\x05R\x05jobId\x12\x19\n" +
-	"\bjob_name\x18\x02 \x01(\tR\ajobName\x12$\n" +
-	"\x0ejob_short_name\x18\x03 \x01(\tR\fjobShortName\"\x0f\n" +
-	"\rCreateJobResp\"\xa2\x01\n" +
-	"\fUpdateJobReq\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\x05R\x05jobId\x127\n" +
-	"\bjob_name\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobName\x12B\n" +
-	"\x0ejob_short_name\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\fjobShortName\"\x0f\n" +
-	"\rUpdateJobResp\"'\n" +
-	"\fDeleteJobReq\x12\x17\n" +
-	"\ajob_ids\x18\x01 \x03(\x05R\x06jobIds\"\x0f\n" +
-	"\rDeleteJobResp\"\"\n" +
-	"\tGetJobReq\x12\x15\n" +
-	"\x06job_id\x18\x01 \x01(\x05R\x05jobId\".\n" +
+	"createTime\x18\x04 \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x05 \x01(\x03R\n" +
+	"updateTime\"b\n" +
+	"\fCreateJobReq\x12\x14\n" +
+	"\x05jobID\x18\x01 \x01(\x05R\x05jobID\x12\x18\n" +
+	"\ajobName\x18\x02 \x01(\tR\ajobName\x12\"\n" +
+	"\fjobShortName\x18\x03 \x01(\tR\fjobShortName\"\x0f\n" +
+	"\rCreateJobResp\"\x9e\x01\n" +
+	"\fUpdateJobReq\x12\x14\n" +
+	"\x05jobID\x18\x01 \x01(\x05R\x05jobID\x126\n" +
+	"\ajobName\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\ajobName\x12@\n" +
+	"\fjobShortName\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\fjobShortName\"\x0f\n" +
+	"\rUpdateJobResp\"&\n" +
+	"\fDeleteJobReq\x12\x16\n" +
+	"\x06jobIDs\x18\x01 \x03(\x05R\x06jobIDs\"\x0f\n" +
+	"\rDeleteJobResp\"!\n" +
+	"\tGetJobReq\x12\x14\n" +
+	"\x05jobID\x18\x01 \x01(\x05R\x05jobID\".\n" +
 	"\n" +
 	"GetJobResp\x12 \n" +
-	"\x03job\x18\x01 \x01(\v2\x0e.openim.oa.JobR\x03job\"%\n" +
+	"\x03job\x18\x01 \x01(\v2\x0e.openim.oa.JobR\x03job\"$\n" +
 	"\n" +
-	"GetJobsReq\x12\x17\n" +
-	"\ajob_ids\x18\x01 \x03(\x05R\x06jobIds\"1\n" +
+	"GetJobsReq\x12\x16\n" +
+	"\x06jobIDs\x18\x01 \x03(\x05R\x06jobIDs\"1\n" +
 	"\vGetJobsResp\x12\"\n" +
 	"\x04jobs\x18\x01 \x03(\v2\x0e.openim.oa.JobR\x04jobs\"i\n" +
 	"\fSearchJobReq\x12\x18\n" +
@@ -5040,20 +5025,19 @@ const file_oa_oa_proto_rawDesc = "" +
 	"pagination\"I\n" +
 	"\rSearchJobResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\"\n" +
-	"\x04jobs\x18\x02 \x03(\v2\x0e.openim.oa.JobR\x04jobs\"c\n" +
-	"\x13SyncOADataToChatReq\x12-\n" +
-	"\x13create_if_not_exist\x18\x01 \x01(\bR\x10createIfNotExist\x12\x1d\n" +
-	"\n" +
-	"batch_size\x18\x02 \x01(\x05R\tbatchSize\"\xf7\x01\n" +
+	"\x04jobs\x18\x02 \x03(\v2\x0e.openim.oa.JobR\x04jobs\"_\n" +
+	"\x13SyncOADataToChatReq\x12*\n" +
+	"\x10createIfNotExist\x18\x01 \x01(\bR\x10createIfNotExist\x12\x1c\n" +
+	"\tbatchSize\x18\x02 \x01(\x05R\tbatchSize\"\xf4\x01\n" +
 	"\x14SyncOADataToChatResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\rR\asuccess\x12\x18\n" +
 	"\acreated\x18\x03 \x01(\rR\acreated\x12\x18\n" +
 	"\aupdated\x18\x04 \x01(\rR\aupdated\x12\x16\n" +
-	"\x06errors\x18\x05 \x01(\rR\x06errors\x12$\n" +
-	"\x0emongo_db_count\x18\x06 \x01(\x05R\fmongoDbCount\x12\x18\n" +
-	"\amessage\x18\a \x01(\tR\amessage\x12#\n" +
-	"\rerror_details\x18\b \x03(\tR\ferrorDetails2\xf8\x17\n" +
+	"\x06errors\x18\x05 \x01(\rR\x06errors\x12\"\n" +
+	"\fmongoDBCount\x18\x06 \x01(\x05R\fmongoDBCount\x12\x18\n" +
+	"\amessage\x18\a \x01(\tR\amessage\x12\"\n" +
+	"\ferrorDetails\x18\b \x03(\tR\ferrorDetails2\xf8\x17\n" +
 	"\x02oa\x12J\n" +
 	"\rCreateCompany\x12\x1b.openim.oa.CreateCompanyReq\x1a\x1c.openim.oa.CreateCompanyResp\x12J\n" +
 	"\rUpdateCompany\x12\x1b.openim.oa.UpdateCompanyReq\x1a\x1c.openim.oa.UpdateCompanyResp\x12J\n" +
@@ -5188,15 +5172,15 @@ var file_oa_oa_proto_goTypes = []any{
 	(*wrapperspb.Int64Value)(nil),        // 76: openim.protobuf.Int64Value
 }
 var file_oa_oa_proto_depIdxs = []int32{
-	72,  // 0: openim.oa.UpdateCompanyReq.company_code:type_name -> openim.protobuf.StringValue
-	72,  // 1: openim.oa.UpdateCompanyReq.company_name:type_name -> openim.protobuf.StringValue
-	72,  // 2: openim.oa.UpdateCompanyReq.company_short_name:type_name -> openim.protobuf.StringValue
-	73,  // 3: openim.oa.UpdateCompanyReq.parent_company_id:type_name -> openim.protobuf.Int32Value
+	72,  // 0: openim.oa.UpdateCompanyReq.companyCode:type_name -> openim.protobuf.StringValue
+	72,  // 1: openim.oa.UpdateCompanyReq.companyName:type_name -> openim.protobuf.StringValue
+	72,  // 2: openim.oa.UpdateCompanyReq.companyShortName:type_name -> openim.protobuf.StringValue
+	73,  // 3: openim.oa.UpdateCompanyReq.parentCompanyID:type_name -> openim.protobuf.Int32Value
 	72,  // 4: openim.oa.UpdateCompanyReq.website:type_name -> openim.protobuf.StringValue
-	74,  // 5: openim.oa.UpdateCompanyReq.is_main_company:type_name -> openim.protobuf.BoolValue
-	74,  // 6: openim.oa.UpdateCompanyReq.is_effect:type_name -> openim.protobuf.BoolValue
-	74,  // 7: openim.oa.UpdateCompanyReq.is_draw_back:type_name -> openim.protobuf.BoolValue
-	73,  // 8: openim.oa.UpdateCompanyReq.show_order:type_name -> openim.protobuf.Int32Value
+	74,  // 5: openim.oa.UpdateCompanyReq.isMainCompany:type_name -> openim.protobuf.BoolValue
+	74,  // 6: openim.oa.UpdateCompanyReq.isEffect:type_name -> openim.protobuf.BoolValue
+	74,  // 7: openim.oa.UpdateCompanyReq.isDrawBack:type_name -> openim.protobuf.BoolValue
+	73,  // 8: openim.oa.UpdateCompanyReq.showOrder:type_name -> openim.protobuf.Int32Value
 	74,  // 9: openim.oa.UpdateCompanyReq.canceled:type_name -> openim.protobuf.BoolValue
 	0,   // 10: openim.oa.GetCompanyResp.company:type_name -> openim.oa.CompanyInfo
 	0,   // 11: openim.oa.GetCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
@@ -5209,25 +5193,25 @@ var file_oa_oa_proto_depIdxs = []int32{
 	21,  // 18: openim.oa.GetDepartmentTreeResp.items:type_name -> openim.oa.DepartmentTreeItem
 	25,  // 19: openim.oa.DepartmentTreeItem.member:type_name -> openim.oa.MemberInfo
 	22,  // 20: openim.oa.DepartmentTreeItem.department:type_name -> openim.oa.DepartmentItem
-	23,  // 21: openim.oa.DepartmentInfo.sub_departments:type_name -> openim.oa.DepartmentInfo
+	23,  // 21: openim.oa.DepartmentInfo.subDepartments:type_name -> openim.oa.DepartmentInfo
 	25,  // 22: openim.oa.DepartmentInfo.members:type_name -> openim.oa.MemberInfo
 	24,  // 23: openim.oa.MemberInfo.onlineStatus:type_name -> openim.oa.PlatformDetail
-	72,  // 24: openim.oa.UpdateDepartmentReq.department_code:type_name -> openim.protobuf.StringValue
-	72,  // 25: openim.oa.UpdateDepartmentReq.department_name:type_name -> openim.protobuf.StringValue
-	72,  // 26: openim.oa.UpdateDepartmentReq.department_short_name:type_name -> openim.protobuf.StringValue
-	73,  // 27: openim.oa.UpdateDepartmentReq.company_id:type_name -> openim.protobuf.Int32Value
-	73,  // 28: openim.oa.UpdateDepartmentReq.parent_department_id:type_name -> openim.protobuf.Int32Value
-	72,  // 29: openim.oa.UpdateDepartmentReq.manager_id:type_name -> openim.protobuf.StringValue
-	72,  // 30: openim.oa.UpdateDepartmentReq.director_id:type_name -> openim.protobuf.StringValue
-	72,  // 31: openim.oa.UpdateDepartmentReq.assistant_id:type_name -> openim.protobuf.StringValue
-	72,  // 32: openim.oa.UpdateDepartmentReq.leaders_id:type_name -> openim.protobuf.StringValue
-	72,  // 33: openim.oa.UpdateDepartmentReq.senior_director_id:type_name -> openim.protobuf.StringValue
-	72,  // 34: openim.oa.UpdateDepartmentReq.hrm_leaders_id:type_name -> openim.protobuf.StringValue
-	73,  // 35: openim.oa.UpdateDepartmentReq.wx_dept_id:type_name -> openim.protobuf.Int32Value
-	74,  // 36: openim.oa.UpdateDepartmentReq.is_dept:type_name -> openim.protobuf.BoolValue
-	73,  // 37: openim.oa.UpdateDepartmentReq.show_order:type_name -> openim.protobuf.Int32Value
+	72,  // 24: openim.oa.UpdateDepartmentReq.departmentCode:type_name -> openim.protobuf.StringValue
+	72,  // 25: openim.oa.UpdateDepartmentReq.departmentName:type_name -> openim.protobuf.StringValue
+	72,  // 26: openim.oa.UpdateDepartmentReq.departmentShortName:type_name -> openim.protobuf.StringValue
+	73,  // 27: openim.oa.UpdateDepartmentReq.companyID:type_name -> openim.protobuf.Int32Value
+	73,  // 28: openim.oa.UpdateDepartmentReq.parentDepartmentID:type_name -> openim.protobuf.Int32Value
+	72,  // 29: openim.oa.UpdateDepartmentReq.managerID:type_name -> openim.protobuf.StringValue
+	72,  // 30: openim.oa.UpdateDepartmentReq.directorID:type_name -> openim.protobuf.StringValue
+	72,  // 31: openim.oa.UpdateDepartmentReq.assistantID:type_name -> openim.protobuf.StringValue
+	72,  // 32: openim.oa.UpdateDepartmentReq.leadersID:type_name -> openim.protobuf.StringValue
+	72,  // 33: openim.oa.UpdateDepartmentReq.seniorDirectorID:type_name -> openim.protobuf.StringValue
+	72,  // 34: openim.oa.UpdateDepartmentReq.hrmLeadersID:type_name -> openim.protobuf.StringValue
+	73,  // 35: openim.oa.UpdateDepartmentReq.wxDeptID:type_name -> openim.protobuf.Int32Value
+	74,  // 36: openim.oa.UpdateDepartmentReq.isDept:type_name -> openim.protobuf.BoolValue
+	73,  // 37: openim.oa.UpdateDepartmentReq.showOrder:type_name -> openim.protobuf.Int32Value
 	74,  // 38: openim.oa.UpdateDepartmentReq.canceled:type_name -> openim.protobuf.BoolValue
-	76,  // 39: openim.oa.UpdateDepartmentReq.canceled_date:type_name -> openim.protobuf.Int64Value
+	76,  // 39: openim.oa.UpdateDepartmentReq.canceledDate:type_name -> openim.protobuf.Int64Value
 	23,  // 40: openim.oa.GetDepartmentResp.department:type_name -> openim.oa.DepartmentInfo
 	23,  // 41: openim.oa.GetDepartmentsResp.departments:type_name -> openim.oa.DepartmentInfo
 	75,  // 42: openim.oa.SearchDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
@@ -5236,25 +5220,25 @@ var file_oa_oa_proto_depIdxs = []int32{
 	23,  // 45: openim.oa.GetDepartmentsByCompanyResp.departments:type_name -> openim.oa.DepartmentInfo
 	75,  // 46: openim.oa.GetChildDepartmentsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	23,  // 47: openim.oa.GetChildDepartmentsResp.departments:type_name -> openim.oa.DepartmentInfo
-	72,  // 48: openim.oa.UpdateJobTitleReq.job_code:type_name -> openim.protobuf.StringValue
-	72,  // 49: openim.oa.UpdateJobTitleReq.job_name:type_name -> openim.protobuf.StringValue
-	72,  // 50: openim.oa.UpdateJobTitleReq.job_short_name:type_name -> openim.protobuf.StringValue
-	73,  // 51: openim.oa.UpdateJobTitleReq.department_id:type_name -> openim.protobuf.Int32Value
-	72,  // 52: openim.oa.UpdateJobTitleReq.job_competency:type_name -> openim.protobuf.StringValue
-	72,  // 53: openim.oa.UpdateJobTitleReq.job_responsibility:type_name -> openim.protobuf.StringValue
-	72,  // 54: openim.oa.UpdateJobTitleReq.job_doc:type_name -> openim.protobuf.StringValue
-	72,  // 55: openim.oa.UpdateJobTitleReq.job_remark:type_name -> openim.protobuf.StringValue
+	72,  // 48: openim.oa.UpdateJobTitleReq.jobCode:type_name -> openim.protobuf.StringValue
+	72,  // 49: openim.oa.UpdateJobTitleReq.jobName:type_name -> openim.protobuf.StringValue
+	72,  // 50: openim.oa.UpdateJobTitleReq.jobShortName:type_name -> openim.protobuf.StringValue
+	73,  // 51: openim.oa.UpdateJobTitleReq.departmentID:type_name -> openim.protobuf.Int32Value
+	72,  // 52: openim.oa.UpdateJobTitleReq.jobCompetency:type_name -> openim.protobuf.StringValue
+	72,  // 53: openim.oa.UpdateJobTitleReq.jobResponsibility:type_name -> openim.protobuf.StringValue
+	72,  // 54: openim.oa.UpdateJobTitleReq.jobDoc:type_name -> openim.protobuf.StringValue
+	72,  // 55: openim.oa.UpdateJobTitleReq.jobRemark:type_name -> openim.protobuf.StringValue
 	72,  // 56: openim.oa.UpdateJobTitleReq.status:type_name -> openim.protobuf.StringValue
-	72,  // 57: openim.oa.UpdateJobTitleReq.safe_level:type_name -> openim.protobuf.StringValue
-	74,  // 58: openim.oa.UpdateJobTitleReq.is_head:type_name -> openim.protobuf.BoolValue
-	42,  // 59: openim.oa.GetJobTitleResp.job_title:type_name -> openim.oa.JobInfo
-	42,  // 60: openim.oa.GetJobTitlesResp.job_titles:type_name -> openim.oa.JobInfo
+	72,  // 57: openim.oa.UpdateJobTitleReq.safeLevel:type_name -> openim.protobuf.StringValue
+	74,  // 58: openim.oa.UpdateJobTitleReq.isHead:type_name -> openim.protobuf.BoolValue
+	42,  // 59: openim.oa.GetJobTitleResp.jobTitle:type_name -> openim.oa.JobInfo
+	42,  // 60: openim.oa.GetJobTitlesResp.jobTitles:type_name -> openim.oa.JobInfo
 	75,  // 61: openim.oa.SearchJobTitleReq.pagination:type_name -> openim.sdkws.RequestPagination
-	42,  // 62: openim.oa.SearchJobTitleResp.job_titles:type_name -> openim.oa.JobInfo
+	42,  // 62: openim.oa.SearchJobTitleResp.jobTitles:type_name -> openim.oa.JobInfo
 	75,  // 63: openim.oa.GetJobTitlesByDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
-	42,  // 64: openim.oa.GetJobTitlesByDepartmentResp.job_titles:type_name -> openim.oa.JobInfo
-	72,  // 65: openim.oa.UpdateJobReq.job_name:type_name -> openim.protobuf.StringValue
-	72,  // 66: openim.oa.UpdateJobReq.job_short_name:type_name -> openim.protobuf.StringValue
+	42,  // 64: openim.oa.GetJobTitlesByDepartmentResp.jobTitles:type_name -> openim.oa.JobInfo
+	72,  // 65: openim.oa.UpdateJobReq.jobName:type_name -> openim.protobuf.StringValue
+	72,  // 66: openim.oa.UpdateJobReq.jobShortName:type_name -> openim.protobuf.StringValue
 	57,  // 67: openim.oa.GetJobResp.job:type_name -> openim.oa.Job
 	57,  // 68: openim.oa.GetJobsResp.jobs:type_name -> openim.oa.Job
 	75,  // 69: openim.oa.SearchJobReq.pagination:type_name -> openim.sdkws.RequestPagination
