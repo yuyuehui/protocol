@@ -603,6 +603,7 @@ message SummaryRecordAddTips {
   int64 createTime = 7;          // 创建时间
   string creatorNickname = 8;    // 创建者昵称
   string creatorFaceURL = 9;     // 创建者头像
+  string contents = 10;          // 用户输入的总结请求
 }
 
 // 智能总结记录删除通知
