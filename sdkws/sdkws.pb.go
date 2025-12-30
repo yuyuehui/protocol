@@ -5220,6 +5220,7 @@ type SummaryRecordAddTips struct {
 	CreatorNickname  string                 `protobuf:"bytes,8,opt,name=creatorNickname,proto3" json:"creatorNickname"`    // 创建者昵称
 	CreatorFaceURL   string                 `protobuf:"bytes,9,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL"`      // 创建者头像
 	Contents         string                 `protobuf:"bytes,10,opt,name=contents,proto3" json:"contents"`                 // 用户输入的总结请求
+	SummaryType      int32                  `protobuf:"varint,11,opt,name=summaryType,proto3" json:"summaryType"`          // 总结类型：1=自动生成，2=手动生成
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -5322,6 +5323,13 @@ func (x *SummaryRecordAddTips) GetContents() string {
 		return x.Contents
 	}
 	return ""
+}
+
+func (x *SummaryRecordAddTips) GetSummaryType() int32 {
+	if x != nil {
+		return x.SummaryType
+	}
+	return 0
 }
 
 // 智能总结记录删除通知
@@ -7376,7 +7384,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\btoUserID\x18\x02 \x01(\tR\btoUserID\x12\x18\n" +
 	"\areplyID\x18\x03 \x01(\tR\areplyID\x12\x1a\n" +
 	"\bisPinned\x18\x04 \x01(\bR\bisPinned\x12\x18\n" +
-	"\apinTime\x18\x05 \x01(\x03R\apinTime\"\xf0\x02\n" +
+	"\apinTime\x18\x05 \x01(\x03R\apinTime\"\x92\x03\n" +
 	"\x14SummaryRecordAddTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12*\n" +
@@ -7390,7 +7398,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0fcreatorNickname\x18\b \x01(\tR\x0fcreatorNickname\x12&\n" +
 	"\x0ecreatorFaceURL\x18\t \x01(\tR\x0ecreatorFaceURL\x12\x1a\n" +
 	"\bcontents\x18\n" +
-	" \x01(\tR\bcontents\"\xb3\x01\n" +
+	" \x01(\tR\bcontents\x12 \n" +
+	"\vsummaryType\x18\v \x01(\x05R\vsummaryType\"\xb3\x01\n" +
 	"\x17SummaryRecordDeleteTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12*\n" +
