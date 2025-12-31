@@ -89,12 +89,14 @@ message GetCompanyResp {
 
 // GetCompaniesReq 批量获取公司请求
 message GetCompaniesReq {
-  repeated int32 companyIDs = 1;     // 公司ID列表
+  repeated int32 companyIDs = 1;     // 公司ID列表（为空时返回所有公司）
+  openim.sdkws.RequestPagination pagination = 2;  // 分页参数（可选，当companyIDs为空时生效）
 }
 
 // GetCompaniesResp 批量获取公司响应
 message GetCompaniesResp {
-  repeated CompanyInfo companies = 1;
+  uint32 total = 1;                    // 总数（当使用分页时返回）
+  repeated CompanyInfo companies = 2;  // 公司列表
 }
 
 // SearchCompanyReq 搜索公司请求
@@ -112,17 +114,31 @@ message SearchCompanyResp {
   repeated CompanyInfo companies = 2;   // 公司列表
 }
 
-// GetChildCompaniesReq 获取子公司请求
-message GetChildCompaniesReq {
-  int32 parentCompanyID = 1;       // 上级公司ID
-  openim.sdkws.RequestPagination pagination = 2;
+// SearchCompanyAndDepartmentReq 搜索企业和部门请求（返回树形结构）
+message SearchCompanyAndDepartmentReq {
+  string keyword = 1;                  // 关键词（企业名称、编码、部门名称、编码）
+  int32 companyID = 2;                 // 公司ID（可选，用于限制搜索范围，为0时搜索所有公司）
+  bool includeMembers = 3;             // 是否包含人员（可选，默认false）
+  openim.sdkws.RequestPagination pagination = 4; // 分页参数（可选）
 }
 
-// GetChildCompaniesResp 获取子公司响应
-message GetChildCompaniesResp {
-  uint32 total = 1;
-  repeated CompanyInfo companies = 2;
+// SearchCompanyAndDepartmentResp 搜索企业和部门响应（树形结构）
+message SearchCompanyAndDepartmentResp {
+  uint32 total = 1;                    // 总数
+  repeated OrganizationTreeNode nodes = 2; // 树形节点列表
 }
+
+// OrganizationTreeNode 组织树节点（企业、部门、人员的统一类型）
+message OrganizationTreeNode {
+  int32 type = 1;                      // 类型：1=企业，2=部门，3=人员
+  CompanyInfo company = 2;             // 企业信息（type=1 时有效）
+  DepartmentItem department = 3;        // 部门信息（type=2 时有效）
+  MemberInfo member = 4;               // 人员信息（type=3 时有效）
+  repeated OrganizationTreeNode children = 5; // 子节点列表（用于构建树形结构）
+}
+
+
+
 
 // GetUserJoinedCompaniesReq 获取用户加入的企业请求
 message GetUserJoinedCompaniesReq {
@@ -291,14 +307,23 @@ message GetDepartmentResp {
   DepartmentInfo department = 1;
 }
 
-// GetDepartmentsReq 批量获取部门请求
+// GetDepartmentsReq 批量获取部门请求（统一接口，支持多种查询方式）
+// 查询优先级：departmentID > companyID > parentDepartmentID
+// 1. 如果 departmentID 不为0，则将其值赋给 parentDepartmentID，然后查询子部门（支持分页）
+//    如果同时提供了 companyID，则使用 companyID 和 parentDepartmentID 进行查询
+// 2. 如果 departmentID 为0但 companyID 不为0，则查询该公司的所有部门（支持分页）
+// 3. 如果 departmentID 和 companyID 都为0但 parentDepartmentID 不为0，则查询子部门（支持分页）
 message GetDepartmentsReq {
-  repeated int32 departmentIDs = 1;   // 部门ID列表
+  int32 departmentID = 1;             // 部门ID（优先级最高，为0时表示不按部门ID查询；大于0时，会将其值赋给 parentDepartmentID 查询子部门）
+  int32 companyID = 2;                 // 公司ID（可选）
+  int32 parentDepartmentID = 3;       // 父部门ID（可选）
+  openim.sdkws.RequestPagination pagination = 4;  // 分页参数（可选，仅在按companyID或parentDepartmentID查询时有效）
 }
 
 // GetDepartmentsResp 批量获取部门响应
 message GetDepartmentsResp {
-  repeated DepartmentInfo departments = 1;
+  uint32 total = 1;                    // 总数（仅在按companyID或parentDepartmentID查询时有效）
+  repeated DepartmentInfo departments = 2; // 部门列表
 }
 
 // SearchDepartmentReq 搜索部门请求
@@ -316,28 +341,95 @@ message SearchDepartmentResp {
   repeated DepartmentInfo departments = 2; // 部门列表
 }
 
-// GetDepartmentsByCompanyReq 根据公司获取部门请求
-message GetDepartmentsByCompanyReq {
-  int32 companyID = 1;               // 公司ID
-  openim.sdkws.RequestPagination pagination = 2;
+// GetMembersByCompanyAndDepartmentReq 根据企业ID和部门ID获取所有人员请求（前台用）
+message GetMembersByCompanyAndDepartmentReq {
+  int32 companyID = 1;                  // 企业ID（必填）
+  int32 departmentID = 2;               // 部门ID（可选，为0或空时返回企业的所有人员）
+  openim.sdkws.RequestPagination pagination = 3;  // 分页参数（可选）
 }
 
-// GetDepartmentsByCompanyResp 根据公司获取部门响应
-message GetDepartmentsByCompanyResp {
-  uint32 total = 1;
-  repeated DepartmentInfo departments = 2;
+// AdminMemberInfo 后台管理用成员信息（包含更多字段，不与前台混合）
+message AdminMemberInfo {
+  // 基础信息
+  string userID = 1;                     // 用户ID
+  string account = 2;                    // 账号
+  string nickname = 3;                   // 昵称
+  string faceURL = 4;                   // 头像URL
+  int32 gender = 5;                      // 性别：0-未知，1-男，2-女
+  
+  // 联系信息
+  string phoneNumber = 6;                // 手机号
+  string areaCode = 7;                   // 区号
+  string email = 8;                      // 邮箱
+  
+  // 组织信息
+  int32 companyID = 9;                   // 公司ID
+  string companyName = 10;               // 公司名称
+  int32 departmentID = 11;               // 所属部门ID
+  string departmentName = 12;           // 所属部门名称
+  string departmentCode = 13;           // 部门编码
+  string deptAllName = 14;               // 部门全路径名称
+  string weixinDepartmentID = 15;       // 微信部门ID
+  
+  // 职位信息
+  int32 jobTitleID = 16;                 // 职位ID
+  string jobTitle = 17;                 // 职位名称（需要关联查询）
+  
+  // 工作信息
+  string workCode = 18;                  // 工号
+  int64 startDate = 19;                  // 入职日期（时间戳，毫秒）
+  int64 endDate = 20;                    // 结束日期（时间戳，毫秒，0表示未设置）
+  
+  // 状态信息
+  string status = 21;                    // 状态（如"5"表示离职）
+  string safeLevel = 22;                 // 安全级别
+  int32 accountType = 23;                // 账号类型
+  int32 isNew = 24;                      // 是否新用户：0-否，1-是
+  
+  // 上级信息
+  int32 managerID = 25;                  // 上级ID（经理）
+  int32 groupLeaderID = 26;              // 组长ID
+  
+  // 其他信息
+  string pinyin = 27;                    // 拼音
+  string signature = 28;                 // 用户签名，JSON格式：{"icon":"图片URL或表情","text":"签名文本"}
+  
+  // 时间信息
+  int64 createTime = 29;                 // 创建时间（时间戳，毫秒）
+  int64 changeTime = 30;                 // 修改时间（时间戳，毫秒）
+  int64 birthTime = 31;                  // 生日（时间戳，毫秒）
+  
+  // 在线状态
+  repeated PlatformDetail onlineStatus = 32;  // 在线状态列表（包含 status 和 platformID）
 }
 
-// GetChildDepartmentsReq 获取子部门请求
-message GetChildDepartmentsReq {
-  int32 parentDepartmentID = 1;     // 上级部门ID
-  openim.sdkws.RequestPagination pagination = 2;
+// GetMembersByCompanyAndDepartmentResp 根据企业ID和部门ID获取所有人员响应（前台用）
+message GetMembersByCompanyAndDepartmentResp {
+  uint32 total = 1;                      // 总数
+  repeated MemberInfo members = 2;       // 人员列表（前台用，字段较少）
 }
 
-// GetChildDepartmentsResp 获取子部门响应
-message GetChildDepartmentsResp {
-  uint32 total = 1;
-  repeated DepartmentInfo departments = 2;
+// GetAdminMembersByCompanyAndDepartmentReq 后台管理根据企业ID和部门ID获取所有人员请求
+message GetAdminMembersByCompanyAndDepartmentReq {
+  int32 companyID = 1;                  // 企业ID（可选，为0或空时查询所有企业的人员）
+  int32 departmentID = 2;               // 部门ID（可选，为0或空时返回企业的所有人员）
+  openim.sdkws.RequestPagination pagination = 3;  // 分页参数（可选）
+  // 搜索条件（可选）
+  string workCode = 4;                  // 工号（模糊搜索）
+  string name = 5;                      // 姓名（模糊搜索，对应nickname字段）
+  string pinyin = 12;                    // 拼音（模糊搜索，对应pinyin字段）
+  string phoneNumber = 6;               // 手机号（模糊搜索）
+  int32 jobTitleID = 7;                 // 岗位ID（精确匹配）
+  string jobTitleName = 8;              // 岗位名称（模糊搜索，需要关联job_titles表）
+  int64 startDateBegin = 9;             // 入职开始时间（时间戳，毫秒，>=）
+  int64 startDateEnd = 10;              // 入职结束时间（时间戳，毫秒，<=）
+  string status = 11;                   // 状态（精确匹配，如"5"表示离职）
+}
+
+// GetAdminMembersByCompanyAndDepartmentResp 后台管理根据企业ID和部门ID获取所有人员响应
+message GetAdminMembersByCompanyAndDepartmentResp {
+  uint32 total = 1;                      // 总数
+  repeated AdminMemberInfo members = 2;  // 人员列表（后台管理用，包含更多字段）
 }
 
 // ==================== 职位相关 ====================
@@ -569,14 +661,14 @@ service oa {
   rpc GetCompanies(GetCompaniesReq) returns (GetCompaniesResp);
   // 搜索公司
   rpc SearchCompany(SearchCompanyReq) returns (SearchCompanyResp);
-  // 获取子公司
-  rpc GetChildCompanies(GetChildCompaniesReq) returns (GetChildCompaniesResp);
   // 获取用户加入的企业（不包含部门信息，部门通过 GetDepartmentTree 获取）
   rpc GetUserJoinedCompanies(GetUserJoinedCompaniesReq) returns (GetUserJoinedCompaniesResp);
   // 获取我加入的企业（只返回企业基本信息，不含部门，从上下文获取当前用户）
   rpc GetMyJoinedCompanies(GetMyJoinedCompaniesReq) returns (GetMyJoinedCompaniesResp);
   // 获取部门树（统一接口：如果department_id为空，返回企业的根部门列表；否则返回该部门的子部门列表）
   rpc GetDepartmentTree(GetDepartmentTreeReq) returns (GetDepartmentTreeResp);
+  // 搜索企业和部门（返回树形结构）
+  rpc SearchCompanyAndDepartment(SearchCompanyAndDepartmentReq) returns (SearchCompanyAndDepartmentResp);
 
   // ========== 部门相关接口 ==========
   // 创建部门
@@ -591,10 +683,10 @@ service oa {
   rpc GetDepartments(GetDepartmentsReq) returns (GetDepartmentsResp);
   // 搜索部门
   rpc SearchDepartment(SearchDepartmentReq) returns (SearchDepartmentResp);
-  // 根据公司获取部门
-  rpc GetDepartmentsByCompany(GetDepartmentsByCompanyReq) returns (GetDepartmentsByCompanyResp);
-  // 获取子部门
-  rpc GetChildDepartments(GetChildDepartmentsReq) returns (GetChildDepartmentsResp);
+  // 根据企业ID和部门ID获取所有人员（部门ID为空时返回企业的所有人员）（前台用）
+  rpc GetMembersByCompanyAndDepartment(GetMembersByCompanyAndDepartmentReq) returns (GetMembersByCompanyAndDepartmentResp);
+  // 后台管理：根据企业ID和部门ID获取所有人员（包含更多字段和搜索条件）
+  rpc GetAdminMembersByCompanyAndDepartment(GetAdminMembersByCompanyAndDepartmentReq) returns (GetAdminMembersByCompanyAndDepartmentResp);
 
   // ========== 职位相关接口 ==========
   // 创建职位

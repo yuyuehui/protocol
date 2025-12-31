@@ -135,6 +135,7 @@ const (
 	ClearConversationNotification       = 1703 // 清空会话通知
 	ConversationDeleteNotification      = 1704 // 删除会话通知
 	ConversationGroupChangeNotification = 1705 // 会话分组变更通知
+	ConversationFoldNotification        = 1706 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作，通过action字段区分）
 
 	// 业务通知
 	BusinessNotificationBegin = 2000

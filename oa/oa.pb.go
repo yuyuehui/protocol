@@ -620,8 +620,9 @@ func (x *GetCompanyResp) GetCompany() *CompanyInfo {
 
 // GetCompaniesReq 批量获取公司请求
 type GetCompaniesReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CompanyIDs    []int32                `protobuf:"varint,1,rep,packed,name=companyIDs,proto3" json:"companyIDs"` // 公司ID列表
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	CompanyIDs    []int32                  `protobuf:"varint,1,rep,packed,name=companyIDs,proto3" json:"companyIDs"` // 公司ID列表（为空时返回所有公司）
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`         // 分页参数（可选，当companyIDs为空时生效）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -663,10 +664,18 @@ func (x *GetCompaniesReq) GetCompanyIDs() []int32 {
 	return nil
 }
 
+func (x *GetCompaniesReq) GetPagination() *sdkws.RequestPagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
 // GetCompaniesResp 批量获取公司响应
 type GetCompaniesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Companies     []*CompanyInfo         `protobuf:"bytes,1,rep,name=companies,proto3" json:"companies"`
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`        // 总数（当使用分页时返回）
+	Companies     []*CompanyInfo         `protobuf:"bytes,2,rep,name=companies,proto3" json:"companies"` // 公司列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -699,6 +708,13 @@ func (x *GetCompaniesResp) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetCompaniesResp.ProtoReflect.Descriptor instead.
 func (*GetCompaniesResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetCompaniesResp) GetTotal() uint32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 func (x *GetCompaniesResp) GetCompanies() []*CompanyInfo {
@@ -838,29 +854,31 @@ func (x *SearchCompanyResp) GetCompanies() []*CompanyInfo {
 	return nil
 }
 
-// GetChildCompaniesReq 获取子公司请求
-type GetChildCompaniesReq struct {
-	state           protoimpl.MessageState   `protogen:"open.v1"`
-	ParentCompanyID int32                    `protobuf:"varint,1,opt,name=parentCompanyID,proto3" json:"parentCompanyID"` // 上级公司ID
-	Pagination      *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+// SearchCompanyAndDepartmentReq 搜索企业和部门请求（返回树形结构）
+type SearchCompanyAndDepartmentReq struct {
+	state          protoimpl.MessageState   `protogen:"open.v1"`
+	Keyword        string                   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword"`                // 关键词（企业名称、编码、部门名称、编码）
+	CompanyID      int32                    `protobuf:"varint,2,opt,name=companyID,proto3" json:"companyID"`           // 公司ID（可选，用于限制搜索范围，为0时搜索所有公司）
+	IncludeMembers bool                     `protobuf:"varint,3,opt,name=includeMembers,proto3" json:"includeMembers"` // 是否包含人员（可选，默认false）
+	Pagination     *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`          // 分页参数（可选）
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
-func (x *GetChildCompaniesReq) Reset() {
-	*x = GetChildCompaniesReq{}
+func (x *SearchCompanyAndDepartmentReq) Reset() {
+	*x = SearchCompanyAndDepartmentReq{}
 	mi := &file_oa_oa_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetChildCompaniesReq) String() string {
+func (x *SearchCompanyAndDepartmentReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetChildCompaniesReq) ProtoMessage() {}
+func (*SearchCompanyAndDepartmentReq) ProtoMessage() {}
 
-func (x *GetChildCompaniesReq) ProtoReflect() protoreflect.Message {
+func (x *SearchCompanyAndDepartmentReq) ProtoReflect() protoreflect.Message {
 	mi := &file_oa_oa_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -872,48 +890,62 @@ func (x *GetChildCompaniesReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetChildCompaniesReq.ProtoReflect.Descriptor instead.
-func (*GetChildCompaniesReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use SearchCompanyAndDepartmentReq.ProtoReflect.Descriptor instead.
+func (*SearchCompanyAndDepartmentReq) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetChildCompaniesReq) GetParentCompanyID() int32 {
+func (x *SearchCompanyAndDepartmentReq) GetKeyword() string {
 	if x != nil {
-		return x.ParentCompanyID
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *SearchCompanyAndDepartmentReq) GetCompanyID() int32 {
+	if x != nil {
+		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *GetChildCompaniesReq) GetPagination() *sdkws.RequestPagination {
+func (x *SearchCompanyAndDepartmentReq) GetIncludeMembers() bool {
+	if x != nil {
+		return x.IncludeMembers
+	}
+	return false
+}
+
+func (x *SearchCompanyAndDepartmentReq) GetPagination() *sdkws.RequestPagination {
 	if x != nil {
 		return x.Pagination
 	}
 	return nil
 }
 
-// GetChildCompaniesResp 获取子公司响应
-type GetChildCompaniesResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Companies     []*CompanyInfo         `protobuf:"bytes,2,rep,name=companies,proto3" json:"companies"`
+// SearchCompanyAndDepartmentResp 搜索企业和部门响应（树形结构）
+type SearchCompanyAndDepartmentResp struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Total         uint32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"` // 总数
+	Nodes         []*OrganizationTreeNode `protobuf:"bytes,2,rep,name=nodes,proto3" json:"nodes"`  // 树形节点列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetChildCompaniesResp) Reset() {
-	*x = GetChildCompaniesResp{}
+func (x *SearchCompanyAndDepartmentResp) Reset() {
+	*x = SearchCompanyAndDepartmentResp{}
 	mi := &file_oa_oa_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetChildCompaniesResp) String() string {
+func (x *SearchCompanyAndDepartmentResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetChildCompaniesResp) ProtoMessage() {}
+func (*SearchCompanyAndDepartmentResp) ProtoMessage() {}
 
-func (x *GetChildCompaniesResp) ProtoReflect() protoreflect.Message {
+func (x *SearchCompanyAndDepartmentResp) ProtoReflect() protoreflect.Message {
 	mi := &file_oa_oa_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -925,21 +957,98 @@ func (x *GetChildCompaniesResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetChildCompaniesResp.ProtoReflect.Descriptor instead.
-func (*GetChildCompaniesResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use SearchCompanyAndDepartmentResp.ProtoReflect.Descriptor instead.
+func (*SearchCompanyAndDepartmentResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *GetChildCompaniesResp) GetTotal() uint32 {
+func (x *SearchCompanyAndDepartmentResp) GetTotal() uint32 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *GetChildCompaniesResp) GetCompanies() []*CompanyInfo {
+func (x *SearchCompanyAndDepartmentResp) GetNodes() []*OrganizationTreeNode {
 	if x != nil {
-		return x.Companies
+		return x.Nodes
+	}
+	return nil
+}
+
+// OrganizationTreeNode 组织树节点（企业、部门、人员的统一类型）
+type OrganizationTreeNode struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Type          int32                   `protobuf:"varint,1,opt,name=type,proto3" json:"type"`            // 类型：1=企业，2=部门，3=人员
+	Company       *CompanyInfo            `protobuf:"bytes,2,opt,name=company,proto3" json:"company"`       // 企业信息（type=1 时有效）
+	Department    *DepartmentItem         `protobuf:"bytes,3,opt,name=department,proto3" json:"department"` // 部门信息（type=2 时有效）
+	Member        *MemberInfo             `protobuf:"bytes,4,opt,name=member,proto3" json:"member"`         // 人员信息（type=3 时有效）
+	Children      []*OrganizationTreeNode `protobuf:"bytes,5,rep,name=children,proto3" json:"children"`     // 子节点列表（用于构建树形结构）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrganizationTreeNode) Reset() {
+	*x = OrganizationTreeNode{}
+	mi := &file_oa_oa_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrganizationTreeNode) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrganizationTreeNode) ProtoMessage() {}
+
+func (x *OrganizationTreeNode) ProtoReflect() protoreflect.Message {
+	mi := &file_oa_oa_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrganizationTreeNode.ProtoReflect.Descriptor instead.
+func (*OrganizationTreeNode) Descriptor() ([]byte, []int) {
+	return file_oa_oa_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *OrganizationTreeNode) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *OrganizationTreeNode) GetCompany() *CompanyInfo {
+	if x != nil {
+		return x.Company
+	}
+	return nil
+}
+
+func (x *OrganizationTreeNode) GetDepartment() *DepartmentItem {
+	if x != nil {
+		return x.Department
+	}
+	return nil
+}
+
+func (x *OrganizationTreeNode) GetMember() *MemberInfo {
+	if x != nil {
+		return x.Member
+	}
+	return nil
+}
+
+func (x *OrganizationTreeNode) GetChildren() []*OrganizationTreeNode {
+	if x != nil {
+		return x.Children
 	}
 	return nil
 }
@@ -954,7 +1063,7 @@ type GetUserJoinedCompaniesReq struct {
 
 func (x *GetUserJoinedCompaniesReq) Reset() {
 	*x = GetUserJoinedCompaniesReq{}
-	mi := &file_oa_oa_proto_msgTypes[15]
+	mi := &file_oa_oa_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -966,7 +1075,7 @@ func (x *GetUserJoinedCompaniesReq) String() string {
 func (*GetUserJoinedCompaniesReq) ProtoMessage() {}
 
 func (x *GetUserJoinedCompaniesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[15]
+	mi := &file_oa_oa_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -979,7 +1088,7 @@ func (x *GetUserJoinedCompaniesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserJoinedCompaniesReq.ProtoReflect.Descriptor instead.
 func (*GetUserJoinedCompaniesReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{15}
+	return file_oa_oa_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetUserJoinedCompaniesReq) GetUserID() string {
@@ -999,7 +1108,7 @@ type GetUserJoinedCompaniesResp struct {
 
 func (x *GetUserJoinedCompaniesResp) Reset() {
 	*x = GetUserJoinedCompaniesResp{}
-	mi := &file_oa_oa_proto_msgTypes[16]
+	mi := &file_oa_oa_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1011,7 +1120,7 @@ func (x *GetUserJoinedCompaniesResp) String() string {
 func (*GetUserJoinedCompaniesResp) ProtoMessage() {}
 
 func (x *GetUserJoinedCompaniesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[16]
+	mi := &file_oa_oa_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1024,7 +1133,7 @@ func (x *GetUserJoinedCompaniesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserJoinedCompaniesResp.ProtoReflect.Descriptor instead.
 func (*GetUserJoinedCompaniesResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{16}
+	return file_oa_oa_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetUserJoinedCompaniesResp) GetCompanies() []*CompanyInfo {
@@ -1043,7 +1152,7 @@ type GetMyJoinedCompaniesReq struct {
 
 func (x *GetMyJoinedCompaniesReq) Reset() {
 	*x = GetMyJoinedCompaniesReq{}
-	mi := &file_oa_oa_proto_msgTypes[17]
+	mi := &file_oa_oa_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1055,7 +1164,7 @@ func (x *GetMyJoinedCompaniesReq) String() string {
 func (*GetMyJoinedCompaniesReq) ProtoMessage() {}
 
 func (x *GetMyJoinedCompaniesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[17]
+	mi := &file_oa_oa_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1068,7 +1177,7 @@ func (x *GetMyJoinedCompaniesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMyJoinedCompaniesReq.ProtoReflect.Descriptor instead.
 func (*GetMyJoinedCompaniesReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{17}
+	return file_oa_oa_proto_rawDescGZIP(), []int{18}
 }
 
 // GetMyJoinedCompaniesResp 获取我加入的企业响应
@@ -1081,7 +1190,7 @@ type GetMyJoinedCompaniesResp struct {
 
 func (x *GetMyJoinedCompaniesResp) Reset() {
 	*x = GetMyJoinedCompaniesResp{}
-	mi := &file_oa_oa_proto_msgTypes[18]
+	mi := &file_oa_oa_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1093,7 +1202,7 @@ func (x *GetMyJoinedCompaniesResp) String() string {
 func (*GetMyJoinedCompaniesResp) ProtoMessage() {}
 
 func (x *GetMyJoinedCompaniesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[18]
+	mi := &file_oa_oa_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1106,7 +1215,7 @@ func (x *GetMyJoinedCompaniesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMyJoinedCompaniesResp.ProtoReflect.Descriptor instead.
 func (*GetMyJoinedCompaniesResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{18}
+	return file_oa_oa_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetMyJoinedCompaniesResp) GetCompanies() []*CompanyInfo {
@@ -1127,7 +1236,7 @@ type GetDepartmentTreeReq struct {
 
 func (x *GetDepartmentTreeReq) Reset() {
 	*x = GetDepartmentTreeReq{}
-	mi := &file_oa_oa_proto_msgTypes[19]
+	mi := &file_oa_oa_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1139,7 +1248,7 @@ func (x *GetDepartmentTreeReq) String() string {
 func (*GetDepartmentTreeReq) ProtoMessage() {}
 
 func (x *GetDepartmentTreeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[19]
+	mi := &file_oa_oa_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +1261,7 @@ func (x *GetDepartmentTreeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentTreeReq.ProtoReflect.Descriptor instead.
 func (*GetDepartmentTreeReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{19}
+	return file_oa_oa_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetDepartmentTreeReq) GetCompanyID() int32 {
@@ -1179,7 +1288,7 @@ type GetDepartmentTreeResp struct {
 
 func (x *GetDepartmentTreeResp) Reset() {
 	*x = GetDepartmentTreeResp{}
-	mi := &file_oa_oa_proto_msgTypes[20]
+	mi := &file_oa_oa_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1191,7 +1300,7 @@ func (x *GetDepartmentTreeResp) String() string {
 func (*GetDepartmentTreeResp) ProtoMessage() {}
 
 func (x *GetDepartmentTreeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[20]
+	mi := &file_oa_oa_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1204,7 +1313,7 @@ func (x *GetDepartmentTreeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentTreeResp.ProtoReflect.Descriptor instead.
 func (*GetDepartmentTreeResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{20}
+	return file_oa_oa_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetDepartmentTreeResp) GetItems() []*DepartmentTreeItem {
@@ -1226,7 +1335,7 @@ type DepartmentTreeItem struct {
 
 func (x *DepartmentTreeItem) Reset() {
 	*x = DepartmentTreeItem{}
-	mi := &file_oa_oa_proto_msgTypes[21]
+	mi := &file_oa_oa_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1238,7 +1347,7 @@ func (x *DepartmentTreeItem) String() string {
 func (*DepartmentTreeItem) ProtoMessage() {}
 
 func (x *DepartmentTreeItem) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[21]
+	mi := &file_oa_oa_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1251,7 +1360,7 @@ func (x *DepartmentTreeItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DepartmentTreeItem.ProtoReflect.Descriptor instead.
 func (*DepartmentTreeItem) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{21}
+	return file_oa_oa_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *DepartmentTreeItem) GetType() int32 {
@@ -1293,7 +1402,7 @@ type DepartmentItem struct {
 
 func (x *DepartmentItem) Reset() {
 	*x = DepartmentItem{}
-	mi := &file_oa_oa_proto_msgTypes[22]
+	mi := &file_oa_oa_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1305,7 +1414,7 @@ func (x *DepartmentItem) String() string {
 func (*DepartmentItem) ProtoMessage() {}
 
 func (x *DepartmentItem) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[22]
+	mi := &file_oa_oa_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1318,7 +1427,7 @@ func (x *DepartmentItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DepartmentItem.ProtoReflect.Descriptor instead.
 func (*DepartmentItem) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{22}
+	return file_oa_oa_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *DepartmentItem) GetDepartmentID() int32 {
@@ -1417,7 +1526,7 @@ type DepartmentInfo struct {
 
 func (x *DepartmentInfo) Reset() {
 	*x = DepartmentInfo{}
-	mi := &file_oa_oa_proto_msgTypes[23]
+	mi := &file_oa_oa_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1429,7 +1538,7 @@ func (x *DepartmentInfo) String() string {
 func (*DepartmentInfo) ProtoMessage() {}
 
 func (x *DepartmentInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[23]
+	mi := &file_oa_oa_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1442,7 +1551,7 @@ func (x *DepartmentInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DepartmentInfo.ProtoReflect.Descriptor instead.
 func (*DepartmentInfo) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{23}
+	return file_oa_oa_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DepartmentInfo) GetDepartmentID() int32 {
@@ -1624,7 +1733,7 @@ type PlatformDetail struct {
 
 func (x *PlatformDetail) Reset() {
 	*x = PlatformDetail{}
-	mi := &file_oa_oa_proto_msgTypes[24]
+	mi := &file_oa_oa_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1636,7 +1745,7 @@ func (x *PlatformDetail) String() string {
 func (*PlatformDetail) ProtoMessage() {}
 
 func (x *PlatformDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[24]
+	mi := &file_oa_oa_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1649,7 +1758,7 @@ func (x *PlatformDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PlatformDetail.ProtoReflect.Descriptor instead.
 func (*PlatformDetail) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{24}
+	return file_oa_oa_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *PlatformDetail) GetPlatformID() int32 {
@@ -1688,7 +1797,7 @@ type MemberInfo struct {
 
 func (x *MemberInfo) Reset() {
 	*x = MemberInfo{}
-	mi := &file_oa_oa_proto_msgTypes[25]
+	mi := &file_oa_oa_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1700,7 +1809,7 @@ func (x *MemberInfo) String() string {
 func (*MemberInfo) ProtoMessage() {}
 
 func (x *MemberInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[25]
+	mi := &file_oa_oa_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1713,7 +1822,7 @@ func (x *MemberInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MemberInfo.ProtoReflect.Descriptor instead.
 func (*MemberInfo) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{25}
+	return file_oa_oa_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *MemberInfo) GetUserID() string {
@@ -1830,7 +1939,7 @@ type CreateDepartmentReq struct {
 
 func (x *CreateDepartmentReq) Reset() {
 	*x = CreateDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[26]
+	mi := &file_oa_oa_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1842,7 +1951,7 @@ func (x *CreateDepartmentReq) String() string {
 func (*CreateDepartmentReq) ProtoMessage() {}
 
 func (x *CreateDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[26]
+	mi := &file_oa_oa_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1855,7 +1964,7 @@ func (x *CreateDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDepartmentReq.ProtoReflect.Descriptor instead.
 func (*CreateDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{26}
+	return file_oa_oa_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CreateDepartmentReq) GetDepartmentCode() string {
@@ -1966,7 +2075,7 @@ type CreateDepartmentResp struct {
 
 func (x *CreateDepartmentResp) Reset() {
 	*x = CreateDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[27]
+	mi := &file_oa_oa_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1978,7 +2087,7 @@ func (x *CreateDepartmentResp) String() string {
 func (*CreateDepartmentResp) ProtoMessage() {}
 
 func (x *CreateDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[27]
+	mi := &file_oa_oa_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1991,7 +2100,7 @@ func (x *CreateDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDepartmentResp.ProtoReflect.Descriptor instead.
 func (*CreateDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{27}
+	return file_oa_oa_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *CreateDepartmentResp) GetDepartmentID() int32 {
@@ -2027,7 +2136,7 @@ type UpdateDepartmentReq struct {
 
 func (x *UpdateDepartmentReq) Reset() {
 	*x = UpdateDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[28]
+	mi := &file_oa_oa_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2039,7 +2148,7 @@ func (x *UpdateDepartmentReq) String() string {
 func (*UpdateDepartmentReq) ProtoMessage() {}
 
 func (x *UpdateDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[28]
+	mi := &file_oa_oa_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2052,7 +2161,7 @@ func (x *UpdateDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDepartmentReq.ProtoReflect.Descriptor instead.
 func (*UpdateDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{28}
+	return file_oa_oa_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *UpdateDepartmentReq) GetDepartmentID() int32 {
@@ -2183,7 +2292,7 @@ type UpdateDepartmentResp struct {
 
 func (x *UpdateDepartmentResp) Reset() {
 	*x = UpdateDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[29]
+	mi := &file_oa_oa_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2195,7 +2304,7 @@ func (x *UpdateDepartmentResp) String() string {
 func (*UpdateDepartmentResp) ProtoMessage() {}
 
 func (x *UpdateDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[29]
+	mi := &file_oa_oa_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2208,7 +2317,7 @@ func (x *UpdateDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDepartmentResp.ProtoReflect.Descriptor instead.
 func (*UpdateDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{29}
+	return file_oa_oa_proto_rawDescGZIP(), []int{30}
 }
 
 // DeleteDepartmentReq 删除部门请求
@@ -2221,7 +2330,7 @@ type DeleteDepartmentReq struct {
 
 func (x *DeleteDepartmentReq) Reset() {
 	*x = DeleteDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[30]
+	mi := &file_oa_oa_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2233,7 +2342,7 @@ func (x *DeleteDepartmentReq) String() string {
 func (*DeleteDepartmentReq) ProtoMessage() {}
 
 func (x *DeleteDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[30]
+	mi := &file_oa_oa_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2246,7 +2355,7 @@ func (x *DeleteDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDepartmentReq.ProtoReflect.Descriptor instead.
 func (*DeleteDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{30}
+	return file_oa_oa_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *DeleteDepartmentReq) GetDepartmentIDs() []int32 {
@@ -2265,7 +2374,7 @@ type DeleteDepartmentResp struct {
 
 func (x *DeleteDepartmentResp) Reset() {
 	*x = DeleteDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[31]
+	mi := &file_oa_oa_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2277,7 +2386,7 @@ func (x *DeleteDepartmentResp) String() string {
 func (*DeleteDepartmentResp) ProtoMessage() {}
 
 func (x *DeleteDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[31]
+	mi := &file_oa_oa_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2290,7 +2399,7 @@ func (x *DeleteDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDepartmentResp.ProtoReflect.Descriptor instead.
 func (*DeleteDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{31}
+	return file_oa_oa_proto_rawDescGZIP(), []int{32}
 }
 
 // GetDepartmentReq 获取部门请求
@@ -2303,7 +2412,7 @@ type GetDepartmentReq struct {
 
 func (x *GetDepartmentReq) Reset() {
 	*x = GetDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[32]
+	mi := &file_oa_oa_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2315,7 +2424,7 @@ func (x *GetDepartmentReq) String() string {
 func (*GetDepartmentReq) ProtoMessage() {}
 
 func (x *GetDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[32]
+	mi := &file_oa_oa_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2328,7 +2437,7 @@ func (x *GetDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentReq.ProtoReflect.Descriptor instead.
 func (*GetDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{32}
+	return file_oa_oa_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetDepartmentReq) GetDepartmentID() int32 {
@@ -2348,7 +2457,7 @@ type GetDepartmentResp struct {
 
 func (x *GetDepartmentResp) Reset() {
 	*x = GetDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[33]
+	mi := &file_oa_oa_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2360,7 +2469,7 @@ func (x *GetDepartmentResp) String() string {
 func (*GetDepartmentResp) ProtoMessage() {}
 
 func (x *GetDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[33]
+	mi := &file_oa_oa_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2373,7 +2482,7 @@ func (x *GetDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentResp.ProtoReflect.Descriptor instead.
 func (*GetDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{33}
+	return file_oa_oa_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetDepartmentResp) GetDepartment() *DepartmentInfo {
@@ -2383,17 +2492,25 @@ func (x *GetDepartmentResp) GetDepartment() *DepartmentInfo {
 	return nil
 }
 
-// GetDepartmentsReq 批量获取部门请求
+// GetDepartmentsReq 批量获取部门请求（统一接口，支持多种查询方式）
+// 查询优先级：departmentID > companyID > parentDepartmentID
+//  1. 如果 departmentID 不为0，则将其值赋给 parentDepartmentID，然后查询子部门（支持分页）
+//     如果同时提供了 companyID，则使用 companyID 和 parentDepartmentID 进行查询
+//  2. 如果 departmentID 为0但 companyID 不为0，则查询该公司的所有部门（支持分页）
+//  3. 如果 departmentID 和 companyID 都为0但 parentDepartmentID 不为0，则查询子部门（支持分页）
 type GetDepartmentsReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	DepartmentIDs []int32                `protobuf:"varint,1,rep,packed,name=departmentIDs,proto3" json:"departmentIDs"` // 部门ID列表
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state              protoimpl.MessageState   `protogen:"open.v1"`
+	DepartmentID       int32                    `protobuf:"varint,1,opt,name=departmentID,proto3" json:"departmentID"`             // 部门ID（优先级最高，为0时表示不按部门ID查询；大于0时，会将其值赋给 parentDepartmentID 查询子部门）
+	CompanyID          int32                    `protobuf:"varint,2,opt,name=companyID,proto3" json:"companyID"`                   // 公司ID（可选）
+	ParentDepartmentID int32                    `protobuf:"varint,3,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"` // 父部门ID（可选）
+	Pagination         *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`                  // 分页参数（可选，仅在按companyID或parentDepartmentID查询时有效）
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *GetDepartmentsReq) Reset() {
 	*x = GetDepartmentsReq{}
-	mi := &file_oa_oa_proto_msgTypes[34]
+	mi := &file_oa_oa_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2405,7 +2522,7 @@ func (x *GetDepartmentsReq) String() string {
 func (*GetDepartmentsReq) ProtoMessage() {}
 
 func (x *GetDepartmentsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[34]
+	mi := &file_oa_oa_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2418,12 +2535,33 @@ func (x *GetDepartmentsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentsReq.ProtoReflect.Descriptor instead.
 func (*GetDepartmentsReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{34}
+	return file_oa_oa_proto_rawDescGZIP(), []int{35}
 }
 
-func (x *GetDepartmentsReq) GetDepartmentIDs() []int32 {
+func (x *GetDepartmentsReq) GetDepartmentID() int32 {
 	if x != nil {
-		return x.DepartmentIDs
+		return x.DepartmentID
+	}
+	return 0
+}
+
+func (x *GetDepartmentsReq) GetCompanyID() int32 {
+	if x != nil {
+		return x.CompanyID
+	}
+	return 0
+}
+
+func (x *GetDepartmentsReq) GetParentDepartmentID() int32 {
+	if x != nil {
+		return x.ParentDepartmentID
+	}
+	return 0
+}
+
+func (x *GetDepartmentsReq) GetPagination() *sdkws.RequestPagination {
+	if x != nil {
+		return x.Pagination
 	}
 	return nil
 }
@@ -2431,14 +2569,15 @@ func (x *GetDepartmentsReq) GetDepartmentIDs() []int32 {
 // GetDepartmentsResp 批量获取部门响应
 type GetDepartmentsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Departments   []*DepartmentInfo      `protobuf:"bytes,1,rep,name=departments,proto3" json:"departments"`
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`            // 总数（仅在按companyID或parentDepartmentID查询时有效）
+	Departments   []*DepartmentInfo      `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments"` // 部门列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetDepartmentsResp) Reset() {
 	*x = GetDepartmentsResp{}
-	mi := &file_oa_oa_proto_msgTypes[35]
+	mi := &file_oa_oa_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2450,7 +2589,7 @@ func (x *GetDepartmentsResp) String() string {
 func (*GetDepartmentsResp) ProtoMessage() {}
 
 func (x *GetDepartmentsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[35]
+	mi := &file_oa_oa_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2463,7 +2602,14 @@ func (x *GetDepartmentsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepartmentsResp.ProtoReflect.Descriptor instead.
 func (*GetDepartmentsResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{35}
+	return file_oa_oa_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *GetDepartmentsResp) GetTotal() uint32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 func (x *GetDepartmentsResp) GetDepartments() []*DepartmentInfo {
@@ -2487,7 +2633,7 @@ type SearchDepartmentReq struct {
 
 func (x *SearchDepartmentReq) Reset() {
 	*x = SearchDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[36]
+	mi := &file_oa_oa_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2499,7 +2645,7 @@ func (x *SearchDepartmentReq) String() string {
 func (*SearchDepartmentReq) ProtoMessage() {}
 
 func (x *SearchDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[36]
+	mi := &file_oa_oa_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2512,7 +2658,7 @@ func (x *SearchDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchDepartmentReq.ProtoReflect.Descriptor instead.
 func (*SearchDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{36}
+	return file_oa_oa_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *SearchDepartmentReq) GetKeyword() string {
@@ -2561,7 +2707,7 @@ type SearchDepartmentResp struct {
 
 func (x *SearchDepartmentResp) Reset() {
 	*x = SearchDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[37]
+	mi := &file_oa_oa_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2573,7 +2719,7 @@ func (x *SearchDepartmentResp) String() string {
 func (*SearchDepartmentResp) ProtoMessage() {}
 
 func (x *SearchDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[37]
+	mi := &file_oa_oa_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2586,7 +2732,7 @@ func (x *SearchDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchDepartmentResp.ProtoReflect.Descriptor instead.
 func (*SearchDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{37}
+	return file_oa_oa_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *SearchDepartmentResp) GetTotal() uint32 {
@@ -2603,30 +2749,31 @@ func (x *SearchDepartmentResp) GetDepartments() []*DepartmentInfo {
 	return nil
 }
 
-// GetDepartmentsByCompanyReq 根据公司获取部门请求
-type GetDepartmentsByCompanyReq struct {
+// GetMembersByCompanyAndDepartmentReq 根据企业ID和部门ID获取所有人员请求（前台用）
+type GetMembersByCompanyAndDepartmentReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	CompanyID     int32                    `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"` // 公司ID
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
+	CompanyID     int32                    `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"`       // 企业ID（必填）
+	DepartmentID  int32                    `protobuf:"varint,2,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID（可选，为0或空时返回企业的所有人员）
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`      // 分页参数（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetDepartmentsByCompanyReq) Reset() {
-	*x = GetDepartmentsByCompanyReq{}
-	mi := &file_oa_oa_proto_msgTypes[38]
+func (x *GetMembersByCompanyAndDepartmentReq) Reset() {
+	*x = GetMembersByCompanyAndDepartmentReq{}
+	mi := &file_oa_oa_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetDepartmentsByCompanyReq) String() string {
+func (x *GetMembersByCompanyAndDepartmentReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetDepartmentsByCompanyReq) ProtoMessage() {}
+func (*GetMembersByCompanyAndDepartmentReq) ProtoMessage() {}
 
-func (x *GetDepartmentsByCompanyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[38]
+func (x *GetMembersByCompanyAndDepartmentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_oa_oa_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2637,101 +2784,95 @@ func (x *GetDepartmentsByCompanyReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetDepartmentsByCompanyReq.ProtoReflect.Descriptor instead.
-func (*GetDepartmentsByCompanyReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{38}
+// Deprecated: Use GetMembersByCompanyAndDepartmentReq.ProtoReflect.Descriptor instead.
+func (*GetMembersByCompanyAndDepartmentReq) Descriptor() ([]byte, []int) {
+	return file_oa_oa_proto_rawDescGZIP(), []int{39}
 }
 
-func (x *GetDepartmentsByCompanyReq) GetCompanyID() int32 {
+func (x *GetMembersByCompanyAndDepartmentReq) GetCompanyID() int32 {
 	if x != nil {
 		return x.CompanyID
 	}
 	return 0
 }
 
-func (x *GetDepartmentsByCompanyReq) GetPagination() *sdkws.RequestPagination {
+func (x *GetMembersByCompanyAndDepartmentReq) GetDepartmentID() int32 {
+	if x != nil {
+		return x.DepartmentID
+	}
+	return 0
+}
+
+func (x *GetMembersByCompanyAndDepartmentReq) GetPagination() *sdkws.RequestPagination {
 	if x != nil {
 		return x.Pagination
 	}
 	return nil
 }
 
-// GetDepartmentsByCompanyResp 根据公司获取部门响应
-type GetDepartmentsByCompanyResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Departments   []*DepartmentInfo      `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments"`
+// AdminMemberInfo 后台管理用成员信息（包含更多字段，不与前台混合）
+type AdminMemberInfo struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 基础信息
+	UserID   string `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`     // 用户ID
+	Account  string `protobuf:"bytes,2,opt,name=account,proto3" json:"account"`   // 账号
+	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname"` // 昵称
+	FaceURL  string `protobuf:"bytes,4,opt,name=faceURL,proto3" json:"faceURL"`   // 头像URL
+	Gender   int32  `protobuf:"varint,5,opt,name=gender,proto3" json:"gender"`    // 性别：0-未知，1-男，2-女
+	// 联系信息
+	PhoneNumber string `protobuf:"bytes,6,opt,name=phoneNumber,proto3" json:"phoneNumber"` // 手机号
+	AreaCode    string `protobuf:"bytes,7,opt,name=areaCode,proto3" json:"areaCode"`       // 区号
+	Email       string `protobuf:"bytes,8,opt,name=email,proto3" json:"email"`             // 邮箱
+	// 组织信息
+	CompanyID          int32  `protobuf:"varint,9,opt,name=companyID,proto3" json:"companyID"`                   // 公司ID
+	CompanyName        string `protobuf:"bytes,10,opt,name=companyName,proto3" json:"companyName"`               // 公司名称
+	DepartmentID       int32  `protobuf:"varint,11,opt,name=departmentID,proto3" json:"departmentID"`            // 所属部门ID
+	DepartmentName     string `protobuf:"bytes,12,opt,name=departmentName,proto3" json:"departmentName"`         // 所属部门名称
+	DepartmentCode     string `protobuf:"bytes,13,opt,name=departmentCode,proto3" json:"departmentCode"`         // 部门编码
+	DeptAllName        string `protobuf:"bytes,14,opt,name=deptAllName,proto3" json:"deptAllName"`               // 部门全路径名称
+	WeixinDepartmentID string `protobuf:"bytes,15,opt,name=weixinDepartmentID,proto3" json:"weixinDepartmentID"` // 微信部门ID
+	// 职位信息
+	JobTitleID int32  `protobuf:"varint,16,opt,name=jobTitleID,proto3" json:"jobTitleID"` // 职位ID
+	JobTitle   string `protobuf:"bytes,17,opt,name=jobTitle,proto3" json:"jobTitle"`      // 职位名称（需要关联查询）
+	// 工作信息
+	WorkCode  string `protobuf:"bytes,18,opt,name=workCode,proto3" json:"workCode"`    // 工号
+	StartDate int64  `protobuf:"varint,19,opt,name=startDate,proto3" json:"startDate"` // 入职日期（时间戳，毫秒）
+	EndDate   int64  `protobuf:"varint,20,opt,name=endDate,proto3" json:"endDate"`     // 结束日期（时间戳，毫秒，0表示未设置）
+	// 状态信息
+	Status      string `protobuf:"bytes,21,opt,name=status,proto3" json:"status"`            // 状态（如"5"表示离职）
+	SafeLevel   string `protobuf:"bytes,22,opt,name=safeLevel,proto3" json:"safeLevel"`      // 安全级别
+	AccountType int32  `protobuf:"varint,23,opt,name=accountType,proto3" json:"accountType"` // 账号类型
+	IsNew       int32  `protobuf:"varint,24,opt,name=isNew,proto3" json:"isNew"`             // 是否新用户：0-否，1-是
+	// 上级信息
+	ManagerID     int32 `protobuf:"varint,25,opt,name=managerID,proto3" json:"managerID"`         // 上级ID（经理）
+	GroupLeaderID int32 `protobuf:"varint,26,opt,name=groupLeaderID,proto3" json:"groupLeaderID"` // 组长ID
+	// 其他信息
+	Pinyin    string `protobuf:"bytes,27,opt,name=pinyin,proto3" json:"pinyin"`       // 拼音
+	Signature string `protobuf:"bytes,28,opt,name=signature,proto3" json:"signature"` // 用户签名，JSON格式：{"icon":"图片URL或表情","text":"签名文本"}
+	// 时间信息
+	CreateTime int64 `protobuf:"varint,29,opt,name=createTime,proto3" json:"createTime"` // 创建时间（时间戳，毫秒）
+	ChangeTime int64 `protobuf:"varint,30,opt,name=changeTime,proto3" json:"changeTime"` // 修改时间（时间戳，毫秒）
+	BirthTime  int64 `protobuf:"varint,31,opt,name=birthTime,proto3" json:"birthTime"`   // 生日（时间戳，毫秒）
+	// 在线状态
+	OnlineStatus  []*PlatformDetail `protobuf:"bytes,32,rep,name=onlineStatus,proto3" json:"onlineStatus"` // 在线状态列表（包含 status 和 platformID）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetDepartmentsByCompanyResp) Reset() {
-	*x = GetDepartmentsByCompanyResp{}
-	mi := &file_oa_oa_proto_msgTypes[39]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetDepartmentsByCompanyResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetDepartmentsByCompanyResp) ProtoMessage() {}
-
-func (x *GetDepartmentsByCompanyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[39]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetDepartmentsByCompanyResp.ProtoReflect.Descriptor instead.
-func (*GetDepartmentsByCompanyResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *GetDepartmentsByCompanyResp) GetTotal() uint32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *GetDepartmentsByCompanyResp) GetDepartments() []*DepartmentInfo {
-	if x != nil {
-		return x.Departments
-	}
-	return nil
-}
-
-// GetChildDepartmentsReq 获取子部门请求
-type GetChildDepartmentsReq struct {
-	state              protoimpl.MessageState   `protogen:"open.v1"`
-	ParentDepartmentID int32                    `protobuf:"varint,1,opt,name=parentDepartmentID,proto3" json:"parentDepartmentID"` // 上级部门ID
-	Pagination         *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *GetChildDepartmentsReq) Reset() {
-	*x = GetChildDepartmentsReq{}
+func (x *AdminMemberInfo) Reset() {
+	*x = AdminMemberInfo{}
 	mi := &file_oa_oa_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetChildDepartmentsReq) String() string {
+func (x *AdminMemberInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetChildDepartmentsReq) ProtoMessage() {}
+func (*AdminMemberInfo) ProtoMessage() {}
 
-func (x *GetChildDepartmentsReq) ProtoReflect() protoreflect.Message {
+func (x *AdminMemberInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_oa_oa_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2743,48 +2884,258 @@ func (x *GetChildDepartmentsReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetChildDepartmentsReq.ProtoReflect.Descriptor instead.
-func (*GetChildDepartmentsReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminMemberInfo.ProtoReflect.Descriptor instead.
+func (*AdminMemberInfo) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{40}
 }
 
-func (x *GetChildDepartmentsReq) GetParentDepartmentID() int32 {
+func (x *AdminMemberInfo) GetUserID() string {
 	if x != nil {
-		return x.ParentDepartmentID
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetAccount() string {
+	if x != nil {
+		return x.Account
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetFaceURL() string {
+	if x != nil {
+		return x.FaceURL
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetGender() int32 {
+	if x != nil {
+		return x.Gender
 	}
 	return 0
 }
 
-func (x *GetChildDepartmentsReq) GetPagination() *sdkws.RequestPagination {
+func (x *AdminMemberInfo) GetPhoneNumber() string {
 	if x != nil {
-		return x.Pagination
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetAreaCode() string {
+	if x != nil {
+		return x.AreaCode
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetCompanyID() int32 {
+	if x != nil {
+		return x.CompanyID
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetCompanyName() string {
+	if x != nil {
+		return x.CompanyName
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetDepartmentID() int32 {
+	if x != nil {
+		return x.DepartmentID
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetDepartmentName() string {
+	if x != nil {
+		return x.DepartmentName
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetDepartmentCode() string {
+	if x != nil {
+		return x.DepartmentCode
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetDeptAllName() string {
+	if x != nil {
+		return x.DeptAllName
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetWeixinDepartmentID() string {
+	if x != nil {
+		return x.WeixinDepartmentID
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetJobTitleID() int32 {
+	if x != nil {
+		return x.JobTitleID
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetJobTitle() string {
+	if x != nil {
+		return x.JobTitle
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetWorkCode() string {
+	if x != nil {
+		return x.WorkCode
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetStartDate() int64 {
+	if x != nil {
+		return x.StartDate
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetEndDate() int64 {
+	if x != nil {
+		return x.EndDate
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetSafeLevel() string {
+	if x != nil {
+		return x.SafeLevel
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetAccountType() int32 {
+	if x != nil {
+		return x.AccountType
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetIsNew() int32 {
+	if x != nil {
+		return x.IsNew
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetManagerID() int32 {
+	if x != nil {
+		return x.ManagerID
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetGroupLeaderID() int32 {
+	if x != nil {
+		return x.GroupLeaderID
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetPinyin() string {
+	if x != nil {
+		return x.Pinyin
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetSignature() string {
+	if x != nil {
+		return x.Signature
+	}
+	return ""
+}
+
+func (x *AdminMemberInfo) GetCreateTime() int64 {
+	if x != nil {
+		return x.CreateTime
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetChangeTime() int64 {
+	if x != nil {
+		return x.ChangeTime
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetBirthTime() int64 {
+	if x != nil {
+		return x.BirthTime
+	}
+	return 0
+}
+
+func (x *AdminMemberInfo) GetOnlineStatus() []*PlatformDetail {
+	if x != nil {
+		return x.OnlineStatus
 	}
 	return nil
 }
 
-// GetChildDepartmentsResp 获取子部门响应
-type GetChildDepartmentsResp struct {
+// GetMembersByCompanyAndDepartmentResp 根据企业ID和部门ID获取所有人员响应（前台用）
+type GetMembersByCompanyAndDepartmentResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Departments   []*DepartmentInfo      `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments"`
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`    // 总数
+	Members       []*MemberInfo          `protobuf:"bytes,2,rep,name=members,proto3" json:"members"` // 人员列表（前台用，字段较少）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetChildDepartmentsResp) Reset() {
-	*x = GetChildDepartmentsResp{}
+func (x *GetMembersByCompanyAndDepartmentResp) Reset() {
+	*x = GetMembersByCompanyAndDepartmentResp{}
 	mi := &file_oa_oa_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetChildDepartmentsResp) String() string {
+func (x *GetMembersByCompanyAndDepartmentResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetChildDepartmentsResp) ProtoMessage() {}
+func (*GetMembersByCompanyAndDepartmentResp) ProtoMessage() {}
 
-func (x *GetChildDepartmentsResp) ProtoReflect() protoreflect.Message {
+func (x *GetMembersByCompanyAndDepartmentResp) ProtoReflect() protoreflect.Message {
 	mi := &file_oa_oa_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2796,21 +3147,208 @@ func (x *GetChildDepartmentsResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetChildDepartmentsResp.ProtoReflect.Descriptor instead.
-func (*GetChildDepartmentsResp) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetMembersByCompanyAndDepartmentResp.ProtoReflect.Descriptor instead.
+func (*GetMembersByCompanyAndDepartmentResp) Descriptor() ([]byte, []int) {
 	return file_oa_oa_proto_rawDescGZIP(), []int{41}
 }
 
-func (x *GetChildDepartmentsResp) GetTotal() uint32 {
+func (x *GetMembersByCompanyAndDepartmentResp) GetTotal() uint32 {
 	if x != nil {
 		return x.Total
 	}
 	return 0
 }
 
-func (x *GetChildDepartmentsResp) GetDepartments() []*DepartmentInfo {
+func (x *GetMembersByCompanyAndDepartmentResp) GetMembers() []*MemberInfo {
 	if x != nil {
-		return x.Departments
+		return x.Members
+	}
+	return nil
+}
+
+// GetAdminMembersByCompanyAndDepartmentReq 后台管理根据企业ID和部门ID获取所有人员请求
+type GetAdminMembersByCompanyAndDepartmentReq struct {
+	state        protoimpl.MessageState   `protogen:"open.v1"`
+	CompanyID    int32                    `protobuf:"varint,1,opt,name=companyID,proto3" json:"companyID"`       // 企业ID（可选，为0或空时查询所有企业的人员）
+	DepartmentID int32                    `protobuf:"varint,2,opt,name=departmentID,proto3" json:"departmentID"` // 部门ID（可选，为0或空时返回企业的所有人员）
+	Pagination   *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`      // 分页参数（可选）
+	// 搜索条件（可选）
+	WorkCode       string `protobuf:"bytes,4,opt,name=workCode,proto3" json:"workCode"`              // 工号（模糊搜索）
+	Name           string `protobuf:"bytes,5,opt,name=name,proto3" json:"name"`                      // 姓名（模糊搜索，对应nickname字段）
+	Pinyin         string `protobuf:"bytes,12,opt,name=pinyin,proto3" json:"pinyin"`                 // 拼音（模糊搜索，对应pinyin字段）
+	PhoneNumber    string `protobuf:"bytes,6,opt,name=phoneNumber,proto3" json:"phoneNumber"`        // 手机号（模糊搜索）
+	JobTitleID     int32  `protobuf:"varint,7,opt,name=jobTitleID,proto3" json:"jobTitleID"`         // 岗位ID（精确匹配）
+	JobTitleName   string `protobuf:"bytes,8,opt,name=jobTitleName,proto3" json:"jobTitleName"`      // 岗位名称（模糊搜索，需要关联job_titles表）
+	StartDateBegin int64  `protobuf:"varint,9,opt,name=startDateBegin,proto3" json:"startDateBegin"` // 入职开始时间（时间戳，毫秒，>=）
+	StartDateEnd   int64  `protobuf:"varint,10,opt,name=startDateEnd,proto3" json:"startDateEnd"`    // 入职结束时间（时间戳，毫秒，<=）
+	Status         string `protobuf:"bytes,11,opt,name=status,proto3" json:"status"`                 // 状态（精确匹配，如"5"表示离职）
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) Reset() {
+	*x = GetAdminMembersByCompanyAndDepartmentReq{}
+	mi := &file_oa_oa_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminMembersByCompanyAndDepartmentReq) ProtoMessage() {}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_oa_oa_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminMembersByCompanyAndDepartmentReq.ProtoReflect.Descriptor instead.
+func (*GetAdminMembersByCompanyAndDepartmentReq) Descriptor() ([]byte, []int) {
+	return file_oa_oa_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetCompanyID() int32 {
+	if x != nil {
+		return x.CompanyID
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetDepartmentID() int32 {
+	if x != nil {
+		return x.DepartmentID
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetPagination() *sdkws.RequestPagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetWorkCode() string {
+	if x != nil {
+		return x.WorkCode
+	}
+	return ""
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetPinyin() string {
+	if x != nil {
+		return x.Pinyin
+	}
+	return ""
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetJobTitleID() int32 {
+	if x != nil {
+		return x.JobTitleID
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetJobTitleName() string {
+	if x != nil {
+		return x.JobTitleName
+	}
+	return ""
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetStartDateBegin() int64 {
+	if x != nil {
+		return x.StartDateBegin
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetStartDateEnd() int64 {
+	if x != nil {
+		return x.StartDateEnd
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentReq) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+// GetAdminMembersByCompanyAndDepartmentResp 后台管理根据企业ID和部门ID获取所有人员响应
+type GetAdminMembersByCompanyAndDepartmentResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Total         uint32                 `protobuf:"varint,1,opt,name=total,proto3" json:"total"`    // 总数
+	Members       []*AdminMemberInfo     `protobuf:"bytes,2,rep,name=members,proto3" json:"members"` // 人员列表（后台管理用，包含更多字段）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentResp) Reset() {
+	*x = GetAdminMembersByCompanyAndDepartmentResp{}
+	mi := &file_oa_oa_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminMembersByCompanyAndDepartmentResp) ProtoMessage() {}
+
+func (x *GetAdminMembersByCompanyAndDepartmentResp) ProtoReflect() protoreflect.Message {
+	mi := &file_oa_oa_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminMembersByCompanyAndDepartmentResp.ProtoReflect.Descriptor instead.
+func (*GetAdminMembersByCompanyAndDepartmentResp) Descriptor() ([]byte, []int) {
+	return file_oa_oa_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentResp) GetTotal() uint32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *GetAdminMembersByCompanyAndDepartmentResp) GetMembers() []*AdminMemberInfo {
+	if x != nil {
+		return x.Members
 	}
 	return nil
 }
@@ -2845,7 +3383,7 @@ type JobInfo struct {
 
 func (x *JobInfo) Reset() {
 	*x = JobInfo{}
-	mi := &file_oa_oa_proto_msgTypes[42]
+	mi := &file_oa_oa_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2857,7 +3395,7 @@ func (x *JobInfo) String() string {
 func (*JobInfo) ProtoMessage() {}
 
 func (x *JobInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[42]
+	mi := &file_oa_oa_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2870,7 +3408,7 @@ func (x *JobInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JobInfo.ProtoReflect.Descriptor instead.
 func (*JobInfo) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{42}
+	return file_oa_oa_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *JobInfo) GetJobTitleID() int32 {
@@ -3040,7 +3578,7 @@ type CreateJobTitleReq struct {
 
 func (x *CreateJobTitleReq) Reset() {
 	*x = CreateJobTitleReq{}
-	mi := &file_oa_oa_proto_msgTypes[43]
+	mi := &file_oa_oa_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3052,7 +3590,7 @@ func (x *CreateJobTitleReq) String() string {
 func (*CreateJobTitleReq) ProtoMessage() {}
 
 func (x *CreateJobTitleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[43]
+	mi := &file_oa_oa_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3065,7 +3603,7 @@ func (x *CreateJobTitleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateJobTitleReq.ProtoReflect.Descriptor instead.
 func (*CreateJobTitleReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{43}
+	return file_oa_oa_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *CreateJobTitleReq) GetJobCode() string {
@@ -3155,7 +3693,7 @@ type CreateJobTitleResp struct {
 
 func (x *CreateJobTitleResp) Reset() {
 	*x = CreateJobTitleResp{}
-	mi := &file_oa_oa_proto_msgTypes[44]
+	mi := &file_oa_oa_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3167,7 +3705,7 @@ func (x *CreateJobTitleResp) String() string {
 func (*CreateJobTitleResp) ProtoMessage() {}
 
 func (x *CreateJobTitleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[44]
+	mi := &file_oa_oa_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3180,7 +3718,7 @@ func (x *CreateJobTitleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateJobTitleResp.ProtoReflect.Descriptor instead.
 func (*CreateJobTitleResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{44}
+	return file_oa_oa_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *CreateJobTitleResp) GetJobTitleID() int32 {
@@ -3211,7 +3749,7 @@ type UpdateJobTitleReq struct {
 
 func (x *UpdateJobTitleReq) Reset() {
 	*x = UpdateJobTitleReq{}
-	mi := &file_oa_oa_proto_msgTypes[45]
+	mi := &file_oa_oa_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3223,7 +3761,7 @@ func (x *UpdateJobTitleReq) String() string {
 func (*UpdateJobTitleReq) ProtoMessage() {}
 
 func (x *UpdateJobTitleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[45]
+	mi := &file_oa_oa_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3236,7 +3774,7 @@ func (x *UpdateJobTitleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateJobTitleReq.ProtoReflect.Descriptor instead.
 func (*UpdateJobTitleReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{45}
+	return file_oa_oa_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *UpdateJobTitleReq) GetJobTitleID() int32 {
@@ -3332,7 +3870,7 @@ type UpdateJobTitleResp struct {
 
 func (x *UpdateJobTitleResp) Reset() {
 	*x = UpdateJobTitleResp{}
-	mi := &file_oa_oa_proto_msgTypes[46]
+	mi := &file_oa_oa_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3344,7 +3882,7 @@ func (x *UpdateJobTitleResp) String() string {
 func (*UpdateJobTitleResp) ProtoMessage() {}
 
 func (x *UpdateJobTitleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[46]
+	mi := &file_oa_oa_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3357,7 +3895,7 @@ func (x *UpdateJobTitleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateJobTitleResp.ProtoReflect.Descriptor instead.
 func (*UpdateJobTitleResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{46}
+	return file_oa_oa_proto_rawDescGZIP(), []int{48}
 }
 
 // DeleteJobTitleReq 删除职位请求
@@ -3370,7 +3908,7 @@ type DeleteJobTitleReq struct {
 
 func (x *DeleteJobTitleReq) Reset() {
 	*x = DeleteJobTitleReq{}
-	mi := &file_oa_oa_proto_msgTypes[47]
+	mi := &file_oa_oa_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3382,7 +3920,7 @@ func (x *DeleteJobTitleReq) String() string {
 func (*DeleteJobTitleReq) ProtoMessage() {}
 
 func (x *DeleteJobTitleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[47]
+	mi := &file_oa_oa_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3395,7 +3933,7 @@ func (x *DeleteJobTitleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobTitleReq.ProtoReflect.Descriptor instead.
 func (*DeleteJobTitleReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{47}
+	return file_oa_oa_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *DeleteJobTitleReq) GetJobTitleIDs() []int32 {
@@ -3414,7 +3952,7 @@ type DeleteJobTitleResp struct {
 
 func (x *DeleteJobTitleResp) Reset() {
 	*x = DeleteJobTitleResp{}
-	mi := &file_oa_oa_proto_msgTypes[48]
+	mi := &file_oa_oa_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3426,7 +3964,7 @@ func (x *DeleteJobTitleResp) String() string {
 func (*DeleteJobTitleResp) ProtoMessage() {}
 
 func (x *DeleteJobTitleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[48]
+	mi := &file_oa_oa_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3439,7 +3977,7 @@ func (x *DeleteJobTitleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobTitleResp.ProtoReflect.Descriptor instead.
 func (*DeleteJobTitleResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{48}
+	return file_oa_oa_proto_rawDescGZIP(), []int{50}
 }
 
 // GetJobTitleReq 获取职位请求
@@ -3452,7 +3990,7 @@ type GetJobTitleReq struct {
 
 func (x *GetJobTitleReq) Reset() {
 	*x = GetJobTitleReq{}
-	mi := &file_oa_oa_proto_msgTypes[49]
+	mi := &file_oa_oa_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3464,7 +4002,7 @@ func (x *GetJobTitleReq) String() string {
 func (*GetJobTitleReq) ProtoMessage() {}
 
 func (x *GetJobTitleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[49]
+	mi := &file_oa_oa_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3477,7 +4015,7 @@ func (x *GetJobTitleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitleReq.ProtoReflect.Descriptor instead.
 func (*GetJobTitleReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{49}
+	return file_oa_oa_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GetJobTitleReq) GetJobTitleID() int32 {
@@ -3497,7 +4035,7 @@ type GetJobTitleResp struct {
 
 func (x *GetJobTitleResp) Reset() {
 	*x = GetJobTitleResp{}
-	mi := &file_oa_oa_proto_msgTypes[50]
+	mi := &file_oa_oa_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3509,7 +4047,7 @@ func (x *GetJobTitleResp) String() string {
 func (*GetJobTitleResp) ProtoMessage() {}
 
 func (x *GetJobTitleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[50]
+	mi := &file_oa_oa_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3522,7 +4060,7 @@ func (x *GetJobTitleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitleResp.ProtoReflect.Descriptor instead.
 func (*GetJobTitleResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{50}
+	return file_oa_oa_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *GetJobTitleResp) GetJobTitle() *JobInfo {
@@ -3542,7 +4080,7 @@ type GetJobTitlesReq struct {
 
 func (x *GetJobTitlesReq) Reset() {
 	*x = GetJobTitlesReq{}
-	mi := &file_oa_oa_proto_msgTypes[51]
+	mi := &file_oa_oa_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3554,7 +4092,7 @@ func (x *GetJobTitlesReq) String() string {
 func (*GetJobTitlesReq) ProtoMessage() {}
 
 func (x *GetJobTitlesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[51]
+	mi := &file_oa_oa_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3567,7 +4105,7 @@ func (x *GetJobTitlesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitlesReq.ProtoReflect.Descriptor instead.
 func (*GetJobTitlesReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{51}
+	return file_oa_oa_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *GetJobTitlesReq) GetJobTitleIDs() []int32 {
@@ -3587,7 +4125,7 @@ type GetJobTitlesResp struct {
 
 func (x *GetJobTitlesResp) Reset() {
 	*x = GetJobTitlesResp{}
-	mi := &file_oa_oa_proto_msgTypes[52]
+	mi := &file_oa_oa_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3599,7 +4137,7 @@ func (x *GetJobTitlesResp) String() string {
 func (*GetJobTitlesResp) ProtoMessage() {}
 
 func (x *GetJobTitlesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[52]
+	mi := &file_oa_oa_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3612,7 +4150,7 @@ func (x *GetJobTitlesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitlesResp.ProtoReflect.Descriptor instead.
 func (*GetJobTitlesResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{52}
+	return file_oa_oa_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *GetJobTitlesResp) GetJobTitles() []*JobInfo {
@@ -3635,7 +4173,7 @@ type SearchJobTitleReq struct {
 
 func (x *SearchJobTitleReq) Reset() {
 	*x = SearchJobTitleReq{}
-	mi := &file_oa_oa_proto_msgTypes[53]
+	mi := &file_oa_oa_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3647,7 +4185,7 @@ func (x *SearchJobTitleReq) String() string {
 func (*SearchJobTitleReq) ProtoMessage() {}
 
 func (x *SearchJobTitleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[53]
+	mi := &file_oa_oa_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3660,7 +4198,7 @@ func (x *SearchJobTitleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchJobTitleReq.ProtoReflect.Descriptor instead.
 func (*SearchJobTitleReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{53}
+	return file_oa_oa_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *SearchJobTitleReq) GetKeyword() string {
@@ -3702,7 +4240,7 @@ type SearchJobTitleResp struct {
 
 func (x *SearchJobTitleResp) Reset() {
 	*x = SearchJobTitleResp{}
-	mi := &file_oa_oa_proto_msgTypes[54]
+	mi := &file_oa_oa_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3714,7 +4252,7 @@ func (x *SearchJobTitleResp) String() string {
 func (*SearchJobTitleResp) ProtoMessage() {}
 
 func (x *SearchJobTitleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[54]
+	mi := &file_oa_oa_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3727,7 +4265,7 @@ func (x *SearchJobTitleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchJobTitleResp.ProtoReflect.Descriptor instead.
 func (*SearchJobTitleResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{54}
+	return file_oa_oa_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *SearchJobTitleResp) GetTotal() uint32 {
@@ -3755,7 +4293,7 @@ type GetJobTitlesByDepartmentReq struct {
 
 func (x *GetJobTitlesByDepartmentReq) Reset() {
 	*x = GetJobTitlesByDepartmentReq{}
-	mi := &file_oa_oa_proto_msgTypes[55]
+	mi := &file_oa_oa_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3767,7 +4305,7 @@ func (x *GetJobTitlesByDepartmentReq) String() string {
 func (*GetJobTitlesByDepartmentReq) ProtoMessage() {}
 
 func (x *GetJobTitlesByDepartmentReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[55]
+	mi := &file_oa_oa_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3780,7 +4318,7 @@ func (x *GetJobTitlesByDepartmentReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitlesByDepartmentReq.ProtoReflect.Descriptor instead.
 func (*GetJobTitlesByDepartmentReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{55}
+	return file_oa_oa_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *GetJobTitlesByDepartmentReq) GetDepartmentID() int32 {
@@ -3808,7 +4346,7 @@ type GetJobTitlesByDepartmentResp struct {
 
 func (x *GetJobTitlesByDepartmentResp) Reset() {
 	*x = GetJobTitlesByDepartmentResp{}
-	mi := &file_oa_oa_proto_msgTypes[56]
+	mi := &file_oa_oa_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3820,7 +4358,7 @@ func (x *GetJobTitlesByDepartmentResp) String() string {
 func (*GetJobTitlesByDepartmentResp) ProtoMessage() {}
 
 func (x *GetJobTitlesByDepartmentResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[56]
+	mi := &file_oa_oa_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3833,7 +4371,7 @@ func (x *GetJobTitlesByDepartmentResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobTitlesByDepartmentResp.ProtoReflect.Descriptor instead.
 func (*GetJobTitlesByDepartmentResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{56}
+	return file_oa_oa_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *GetJobTitlesByDepartmentResp) GetTotal() uint32 {
@@ -3864,7 +4402,7 @@ type Job struct {
 
 func (x *Job) Reset() {
 	*x = Job{}
-	mi := &file_oa_oa_proto_msgTypes[57]
+	mi := &file_oa_oa_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3876,7 +4414,7 @@ func (x *Job) String() string {
 func (*Job) ProtoMessage() {}
 
 func (x *Job) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[57]
+	mi := &file_oa_oa_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3889,7 +4427,7 @@ func (x *Job) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Job.ProtoReflect.Descriptor instead.
 func (*Job) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{57}
+	return file_oa_oa_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *Job) GetJobID() int32 {
@@ -3939,7 +4477,7 @@ type CreateJobReq struct {
 
 func (x *CreateJobReq) Reset() {
 	*x = CreateJobReq{}
-	mi := &file_oa_oa_proto_msgTypes[58]
+	mi := &file_oa_oa_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3951,7 +4489,7 @@ func (x *CreateJobReq) String() string {
 func (*CreateJobReq) ProtoMessage() {}
 
 func (x *CreateJobReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[58]
+	mi := &file_oa_oa_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3964,7 +4502,7 @@ func (x *CreateJobReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateJobReq.ProtoReflect.Descriptor instead.
 func (*CreateJobReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{58}
+	return file_oa_oa_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *CreateJobReq) GetJobID() int32 {
@@ -3997,7 +4535,7 @@ type CreateJobResp struct {
 
 func (x *CreateJobResp) Reset() {
 	*x = CreateJobResp{}
-	mi := &file_oa_oa_proto_msgTypes[59]
+	mi := &file_oa_oa_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4009,7 +4547,7 @@ func (x *CreateJobResp) String() string {
 func (*CreateJobResp) ProtoMessage() {}
 
 func (x *CreateJobResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[59]
+	mi := &file_oa_oa_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4022,7 +4560,7 @@ func (x *CreateJobResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateJobResp.ProtoReflect.Descriptor instead.
 func (*CreateJobResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{59}
+	return file_oa_oa_proto_rawDescGZIP(), []int{61}
 }
 
 // UpdateJobReq 更新职位请求
@@ -4037,7 +4575,7 @@ type UpdateJobReq struct {
 
 func (x *UpdateJobReq) Reset() {
 	*x = UpdateJobReq{}
-	mi := &file_oa_oa_proto_msgTypes[60]
+	mi := &file_oa_oa_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4049,7 +4587,7 @@ func (x *UpdateJobReq) String() string {
 func (*UpdateJobReq) ProtoMessage() {}
 
 func (x *UpdateJobReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[60]
+	mi := &file_oa_oa_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4062,7 +4600,7 @@ func (x *UpdateJobReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateJobReq.ProtoReflect.Descriptor instead.
 func (*UpdateJobReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{60}
+	return file_oa_oa_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *UpdateJobReq) GetJobID() int32 {
@@ -4095,7 +4633,7 @@ type UpdateJobResp struct {
 
 func (x *UpdateJobResp) Reset() {
 	*x = UpdateJobResp{}
-	mi := &file_oa_oa_proto_msgTypes[61]
+	mi := &file_oa_oa_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4107,7 +4645,7 @@ func (x *UpdateJobResp) String() string {
 func (*UpdateJobResp) ProtoMessage() {}
 
 func (x *UpdateJobResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[61]
+	mi := &file_oa_oa_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4120,7 +4658,7 @@ func (x *UpdateJobResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateJobResp.ProtoReflect.Descriptor instead.
 func (*UpdateJobResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{61}
+	return file_oa_oa_proto_rawDescGZIP(), []int{63}
 }
 
 // DeleteJobReq 删除职位请求
@@ -4133,7 +4671,7 @@ type DeleteJobReq struct {
 
 func (x *DeleteJobReq) Reset() {
 	*x = DeleteJobReq{}
-	mi := &file_oa_oa_proto_msgTypes[62]
+	mi := &file_oa_oa_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4145,7 +4683,7 @@ func (x *DeleteJobReq) String() string {
 func (*DeleteJobReq) ProtoMessage() {}
 
 func (x *DeleteJobReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[62]
+	mi := &file_oa_oa_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4158,7 +4696,7 @@ func (x *DeleteJobReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobReq.ProtoReflect.Descriptor instead.
 func (*DeleteJobReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{62}
+	return file_oa_oa_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *DeleteJobReq) GetJobIDs() []int32 {
@@ -4177,7 +4715,7 @@ type DeleteJobResp struct {
 
 func (x *DeleteJobResp) Reset() {
 	*x = DeleteJobResp{}
-	mi := &file_oa_oa_proto_msgTypes[63]
+	mi := &file_oa_oa_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4189,7 +4727,7 @@ func (x *DeleteJobResp) String() string {
 func (*DeleteJobResp) ProtoMessage() {}
 
 func (x *DeleteJobResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[63]
+	mi := &file_oa_oa_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4202,7 +4740,7 @@ func (x *DeleteJobResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteJobResp.ProtoReflect.Descriptor instead.
 func (*DeleteJobResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{63}
+	return file_oa_oa_proto_rawDescGZIP(), []int{65}
 }
 
 // GetJobReq 获取职位请求
@@ -4215,7 +4753,7 @@ type GetJobReq struct {
 
 func (x *GetJobReq) Reset() {
 	*x = GetJobReq{}
-	mi := &file_oa_oa_proto_msgTypes[64]
+	mi := &file_oa_oa_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4227,7 +4765,7 @@ func (x *GetJobReq) String() string {
 func (*GetJobReq) ProtoMessage() {}
 
 func (x *GetJobReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[64]
+	mi := &file_oa_oa_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4240,7 +4778,7 @@ func (x *GetJobReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobReq.ProtoReflect.Descriptor instead.
 func (*GetJobReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{64}
+	return file_oa_oa_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *GetJobReq) GetJobID() int32 {
@@ -4260,7 +4798,7 @@ type GetJobResp struct {
 
 func (x *GetJobResp) Reset() {
 	*x = GetJobResp{}
-	mi := &file_oa_oa_proto_msgTypes[65]
+	mi := &file_oa_oa_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4272,7 +4810,7 @@ func (x *GetJobResp) String() string {
 func (*GetJobResp) ProtoMessage() {}
 
 func (x *GetJobResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[65]
+	mi := &file_oa_oa_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4285,7 +4823,7 @@ func (x *GetJobResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobResp.ProtoReflect.Descriptor instead.
 func (*GetJobResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{65}
+	return file_oa_oa_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *GetJobResp) GetJob() *Job {
@@ -4305,7 +4843,7 @@ type GetJobsReq struct {
 
 func (x *GetJobsReq) Reset() {
 	*x = GetJobsReq{}
-	mi := &file_oa_oa_proto_msgTypes[66]
+	mi := &file_oa_oa_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4317,7 +4855,7 @@ func (x *GetJobsReq) String() string {
 func (*GetJobsReq) ProtoMessage() {}
 
 func (x *GetJobsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[66]
+	mi := &file_oa_oa_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4330,7 +4868,7 @@ func (x *GetJobsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobsReq.ProtoReflect.Descriptor instead.
 func (*GetJobsReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{66}
+	return file_oa_oa_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *GetJobsReq) GetJobIDs() []int32 {
@@ -4350,7 +4888,7 @@ type GetJobsResp struct {
 
 func (x *GetJobsResp) Reset() {
 	*x = GetJobsResp{}
-	mi := &file_oa_oa_proto_msgTypes[67]
+	mi := &file_oa_oa_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4362,7 +4900,7 @@ func (x *GetJobsResp) String() string {
 func (*GetJobsResp) ProtoMessage() {}
 
 func (x *GetJobsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[67]
+	mi := &file_oa_oa_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4375,7 +4913,7 @@ func (x *GetJobsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobsResp.ProtoReflect.Descriptor instead.
 func (*GetJobsResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{67}
+	return file_oa_oa_proto_rawDescGZIP(), []int{69}
 }
 
 func (x *GetJobsResp) GetJobs() []*Job {
@@ -4396,7 +4934,7 @@ type SearchJobReq struct {
 
 func (x *SearchJobReq) Reset() {
 	*x = SearchJobReq{}
-	mi := &file_oa_oa_proto_msgTypes[68]
+	mi := &file_oa_oa_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4408,7 +4946,7 @@ func (x *SearchJobReq) String() string {
 func (*SearchJobReq) ProtoMessage() {}
 
 func (x *SearchJobReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[68]
+	mi := &file_oa_oa_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4421,7 +4959,7 @@ func (x *SearchJobReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchJobReq.ProtoReflect.Descriptor instead.
 func (*SearchJobReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{68}
+	return file_oa_oa_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *SearchJobReq) GetKeyword() string {
@@ -4449,7 +4987,7 @@ type SearchJobResp struct {
 
 func (x *SearchJobResp) Reset() {
 	*x = SearchJobResp{}
-	mi := &file_oa_oa_proto_msgTypes[69]
+	mi := &file_oa_oa_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4461,7 +4999,7 @@ func (x *SearchJobResp) String() string {
 func (*SearchJobResp) ProtoMessage() {}
 
 func (x *SearchJobResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[69]
+	mi := &file_oa_oa_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4474,7 +5012,7 @@ func (x *SearchJobResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchJobResp.ProtoReflect.Descriptor instead.
 func (*SearchJobResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{69}
+	return file_oa_oa_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *SearchJobResp) GetTotal() uint32 {
@@ -4502,7 +5040,7 @@ type SyncOADataToChatReq struct {
 
 func (x *SyncOADataToChatReq) Reset() {
 	*x = SyncOADataToChatReq{}
-	mi := &file_oa_oa_proto_msgTypes[70]
+	mi := &file_oa_oa_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4514,7 +5052,7 @@ func (x *SyncOADataToChatReq) String() string {
 func (*SyncOADataToChatReq) ProtoMessage() {}
 
 func (x *SyncOADataToChatReq) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[70]
+	mi := &file_oa_oa_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4527,7 +5065,7 @@ func (x *SyncOADataToChatReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncOADataToChatReq.ProtoReflect.Descriptor instead.
 func (*SyncOADataToChatReq) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{70}
+	return file_oa_oa_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *SyncOADataToChatReq) GetCreateIfNotExist() bool {
@@ -4561,7 +5099,7 @@ type SyncOADataToChatResp struct {
 
 func (x *SyncOADataToChatResp) Reset() {
 	*x = SyncOADataToChatResp{}
-	mi := &file_oa_oa_proto_msgTypes[71]
+	mi := &file_oa_oa_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4573,7 +5111,7 @@ func (x *SyncOADataToChatResp) String() string {
 func (*SyncOADataToChatResp) ProtoMessage() {}
 
 func (x *SyncOADataToChatResp) ProtoReflect() protoreflect.Message {
-	mi := &file_oa_oa_proto_msgTypes[71]
+	mi := &file_oa_oa_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4586,7 +5124,7 @@ func (x *SyncOADataToChatResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncOADataToChatResp.ProtoReflect.Descriptor instead.
 func (*SyncOADataToChatResp) Descriptor() ([]byte, []int) {
-	return file_oa_oa_proto_rawDescGZIP(), []int{71}
+	return file_oa_oa_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *SyncOADataToChatResp) GetTotal() uint32 {
@@ -4696,13 +5234,17 @@ const file_oa_oa_proto_rawDesc = "" +
 	"\rGetCompanyReq\x12\x1c\n" +
 	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\"B\n" +
 	"\x0eGetCompanyResp\x120\n" +
-	"\acompany\x18\x01 \x01(\v2\x16.openim.oa.CompanyInfoR\acompany\"1\n" +
+	"\acompany\x18\x01 \x01(\v2\x16.openim.oa.CompanyInfoR\acompany\"r\n" +
 	"\x0fGetCompaniesReq\x12\x1e\n" +
 	"\n" +
 	"companyIDs\x18\x01 \x03(\x05R\n" +
-	"companyIDs\"H\n" +
-	"\x10GetCompaniesResp\x124\n" +
-	"\tcompanies\x18\x01 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\xd9\x01\n" +
+	"companyIDs\x12?\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"^\n" +
+	"\x10GetCompaniesResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
+	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\xd9\x01\n" +
 	"\x10SearchCompanyReq\x12\x18\n" +
 	"\akeyword\x18\x01 \x01(\tR\akeyword\x12(\n" +
 	"\x0fparentCompanyID\x18\x02 \x01(\x05R\x0fparentCompanyID\x12$\n" +
@@ -4713,15 +5255,25 @@ const file_oa_oa_proto_rawDesc = "" +
 	"pagination\"_\n" +
 	"\x11SearchCompanyResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
-	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\x81\x01\n" +
-	"\x14GetChildCompaniesReq\x12(\n" +
-	"\x0fparentCompanyID\x18\x01 \x01(\x05R\x0fparentCompanyID\x12?\n" +
+	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"\xc0\x01\n" +
+	"\x1dSearchCompanyAndDepartmentReq\x12\x18\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x1c\n" +
+	"\tcompanyID\x18\x02 \x01(\x05R\tcompanyID\x12&\n" +
+	"\x0eincludeMembers\x18\x03 \x01(\bR\x0eincludeMembers\x12?\n" +
 	"\n" +
-	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"c\n" +
-	"\x15GetChildCompaniesResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
-	"\tcompanies\x18\x02 \x03(\v2\x16.openim.oa.CompanyInfoR\tcompanies\"3\n" +
+	"pagination\x18\x04 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"m\n" +
+	"\x1eSearchCompanyAndDepartmentResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x125\n" +
+	"\x05nodes\x18\x02 \x03(\v2\x1f.openim.oa.OrganizationTreeNodeR\x05nodes\"\x83\x02\n" +
+	"\x14OrganizationTreeNode\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\x05R\x04type\x120\n" +
+	"\acompany\x18\x02 \x01(\v2\x16.openim.oa.CompanyInfoR\acompany\x129\n" +
+	"\n" +
+	"department\x18\x03 \x01(\v2\x19.openim.oa.DepartmentItemR\n" +
+	"department\x12-\n" +
+	"\x06member\x18\x04 \x01(\v2\x15.openim.oa.MemberInfoR\x06member\x12;\n" +
+	"\bchildren\x18\x05 \x03(\v2\x1f.openim.oa.OrganizationTreeNodeR\bchildren\"3\n" +
 	"\x19GetUserJoinedCompaniesReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\"R\n" +
 	"\x1aGetUserJoinedCompaniesResp\x124\n" +
@@ -4859,11 +5411,17 @@ const file_oa_oa_proto_rawDesc = "" +
 	"\x11GetDepartmentResp\x129\n" +
 	"\n" +
 	"department\x18\x01 \x01(\v2\x19.openim.oa.DepartmentInfoR\n" +
-	"department\"9\n" +
-	"\x11GetDepartmentsReq\x12$\n" +
-	"\rdepartmentIDs\x18\x01 \x03(\x05R\rdepartmentIDs\"Q\n" +
-	"\x12GetDepartmentsResp\x12;\n" +
-	"\vdepartments\x18\x01 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xd6\x01\n" +
+	"department\"\xc6\x01\n" +
+	"\x11GetDepartmentsReq\x12\"\n" +
+	"\fdepartmentID\x18\x01 \x01(\x05R\fdepartmentID\x12\x1c\n" +
+	"\tcompanyID\x18\x02 \x01(\x05R\tcompanyID\x12.\n" +
+	"\x12parentDepartmentID\x18\x03 \x01(\x05R\x12parentDepartmentID\x12?\n" +
+	"\n" +
+	"pagination\x18\x04 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"g\n" +
+	"\x12GetDepartmentsResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
+	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xd6\x01\n" +
 	"\x13SearchDepartmentReq\x12\x18\n" +
 	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x1c\n" +
 	"\tcompanyID\x18\x02 \x01(\x05R\tcompanyID\x12.\n" +
@@ -4874,23 +5432,77 @@ const file_oa_oa_proto_rawDesc = "" +
 	"pagination\"i\n" +
 	"\x14SearchDepartmentResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"{\n" +
-	"\x1aGetDepartmentsByCompanyReq\x12\x1c\n" +
-	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12?\n" +
+	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xa8\x01\n" +
+	"#GetMembersByCompanyAndDepartmentReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12\"\n" +
+	"\fdepartmentID\x18\x02 \x01(\x05R\fdepartmentID\x12?\n" +
 	"\n" +
-	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"p\n" +
-	"\x1bGetDepartmentsByCompanyResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\x89\x01\n" +
-	"\x16GetChildDepartmentsReq\x12.\n" +
-	"\x12parentDepartmentID\x18\x01 \x01(\x05R\x12parentDepartmentID\x12?\n" +
+	"pagination\x18\x03 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"\x80\b\n" +
+	"\x0fAdminMemberInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
+	"\aaccount\x18\x02 \x01(\tR\aaccount\x12\x1a\n" +
+	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x04 \x01(\tR\afaceURL\x12\x16\n" +
+	"\x06gender\x18\x05 \x01(\x05R\x06gender\x12 \n" +
+	"\vphoneNumber\x18\x06 \x01(\tR\vphoneNumber\x12\x1a\n" +
+	"\bareaCode\x18\a \x01(\tR\bareaCode\x12\x14\n" +
+	"\x05email\x18\b \x01(\tR\x05email\x12\x1c\n" +
+	"\tcompanyID\x18\t \x01(\x05R\tcompanyID\x12 \n" +
+	"\vcompanyName\x18\n" +
+	" \x01(\tR\vcompanyName\x12\"\n" +
+	"\fdepartmentID\x18\v \x01(\x05R\fdepartmentID\x12&\n" +
+	"\x0edepartmentName\x18\f \x01(\tR\x0edepartmentName\x12&\n" +
+	"\x0edepartmentCode\x18\r \x01(\tR\x0edepartmentCode\x12 \n" +
+	"\vdeptAllName\x18\x0e \x01(\tR\vdeptAllName\x12.\n" +
+	"\x12weixinDepartmentID\x18\x0f \x01(\tR\x12weixinDepartmentID\x12\x1e\n" +
 	"\n" +
-	"pagination\x18\x02 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"l\n" +
-	"\x17GetChildDepartmentsResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\rR\x05total\x12;\n" +
-	"\vdepartments\x18\x02 \x03(\v2\x19.openim.oa.DepartmentInfoR\vdepartments\"\xf7\x04\n" +
+	"jobTitleID\x18\x10 \x01(\x05R\n" +
+	"jobTitleID\x12\x1a\n" +
+	"\bjobTitle\x18\x11 \x01(\tR\bjobTitle\x12\x1a\n" +
+	"\bworkCode\x18\x12 \x01(\tR\bworkCode\x12\x1c\n" +
+	"\tstartDate\x18\x13 \x01(\x03R\tstartDate\x12\x18\n" +
+	"\aendDate\x18\x14 \x01(\x03R\aendDate\x12\x16\n" +
+	"\x06status\x18\x15 \x01(\tR\x06status\x12\x1c\n" +
+	"\tsafeLevel\x18\x16 \x01(\tR\tsafeLevel\x12 \n" +
+	"\vaccountType\x18\x17 \x01(\x05R\vaccountType\x12\x14\n" +
+	"\x05isNew\x18\x18 \x01(\x05R\x05isNew\x12\x1c\n" +
+	"\tmanagerID\x18\x19 \x01(\x05R\tmanagerID\x12$\n" +
+	"\rgroupLeaderID\x18\x1a \x01(\x05R\rgroupLeaderID\x12\x16\n" +
+	"\x06pinyin\x18\x1b \x01(\tR\x06pinyin\x12\x1c\n" +
+	"\tsignature\x18\x1c \x01(\tR\tsignature\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\x1d \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"changeTime\x18\x1e \x01(\x03R\n" +
+	"changeTime\x12\x1c\n" +
+	"\tbirthTime\x18\x1f \x01(\x03R\tbirthTime\x12=\n" +
+	"\fonlineStatus\x18  \x03(\v2\x19.openim.oa.PlatformDetailR\fonlineStatus\"m\n" +
+	"$GetMembersByCompanyAndDepartmentResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x12/\n" +
+	"\amembers\x18\x02 \x03(\v2\x15.openim.oa.MemberInfoR\amembers\"\xbf\x03\n" +
+	"(GetAdminMembersByCompanyAndDepartmentReq\x12\x1c\n" +
+	"\tcompanyID\x18\x01 \x01(\x05R\tcompanyID\x12\"\n" +
+	"\fdepartmentID\x18\x02 \x01(\x05R\fdepartmentID\x12?\n" +
+	"\n" +
+	"pagination\x18\x03 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\x12\x1a\n" +
+	"\bworkCode\x18\x04 \x01(\tR\bworkCode\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x16\n" +
+	"\x06pinyin\x18\f \x01(\tR\x06pinyin\x12 \n" +
+	"\vphoneNumber\x18\x06 \x01(\tR\vphoneNumber\x12\x1e\n" +
+	"\n" +
+	"jobTitleID\x18\a \x01(\x05R\n" +
+	"jobTitleID\x12\"\n" +
+	"\fjobTitleName\x18\b \x01(\tR\fjobTitleName\x12&\n" +
+	"\x0estartDateBegin\x18\t \x01(\x03R\x0estartDateBegin\x12\"\n" +
+	"\fstartDateEnd\x18\n" +
+	" \x01(\x03R\fstartDateEnd\x12\x16\n" +
+	"\x06status\x18\v \x01(\tR\x06status\"w\n" +
+	")GetAdminMembersByCompanyAndDepartmentResp\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\rR\x05total\x124\n" +
+	"\amembers\x18\x02 \x03(\v2\x1a.openim.oa.AdminMemberInfoR\amembers\"\xf7\x04\n" +
 	"\aJobInfo\x12\x1e\n" +
 	"\n" +
 	"jobTitleID\x18\x01 \x01(\x05R\n" +
@@ -5037,7 +5649,7 @@ const file_oa_oa_proto_rawDesc = "" +
 	"\x06errors\x18\x05 \x01(\rR\x06errors\x12\"\n" +
 	"\fmongoDBCount\x18\x06 \x01(\x05R\fmongoDBCount\x12\x18\n" +
 	"\amessage\x18\a \x01(\tR\amessage\x12\"\n" +
-	"\ferrorDetails\x18\b \x03(\tR\ferrorDetails2\xf8\x17\n" +
+	"\ferrorDetails\x18\b \x03(\tR\ferrorDetails2\xe6\x18\n" +
 	"\x02oa\x12J\n" +
 	"\rCreateCompany\x12\x1b.openim.oa.CreateCompanyReq\x1a\x1c.openim.oa.CreateCompanyResp\x12J\n" +
 	"\rUpdateCompany\x12\x1b.openim.oa.UpdateCompanyReq\x1a\x1c.openim.oa.UpdateCompanyResp\x12J\n" +
@@ -5045,19 +5657,19 @@ const file_oa_oa_proto_rawDesc = "" +
 	"\n" +
 	"GetCompany\x12\x18.openim.oa.GetCompanyReq\x1a\x19.openim.oa.GetCompanyResp\x12G\n" +
 	"\fGetCompanies\x12\x1a.openim.oa.GetCompaniesReq\x1a\x1b.openim.oa.GetCompaniesResp\x12J\n" +
-	"\rSearchCompany\x12\x1b.openim.oa.SearchCompanyReq\x1a\x1c.openim.oa.SearchCompanyResp\x12V\n" +
-	"\x11GetChildCompanies\x12\x1f.openim.oa.GetChildCompaniesReq\x1a .openim.oa.GetChildCompaniesResp\x12e\n" +
+	"\rSearchCompany\x12\x1b.openim.oa.SearchCompanyReq\x1a\x1c.openim.oa.SearchCompanyResp\x12e\n" +
 	"\x16GetUserJoinedCompanies\x12$.openim.oa.GetUserJoinedCompaniesReq\x1a%.openim.oa.GetUserJoinedCompaniesResp\x12_\n" +
 	"\x14GetMyJoinedCompanies\x12\".openim.oa.GetMyJoinedCompaniesReq\x1a#.openim.oa.GetMyJoinedCompaniesResp\x12V\n" +
-	"\x11GetDepartmentTree\x12\x1f.openim.oa.GetDepartmentTreeReq\x1a .openim.oa.GetDepartmentTreeResp\x12S\n" +
+	"\x11GetDepartmentTree\x12\x1f.openim.oa.GetDepartmentTreeReq\x1a .openim.oa.GetDepartmentTreeResp\x12q\n" +
+	"\x1aSearchCompanyAndDepartment\x12(.openim.oa.SearchCompanyAndDepartmentReq\x1a).openim.oa.SearchCompanyAndDepartmentResp\x12S\n" +
 	"\x10CreateDepartment\x12\x1e.openim.oa.CreateDepartmentReq\x1a\x1f.openim.oa.CreateDepartmentResp\x12S\n" +
 	"\x10UpdateDepartment\x12\x1e.openim.oa.UpdateDepartmentReq\x1a\x1f.openim.oa.UpdateDepartmentResp\x12S\n" +
 	"\x10DeleteDepartment\x12\x1e.openim.oa.DeleteDepartmentReq\x1a\x1f.openim.oa.DeleteDepartmentResp\x12J\n" +
 	"\rGetDepartment\x12\x1b.openim.oa.GetDepartmentReq\x1a\x1c.openim.oa.GetDepartmentResp\x12M\n" +
 	"\x0eGetDepartments\x12\x1c.openim.oa.GetDepartmentsReq\x1a\x1d.openim.oa.GetDepartmentsResp\x12S\n" +
-	"\x10SearchDepartment\x12\x1e.openim.oa.SearchDepartmentReq\x1a\x1f.openim.oa.SearchDepartmentResp\x12h\n" +
-	"\x17GetDepartmentsByCompany\x12%.openim.oa.GetDepartmentsByCompanyReq\x1a&.openim.oa.GetDepartmentsByCompanyResp\x12\\\n" +
-	"\x13GetChildDepartments\x12!.openim.oa.GetChildDepartmentsReq\x1a\".openim.oa.GetChildDepartmentsResp\x12M\n" +
+	"\x10SearchDepartment\x12\x1e.openim.oa.SearchDepartmentReq\x1a\x1f.openim.oa.SearchDepartmentResp\x12\x83\x01\n" +
+	" GetMembersByCompanyAndDepartment\x12..openim.oa.GetMembersByCompanyAndDepartmentReq\x1a/.openim.oa.GetMembersByCompanyAndDepartmentResp\x12\x92\x01\n" +
+	"%GetAdminMembersByCompanyAndDepartment\x123.openim.oa.GetAdminMembersByCompanyAndDepartmentReq\x1a4.openim.oa.GetAdminMembersByCompanyAndDepartmentResp\x12M\n" +
 	"\x0eCreateJobTitle\x12\x1c.openim.oa.CreateJobTitleReq\x1a\x1d.openim.oa.CreateJobTitleResp\x12M\n" +
 	"\x0eUpdateJobTitle\x12\x1c.openim.oa.UpdateJobTitleReq\x1a\x1d.openim.oa.UpdateJobTitleResp\x12M\n" +
 	"\x0eDeleteJobTitle\x12\x1c.openim.oa.DeleteJobTitleReq\x1a\x1d.openim.oa.DeleteJobTitleResp\x12D\n" +
@@ -5091,239 +5703,248 @@ func file_oa_oa_proto_rawDescGZIP() []byte {
 	return file_oa_oa_proto_rawDescData
 }
 
-var file_oa_oa_proto_msgTypes = make([]protoimpl.MessageInfo, 72)
+var file_oa_oa_proto_msgTypes = make([]protoimpl.MessageInfo, 74)
 var file_oa_oa_proto_goTypes = []any{
-	(*CompanyInfo)(nil),                  // 0: openim.oa.CompanyInfo
-	(*CreateCompanyReq)(nil),             // 1: openim.oa.CreateCompanyReq
-	(*CreateCompanyResp)(nil),            // 2: openim.oa.CreateCompanyResp
-	(*UpdateCompanyReq)(nil),             // 3: openim.oa.UpdateCompanyReq
-	(*UpdateCompanyResp)(nil),            // 4: openim.oa.UpdateCompanyResp
-	(*DeleteCompanyReq)(nil),             // 5: openim.oa.DeleteCompanyReq
-	(*DeleteCompanyResp)(nil),            // 6: openim.oa.DeleteCompanyResp
-	(*GetCompanyReq)(nil),                // 7: openim.oa.GetCompanyReq
-	(*GetCompanyResp)(nil),               // 8: openim.oa.GetCompanyResp
-	(*GetCompaniesReq)(nil),              // 9: openim.oa.GetCompaniesReq
-	(*GetCompaniesResp)(nil),             // 10: openim.oa.GetCompaniesResp
-	(*SearchCompanyReq)(nil),             // 11: openim.oa.SearchCompanyReq
-	(*SearchCompanyResp)(nil),            // 12: openim.oa.SearchCompanyResp
-	(*GetChildCompaniesReq)(nil),         // 13: openim.oa.GetChildCompaniesReq
-	(*GetChildCompaniesResp)(nil),        // 14: openim.oa.GetChildCompaniesResp
-	(*GetUserJoinedCompaniesReq)(nil),    // 15: openim.oa.GetUserJoinedCompaniesReq
-	(*GetUserJoinedCompaniesResp)(nil),   // 16: openim.oa.GetUserJoinedCompaniesResp
-	(*GetMyJoinedCompaniesReq)(nil),      // 17: openim.oa.GetMyJoinedCompaniesReq
-	(*GetMyJoinedCompaniesResp)(nil),     // 18: openim.oa.GetMyJoinedCompaniesResp
-	(*GetDepartmentTreeReq)(nil),         // 19: openim.oa.GetDepartmentTreeReq
-	(*GetDepartmentTreeResp)(nil),        // 20: openim.oa.GetDepartmentTreeResp
-	(*DepartmentTreeItem)(nil),           // 21: openim.oa.DepartmentTreeItem
-	(*DepartmentItem)(nil),               // 22: openim.oa.DepartmentItem
-	(*DepartmentInfo)(nil),               // 23: openim.oa.DepartmentInfo
-	(*PlatformDetail)(nil),               // 24: openim.oa.PlatformDetail
-	(*MemberInfo)(nil),                   // 25: openim.oa.MemberInfo
-	(*CreateDepartmentReq)(nil),          // 26: openim.oa.CreateDepartmentReq
-	(*CreateDepartmentResp)(nil),         // 27: openim.oa.CreateDepartmentResp
-	(*UpdateDepartmentReq)(nil),          // 28: openim.oa.UpdateDepartmentReq
-	(*UpdateDepartmentResp)(nil),         // 29: openim.oa.UpdateDepartmentResp
-	(*DeleteDepartmentReq)(nil),          // 30: openim.oa.DeleteDepartmentReq
-	(*DeleteDepartmentResp)(nil),         // 31: openim.oa.DeleteDepartmentResp
-	(*GetDepartmentReq)(nil),             // 32: openim.oa.GetDepartmentReq
-	(*GetDepartmentResp)(nil),            // 33: openim.oa.GetDepartmentResp
-	(*GetDepartmentsReq)(nil),            // 34: openim.oa.GetDepartmentsReq
-	(*GetDepartmentsResp)(nil),           // 35: openim.oa.GetDepartmentsResp
-	(*SearchDepartmentReq)(nil),          // 36: openim.oa.SearchDepartmentReq
-	(*SearchDepartmentResp)(nil),         // 37: openim.oa.SearchDepartmentResp
-	(*GetDepartmentsByCompanyReq)(nil),   // 38: openim.oa.GetDepartmentsByCompanyReq
-	(*GetDepartmentsByCompanyResp)(nil),  // 39: openim.oa.GetDepartmentsByCompanyResp
-	(*GetChildDepartmentsReq)(nil),       // 40: openim.oa.GetChildDepartmentsReq
-	(*GetChildDepartmentsResp)(nil),      // 41: openim.oa.GetChildDepartmentsResp
-	(*JobInfo)(nil),                      // 42: openim.oa.JobInfo
-	(*CreateJobTitleReq)(nil),            // 43: openim.oa.CreateJobTitleReq
-	(*CreateJobTitleResp)(nil),           // 44: openim.oa.CreateJobTitleResp
-	(*UpdateJobTitleReq)(nil),            // 45: openim.oa.UpdateJobTitleReq
-	(*UpdateJobTitleResp)(nil),           // 46: openim.oa.UpdateJobTitleResp
-	(*DeleteJobTitleReq)(nil),            // 47: openim.oa.DeleteJobTitleReq
-	(*DeleteJobTitleResp)(nil),           // 48: openim.oa.DeleteJobTitleResp
-	(*GetJobTitleReq)(nil),               // 49: openim.oa.GetJobTitleReq
-	(*GetJobTitleResp)(nil),              // 50: openim.oa.GetJobTitleResp
-	(*GetJobTitlesReq)(nil),              // 51: openim.oa.GetJobTitlesReq
-	(*GetJobTitlesResp)(nil),             // 52: openim.oa.GetJobTitlesResp
-	(*SearchJobTitleReq)(nil),            // 53: openim.oa.SearchJobTitleReq
-	(*SearchJobTitleResp)(nil),           // 54: openim.oa.SearchJobTitleResp
-	(*GetJobTitlesByDepartmentReq)(nil),  // 55: openim.oa.GetJobTitlesByDepartmentReq
-	(*GetJobTitlesByDepartmentResp)(nil), // 56: openim.oa.GetJobTitlesByDepartmentResp
-	(*Job)(nil),                          // 57: openim.oa.Job
-	(*CreateJobReq)(nil),                 // 58: openim.oa.CreateJobReq
-	(*CreateJobResp)(nil),                // 59: openim.oa.CreateJobResp
-	(*UpdateJobReq)(nil),                 // 60: openim.oa.UpdateJobReq
-	(*UpdateJobResp)(nil),                // 61: openim.oa.UpdateJobResp
-	(*DeleteJobReq)(nil),                 // 62: openim.oa.DeleteJobReq
-	(*DeleteJobResp)(nil),                // 63: openim.oa.DeleteJobResp
-	(*GetJobReq)(nil),                    // 64: openim.oa.GetJobReq
-	(*GetJobResp)(nil),                   // 65: openim.oa.GetJobResp
-	(*GetJobsReq)(nil),                   // 66: openim.oa.GetJobsReq
-	(*GetJobsResp)(nil),                  // 67: openim.oa.GetJobsResp
-	(*SearchJobReq)(nil),                 // 68: openim.oa.SearchJobReq
-	(*SearchJobResp)(nil),                // 69: openim.oa.SearchJobResp
-	(*SyncOADataToChatReq)(nil),          // 70: openim.oa.SyncOADataToChatReq
-	(*SyncOADataToChatResp)(nil),         // 71: openim.oa.SyncOADataToChatResp
-	(*wrapperspb.StringValue)(nil),       // 72: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),        // 73: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),         // 74: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil),      // 75: openim.sdkws.RequestPagination
-	(*wrapperspb.Int64Value)(nil),        // 76: openim.protobuf.Int64Value
+	(*CompanyInfo)(nil),                               // 0: openim.oa.CompanyInfo
+	(*CreateCompanyReq)(nil),                          // 1: openim.oa.CreateCompanyReq
+	(*CreateCompanyResp)(nil),                         // 2: openim.oa.CreateCompanyResp
+	(*UpdateCompanyReq)(nil),                          // 3: openim.oa.UpdateCompanyReq
+	(*UpdateCompanyResp)(nil),                         // 4: openim.oa.UpdateCompanyResp
+	(*DeleteCompanyReq)(nil),                          // 5: openim.oa.DeleteCompanyReq
+	(*DeleteCompanyResp)(nil),                         // 6: openim.oa.DeleteCompanyResp
+	(*GetCompanyReq)(nil),                             // 7: openim.oa.GetCompanyReq
+	(*GetCompanyResp)(nil),                            // 8: openim.oa.GetCompanyResp
+	(*GetCompaniesReq)(nil),                           // 9: openim.oa.GetCompaniesReq
+	(*GetCompaniesResp)(nil),                          // 10: openim.oa.GetCompaniesResp
+	(*SearchCompanyReq)(nil),                          // 11: openim.oa.SearchCompanyReq
+	(*SearchCompanyResp)(nil),                         // 12: openim.oa.SearchCompanyResp
+	(*SearchCompanyAndDepartmentReq)(nil),             // 13: openim.oa.SearchCompanyAndDepartmentReq
+	(*SearchCompanyAndDepartmentResp)(nil),            // 14: openim.oa.SearchCompanyAndDepartmentResp
+	(*OrganizationTreeNode)(nil),                      // 15: openim.oa.OrganizationTreeNode
+	(*GetUserJoinedCompaniesReq)(nil),                 // 16: openim.oa.GetUserJoinedCompaniesReq
+	(*GetUserJoinedCompaniesResp)(nil),                // 17: openim.oa.GetUserJoinedCompaniesResp
+	(*GetMyJoinedCompaniesReq)(nil),                   // 18: openim.oa.GetMyJoinedCompaniesReq
+	(*GetMyJoinedCompaniesResp)(nil),                  // 19: openim.oa.GetMyJoinedCompaniesResp
+	(*GetDepartmentTreeReq)(nil),                      // 20: openim.oa.GetDepartmentTreeReq
+	(*GetDepartmentTreeResp)(nil),                     // 21: openim.oa.GetDepartmentTreeResp
+	(*DepartmentTreeItem)(nil),                        // 22: openim.oa.DepartmentTreeItem
+	(*DepartmentItem)(nil),                            // 23: openim.oa.DepartmentItem
+	(*DepartmentInfo)(nil),                            // 24: openim.oa.DepartmentInfo
+	(*PlatformDetail)(nil),                            // 25: openim.oa.PlatformDetail
+	(*MemberInfo)(nil),                                // 26: openim.oa.MemberInfo
+	(*CreateDepartmentReq)(nil),                       // 27: openim.oa.CreateDepartmentReq
+	(*CreateDepartmentResp)(nil),                      // 28: openim.oa.CreateDepartmentResp
+	(*UpdateDepartmentReq)(nil),                       // 29: openim.oa.UpdateDepartmentReq
+	(*UpdateDepartmentResp)(nil),                      // 30: openim.oa.UpdateDepartmentResp
+	(*DeleteDepartmentReq)(nil),                       // 31: openim.oa.DeleteDepartmentReq
+	(*DeleteDepartmentResp)(nil),                      // 32: openim.oa.DeleteDepartmentResp
+	(*GetDepartmentReq)(nil),                          // 33: openim.oa.GetDepartmentReq
+	(*GetDepartmentResp)(nil),                         // 34: openim.oa.GetDepartmentResp
+	(*GetDepartmentsReq)(nil),                         // 35: openim.oa.GetDepartmentsReq
+	(*GetDepartmentsResp)(nil),                        // 36: openim.oa.GetDepartmentsResp
+	(*SearchDepartmentReq)(nil),                       // 37: openim.oa.SearchDepartmentReq
+	(*SearchDepartmentResp)(nil),                      // 38: openim.oa.SearchDepartmentResp
+	(*GetMembersByCompanyAndDepartmentReq)(nil),       // 39: openim.oa.GetMembersByCompanyAndDepartmentReq
+	(*AdminMemberInfo)(nil),                           // 40: openim.oa.AdminMemberInfo
+	(*GetMembersByCompanyAndDepartmentResp)(nil),      // 41: openim.oa.GetMembersByCompanyAndDepartmentResp
+	(*GetAdminMembersByCompanyAndDepartmentReq)(nil),  // 42: openim.oa.GetAdminMembersByCompanyAndDepartmentReq
+	(*GetAdminMembersByCompanyAndDepartmentResp)(nil), // 43: openim.oa.GetAdminMembersByCompanyAndDepartmentResp
+	(*JobInfo)(nil),                                   // 44: openim.oa.JobInfo
+	(*CreateJobTitleReq)(nil),                         // 45: openim.oa.CreateJobTitleReq
+	(*CreateJobTitleResp)(nil),                        // 46: openim.oa.CreateJobTitleResp
+	(*UpdateJobTitleReq)(nil),                         // 47: openim.oa.UpdateJobTitleReq
+	(*UpdateJobTitleResp)(nil),                        // 48: openim.oa.UpdateJobTitleResp
+	(*DeleteJobTitleReq)(nil),                         // 49: openim.oa.DeleteJobTitleReq
+	(*DeleteJobTitleResp)(nil),                        // 50: openim.oa.DeleteJobTitleResp
+	(*GetJobTitleReq)(nil),                            // 51: openim.oa.GetJobTitleReq
+	(*GetJobTitleResp)(nil),                           // 52: openim.oa.GetJobTitleResp
+	(*GetJobTitlesReq)(nil),                           // 53: openim.oa.GetJobTitlesReq
+	(*GetJobTitlesResp)(nil),                          // 54: openim.oa.GetJobTitlesResp
+	(*SearchJobTitleReq)(nil),                         // 55: openim.oa.SearchJobTitleReq
+	(*SearchJobTitleResp)(nil),                        // 56: openim.oa.SearchJobTitleResp
+	(*GetJobTitlesByDepartmentReq)(nil),               // 57: openim.oa.GetJobTitlesByDepartmentReq
+	(*GetJobTitlesByDepartmentResp)(nil),              // 58: openim.oa.GetJobTitlesByDepartmentResp
+	(*Job)(nil),                                       // 59: openim.oa.Job
+	(*CreateJobReq)(nil),                              // 60: openim.oa.CreateJobReq
+	(*CreateJobResp)(nil),                             // 61: openim.oa.CreateJobResp
+	(*UpdateJobReq)(nil),                              // 62: openim.oa.UpdateJobReq
+	(*UpdateJobResp)(nil),                             // 63: openim.oa.UpdateJobResp
+	(*DeleteJobReq)(nil),                              // 64: openim.oa.DeleteJobReq
+	(*DeleteJobResp)(nil),                             // 65: openim.oa.DeleteJobResp
+	(*GetJobReq)(nil),                                 // 66: openim.oa.GetJobReq
+	(*GetJobResp)(nil),                                // 67: openim.oa.GetJobResp
+	(*GetJobsReq)(nil),                                // 68: openim.oa.GetJobsReq
+	(*GetJobsResp)(nil),                               // 69: openim.oa.GetJobsResp
+	(*SearchJobReq)(nil),                              // 70: openim.oa.SearchJobReq
+	(*SearchJobResp)(nil),                             // 71: openim.oa.SearchJobResp
+	(*SyncOADataToChatReq)(nil),                       // 72: openim.oa.SyncOADataToChatReq
+	(*SyncOADataToChatResp)(nil),                      // 73: openim.oa.SyncOADataToChatResp
+	(*wrapperspb.StringValue)(nil),                    // 74: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),                     // 75: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),                      // 76: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil),                   // 77: openim.sdkws.RequestPagination
+	(*wrapperspb.Int64Value)(nil),                     // 78: openim.protobuf.Int64Value
 }
 var file_oa_oa_proto_depIdxs = []int32{
-	72,  // 0: openim.oa.UpdateCompanyReq.companyCode:type_name -> openim.protobuf.StringValue
-	72,  // 1: openim.oa.UpdateCompanyReq.companyName:type_name -> openim.protobuf.StringValue
-	72,  // 2: openim.oa.UpdateCompanyReq.companyShortName:type_name -> openim.protobuf.StringValue
-	73,  // 3: openim.oa.UpdateCompanyReq.parentCompanyID:type_name -> openim.protobuf.Int32Value
-	72,  // 4: openim.oa.UpdateCompanyReq.website:type_name -> openim.protobuf.StringValue
-	74,  // 5: openim.oa.UpdateCompanyReq.isMainCompany:type_name -> openim.protobuf.BoolValue
-	74,  // 6: openim.oa.UpdateCompanyReq.isEffect:type_name -> openim.protobuf.BoolValue
-	74,  // 7: openim.oa.UpdateCompanyReq.isDrawBack:type_name -> openim.protobuf.BoolValue
-	73,  // 8: openim.oa.UpdateCompanyReq.showOrder:type_name -> openim.protobuf.Int32Value
-	74,  // 9: openim.oa.UpdateCompanyReq.canceled:type_name -> openim.protobuf.BoolValue
+	74,  // 0: openim.oa.UpdateCompanyReq.companyCode:type_name -> openim.protobuf.StringValue
+	74,  // 1: openim.oa.UpdateCompanyReq.companyName:type_name -> openim.protobuf.StringValue
+	74,  // 2: openim.oa.UpdateCompanyReq.companyShortName:type_name -> openim.protobuf.StringValue
+	75,  // 3: openim.oa.UpdateCompanyReq.parentCompanyID:type_name -> openim.protobuf.Int32Value
+	74,  // 4: openim.oa.UpdateCompanyReq.website:type_name -> openim.protobuf.StringValue
+	76,  // 5: openim.oa.UpdateCompanyReq.isMainCompany:type_name -> openim.protobuf.BoolValue
+	76,  // 6: openim.oa.UpdateCompanyReq.isEffect:type_name -> openim.protobuf.BoolValue
+	76,  // 7: openim.oa.UpdateCompanyReq.isDrawBack:type_name -> openim.protobuf.BoolValue
+	75,  // 8: openim.oa.UpdateCompanyReq.showOrder:type_name -> openim.protobuf.Int32Value
+	76,  // 9: openim.oa.UpdateCompanyReq.canceled:type_name -> openim.protobuf.BoolValue
 	0,   // 10: openim.oa.GetCompanyResp.company:type_name -> openim.oa.CompanyInfo
-	0,   // 11: openim.oa.GetCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
-	75,  // 12: openim.oa.SearchCompanyReq.pagination:type_name -> openim.sdkws.RequestPagination
-	0,   // 13: openim.oa.SearchCompanyResp.companies:type_name -> openim.oa.CompanyInfo
-	75,  // 14: openim.oa.GetChildCompaniesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	0,   // 15: openim.oa.GetChildCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
-	0,   // 16: openim.oa.GetUserJoinedCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
-	0,   // 17: openim.oa.GetMyJoinedCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
-	21,  // 18: openim.oa.GetDepartmentTreeResp.items:type_name -> openim.oa.DepartmentTreeItem
-	25,  // 19: openim.oa.DepartmentTreeItem.member:type_name -> openim.oa.MemberInfo
-	22,  // 20: openim.oa.DepartmentTreeItem.department:type_name -> openim.oa.DepartmentItem
-	23,  // 21: openim.oa.DepartmentInfo.subDepartments:type_name -> openim.oa.DepartmentInfo
-	25,  // 22: openim.oa.DepartmentInfo.members:type_name -> openim.oa.MemberInfo
-	24,  // 23: openim.oa.MemberInfo.onlineStatus:type_name -> openim.oa.PlatformDetail
-	72,  // 24: openim.oa.UpdateDepartmentReq.departmentCode:type_name -> openim.protobuf.StringValue
-	72,  // 25: openim.oa.UpdateDepartmentReq.departmentName:type_name -> openim.protobuf.StringValue
-	72,  // 26: openim.oa.UpdateDepartmentReq.departmentShortName:type_name -> openim.protobuf.StringValue
-	73,  // 27: openim.oa.UpdateDepartmentReq.companyID:type_name -> openim.protobuf.Int32Value
-	73,  // 28: openim.oa.UpdateDepartmentReq.parentDepartmentID:type_name -> openim.protobuf.Int32Value
-	72,  // 29: openim.oa.UpdateDepartmentReq.managerID:type_name -> openim.protobuf.StringValue
-	72,  // 30: openim.oa.UpdateDepartmentReq.directorID:type_name -> openim.protobuf.StringValue
-	72,  // 31: openim.oa.UpdateDepartmentReq.assistantID:type_name -> openim.protobuf.StringValue
-	72,  // 32: openim.oa.UpdateDepartmentReq.leadersID:type_name -> openim.protobuf.StringValue
-	72,  // 33: openim.oa.UpdateDepartmentReq.seniorDirectorID:type_name -> openim.protobuf.StringValue
-	72,  // 34: openim.oa.UpdateDepartmentReq.hrmLeadersID:type_name -> openim.protobuf.StringValue
-	73,  // 35: openim.oa.UpdateDepartmentReq.wxDeptID:type_name -> openim.protobuf.Int32Value
-	74,  // 36: openim.oa.UpdateDepartmentReq.isDept:type_name -> openim.protobuf.BoolValue
-	73,  // 37: openim.oa.UpdateDepartmentReq.showOrder:type_name -> openim.protobuf.Int32Value
-	74,  // 38: openim.oa.UpdateDepartmentReq.canceled:type_name -> openim.protobuf.BoolValue
-	76,  // 39: openim.oa.UpdateDepartmentReq.canceledDate:type_name -> openim.protobuf.Int64Value
-	23,  // 40: openim.oa.GetDepartmentResp.department:type_name -> openim.oa.DepartmentInfo
-	23,  // 41: openim.oa.GetDepartmentsResp.departments:type_name -> openim.oa.DepartmentInfo
-	75,  // 42: openim.oa.SearchDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
-	23,  // 43: openim.oa.SearchDepartmentResp.departments:type_name -> openim.oa.DepartmentInfo
-	75,  // 44: openim.oa.GetDepartmentsByCompanyReq.pagination:type_name -> openim.sdkws.RequestPagination
-	23,  // 45: openim.oa.GetDepartmentsByCompanyResp.departments:type_name -> openim.oa.DepartmentInfo
-	75,  // 46: openim.oa.GetChildDepartmentsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	23,  // 47: openim.oa.GetChildDepartmentsResp.departments:type_name -> openim.oa.DepartmentInfo
-	72,  // 48: openim.oa.UpdateJobTitleReq.jobCode:type_name -> openim.protobuf.StringValue
-	72,  // 49: openim.oa.UpdateJobTitleReq.jobName:type_name -> openim.protobuf.StringValue
-	72,  // 50: openim.oa.UpdateJobTitleReq.jobShortName:type_name -> openim.protobuf.StringValue
-	73,  // 51: openim.oa.UpdateJobTitleReq.departmentID:type_name -> openim.protobuf.Int32Value
-	72,  // 52: openim.oa.UpdateJobTitleReq.jobCompetency:type_name -> openim.protobuf.StringValue
-	72,  // 53: openim.oa.UpdateJobTitleReq.jobResponsibility:type_name -> openim.protobuf.StringValue
-	72,  // 54: openim.oa.UpdateJobTitleReq.jobDoc:type_name -> openim.protobuf.StringValue
-	72,  // 55: openim.oa.UpdateJobTitleReq.jobRemark:type_name -> openim.protobuf.StringValue
-	72,  // 56: openim.oa.UpdateJobTitleReq.status:type_name -> openim.protobuf.StringValue
-	72,  // 57: openim.oa.UpdateJobTitleReq.safeLevel:type_name -> openim.protobuf.StringValue
-	74,  // 58: openim.oa.UpdateJobTitleReq.isHead:type_name -> openim.protobuf.BoolValue
-	42,  // 59: openim.oa.GetJobTitleResp.jobTitle:type_name -> openim.oa.JobInfo
-	42,  // 60: openim.oa.GetJobTitlesResp.jobTitles:type_name -> openim.oa.JobInfo
-	75,  // 61: openim.oa.SearchJobTitleReq.pagination:type_name -> openim.sdkws.RequestPagination
-	42,  // 62: openim.oa.SearchJobTitleResp.jobTitles:type_name -> openim.oa.JobInfo
-	75,  // 63: openim.oa.GetJobTitlesByDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
-	42,  // 64: openim.oa.GetJobTitlesByDepartmentResp.jobTitles:type_name -> openim.oa.JobInfo
-	72,  // 65: openim.oa.UpdateJobReq.jobName:type_name -> openim.protobuf.StringValue
-	72,  // 66: openim.oa.UpdateJobReq.jobShortName:type_name -> openim.protobuf.StringValue
-	57,  // 67: openim.oa.GetJobResp.job:type_name -> openim.oa.Job
-	57,  // 68: openim.oa.GetJobsResp.jobs:type_name -> openim.oa.Job
-	75,  // 69: openim.oa.SearchJobReq.pagination:type_name -> openim.sdkws.RequestPagination
-	57,  // 70: openim.oa.SearchJobResp.jobs:type_name -> openim.oa.Job
-	1,   // 71: openim.oa.oa.CreateCompany:input_type -> openim.oa.CreateCompanyReq
-	3,   // 72: openim.oa.oa.UpdateCompany:input_type -> openim.oa.UpdateCompanyReq
-	5,   // 73: openim.oa.oa.DeleteCompany:input_type -> openim.oa.DeleteCompanyReq
-	7,   // 74: openim.oa.oa.GetCompany:input_type -> openim.oa.GetCompanyReq
-	9,   // 75: openim.oa.oa.GetCompanies:input_type -> openim.oa.GetCompaniesReq
-	11,  // 76: openim.oa.oa.SearchCompany:input_type -> openim.oa.SearchCompanyReq
-	13,  // 77: openim.oa.oa.GetChildCompanies:input_type -> openim.oa.GetChildCompaniesReq
-	15,  // 78: openim.oa.oa.GetUserJoinedCompanies:input_type -> openim.oa.GetUserJoinedCompaniesReq
-	17,  // 79: openim.oa.oa.GetMyJoinedCompanies:input_type -> openim.oa.GetMyJoinedCompaniesReq
-	19,  // 80: openim.oa.oa.GetDepartmentTree:input_type -> openim.oa.GetDepartmentTreeReq
-	26,  // 81: openim.oa.oa.CreateDepartment:input_type -> openim.oa.CreateDepartmentReq
-	28,  // 82: openim.oa.oa.UpdateDepartment:input_type -> openim.oa.UpdateDepartmentReq
-	30,  // 83: openim.oa.oa.DeleteDepartment:input_type -> openim.oa.DeleteDepartmentReq
-	32,  // 84: openim.oa.oa.GetDepartment:input_type -> openim.oa.GetDepartmentReq
-	34,  // 85: openim.oa.oa.GetDepartments:input_type -> openim.oa.GetDepartmentsReq
-	36,  // 86: openim.oa.oa.SearchDepartment:input_type -> openim.oa.SearchDepartmentReq
-	38,  // 87: openim.oa.oa.GetDepartmentsByCompany:input_type -> openim.oa.GetDepartmentsByCompanyReq
-	40,  // 88: openim.oa.oa.GetChildDepartments:input_type -> openim.oa.GetChildDepartmentsReq
-	43,  // 89: openim.oa.oa.CreateJobTitle:input_type -> openim.oa.CreateJobTitleReq
-	45,  // 90: openim.oa.oa.UpdateJobTitle:input_type -> openim.oa.UpdateJobTitleReq
-	47,  // 91: openim.oa.oa.DeleteJobTitle:input_type -> openim.oa.DeleteJobTitleReq
-	49,  // 92: openim.oa.oa.GetJobTitle:input_type -> openim.oa.GetJobTitleReq
-	51,  // 93: openim.oa.oa.GetJobTitles:input_type -> openim.oa.GetJobTitlesReq
-	53,  // 94: openim.oa.oa.SearchJobTitle:input_type -> openim.oa.SearchJobTitleReq
-	55,  // 95: openim.oa.oa.GetJobTitlesByDepartment:input_type -> openim.oa.GetJobTitlesByDepartmentReq
-	58,  // 96: openim.oa.oa.CreateJob:input_type -> openim.oa.CreateJobReq
-	60,  // 97: openim.oa.oa.UpdateJob:input_type -> openim.oa.UpdateJobReq
-	62,  // 98: openim.oa.oa.DeleteJob:input_type -> openim.oa.DeleteJobReq
-	64,  // 99: openim.oa.oa.GetJob:input_type -> openim.oa.GetJobReq
-	66,  // 100: openim.oa.oa.GetJobs:input_type -> openim.oa.GetJobsReq
-	68,  // 101: openim.oa.oa.SearchJob:input_type -> openim.oa.SearchJobReq
-	70,  // 102: openim.oa.oa.SyncJobFromJobTitle:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 103: openim.oa.oa.SyncOADataToChat:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 104: openim.oa.oa.SyncOADepartmentToChat:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 105: openim.oa.oa.SyncOAJobTitleToChat:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 106: openim.oa.oa.SyncOACompanyToChat:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 107: openim.oa.oa.SyncJobToChat:input_type -> openim.oa.SyncOADataToChatReq
-	70,  // 108: openim.oa.oa.SyncOAUserToChat:input_type -> openim.oa.SyncOADataToChatReq
-	2,   // 109: openim.oa.oa.CreateCompany:output_type -> openim.oa.CreateCompanyResp
-	4,   // 110: openim.oa.oa.UpdateCompany:output_type -> openim.oa.UpdateCompanyResp
-	6,   // 111: openim.oa.oa.DeleteCompany:output_type -> openim.oa.DeleteCompanyResp
-	8,   // 112: openim.oa.oa.GetCompany:output_type -> openim.oa.GetCompanyResp
-	10,  // 113: openim.oa.oa.GetCompanies:output_type -> openim.oa.GetCompaniesResp
-	12,  // 114: openim.oa.oa.SearchCompany:output_type -> openim.oa.SearchCompanyResp
-	14,  // 115: openim.oa.oa.GetChildCompanies:output_type -> openim.oa.GetChildCompaniesResp
-	16,  // 116: openim.oa.oa.GetUserJoinedCompanies:output_type -> openim.oa.GetUserJoinedCompaniesResp
-	18,  // 117: openim.oa.oa.GetMyJoinedCompanies:output_type -> openim.oa.GetMyJoinedCompaniesResp
-	20,  // 118: openim.oa.oa.GetDepartmentTree:output_type -> openim.oa.GetDepartmentTreeResp
-	27,  // 119: openim.oa.oa.CreateDepartment:output_type -> openim.oa.CreateDepartmentResp
-	29,  // 120: openim.oa.oa.UpdateDepartment:output_type -> openim.oa.UpdateDepartmentResp
-	31,  // 121: openim.oa.oa.DeleteDepartment:output_type -> openim.oa.DeleteDepartmentResp
-	33,  // 122: openim.oa.oa.GetDepartment:output_type -> openim.oa.GetDepartmentResp
-	35,  // 123: openim.oa.oa.GetDepartments:output_type -> openim.oa.GetDepartmentsResp
-	37,  // 124: openim.oa.oa.SearchDepartment:output_type -> openim.oa.SearchDepartmentResp
-	39,  // 125: openim.oa.oa.GetDepartmentsByCompany:output_type -> openim.oa.GetDepartmentsByCompanyResp
-	41,  // 126: openim.oa.oa.GetChildDepartments:output_type -> openim.oa.GetChildDepartmentsResp
-	44,  // 127: openim.oa.oa.CreateJobTitle:output_type -> openim.oa.CreateJobTitleResp
-	46,  // 128: openim.oa.oa.UpdateJobTitle:output_type -> openim.oa.UpdateJobTitleResp
-	48,  // 129: openim.oa.oa.DeleteJobTitle:output_type -> openim.oa.DeleteJobTitleResp
-	50,  // 130: openim.oa.oa.GetJobTitle:output_type -> openim.oa.GetJobTitleResp
-	52,  // 131: openim.oa.oa.GetJobTitles:output_type -> openim.oa.GetJobTitlesResp
-	54,  // 132: openim.oa.oa.SearchJobTitle:output_type -> openim.oa.SearchJobTitleResp
-	56,  // 133: openim.oa.oa.GetJobTitlesByDepartment:output_type -> openim.oa.GetJobTitlesByDepartmentResp
-	59,  // 134: openim.oa.oa.CreateJob:output_type -> openim.oa.CreateJobResp
-	61,  // 135: openim.oa.oa.UpdateJob:output_type -> openim.oa.UpdateJobResp
-	63,  // 136: openim.oa.oa.DeleteJob:output_type -> openim.oa.DeleteJobResp
-	65,  // 137: openim.oa.oa.GetJob:output_type -> openim.oa.GetJobResp
-	67,  // 138: openim.oa.oa.GetJobs:output_type -> openim.oa.GetJobsResp
-	69,  // 139: openim.oa.oa.SearchJob:output_type -> openim.oa.SearchJobResp
-	71,  // 140: openim.oa.oa.SyncJobFromJobTitle:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 141: openim.oa.oa.SyncOADataToChat:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 142: openim.oa.oa.SyncOADepartmentToChat:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 143: openim.oa.oa.SyncOAJobTitleToChat:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 144: openim.oa.oa.SyncOACompanyToChat:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 145: openim.oa.oa.SyncJobToChat:output_type -> openim.oa.SyncOADataToChatResp
-	71,  // 146: openim.oa.oa.SyncOAUserToChat:output_type -> openim.oa.SyncOADataToChatResp
-	109, // [109:147] is the sub-list for method output_type
-	71,  // [71:109] is the sub-list for method input_type
-	71,  // [71:71] is the sub-list for extension type_name
-	71,  // [71:71] is the sub-list for extension extendee
-	0,   // [0:71] is the sub-list for field type_name
+	77,  // 11: openim.oa.GetCompaniesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	0,   // 12: openim.oa.GetCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
+	77,  // 13: openim.oa.SearchCompanyReq.pagination:type_name -> openim.sdkws.RequestPagination
+	0,   // 14: openim.oa.SearchCompanyResp.companies:type_name -> openim.oa.CompanyInfo
+	77,  // 15: openim.oa.SearchCompanyAndDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
+	15,  // 16: openim.oa.SearchCompanyAndDepartmentResp.nodes:type_name -> openim.oa.OrganizationTreeNode
+	0,   // 17: openim.oa.OrganizationTreeNode.company:type_name -> openim.oa.CompanyInfo
+	23,  // 18: openim.oa.OrganizationTreeNode.department:type_name -> openim.oa.DepartmentItem
+	26,  // 19: openim.oa.OrganizationTreeNode.member:type_name -> openim.oa.MemberInfo
+	15,  // 20: openim.oa.OrganizationTreeNode.children:type_name -> openim.oa.OrganizationTreeNode
+	0,   // 21: openim.oa.GetUserJoinedCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
+	0,   // 22: openim.oa.GetMyJoinedCompaniesResp.companies:type_name -> openim.oa.CompanyInfo
+	22,  // 23: openim.oa.GetDepartmentTreeResp.items:type_name -> openim.oa.DepartmentTreeItem
+	26,  // 24: openim.oa.DepartmentTreeItem.member:type_name -> openim.oa.MemberInfo
+	23,  // 25: openim.oa.DepartmentTreeItem.department:type_name -> openim.oa.DepartmentItem
+	24,  // 26: openim.oa.DepartmentInfo.subDepartments:type_name -> openim.oa.DepartmentInfo
+	26,  // 27: openim.oa.DepartmentInfo.members:type_name -> openim.oa.MemberInfo
+	25,  // 28: openim.oa.MemberInfo.onlineStatus:type_name -> openim.oa.PlatformDetail
+	74,  // 29: openim.oa.UpdateDepartmentReq.departmentCode:type_name -> openim.protobuf.StringValue
+	74,  // 30: openim.oa.UpdateDepartmentReq.departmentName:type_name -> openim.protobuf.StringValue
+	74,  // 31: openim.oa.UpdateDepartmentReq.departmentShortName:type_name -> openim.protobuf.StringValue
+	75,  // 32: openim.oa.UpdateDepartmentReq.companyID:type_name -> openim.protobuf.Int32Value
+	75,  // 33: openim.oa.UpdateDepartmentReq.parentDepartmentID:type_name -> openim.protobuf.Int32Value
+	74,  // 34: openim.oa.UpdateDepartmentReq.managerID:type_name -> openim.protobuf.StringValue
+	74,  // 35: openim.oa.UpdateDepartmentReq.directorID:type_name -> openim.protobuf.StringValue
+	74,  // 36: openim.oa.UpdateDepartmentReq.assistantID:type_name -> openim.protobuf.StringValue
+	74,  // 37: openim.oa.UpdateDepartmentReq.leadersID:type_name -> openim.protobuf.StringValue
+	74,  // 38: openim.oa.UpdateDepartmentReq.seniorDirectorID:type_name -> openim.protobuf.StringValue
+	74,  // 39: openim.oa.UpdateDepartmentReq.hrmLeadersID:type_name -> openim.protobuf.StringValue
+	75,  // 40: openim.oa.UpdateDepartmentReq.wxDeptID:type_name -> openim.protobuf.Int32Value
+	76,  // 41: openim.oa.UpdateDepartmentReq.isDept:type_name -> openim.protobuf.BoolValue
+	75,  // 42: openim.oa.UpdateDepartmentReq.showOrder:type_name -> openim.protobuf.Int32Value
+	76,  // 43: openim.oa.UpdateDepartmentReq.canceled:type_name -> openim.protobuf.BoolValue
+	78,  // 44: openim.oa.UpdateDepartmentReq.canceledDate:type_name -> openim.protobuf.Int64Value
+	24,  // 45: openim.oa.GetDepartmentResp.department:type_name -> openim.oa.DepartmentInfo
+	77,  // 46: openim.oa.GetDepartmentsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	24,  // 47: openim.oa.GetDepartmentsResp.departments:type_name -> openim.oa.DepartmentInfo
+	77,  // 48: openim.oa.SearchDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
+	24,  // 49: openim.oa.SearchDepartmentResp.departments:type_name -> openim.oa.DepartmentInfo
+	77,  // 50: openim.oa.GetMembersByCompanyAndDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
+	25,  // 51: openim.oa.AdminMemberInfo.onlineStatus:type_name -> openim.oa.PlatformDetail
+	26,  // 52: openim.oa.GetMembersByCompanyAndDepartmentResp.members:type_name -> openim.oa.MemberInfo
+	77,  // 53: openim.oa.GetAdminMembersByCompanyAndDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
+	40,  // 54: openim.oa.GetAdminMembersByCompanyAndDepartmentResp.members:type_name -> openim.oa.AdminMemberInfo
+	74,  // 55: openim.oa.UpdateJobTitleReq.jobCode:type_name -> openim.protobuf.StringValue
+	74,  // 56: openim.oa.UpdateJobTitleReq.jobName:type_name -> openim.protobuf.StringValue
+	74,  // 57: openim.oa.UpdateJobTitleReq.jobShortName:type_name -> openim.protobuf.StringValue
+	75,  // 58: openim.oa.UpdateJobTitleReq.departmentID:type_name -> openim.protobuf.Int32Value
+	74,  // 59: openim.oa.UpdateJobTitleReq.jobCompetency:type_name -> openim.protobuf.StringValue
+	74,  // 60: openim.oa.UpdateJobTitleReq.jobResponsibility:type_name -> openim.protobuf.StringValue
+	74,  // 61: openim.oa.UpdateJobTitleReq.jobDoc:type_name -> openim.protobuf.StringValue
+	74,  // 62: openim.oa.UpdateJobTitleReq.jobRemark:type_name -> openim.protobuf.StringValue
+	74,  // 63: openim.oa.UpdateJobTitleReq.status:type_name -> openim.protobuf.StringValue
+	74,  // 64: openim.oa.UpdateJobTitleReq.safeLevel:type_name -> openim.protobuf.StringValue
+	76,  // 65: openim.oa.UpdateJobTitleReq.isHead:type_name -> openim.protobuf.BoolValue
+	44,  // 66: openim.oa.GetJobTitleResp.jobTitle:type_name -> openim.oa.JobInfo
+	44,  // 67: openim.oa.GetJobTitlesResp.jobTitles:type_name -> openim.oa.JobInfo
+	77,  // 68: openim.oa.SearchJobTitleReq.pagination:type_name -> openim.sdkws.RequestPagination
+	44,  // 69: openim.oa.SearchJobTitleResp.jobTitles:type_name -> openim.oa.JobInfo
+	77,  // 70: openim.oa.GetJobTitlesByDepartmentReq.pagination:type_name -> openim.sdkws.RequestPagination
+	44,  // 71: openim.oa.GetJobTitlesByDepartmentResp.jobTitles:type_name -> openim.oa.JobInfo
+	74,  // 72: openim.oa.UpdateJobReq.jobName:type_name -> openim.protobuf.StringValue
+	74,  // 73: openim.oa.UpdateJobReq.jobShortName:type_name -> openim.protobuf.StringValue
+	59,  // 74: openim.oa.GetJobResp.job:type_name -> openim.oa.Job
+	59,  // 75: openim.oa.GetJobsResp.jobs:type_name -> openim.oa.Job
+	77,  // 76: openim.oa.SearchJobReq.pagination:type_name -> openim.sdkws.RequestPagination
+	59,  // 77: openim.oa.SearchJobResp.jobs:type_name -> openim.oa.Job
+	1,   // 78: openim.oa.oa.CreateCompany:input_type -> openim.oa.CreateCompanyReq
+	3,   // 79: openim.oa.oa.UpdateCompany:input_type -> openim.oa.UpdateCompanyReq
+	5,   // 80: openim.oa.oa.DeleteCompany:input_type -> openim.oa.DeleteCompanyReq
+	7,   // 81: openim.oa.oa.GetCompany:input_type -> openim.oa.GetCompanyReq
+	9,   // 82: openim.oa.oa.GetCompanies:input_type -> openim.oa.GetCompaniesReq
+	11,  // 83: openim.oa.oa.SearchCompany:input_type -> openim.oa.SearchCompanyReq
+	16,  // 84: openim.oa.oa.GetUserJoinedCompanies:input_type -> openim.oa.GetUserJoinedCompaniesReq
+	18,  // 85: openim.oa.oa.GetMyJoinedCompanies:input_type -> openim.oa.GetMyJoinedCompaniesReq
+	20,  // 86: openim.oa.oa.GetDepartmentTree:input_type -> openim.oa.GetDepartmentTreeReq
+	13,  // 87: openim.oa.oa.SearchCompanyAndDepartment:input_type -> openim.oa.SearchCompanyAndDepartmentReq
+	27,  // 88: openim.oa.oa.CreateDepartment:input_type -> openim.oa.CreateDepartmentReq
+	29,  // 89: openim.oa.oa.UpdateDepartment:input_type -> openim.oa.UpdateDepartmentReq
+	31,  // 90: openim.oa.oa.DeleteDepartment:input_type -> openim.oa.DeleteDepartmentReq
+	33,  // 91: openim.oa.oa.GetDepartment:input_type -> openim.oa.GetDepartmentReq
+	35,  // 92: openim.oa.oa.GetDepartments:input_type -> openim.oa.GetDepartmentsReq
+	37,  // 93: openim.oa.oa.SearchDepartment:input_type -> openim.oa.SearchDepartmentReq
+	39,  // 94: openim.oa.oa.GetMembersByCompanyAndDepartment:input_type -> openim.oa.GetMembersByCompanyAndDepartmentReq
+	42,  // 95: openim.oa.oa.GetAdminMembersByCompanyAndDepartment:input_type -> openim.oa.GetAdminMembersByCompanyAndDepartmentReq
+	45,  // 96: openim.oa.oa.CreateJobTitle:input_type -> openim.oa.CreateJobTitleReq
+	47,  // 97: openim.oa.oa.UpdateJobTitle:input_type -> openim.oa.UpdateJobTitleReq
+	49,  // 98: openim.oa.oa.DeleteJobTitle:input_type -> openim.oa.DeleteJobTitleReq
+	51,  // 99: openim.oa.oa.GetJobTitle:input_type -> openim.oa.GetJobTitleReq
+	53,  // 100: openim.oa.oa.GetJobTitles:input_type -> openim.oa.GetJobTitlesReq
+	55,  // 101: openim.oa.oa.SearchJobTitle:input_type -> openim.oa.SearchJobTitleReq
+	57,  // 102: openim.oa.oa.GetJobTitlesByDepartment:input_type -> openim.oa.GetJobTitlesByDepartmentReq
+	60,  // 103: openim.oa.oa.CreateJob:input_type -> openim.oa.CreateJobReq
+	62,  // 104: openim.oa.oa.UpdateJob:input_type -> openim.oa.UpdateJobReq
+	64,  // 105: openim.oa.oa.DeleteJob:input_type -> openim.oa.DeleteJobReq
+	66,  // 106: openim.oa.oa.GetJob:input_type -> openim.oa.GetJobReq
+	68,  // 107: openim.oa.oa.GetJobs:input_type -> openim.oa.GetJobsReq
+	70,  // 108: openim.oa.oa.SearchJob:input_type -> openim.oa.SearchJobReq
+	72,  // 109: openim.oa.oa.SyncJobFromJobTitle:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 110: openim.oa.oa.SyncOADataToChat:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 111: openim.oa.oa.SyncOADepartmentToChat:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 112: openim.oa.oa.SyncOAJobTitleToChat:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 113: openim.oa.oa.SyncOACompanyToChat:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 114: openim.oa.oa.SyncJobToChat:input_type -> openim.oa.SyncOADataToChatReq
+	72,  // 115: openim.oa.oa.SyncOAUserToChat:input_type -> openim.oa.SyncOADataToChatReq
+	2,   // 116: openim.oa.oa.CreateCompany:output_type -> openim.oa.CreateCompanyResp
+	4,   // 117: openim.oa.oa.UpdateCompany:output_type -> openim.oa.UpdateCompanyResp
+	6,   // 118: openim.oa.oa.DeleteCompany:output_type -> openim.oa.DeleteCompanyResp
+	8,   // 119: openim.oa.oa.GetCompany:output_type -> openim.oa.GetCompanyResp
+	10,  // 120: openim.oa.oa.GetCompanies:output_type -> openim.oa.GetCompaniesResp
+	12,  // 121: openim.oa.oa.SearchCompany:output_type -> openim.oa.SearchCompanyResp
+	17,  // 122: openim.oa.oa.GetUserJoinedCompanies:output_type -> openim.oa.GetUserJoinedCompaniesResp
+	19,  // 123: openim.oa.oa.GetMyJoinedCompanies:output_type -> openim.oa.GetMyJoinedCompaniesResp
+	21,  // 124: openim.oa.oa.GetDepartmentTree:output_type -> openim.oa.GetDepartmentTreeResp
+	14,  // 125: openim.oa.oa.SearchCompanyAndDepartment:output_type -> openim.oa.SearchCompanyAndDepartmentResp
+	28,  // 126: openim.oa.oa.CreateDepartment:output_type -> openim.oa.CreateDepartmentResp
+	30,  // 127: openim.oa.oa.UpdateDepartment:output_type -> openim.oa.UpdateDepartmentResp
+	32,  // 128: openim.oa.oa.DeleteDepartment:output_type -> openim.oa.DeleteDepartmentResp
+	34,  // 129: openim.oa.oa.GetDepartment:output_type -> openim.oa.GetDepartmentResp
+	36,  // 130: openim.oa.oa.GetDepartments:output_type -> openim.oa.GetDepartmentsResp
+	38,  // 131: openim.oa.oa.SearchDepartment:output_type -> openim.oa.SearchDepartmentResp
+	41,  // 132: openim.oa.oa.GetMembersByCompanyAndDepartment:output_type -> openim.oa.GetMembersByCompanyAndDepartmentResp
+	43,  // 133: openim.oa.oa.GetAdminMembersByCompanyAndDepartment:output_type -> openim.oa.GetAdminMembersByCompanyAndDepartmentResp
+	46,  // 134: openim.oa.oa.CreateJobTitle:output_type -> openim.oa.CreateJobTitleResp
+	48,  // 135: openim.oa.oa.UpdateJobTitle:output_type -> openim.oa.UpdateJobTitleResp
+	50,  // 136: openim.oa.oa.DeleteJobTitle:output_type -> openim.oa.DeleteJobTitleResp
+	52,  // 137: openim.oa.oa.GetJobTitle:output_type -> openim.oa.GetJobTitleResp
+	54,  // 138: openim.oa.oa.GetJobTitles:output_type -> openim.oa.GetJobTitlesResp
+	56,  // 139: openim.oa.oa.SearchJobTitle:output_type -> openim.oa.SearchJobTitleResp
+	58,  // 140: openim.oa.oa.GetJobTitlesByDepartment:output_type -> openim.oa.GetJobTitlesByDepartmentResp
+	61,  // 141: openim.oa.oa.CreateJob:output_type -> openim.oa.CreateJobResp
+	63,  // 142: openim.oa.oa.UpdateJob:output_type -> openim.oa.UpdateJobResp
+	65,  // 143: openim.oa.oa.DeleteJob:output_type -> openim.oa.DeleteJobResp
+	67,  // 144: openim.oa.oa.GetJob:output_type -> openim.oa.GetJobResp
+	69,  // 145: openim.oa.oa.GetJobs:output_type -> openim.oa.GetJobsResp
+	71,  // 146: openim.oa.oa.SearchJob:output_type -> openim.oa.SearchJobResp
+	73,  // 147: openim.oa.oa.SyncJobFromJobTitle:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 148: openim.oa.oa.SyncOADataToChat:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 149: openim.oa.oa.SyncOADepartmentToChat:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 150: openim.oa.oa.SyncOAJobTitleToChat:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 151: openim.oa.oa.SyncOACompanyToChat:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 152: openim.oa.oa.SyncJobToChat:output_type -> openim.oa.SyncOADataToChatResp
+	73,  // 153: openim.oa.oa.SyncOAUserToChat:output_type -> openim.oa.SyncOADataToChatResp
+	116, // [116:154] is the sub-list for method output_type
+	78,  // [78:116] is the sub-list for method input_type
+	78,  // [78:78] is the sub-list for extension type_name
+	78,  // [78:78] is the sub-list for extension extendee
+	0,   // [0:78] is the sub-list for field type_name
 }
 
 func init() { file_oa_oa_proto_init() }
@@ -5337,7 +5958,7 @@ func file_oa_oa_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_oa_oa_proto_rawDesc), len(file_oa_oa_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   72,
+			NumMessages:   74,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
