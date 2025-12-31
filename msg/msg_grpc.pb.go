@@ -79,6 +79,11 @@ const (
 	Msg_UnmarkMessage_FullMethodName                    = "/openim.msg.msg/UnmarkMessage"
 	Msg_SearchMarkedMessage_FullMethodName              = "/openim.msg.msg/SearchMarkedMessage"
 	Msg_GetMarkedMessageList_FullMethodName             = "/openim.msg.msg/GetMarkedMessageList"
+	Msg_CreateSummaryRecord_FullMethodName              = "/openim.msg.msg/CreateSummaryRecord"
+	Msg_DeleteSummaryRecord_FullMethodName              = "/openim.msg.msg/DeleteSummaryRecord"
+	Msg_GetSummaryRecordList_FullMethodName             = "/openim.msg.msg/GetSummaryRecordList"
+	Msg_GetSummaryRecord_FullMethodName                 = "/openim.msg.msg/GetSummaryRecord"
+	Msg_SyncSummaryRecords_FullMethodName               = "/openim.msg.msg/SyncSummaryRecords"
 )
 
 // MsgClient is the client API for Msg service.
@@ -148,6 +153,12 @@ type MsgClient interface {
 	UnmarkMessage(ctx context.Context, in *UnmarkMsgReq, opts ...grpc.CallOption) (*UnmarkMsgResp, error)
 	SearchMarkedMessage(ctx context.Context, in *SearchMarkedMsgReq, opts ...grpc.CallOption) (*SearchMarkedMsgResp, error)
 	GetMarkedMessageList(ctx context.Context, in *GetMarkedMsgListReq, opts ...grpc.CallOption) (*GetMarkedMsgListResp, error)
+	// 智能总结相关接口
+	CreateSummaryRecord(ctx context.Context, in *CreateSummaryRecordReq, opts ...grpc.CallOption) (*CreateSummaryRecordResp, error)
+	DeleteSummaryRecord(ctx context.Context, in *DeleteSummaryRecordReq, opts ...grpc.CallOption) (*DeleteSummaryRecordResp, error)
+	GetSummaryRecordList(ctx context.Context, in *GetSummaryRecordListReq, opts ...grpc.CallOption) (*GetSummaryRecordListResp, error)
+	GetSummaryRecord(ctx context.Context, in *GetSummaryRecordReq, opts ...grpc.CallOption) (*GetSummaryRecordResp, error)
+	SyncSummaryRecords(ctx context.Context, in *SyncSummaryRecordsReq, opts ...grpc.CallOption) (*SyncSummaryRecordsResp, error)
 }
 
 type msgClient struct {
@@ -608,6 +619,56 @@ func (c *msgClient) GetMarkedMessageList(ctx context.Context, in *GetMarkedMsgLi
 	return out, nil
 }
 
+func (c *msgClient) CreateSummaryRecord(ctx context.Context, in *CreateSummaryRecordReq, opts ...grpc.CallOption) (*CreateSummaryRecordResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSummaryRecordResp)
+	err := c.cc.Invoke(ctx, Msg_CreateSummaryRecord_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DeleteSummaryRecord(ctx context.Context, in *DeleteSummaryRecordReq, opts ...grpc.CallOption) (*DeleteSummaryRecordResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteSummaryRecordResp)
+	err := c.cc.Invoke(ctx, Msg_DeleteSummaryRecord_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) GetSummaryRecordList(ctx context.Context, in *GetSummaryRecordListReq, opts ...grpc.CallOption) (*GetSummaryRecordListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSummaryRecordListResp)
+	err := c.cc.Invoke(ctx, Msg_GetSummaryRecordList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) GetSummaryRecord(ctx context.Context, in *GetSummaryRecordReq, opts ...grpc.CallOption) (*GetSummaryRecordResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSummaryRecordResp)
+	err := c.cc.Invoke(ctx, Msg_GetSummaryRecord_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) SyncSummaryRecords(ctx context.Context, in *SyncSummaryRecordsReq, opts ...grpc.CallOption) (*SyncSummaryRecordsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncSummaryRecordsResp)
+	err := c.cc.Invoke(ctx, Msg_SyncSummaryRecords_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
@@ -675,6 +736,12 @@ type MsgServer interface {
 	UnmarkMessage(context.Context, *UnmarkMsgReq) (*UnmarkMsgResp, error)
 	SearchMarkedMessage(context.Context, *SearchMarkedMsgReq) (*SearchMarkedMsgResp, error)
 	GetMarkedMessageList(context.Context, *GetMarkedMsgListReq) (*GetMarkedMsgListResp, error)
+	// 智能总结相关接口
+	CreateSummaryRecord(context.Context, *CreateSummaryRecordReq) (*CreateSummaryRecordResp, error)
+	DeleteSummaryRecord(context.Context, *DeleteSummaryRecordReq) (*DeleteSummaryRecordResp, error)
+	GetSummaryRecordList(context.Context, *GetSummaryRecordListReq) (*GetSummaryRecordListResp, error)
+	GetSummaryRecord(context.Context, *GetSummaryRecordReq) (*GetSummaryRecordResp, error)
+	SyncSummaryRecords(context.Context, *SyncSummaryRecordsReq) (*SyncSummaryRecordsResp, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -819,6 +886,21 @@ func (UnimplementedMsgServer) SearchMarkedMessage(context.Context, *SearchMarked
 }
 func (UnimplementedMsgServer) GetMarkedMessageList(context.Context, *GetMarkedMsgListReq) (*GetMarkedMsgListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMarkedMessageList not implemented")
+}
+func (UnimplementedMsgServer) CreateSummaryRecord(context.Context, *CreateSummaryRecordReq) (*CreateSummaryRecordResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSummaryRecord not implemented")
+}
+func (UnimplementedMsgServer) DeleteSummaryRecord(context.Context, *DeleteSummaryRecordReq) (*DeleteSummaryRecordResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteSummaryRecord not implemented")
+}
+func (UnimplementedMsgServer) GetSummaryRecordList(context.Context, *GetSummaryRecordListReq) (*GetSummaryRecordListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSummaryRecordList not implemented")
+}
+func (UnimplementedMsgServer) GetSummaryRecord(context.Context, *GetSummaryRecordReq) (*GetSummaryRecordResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSummaryRecord not implemented")
+}
+func (UnimplementedMsgServer) SyncSummaryRecords(context.Context, *SyncSummaryRecordsReq) (*SyncSummaryRecordsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncSummaryRecords not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -1579,6 +1661,7 @@ func _Msg_UpdateFavorite_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+
 func _Msg_MarkMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MarkMsgReq)
 	if err := dec(in); err != nil {
@@ -1647,6 +1730,94 @@ func _Msg_GetMarkedMessageList_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).GetMarkedMessageList(ctx, req.(*GetMarkedMsgListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}func _Msg_CreateSummaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSummaryRecordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateSummaryRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_CreateSummaryRecord_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateSummaryRecord(ctx, req.(*CreateSummaryRecordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DeleteSummaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSummaryRecordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DeleteSummaryRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_DeleteSummaryRecord_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DeleteSummaryRecord(ctx, req.(*DeleteSummaryRecordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_GetSummaryRecordList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSummaryRecordListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).GetSummaryRecordList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_GetSummaryRecordList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).GetSummaryRecordList(ctx, req.(*GetSummaryRecordListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_GetSummaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSummaryRecordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).GetSummaryRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_GetSummaryRecord_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).GetSummaryRecord(ctx, req.(*GetSummaryRecordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_SyncSummaryRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncSummaryRecordsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SyncSummaryRecords(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_SyncSummaryRecords_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SyncSummaryRecords(ctx, req.(*SyncSummaryRecordsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1822,6 +1993,7 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateFavorite",
 			Handler:    _Msg_UpdateFavorite_Handler,
 		},
+		
 		{
 			MethodName: "MarkMessage",
 			Handler:    _Msg_MarkMessage_Handler,
@@ -1837,6 +2009,26 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMarkedMessageList",
 			Handler:    _Msg_GetMarkedMessageList_Handler,
+		},
+		{
+			MethodName: "CreateSummaryRecord",
+			Handler:    _Msg_CreateSummaryRecord_Handler,
+		},
+		{
+			MethodName: "DeleteSummaryRecord",
+			Handler:    _Msg_DeleteSummaryRecord_Handler,
+		},
+		{
+			MethodName: "GetSummaryRecordList",
+			Handler:    _Msg_GetSummaryRecordList_Handler,
+		},
+		{
+			MethodName: "GetSummaryRecord",
+			Handler:    _Msg_GetSummaryRecord_Handler,
+		},
+		{
+			MethodName: "SyncSummaryRecords",
+			Handler:    _Msg_SyncSummaryRecords_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

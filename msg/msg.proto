@@ -615,6 +615,107 @@ message GetMarkedMsgListResp {
   repeated MarkedMsgDetail markedMsgs = 1;  // 标记消息列表
   int32 total = 2;                          // 总数
 }
+// ==================== 智能总结相关定义 ====================
+
+// 总结记录
+message SummaryRecord {
+  string summaryID = 1;           // 总结ID（唯一标识）
+  string userID = 2;              // 创建者用户ID
+  string conversationID = 3;      // 会话ID
+  int32 conversationType = 4;     // 会话类型
+  string showName = 5;            // 会话显示名称
+  string faceURL = 6;             // 会话头像
+  string title = 7;               // 总结标题
+  int32 summaryType = 8;          // 总结类型：1=自动生成，2=手动生成
+  int64 startTime = 9;            // 总结的消息开始时间
+  int64 endTime = 10;             // 总结的消息结束时间
+  string timeDescription = 11;    // 时间描述
+  int32 messageCount = 12;        // 消息数量
+  string contents = 13;           // 用户输入的总结请求内容
+  string overview = 14;           // 总结概述
+  string keyPoints = 15;          // 关键点（JSON格式）
+  string actionItems = 16;        // 待办事项（JSON格式）
+  string statistics = 17;         // 统计信息（JSON格式）
+  string creatorNickname = 18;    // 创建者昵称
+  string creatorFaceURL = 19;     // 创建者头像
+  int64 createTime = 20;          // 创建时间
+  int64 updateTime = 21;          // 更新时间
+  string ex = 22;                 // 扩展字段
+}
+
+// 创建总结记录请求
+message CreateSummaryRecordReq {
+  string conversationID = 1;      // 会话ID
+  int32 conversationType = 2;     // 会话类型
+  string showName = 3;            // 会话显示名称
+  string faceURL = 4;             // 会话头像
+  string title = 5;               // 总结标题
+  int32 summaryType = 6;          // 总结类型
+  int64 startTime = 7;            // 消息开始时间
+  int64 endTime = 8;              // 消息结束时间
+  string timeDescription = 9;     // 时间描述
+  int32 messageCount = 10;        // 消息数量
+  string contents = 11;           // 用户输入的总结请求
+  string overview = 12;           // 总结概述
+  string keyPoints = 13;          // 关键点（JSON格式）
+  string actionItems = 14;        // 待办事项（JSON格式）
+  string statistics = 15;         // 统计信息（JSON格式）
+  string creatorNickname = 16;    // 创建者昵称
+  string creatorFaceURL = 17;     // 创建者头像
+  string ex = 18;                 // 扩展字段
+}
+
+// 创建总结记录响应
+message CreateSummaryRecordResp {
+  string summaryID = 1;           // 创建的总结ID
+}
+
+// 删除总结记录请求
+message DeleteSummaryRecordReq {
+  string summaryID = 1;           // 总结ID
+  string conversationID = 2;      // 会话ID（用于通知）
+}
+
+// 删除总结记录响应
+message DeleteSummaryRecordResp {}
+
+// 获取总结记录列表请求
+message GetSummaryRecordListReq {
+  string conversationID = 1;      // 会话ID（可选，不传则获取所有会话的总结）
+  int64 startTime = 2;            // 开始时间（可选）
+  int64 endTime = 3;              // 结束时间（可选）
+  int32 offset = 4;               // 分页偏移
+  int32 count = 5;                // 每页数量
+}
+
+// 获取总结记录列表响应
+message GetSummaryRecordListResp {
+  repeated SummaryRecord records = 1;  // 总结记录列表
+  int32 total = 2;                     // 总数
+}
+
+// 获取单个总结记录请求
+message GetSummaryRecordReq {
+  string summaryID = 1;           // 总结ID
+}
+
+// 获取单个总结记录响应
+message GetSummaryRecordResp {
+  SummaryRecord record = 1;       // 总结记录
+}
+
+// 同步总结记录请求（用于从服务端同步）
+message SyncSummaryRecordsReq {
+  string conversationID = 1;      // 会话ID（可选）
+  int64 lastSyncTime = 2;         // 上次同步时间
+}
+
+// 同步总结记录响应
+message SyncSummaryRecordsResp {
+  repeated SummaryRecord records = 1;  // 更新的记录
+  repeated string deletedIDs = 2;      // 被删除的记录ID
+  int64 syncTime = 3;                  // 本次同步时间
+}
 
 service msg {
   //获取最小最大seq（包括用户的，以及指定群组的）
@@ -683,10 +784,16 @@ service msg {
   rpc DeleteFavorite(DeleteFavoriteReq) returns (DeleteFavoriteResp);
   rpc GetFavoriteList(GetFavoriteListReq) returns (GetFavoriteListResp);
   rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp);
-  
-  // 消息标记相关接口
+	// 消息标记相关接口
   rpc MarkMessage(MarkMsgReq) returns (MarkMsgResp);
   rpc UnmarkMessage(UnmarkMsgReq) returns (UnmarkMsgResp);
   rpc SearchMarkedMessage(SearchMarkedMsgReq) returns (SearchMarkedMsgResp);
   rpc GetMarkedMessageList(GetMarkedMsgListReq) returns (GetMarkedMsgListResp);
+	
+  // 智能总结相关接口
+  rpc CreateSummaryRecord(CreateSummaryRecordReq) returns (CreateSummaryRecordResp);
+  rpc DeleteSummaryRecord(DeleteSummaryRecordReq) returns (DeleteSummaryRecordResp);
+  rpc GetSummaryRecordList(GetSummaryRecordListReq) returns (GetSummaryRecordListResp);
+  rpc GetSummaryRecord(GetSummaryRecordReq) returns (GetSummaryRecordResp);
+  rpc SyncSummaryRecords(SyncSummaryRecordsReq) returns (SyncSummaryRecordsResp);
 }

@@ -573,7 +573,7 @@ message UserQuickReplyUpdateTips {
   int64 refreshTime = 3;  // 刷新时间
 }
 
-// AI快捷回复更新通知（AI生成完成后实时发送）
+// AI快捷回复更新通知（AI生成完成后发送）
 message UserAIQuickReplyUpdateTips {
   string fromUserID = 1;
   string toUserID = 2;
@@ -611,6 +611,29 @@ message UserQuickReplyPinTips {
   string replyID = 3;     // 回复ID
   bool isPinned = 4;      // 是否置顶
   int64 pinTime = 5;      // 置顶时间
+}
+
+// 智能总结记录新增通知（通知群成员或单聊对方）
+message SummaryRecordAddTips {
+  string operatorUserID = 1;     // 操作者用户ID（创建总结的人）
+  string conversationID = 2;     // 会话ID
+  int32 conversationType = 3;    // 会话类型：1=单聊，2=群聊
+  string summaryID = 4;          // 总结记录ID
+  string title = 5;              // 总结标题
+  string overview = 6;           // 总结概述
+  int64 createTime = 7;          // 创建时间
+  string creatorNickname = 8;    // 创建者昵称
+  string creatorFaceURL = 9;     // 创建者头像
+  string contents = 10;          // 用户输入的总结请求
+  int32 summaryType = 11;        // 总结类型：1=自动生成，2=手动生成
+}
+
+// 智能总结记录删除通知
+message SummaryRecordDeleteTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string conversationID = 2;     // 会话ID
+  int32 conversationType = 3;    // 会话类型
+  string summaryID = 4;          // 被删除的总结记录ID
 }
 
 //////////////////////conversation/////////////////////
@@ -761,3 +784,17 @@ message ConversationGroupChangeTips {
   repeated string conversationIDs = 5;
   int64 updateTime = 6;
 }
+
+// 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
+message ConversationFoldNotificationTips {
+  string userID = 1;                    // 用户ID
+  string foldConversationID = 2;        // 折叠会话ID
+  string action = 3;                    // 操作类型: "created"=创建, "updated"=更新, "deleted"=删除, "conversation_added"=会话移入, "conversation_removed"=会话移出
+  string conversationID = 4;            // 变更的会话ID（会话移入/移出时使用）
+  string foldName = 5;                  // 折叠名称（创建/更新时）
+  int32 foldType = 6;                   // 折叠类型: 1=普通折叠, 2=通知折叠（创建时）
+  string faceURL = 7;                   // 头像URL（更新时）
+  string description = 8;               // 描述（更新时）
+  int64 timestamp = 9;                  // 时间戳（创建/更新/删除/移入/移出时间）
+}
+

@@ -33,44 +33,44 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Oa_CreateCompany_FullMethodName            = "/openim.oa.oa/CreateCompany"
-	Oa_UpdateCompany_FullMethodName            = "/openim.oa.oa/UpdateCompany"
-	Oa_DeleteCompany_FullMethodName            = "/openim.oa.oa/DeleteCompany"
-	Oa_GetCompany_FullMethodName               = "/openim.oa.oa/GetCompany"
-	Oa_GetCompanies_FullMethodName             = "/openim.oa.oa/GetCompanies"
-	Oa_SearchCompany_FullMethodName            = "/openim.oa.oa/SearchCompany"
-	Oa_GetChildCompanies_FullMethodName        = "/openim.oa.oa/GetChildCompanies"
-	Oa_GetUserJoinedCompanies_FullMethodName   = "/openim.oa.oa/GetUserJoinedCompanies"
-	Oa_GetMyJoinedCompanies_FullMethodName     = "/openim.oa.oa/GetMyJoinedCompanies"
-	Oa_GetDepartmentTree_FullMethodName        = "/openim.oa.oa/GetDepartmentTree"
-	Oa_CreateDepartment_FullMethodName         = "/openim.oa.oa/CreateDepartment"
-	Oa_UpdateDepartment_FullMethodName         = "/openim.oa.oa/UpdateDepartment"
-	Oa_DeleteDepartment_FullMethodName         = "/openim.oa.oa/DeleteDepartment"
-	Oa_GetDepartment_FullMethodName            = "/openim.oa.oa/GetDepartment"
-	Oa_GetDepartments_FullMethodName           = "/openim.oa.oa/GetDepartments"
-	Oa_SearchDepartment_FullMethodName         = "/openim.oa.oa/SearchDepartment"
-	Oa_GetDepartmentsByCompany_FullMethodName  = "/openim.oa.oa/GetDepartmentsByCompany"
-	Oa_GetChildDepartments_FullMethodName      = "/openim.oa.oa/GetChildDepartments"
-	Oa_CreateJobTitle_FullMethodName           = "/openim.oa.oa/CreateJobTitle"
-	Oa_UpdateJobTitle_FullMethodName           = "/openim.oa.oa/UpdateJobTitle"
-	Oa_DeleteJobTitle_FullMethodName           = "/openim.oa.oa/DeleteJobTitle"
-	Oa_GetJobTitle_FullMethodName              = "/openim.oa.oa/GetJobTitle"
-	Oa_GetJobTitles_FullMethodName             = "/openim.oa.oa/GetJobTitles"
-	Oa_SearchJobTitle_FullMethodName           = "/openim.oa.oa/SearchJobTitle"
-	Oa_GetJobTitlesByDepartment_FullMethodName = "/openim.oa.oa/GetJobTitlesByDepartment"
-	Oa_CreateJob_FullMethodName                = "/openim.oa.oa/CreateJob"
-	Oa_UpdateJob_FullMethodName                = "/openim.oa.oa/UpdateJob"
-	Oa_DeleteJob_FullMethodName                = "/openim.oa.oa/DeleteJob"
-	Oa_GetJob_FullMethodName                   = "/openim.oa.oa/GetJob"
-	Oa_GetJobs_FullMethodName                  = "/openim.oa.oa/GetJobs"
-	Oa_SearchJob_FullMethodName                = "/openim.oa.oa/SearchJob"
-	Oa_SyncJobFromJobTitle_FullMethodName      = "/openim.oa.oa/SyncJobFromJobTitle"
-	Oa_SyncOADataToChat_FullMethodName         = "/openim.oa.oa/SyncOADataToChat"
-	Oa_SyncOADepartmentToChat_FullMethodName   = "/openim.oa.oa/SyncOADepartmentToChat"
-	Oa_SyncOAJobTitleToChat_FullMethodName     = "/openim.oa.oa/SyncOAJobTitleToChat"
-	Oa_SyncOACompanyToChat_FullMethodName      = "/openim.oa.oa/SyncOACompanyToChat"
-	Oa_SyncJobToChat_FullMethodName            = "/openim.oa.oa/SyncJobToChat"
-	Oa_SyncOAUserToChat_FullMethodName         = "/openim.oa.oa/SyncOAUserToChat"
+	Oa_CreateCompany_FullMethodName                         = "/openim.oa.oa/CreateCompany"
+	Oa_UpdateCompany_FullMethodName                         = "/openim.oa.oa/UpdateCompany"
+	Oa_DeleteCompany_FullMethodName                         = "/openim.oa.oa/DeleteCompany"
+	Oa_GetCompany_FullMethodName                            = "/openim.oa.oa/GetCompany"
+	Oa_GetCompanies_FullMethodName                          = "/openim.oa.oa/GetCompanies"
+	Oa_SearchCompany_FullMethodName                         = "/openim.oa.oa/SearchCompany"
+	Oa_GetUserJoinedCompanies_FullMethodName                = "/openim.oa.oa/GetUserJoinedCompanies"
+	Oa_GetMyJoinedCompanies_FullMethodName                  = "/openim.oa.oa/GetMyJoinedCompanies"
+	Oa_GetDepartmentTree_FullMethodName                     = "/openim.oa.oa/GetDepartmentTree"
+	Oa_SearchCompanyAndDepartment_FullMethodName            = "/openim.oa.oa/SearchCompanyAndDepartment"
+	Oa_CreateDepartment_FullMethodName                      = "/openim.oa.oa/CreateDepartment"
+	Oa_UpdateDepartment_FullMethodName                      = "/openim.oa.oa/UpdateDepartment"
+	Oa_DeleteDepartment_FullMethodName                      = "/openim.oa.oa/DeleteDepartment"
+	Oa_GetDepartment_FullMethodName                         = "/openim.oa.oa/GetDepartment"
+	Oa_GetDepartments_FullMethodName                        = "/openim.oa.oa/GetDepartments"
+	Oa_SearchDepartment_FullMethodName                      = "/openim.oa.oa/SearchDepartment"
+	Oa_GetMembersByCompanyAndDepartment_FullMethodName      = "/openim.oa.oa/GetMembersByCompanyAndDepartment"
+	Oa_GetAdminMembersByCompanyAndDepartment_FullMethodName = "/openim.oa.oa/GetAdminMembersByCompanyAndDepartment"
+	Oa_CreateJobTitle_FullMethodName                        = "/openim.oa.oa/CreateJobTitle"
+	Oa_UpdateJobTitle_FullMethodName                        = "/openim.oa.oa/UpdateJobTitle"
+	Oa_DeleteJobTitle_FullMethodName                        = "/openim.oa.oa/DeleteJobTitle"
+	Oa_GetJobTitle_FullMethodName                           = "/openim.oa.oa/GetJobTitle"
+	Oa_GetJobTitles_FullMethodName                          = "/openim.oa.oa/GetJobTitles"
+	Oa_SearchJobTitle_FullMethodName                        = "/openim.oa.oa/SearchJobTitle"
+	Oa_GetJobTitlesByDepartment_FullMethodName              = "/openim.oa.oa/GetJobTitlesByDepartment"
+	Oa_CreateJob_FullMethodName                             = "/openim.oa.oa/CreateJob"
+	Oa_UpdateJob_FullMethodName                             = "/openim.oa.oa/UpdateJob"
+	Oa_DeleteJob_FullMethodName                             = "/openim.oa.oa/DeleteJob"
+	Oa_GetJob_FullMethodName                                = "/openim.oa.oa/GetJob"
+	Oa_GetJobs_FullMethodName                               = "/openim.oa.oa/GetJobs"
+	Oa_SearchJob_FullMethodName                             = "/openim.oa.oa/SearchJob"
+	Oa_SyncJobFromJobTitle_FullMethodName                   = "/openim.oa.oa/SyncJobFromJobTitle"
+	Oa_SyncOADataToChat_FullMethodName                      = "/openim.oa.oa/SyncOADataToChat"
+	Oa_SyncOADepartmentToChat_FullMethodName                = "/openim.oa.oa/SyncOADepartmentToChat"
+	Oa_SyncOAJobTitleToChat_FullMethodName                  = "/openim.oa.oa/SyncOAJobTitleToChat"
+	Oa_SyncOACompanyToChat_FullMethodName                   = "/openim.oa.oa/SyncOACompanyToChat"
+	Oa_SyncJobToChat_FullMethodName                         = "/openim.oa.oa/SyncJobToChat"
+	Oa_SyncOAUserToChat_FullMethodName                      = "/openim.oa.oa/SyncOAUserToChat"
 )
 
 // OaClient is the client API for Oa service.
@@ -92,14 +92,14 @@ type OaClient interface {
 	GetCompanies(ctx context.Context, in *GetCompaniesReq, opts ...grpc.CallOption) (*GetCompaniesResp, error)
 	// 搜索公司
 	SearchCompany(ctx context.Context, in *SearchCompanyReq, opts ...grpc.CallOption) (*SearchCompanyResp, error)
-	// 获取子公司
-	GetChildCompanies(ctx context.Context, in *GetChildCompaniesReq, opts ...grpc.CallOption) (*GetChildCompaniesResp, error)
 	// 获取用户加入的企业（不包含部门信息，部门通过 GetDepartmentTree 获取）
 	GetUserJoinedCompanies(ctx context.Context, in *GetUserJoinedCompaniesReq, opts ...grpc.CallOption) (*GetUserJoinedCompaniesResp, error)
 	// 获取我加入的企业（只返回企业基本信息，不含部门，从上下文获取当前用户）
 	GetMyJoinedCompanies(ctx context.Context, in *GetMyJoinedCompaniesReq, opts ...grpc.CallOption) (*GetMyJoinedCompaniesResp, error)
 	// 获取部门树（统一接口：如果department_id为空，返回企业的根部门列表；否则返回该部门的子部门列表）
 	GetDepartmentTree(ctx context.Context, in *GetDepartmentTreeReq, opts ...grpc.CallOption) (*GetDepartmentTreeResp, error)
+	// 搜索企业和部门（返回树形结构）
+	SearchCompanyAndDepartment(ctx context.Context, in *SearchCompanyAndDepartmentReq, opts ...grpc.CallOption) (*SearchCompanyAndDepartmentResp, error)
 	// ========== 部门相关接口 ==========
 	// 创建部门
 	CreateDepartment(ctx context.Context, in *CreateDepartmentReq, opts ...grpc.CallOption) (*CreateDepartmentResp, error)
@@ -113,10 +113,10 @@ type OaClient interface {
 	GetDepartments(ctx context.Context, in *GetDepartmentsReq, opts ...grpc.CallOption) (*GetDepartmentsResp, error)
 	// 搜索部门
 	SearchDepartment(ctx context.Context, in *SearchDepartmentReq, opts ...grpc.CallOption) (*SearchDepartmentResp, error)
-	// 根据公司获取部门
-	GetDepartmentsByCompany(ctx context.Context, in *GetDepartmentsByCompanyReq, opts ...grpc.CallOption) (*GetDepartmentsByCompanyResp, error)
-	// 获取子部门
-	GetChildDepartments(ctx context.Context, in *GetChildDepartmentsReq, opts ...grpc.CallOption) (*GetChildDepartmentsResp, error)
+	// 根据企业ID和部门ID获取所有人员（部门ID为空时返回企业的所有人员）（前台用）
+	GetMembersByCompanyAndDepartment(ctx context.Context, in *GetMembersByCompanyAndDepartmentReq, opts ...grpc.CallOption) (*GetMembersByCompanyAndDepartmentResp, error)
+	// 后台管理：根据企业ID和部门ID获取所有人员（包含更多字段和搜索条件）
+	GetAdminMembersByCompanyAndDepartment(ctx context.Context, in *GetAdminMembersByCompanyAndDepartmentReq, opts ...grpc.CallOption) (*GetAdminMembersByCompanyAndDepartmentResp, error)
 	// ========== 职位相关接口 ==========
 	// 创建职位
 	CreateJobTitle(ctx context.Context, in *CreateJobTitleReq, opts ...grpc.CallOption) (*CreateJobTitleResp, error)
@@ -230,16 +230,6 @@ func (c *oaClient) SearchCompany(ctx context.Context, in *SearchCompanyReq, opts
 	return out, nil
 }
 
-func (c *oaClient) GetChildCompanies(ctx context.Context, in *GetChildCompaniesReq, opts ...grpc.CallOption) (*GetChildCompaniesResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetChildCompaniesResp)
-	err := c.cc.Invoke(ctx, Oa_GetChildCompanies_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *oaClient) GetUserJoinedCompanies(ctx context.Context, in *GetUserJoinedCompaniesReq, opts ...grpc.CallOption) (*GetUserJoinedCompaniesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserJoinedCompaniesResp)
@@ -264,6 +254,16 @@ func (c *oaClient) GetDepartmentTree(ctx context.Context, in *GetDepartmentTreeR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDepartmentTreeResp)
 	err := c.cc.Invoke(ctx, Oa_GetDepartmentTree_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *oaClient) SearchCompanyAndDepartment(ctx context.Context, in *SearchCompanyAndDepartmentReq, opts ...grpc.CallOption) (*SearchCompanyAndDepartmentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchCompanyAndDepartmentResp)
+	err := c.cc.Invoke(ctx, Oa_SearchCompanyAndDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -330,20 +330,20 @@ func (c *oaClient) SearchDepartment(ctx context.Context, in *SearchDepartmentReq
 	return out, nil
 }
 
-func (c *oaClient) GetDepartmentsByCompany(ctx context.Context, in *GetDepartmentsByCompanyReq, opts ...grpc.CallOption) (*GetDepartmentsByCompanyResp, error) {
+func (c *oaClient) GetMembersByCompanyAndDepartment(ctx context.Context, in *GetMembersByCompanyAndDepartmentReq, opts ...grpc.CallOption) (*GetMembersByCompanyAndDepartmentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetDepartmentsByCompanyResp)
-	err := c.cc.Invoke(ctx, Oa_GetDepartmentsByCompany_FullMethodName, in, out, cOpts...)
+	out := new(GetMembersByCompanyAndDepartmentResp)
+	err := c.cc.Invoke(ctx, Oa_GetMembersByCompanyAndDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oaClient) GetChildDepartments(ctx context.Context, in *GetChildDepartmentsReq, opts ...grpc.CallOption) (*GetChildDepartmentsResp, error) {
+func (c *oaClient) GetAdminMembersByCompanyAndDepartment(ctx context.Context, in *GetAdminMembersByCompanyAndDepartmentReq, opts ...grpc.CallOption) (*GetAdminMembersByCompanyAndDepartmentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetChildDepartmentsResp)
-	err := c.cc.Invoke(ctx, Oa_GetChildDepartments_FullMethodName, in, out, cOpts...)
+	out := new(GetAdminMembersByCompanyAndDepartmentResp)
+	err := c.cc.Invoke(ctx, Oa_GetAdminMembersByCompanyAndDepartment_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -569,14 +569,14 @@ type OaServer interface {
 	GetCompanies(context.Context, *GetCompaniesReq) (*GetCompaniesResp, error)
 	// 搜索公司
 	SearchCompany(context.Context, *SearchCompanyReq) (*SearchCompanyResp, error)
-	// 获取子公司
-	GetChildCompanies(context.Context, *GetChildCompaniesReq) (*GetChildCompaniesResp, error)
 	// 获取用户加入的企业（不包含部门信息，部门通过 GetDepartmentTree 获取）
 	GetUserJoinedCompanies(context.Context, *GetUserJoinedCompaniesReq) (*GetUserJoinedCompaniesResp, error)
 	// 获取我加入的企业（只返回企业基本信息，不含部门，从上下文获取当前用户）
 	GetMyJoinedCompanies(context.Context, *GetMyJoinedCompaniesReq) (*GetMyJoinedCompaniesResp, error)
 	// 获取部门树（统一接口：如果department_id为空，返回企业的根部门列表；否则返回该部门的子部门列表）
 	GetDepartmentTree(context.Context, *GetDepartmentTreeReq) (*GetDepartmentTreeResp, error)
+	// 搜索企业和部门（返回树形结构）
+	SearchCompanyAndDepartment(context.Context, *SearchCompanyAndDepartmentReq) (*SearchCompanyAndDepartmentResp, error)
 	// ========== 部门相关接口 ==========
 	// 创建部门
 	CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentResp, error)
@@ -590,10 +590,10 @@ type OaServer interface {
 	GetDepartments(context.Context, *GetDepartmentsReq) (*GetDepartmentsResp, error)
 	// 搜索部门
 	SearchDepartment(context.Context, *SearchDepartmentReq) (*SearchDepartmentResp, error)
-	// 根据公司获取部门
-	GetDepartmentsByCompany(context.Context, *GetDepartmentsByCompanyReq) (*GetDepartmentsByCompanyResp, error)
-	// 获取子部门
-	GetChildDepartments(context.Context, *GetChildDepartmentsReq) (*GetChildDepartmentsResp, error)
+	// 根据企业ID和部门ID获取所有人员（部门ID为空时返回企业的所有人员）（前台用）
+	GetMembersByCompanyAndDepartment(context.Context, *GetMembersByCompanyAndDepartmentReq) (*GetMembersByCompanyAndDepartmentResp, error)
+	// 后台管理：根据企业ID和部门ID获取所有人员（包含更多字段和搜索条件）
+	GetAdminMembersByCompanyAndDepartment(context.Context, *GetAdminMembersByCompanyAndDepartmentReq) (*GetAdminMembersByCompanyAndDepartmentResp, error)
 	// ========== 职位相关接口 ==========
 	// 创建职位
 	CreateJobTitle(context.Context, *CreateJobTitleReq) (*CreateJobTitleResp, error)
@@ -665,9 +665,6 @@ func (UnimplementedOaServer) GetCompanies(context.Context, *GetCompaniesReq) (*G
 func (UnimplementedOaServer) SearchCompany(context.Context, *SearchCompanyReq) (*SearchCompanyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchCompany not implemented")
 }
-func (UnimplementedOaServer) GetChildCompanies(context.Context, *GetChildCompaniesReq) (*GetChildCompaniesResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetChildCompanies not implemented")
-}
 func (UnimplementedOaServer) GetUserJoinedCompanies(context.Context, *GetUserJoinedCompaniesReq) (*GetUserJoinedCompaniesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserJoinedCompanies not implemented")
 }
@@ -676,6 +673,9 @@ func (UnimplementedOaServer) GetMyJoinedCompanies(context.Context, *GetMyJoinedC
 }
 func (UnimplementedOaServer) GetDepartmentTree(context.Context, *GetDepartmentTreeReq) (*GetDepartmentTreeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDepartmentTree not implemented")
+}
+func (UnimplementedOaServer) SearchCompanyAndDepartment(context.Context, *SearchCompanyAndDepartmentReq) (*SearchCompanyAndDepartmentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SearchCompanyAndDepartment not implemented")
 }
 func (UnimplementedOaServer) CreateDepartment(context.Context, *CreateDepartmentReq) (*CreateDepartmentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateDepartment not implemented")
@@ -695,11 +695,11 @@ func (UnimplementedOaServer) GetDepartments(context.Context, *GetDepartmentsReq)
 func (UnimplementedOaServer) SearchDepartment(context.Context, *SearchDepartmentReq) (*SearchDepartmentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchDepartment not implemented")
 }
-func (UnimplementedOaServer) GetDepartmentsByCompany(context.Context, *GetDepartmentsByCompanyReq) (*GetDepartmentsByCompanyResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetDepartmentsByCompany not implemented")
+func (UnimplementedOaServer) GetMembersByCompanyAndDepartment(context.Context, *GetMembersByCompanyAndDepartmentReq) (*GetMembersByCompanyAndDepartmentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMembersByCompanyAndDepartment not implemented")
 }
-func (UnimplementedOaServer) GetChildDepartments(context.Context, *GetChildDepartmentsReq) (*GetChildDepartmentsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetChildDepartments not implemented")
+func (UnimplementedOaServer) GetAdminMembersByCompanyAndDepartment(context.Context, *GetAdminMembersByCompanyAndDepartmentReq) (*GetAdminMembersByCompanyAndDepartmentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAdminMembersByCompanyAndDepartment not implemented")
 }
 func (UnimplementedOaServer) CreateJobTitle(context.Context, *CreateJobTitleReq) (*CreateJobTitleResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateJobTitle not implemented")
@@ -890,24 +890,6 @@ func _Oa_SearchCompany_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Oa_GetChildCompanies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChildCompaniesReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OaServer).GetChildCompanies(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Oa_GetChildCompanies_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OaServer).GetChildCompanies(ctx, req.(*GetChildCompaniesReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Oa_GetUserJoinedCompanies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserJoinedCompaniesReq)
 	if err := dec(in); err != nil {
@@ -958,6 +940,24 @@ func _Oa_GetDepartmentTree_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OaServer).GetDepartmentTree(ctx, req.(*GetDepartmentTreeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Oa_SearchCompanyAndDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchCompanyAndDepartmentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OaServer).SearchCompanyAndDepartment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Oa_SearchCompanyAndDepartment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OaServer).SearchCompanyAndDepartment(ctx, req.(*SearchCompanyAndDepartmentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1070,38 +1070,38 @@ func _Oa_SearchDepartment_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Oa_GetDepartmentsByCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDepartmentsByCompanyReq)
+func _Oa_GetMembersByCompanyAndDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMembersByCompanyAndDepartmentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OaServer).GetDepartmentsByCompany(ctx, in)
+		return srv.(OaServer).GetMembersByCompanyAndDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Oa_GetDepartmentsByCompany_FullMethodName,
+		FullMethod: Oa_GetMembersByCompanyAndDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OaServer).GetDepartmentsByCompany(ctx, req.(*GetDepartmentsByCompanyReq))
+		return srv.(OaServer).GetMembersByCompanyAndDepartment(ctx, req.(*GetMembersByCompanyAndDepartmentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Oa_GetChildDepartments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChildDepartmentsReq)
+func _Oa_GetAdminMembersByCompanyAndDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdminMembersByCompanyAndDepartmentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OaServer).GetChildDepartments(ctx, in)
+		return srv.(OaServer).GetAdminMembersByCompanyAndDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Oa_GetChildDepartments_FullMethodName,
+		FullMethod: Oa_GetAdminMembersByCompanyAndDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OaServer).GetChildDepartments(ctx, req.(*GetChildDepartmentsReq))
+		return srv.(OaServer).GetAdminMembersByCompanyAndDepartment(ctx, req.(*GetAdminMembersByCompanyAndDepartmentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1498,10 +1498,6 @@ var Oa_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Oa_SearchCompany_Handler,
 		},
 		{
-			MethodName: "GetChildCompanies",
-			Handler:    _Oa_GetChildCompanies_Handler,
-		},
-		{
 			MethodName: "GetUserJoinedCompanies",
 			Handler:    _Oa_GetUserJoinedCompanies_Handler,
 		},
@@ -1512,6 +1508,10 @@ var Oa_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDepartmentTree",
 			Handler:    _Oa_GetDepartmentTree_Handler,
+		},
+		{
+			MethodName: "SearchCompanyAndDepartment",
+			Handler:    _Oa_SearchCompanyAndDepartment_Handler,
 		},
 		{
 			MethodName: "CreateDepartment",
@@ -1538,12 +1538,12 @@ var Oa_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Oa_SearchDepartment_Handler,
 		},
 		{
-			MethodName: "GetDepartmentsByCompany",
-			Handler:    _Oa_GetDepartmentsByCompany_Handler,
+			MethodName: "GetMembersByCompanyAndDepartment",
+			Handler:    _Oa_GetMembersByCompanyAndDepartment_Handler,
 		},
 		{
-			MethodName: "GetChildDepartments",
-			Handler:    _Oa_GetChildDepartments_Handler,
+			MethodName: "GetAdminMembersByCompanyAndDepartment",
+			Handler:    _Oa_GetAdminMembersByCompanyAndDepartment_Handler,
 		},
 		{
 			MethodName: "CreateJobTitle",
