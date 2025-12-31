@@ -552,7 +552,7 @@ message UserQuickReplyUpdateTips {
   int64 refreshTime = 3;  // 刷新时间
 }
 
-// AI快捷回复更新通知（AI生成完成后实时发送）
+// AI快捷回复更新通知（AI生成完成后发送）
 message UserAIQuickReplyUpdateTips {
   string fromUserID = 1;
   string toUserID = 2;
@@ -590,6 +590,29 @@ message UserQuickReplyPinTips {
   string replyID = 3;     // 回复ID
   bool isPinned = 4;      // 是否置顶
   int64 pinTime = 5;      // 置顶时间
+}
+
+// 智能总结记录新增通知（通知群成员或单聊对方）
+message SummaryRecordAddTips {
+  string operatorUserID = 1;     // 操作者用户ID（创建总结的人）
+  string conversationID = 2;     // 会话ID
+  int32 conversationType = 3;    // 会话类型：1=单聊，2=群聊
+  string summaryID = 4;          // 总结记录ID
+  string title = 5;              // 总结标题
+  string overview = 6;           // 总结概述
+  int64 createTime = 7;          // 创建时间
+  string creatorNickname = 8;    // 创建者昵称
+  string creatorFaceURL = 9;     // 创建者头像
+  string contents = 10;          // 用户输入的总结请求
+  int32 summaryType = 11;        // 总结类型：1=自动生成，2=手动生成
+}
+
+// 智能总结记录删除通知
+message SummaryRecordDeleteTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string conversationID = 2;     // 会话ID
+  int32 conversationType = 3;    // 会话类型
+  string summaryID = 4;          // 被删除的总结记录ID
 }
 
 //////////////////////conversation/////////////////////
