@@ -1661,7 +1661,6 @@ func _Msg_UpdateFavorite_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-
 func _Msg_MarkMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MarkMsgReq)
 	if err := dec(in); err != nil {
@@ -1732,7 +1731,9 @@ func _Msg_GetMarkedMessageList_Handler(srv interface{}, ctx context.Context, dec
 		return srv.(MsgServer).GetMarkedMessageList(ctx, req.(*GetMarkedMsgListReq))
 	}
 	return interceptor(ctx, in, info, handler)
-}func _Msg_CreateSummaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+}
+
+func _Msg_CreateSummaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateSummaryRecordReq)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -1993,7 +1994,6 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateFavorite",
 			Handler:    _Msg_UpdateFavorite_Handler,
 		},
-		
 		{
 			MethodName: "MarkMessage",
 			Handler:    _Msg_MarkMessage_Handler,
