@@ -88,6 +88,22 @@ message UserInfo {
   string signature = 10;  // 用户签名
   repeated PlatformDetail onlineStatus = 11; // 平台详细状态列表（包含平台ID和在线状态）
   string jobName = 12;   // 职位名称
+  // OA/组织定位字段
+  int32 companyID = 13;  // 企业ID
+  int32 departmentID = 14;  // 部门ID
+  repeated int32 deptPathIDs = 15;  // 部门路径ID数组（从根部门到当前部门的路径，包含根0）
+  repeated string deptPathNames = 16;  // 部门路径名称数组（与deptPathIDs一一对应）
+  int32 jobTitleID = 17;  // OA职位ID
+  // 个人资料字段（不再放入 Ex）
+  string areaCode = 18;  // 国家/地区码（如 +86）
+  string phoneNumber = 19;  // 手机号
+  string email = 20;  // 邮箱
+  int32 gender = 21;  // 性别：0=未知/保密，1=男，2=女
+  int64 birth = 22;  // 生日时间戳
+  string departmentName = 23;  // 部门名称（通常是直属部门名）
+  string deptAllName = 24;  // 部门全路径名称
+  string jobTitle = 25;  // OA 口径职位
+  string workCode = 26;  // 工号
 }
 
 // PlatformDetail 平台详细状态信息（与 user.proto 中的 platformDetail 保持一致）

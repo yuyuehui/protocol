@@ -577,8 +577,24 @@ type UserInfo struct {
 	Signature        string                 `protobuf:"bytes,10,opt,name=signature,proto3" json:"signature"`       // 用户签名
 	OnlineStatus     []*PlatformDetail      `protobuf:"bytes,11,rep,name=onlineStatus,proto3" json:"onlineStatus"` // 平台详细状态列表（包含平台ID和在线状态）
 	JobName          string                 `protobuf:"bytes,12,opt,name=jobName,proto3" json:"jobName"`           // 职位名称
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// OA/组织定位字段
+	CompanyID     int32    `protobuf:"varint,13,opt,name=companyID,proto3" json:"companyID"`            // 企业ID
+	DepartmentID  int32    `protobuf:"varint,14,opt,name=departmentID,proto3" json:"departmentID"`      // 部门ID
+	DeptPathIDs   []int32  `protobuf:"varint,15,rep,packed,name=deptPathIDs,proto3" json:"deptPathIDs"` // 部门路径ID数组（从根部门到当前部门的路径，包含根0）
+	DeptPathNames []string `protobuf:"bytes,16,rep,name=deptPathNames,proto3" json:"deptPathNames"`     // 部门路径名称数组（与deptPathIDs一一对应）
+	JobTitleID    int32    `protobuf:"varint,17,opt,name=jobTitleID,proto3" json:"jobTitleID"`          // OA职位ID
+	// 个人资料字段（不再放入 Ex）
+	AreaCode       string `protobuf:"bytes,18,opt,name=areaCode,proto3" json:"areaCode"`             // 国家/地区码（如 +86）
+	PhoneNumber    string `protobuf:"bytes,19,opt,name=phoneNumber,proto3" json:"phoneNumber"`       // 手机号
+	Email          string `protobuf:"bytes,20,opt,name=email,proto3" json:"email"`                   // 邮箱
+	Gender         int32  `protobuf:"varint,21,opt,name=gender,proto3" json:"gender"`                // 性别：0=未知/保密，1=男，2=女
+	Birth          int64  `protobuf:"varint,22,opt,name=birth,proto3" json:"birth"`                  // 生日时间戳
+	DepartmentName string `protobuf:"bytes,23,opt,name=departmentName,proto3" json:"departmentName"` // 部门名称（通常是直属部门名）
+	DeptAllName    string `protobuf:"bytes,24,opt,name=deptAllName,proto3" json:"deptAllName"`       // 部门全路径名称
+	JobTitle       string `protobuf:"bytes,25,opt,name=jobTitle,proto3" json:"jobTitle"`             // OA 口径职位
+	WorkCode       string `protobuf:"bytes,26,opt,name=workCode,proto3" json:"workCode"`             // 工号
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UserInfo) Reset() {
@@ -691,6 +707,104 @@ func (x *UserInfo) GetOnlineStatus() []*PlatformDetail {
 func (x *UserInfo) GetJobName() string {
 	if x != nil {
 		return x.JobName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetCompanyID() int32 {
+	if x != nil {
+		return x.CompanyID
+	}
+	return 0
+}
+
+func (x *UserInfo) GetDepartmentID() int32 {
+	if x != nil {
+		return x.DepartmentID
+	}
+	return 0
+}
+
+func (x *UserInfo) GetDeptPathIDs() []int32 {
+	if x != nil {
+		return x.DeptPathIDs
+	}
+	return nil
+}
+
+func (x *UserInfo) GetDeptPathNames() []string {
+	if x != nil {
+		return x.DeptPathNames
+	}
+	return nil
+}
+
+func (x *UserInfo) GetJobTitleID() int32 {
+	if x != nil {
+		return x.JobTitleID
+	}
+	return 0
+}
+
+func (x *UserInfo) GetAreaCode() string {
+	if x != nil {
+		return x.AreaCode
+	}
+	return ""
+}
+
+func (x *UserInfo) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *UserInfo) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UserInfo) GetGender() int32 {
+	if x != nil {
+		return x.Gender
+	}
+	return 0
+}
+
+func (x *UserInfo) GetBirth() int64 {
+	if x != nil {
+		return x.Birth
+	}
+	return 0
+}
+
+func (x *UserInfo) GetDepartmentName() string {
+	if x != nil {
+		return x.DepartmentName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetDeptAllName() string {
+	if x != nil {
+		return x.DeptAllName
+	}
+	return ""
+}
+
+func (x *UserInfo) GetJobTitle() string {
+	if x != nil {
+		return x.JobTitle
+	}
+	return ""
+}
+
+func (x *UserInfo) GetWorkCode() string {
+	if x != nil {
+		return x.WorkCode
 	}
 	return ""
 }
@@ -7037,7 +7151,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
 	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\x0e\n" +
-	"\x02ex\x18\x04 \x01(\tR\x02ex\"\x86\x03\n" +
+	"\x02ex\x18\x04 \x01(\tR\x02ex\"\xb4\x06\n" +
 	"\bUserInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
@@ -7053,7 +7167,23 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\tsignature\x18\n" +
 	" \x01(\tR\tsignature\x12@\n" +
 	"\fonlineStatus\x18\v \x03(\v2\x1c.openim.sdkws.PlatformDetailR\fonlineStatus\x12\x18\n" +
-	"\ajobName\x18\f \x01(\tR\ajobName\"H\n" +
+	"\ajobName\x18\f \x01(\tR\ajobName\x12\x1c\n" +
+	"\tcompanyID\x18\r \x01(\x05R\tcompanyID\x12\"\n" +
+	"\fdepartmentID\x18\x0e \x01(\x05R\fdepartmentID\x12 \n" +
+	"\vdeptPathIDs\x18\x0f \x03(\x05R\vdeptPathIDs\x12$\n" +
+	"\rdeptPathNames\x18\x10 \x03(\tR\rdeptPathNames\x12\x1e\n" +
+	"\n" +
+	"jobTitleID\x18\x11 \x01(\x05R\n" +
+	"jobTitleID\x12\x1a\n" +
+	"\bareaCode\x18\x12 \x01(\tR\bareaCode\x12 \n" +
+	"\vphoneNumber\x18\x13 \x01(\tR\vphoneNumber\x12\x14\n" +
+	"\x05email\x18\x14 \x01(\tR\x05email\x12\x16\n" +
+	"\x06gender\x18\x15 \x01(\x05R\x06gender\x12\x14\n" +
+	"\x05birth\x18\x16 \x01(\x03R\x05birth\x12&\n" +
+	"\x0edepartmentName\x18\x17 \x01(\tR\x0edepartmentName\x12 \n" +
+	"\vdeptAllName\x18\x18 \x01(\tR\vdeptAllName\x12\x1a\n" +
+	"\bjobTitle\x18\x19 \x01(\tR\bjobTitle\x12\x1a\n" +
+	"\bworkCode\x18\x1a \x01(\tR\bworkCode\"H\n" +
 	"\x0ePlatformDetail\x12\x1e\n" +
 	"\n" +
 	"platformID\x18\x01 \x01(\x05R\n" +
