@@ -150,6 +150,8 @@ const (
 	MsgRevokeNotification  = 2101 // 消息撤回通知
 	DeleteMsgsNotification = 2102 // 删除消息通知
 	LikeMsgNotification    = 2103 // 点赞消息通知
+	MarkMsgNotification    = 2104 // 标记消息通知
+	UnmarkMsgNotification  = 2105 // 取消标记消息通知
 	HasReadReceipt         = 2200 // 已读回执
 
 	NotificationEnd = 5000 // 通知类型结束标记

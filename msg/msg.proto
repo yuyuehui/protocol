@@ -542,6 +542,79 @@ message GetGroupMessageReaderListResp {
   repeated GroupMsgReadUser unreadList = 5;   // 未读成员列表
 }
 
+// ==================== 消息标记相关定义 ====================
+
+// 标记消息请求
+message MarkMsgReq {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  string userID = 3;              // 标记人用户ID
+  string nickName = 4;            // 标记人昵称
+}
+
+// 标记消息响应
+message MarkMsgResp {
+  bool success = 1;               // 是否成功
+}
+
+// 取消标记消息请求
+message UnmarkMsgReq {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  string userID = 3;              // 操作人用户ID（用于权限校验）
+}
+
+// 取消标记消息响应
+message UnmarkMsgResp {
+  bool success = 1;               // 是否成功
+}
+
+// 搜索标记消息请求
+message SearchMarkedMsgReq {
+  string conversationID = 1;      // 会话ID（必填）
+  string keyword = 2;             // 关键词（搜索消息内容，可选）
+  string senderID = 3;            // 发送人ID筛选（可选）
+  int64 startTime = 4;            // 开始时间（毫秒，可选）
+  int64 endTime = 5;              // 结束时间（毫秒，可选）
+  int32 offset = 6;               // 分页偏移量
+  int32 count = 7;                // 每页数量
+}
+
+// 标记消息详情（用于标记列表展示）
+message MarkedMsgDetail {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  string clientMsgID = 3;         // 客户端消息ID
+  string sendID = 4;              // 发送人ID
+  string senderNickname = 5;      // 发送人昵称
+  int32 contentType = 6;          // 消息类型
+  string content = 7;             // 消息内容
+  int64 sendTime = 8;             // 发送时间
+  int32 sessionType = 9;          // 会话类型
+  string groupID = 10;            // 群ID（群聊时有值）
+  string markerUserID = 11;       // 标记人ID
+  string markerNickname = 12;     // 标记人昵称
+  int64 markTime = 13;            // 标记时间
+}
+
+// 搜索标记消息响应
+message SearchMarkedMsgResp {
+  repeated MarkedMsgDetail markedMsgs = 1;  // 标记消息列表
+  int32 total = 2;                          // 总数
+}
+
+// 获取会话标记消息列表请求
+message GetMarkedMsgListReq {
+  string conversationID = 1;      // 会话ID
+  int32 offset = 2;               // 分页偏移量
+  int32 count = 3;                // 每页数量
+}
+
+// 获取会话标记消息列表响应
+message GetMarkedMsgListResp {
+  repeated MarkedMsgDetail markedMsgs = 1;  // 标记消息列表
+  int32 total = 2;                          // 总数
+}
 // ==================== 智能总结相关定义 ====================
 
 // 总结记录
@@ -711,7 +784,12 @@ service msg {
   rpc DeleteFavorite(DeleteFavoriteReq) returns (DeleteFavoriteResp);
   rpc GetFavoriteList(GetFavoriteListReq) returns (GetFavoriteListResp);
   rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp);
-
+	// 消息标记相关接口
+  rpc MarkMessage(MarkMsgReq) returns (MarkMsgResp);
+  rpc UnmarkMessage(UnmarkMsgReq) returns (UnmarkMsgResp);
+  rpc SearchMarkedMessage(SearchMarkedMsgReq) returns (SearchMarkedMsgResp);
+  rpc GetMarkedMessageList(GetMarkedMsgListReq) returns (GetMarkedMsgListResp);
+	
   // 智能总结相关接口
   rpc CreateSummaryRecord(CreateSummaryRecordReq) returns (CreateSummaryRecordResp);
   rpc DeleteSummaryRecord(DeleteSummaryRecordReq) returns (DeleteSummaryRecordResp);

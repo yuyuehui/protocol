@@ -241,6 +241,7 @@ message MsgData {
   string attachedInfo = 22;
   string ex = 23;
   LikeInfo likeInfo = 24;
+  MarkInfo markInfo = 25;         // 标记信息
 }
 
 // 点赞信息
@@ -273,6 +274,26 @@ message LikeMsgTips {
   string LikerFaceURL = 11;
 }
 
+// 标记信息结构（存储在消息的 MsgData 中）
+message MarkInfo {
+  bool isMarked = 1;              // 是否已标记
+  string markerUserID = 2;        // 标记人用户ID
+  string markerNickname = 3;      // 标记人昵称
+  int64 markTime = 4;             // 标记时间（毫秒时间戳）
+}
+
+// 消息标记通知提示
+message MarkMsgTips {
+  string markerUserID = 1;        // 标记人用户ID
+  string clientMsgID = 2;         // 客户端消息ID
+  int64 markTime = 3;             // 标记时间
+  int64 seq = 4;                  // 消息序号
+  int32 sessionType = 5;          // 会话类型
+  string conversationID = 6;      // 会话ID
+  string markerNickname = 7;      // 标记人昵称
+  string recvID = 8;              // 接收者ID
+  bool isMarked = 9;              // true=标记, false=取消标记
+}
 
 message PushMessages {
   map<string, PullMsgs> msgs = 1;
