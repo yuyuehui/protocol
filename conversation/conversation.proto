@@ -483,15 +483,11 @@ service conversation {
   rpc GetConversationIDsByGroupID(GetConversationIDsByGroupIDReq) returns (GetConversationIDsByGroupIDResp);
   
   // 会话折叠相关接口（折叠会话模式）
-  rpc CreateFoldConversation(CreateFoldConversationReq) returns (CreateFoldConversationResp);  // 创建折叠会话
-  rpc UpdateFoldInfo(UpdateFoldInfoReq) returns (UpdateFoldInfoResp);  // 更新折叠属性
-  rpc GetFoldInfo(GetFoldInfoReq) returns (GetFoldInfoResp);  // 获取折叠属性
+  rpc CreateFold(CreateFoldReq) returns (CreateFoldResp);  // 创建折叠会话
+  rpc UpdateFold(UpdateFoldReq) returns (UpdateFoldResp);  // 更新折叠属性
   rpc SetConversationFold(SetConversationFoldReq) returns (SetConversationFoldResp);  // 将会话放入/移出折叠
   rpc GetFoldConversationList(GetFoldConversationListReq) returns (GetFoldConversationListResp);  // 获取折叠内的会话列表
   rpc GetAllFolds(GetAllFoldsReq) returns (GetAllFoldsResp);  // 获取所有折叠会话列表
-  rpc GetFoldDetail(GetFoldDetailReq) returns (GetFoldDetailResp);  // 获取折叠详情
-  rpc PinFold(PinFoldReq) returns (PinFoldResp);  // 折叠置顶
-  rpc SetFoldRecvMsgOpt(SetFoldRecvMsgOptReq) returns (SetFoldRecvMsgOptResp);  // 设置折叠免打扰
   rpc RemoveFold(RemoveFoldReq) returns (RemoveFoldResp);  // 删除折叠
 }
 
@@ -538,62 +534,23 @@ message ConversationFold {
   string ex = 10;                    // 扩展字段
 }
 
-// FoldInfo 折叠信息（带统计数据，用于列表展示）
+// FoldInfo 折叠信息（包含 Conversation_fold 表的字段和是否系统默认）
 message FoldInfo {
   string foldConversationID = 1;     // 折叠会话ID
-  string foldName = 2;               // 折叠名称
-  string faceURL = 3;                // 头像URL
-  string description = 4;            // 描述
-  int32 foldType = 5;                // 折叠类型: 1=普通折叠, 2=通知折叠
-  int64 conversationCount = 6;       // 分组内的会话数量
-  int32 unreadCount = 7;             // 分组内的未读消息总数
-  int64 latestMsgTime = 8;           // 分组内最后一条消息的时间
-  bool isPinned = 9;                 // 是否置顶（来自折叠会话）
-  int32 recvMsgOpt = 10;             // 接收消息选项（来自折叠会话）
-  bool isSystemDefault = 11;         // 是否为系统默认分组
-  int32 sortOrder = 12;              // 排序顺序
+  string ownerUserID = 2;            // 用户ID（折叠所属用户）
+  string foldName = 3;               // 折叠名称
+  string faceURL = 4;                // 头像URL
+  string description = 5;            // 描述
+  int32 foldType = 6;                // 折叠类型: 1=普通折叠, 2=通知折叠
+  int32 sortOrder = 7;               // 排序顺序
+  int64 createTime = 8;              // 创建时间
+  int64 updateTime = 9;              // 更新时间
+  string ex = 10;                    // 扩展字段
+  bool isSystemDefault = 11;         // 是否为系统默认折叠
 }
 
 message GetAllFoldsResp {
   repeated FoldInfo groups = 1;
-}
-
-message GetFoldDetailReq {
-  string userID = 1;
-  string foldConversationID = 2;  // 折叠会话ID
-  openim.sdkws.RequestPagination pagination = 3;
-}
-
-message GetFoldDetailResp {
-  int64 total = 1;
-  int32 unreadTotal = 2;           // 未读总数
-  repeated Conversation conversations = 3;
-}
-
-message PinFoldReq {
-  string userID = 1;
-  string foldConversationID = 2;  // 折叠会话ID
-  bool isPinned = 3;              // true=置顶, false=取消置顶
-}
-
-message PinFoldResp {}
-
-message SetFoldRecvMsgOptReq {
-  string userID = 1;
-  string foldConversationID = 2;  // 折叠会话ID
-  int32 recvMsgOpt = 3;           // 接收消息选项：0=接收消息, 1=不接收消息, 2=接收消息但不通知（免打扰）
-}
-
-message SetFoldRecvMsgOptResp {}
-
-// GetFoldInfo 获取折叠属性
-message GetFoldInfoReq {
-  string userID = 1;
-  string foldConversationID = 2;   // 折叠会话ID
-}
-
-message GetFoldInfoResp {
-  ConversationFold fold = 1;       // 折叠属性
 }
 
 message RemoveFoldReq {
@@ -605,8 +562,8 @@ message RemoveFoldResp {
   int32 movedCount = 1;            // 移回的会话数量
 }
 
-// CreateFoldConversation 创建折叠会话（同时创建折叠会话和折叠属性）
-message CreateFoldConversationReq {
+// CreateFold 创建折叠会话（同时创建折叠会话和折叠属性）
+message CreateFoldReq {
   string userID = 1;               // 用户ID
   string foldName = 2;             // 折叠名称
   string faceURL = 3;              // 头像URL
@@ -614,12 +571,12 @@ message CreateFoldConversationReq {
   int32 foldType = 5;              // 折叠类型: 1=普通折叠, 2=通知折叠
 }
 
-message CreateFoldConversationResp {
+message CreateFoldResp {
   string foldConversationID = 1;   // 创建的折叠会话ID（同时也是fold表的关联ID）
 }
 
-// UpdateFoldInfo 更新折叠属性（不更新会话本身）
-message UpdateFoldInfoReq {
+// UpdateFold 更新折叠属性（不更新会话本身）
+message UpdateFoldReq {
   string userID = 1;                           // 用户ID
   string foldConversationID = 2;               // 折叠会话ID
   openim.protobuf.StringValue foldName = 3;    // 折叠名称（可选）
@@ -627,4 +584,4 @@ message UpdateFoldInfoReq {
   openim.protobuf.StringValue description = 5; // 描述（可选）
 }
 
-message UpdateFoldInfoResp {}
+message UpdateFoldResp {}

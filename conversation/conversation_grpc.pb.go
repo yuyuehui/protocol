@@ -72,15 +72,11 @@ const (
 	Conversation_AddConversationsToGroup_FullMethodName                 = "/openim.conversation.conversation/AddConversationsToGroup"
 	Conversation_RemoveConversationsFromGroup_FullMethodName            = "/openim.conversation.conversation/RemoveConversationsFromGroup"
 	Conversation_GetConversationIDsByGroupID_FullMethodName             = "/openim.conversation.conversation/GetConversationIDsByGroupID"
-	Conversation_CreateFoldConversation_FullMethodName                  = "/openim.conversation.conversation/CreateFoldConversation"
-	Conversation_UpdateFoldInfo_FullMethodName                          = "/openim.conversation.conversation/UpdateFoldInfo"
-	Conversation_GetFoldInfo_FullMethodName                             = "/openim.conversation.conversation/GetFoldInfo"
+	Conversation_CreateFold_FullMethodName                              = "/openim.conversation.conversation/CreateFold"
+	Conversation_UpdateFold_FullMethodName                              = "/openim.conversation.conversation/UpdateFold"
 	Conversation_SetConversationFold_FullMethodName                     = "/openim.conversation.conversation/SetConversationFold"
 	Conversation_GetFoldConversationList_FullMethodName                 = "/openim.conversation.conversation/GetFoldConversationList"
 	Conversation_GetAllFolds_FullMethodName                             = "/openim.conversation.conversation/GetAllFolds"
-	Conversation_GetFoldDetail_FullMethodName                           = "/openim.conversation.conversation/GetFoldDetail"
-	Conversation_PinFold_FullMethodName                                 = "/openim.conversation.conversation/PinFold"
-	Conversation_SetFoldRecvMsgOpt_FullMethodName                       = "/openim.conversation.conversation/SetFoldRecvMsgOpt"
 	Conversation_RemoveFold_FullMethodName                              = "/openim.conversation.conversation/RemoveFold"
 )
 
@@ -128,15 +124,11 @@ type ConversationClient interface {
 	RemoveConversationsFromGroup(ctx context.Context, in *RemoveConversationsFromGroupReq, opts ...grpc.CallOption) (*RemoveConversationsFromGroupResp, error)
 	GetConversationIDsByGroupID(ctx context.Context, in *GetConversationIDsByGroupIDReq, opts ...grpc.CallOption) (*GetConversationIDsByGroupIDResp, error)
 	// 会话折叠相关接口（折叠会话模式）
-	CreateFoldConversation(ctx context.Context, in *CreateFoldConversationReq, opts ...grpc.CallOption) (*CreateFoldConversationResp, error)
-	UpdateFoldInfo(ctx context.Context, in *UpdateFoldInfoReq, opts ...grpc.CallOption) (*UpdateFoldInfoResp, error)
-	GetFoldInfo(ctx context.Context, in *GetFoldInfoReq, opts ...grpc.CallOption) (*GetFoldInfoResp, error)
+	CreateFold(ctx context.Context, in *CreateFoldReq, opts ...grpc.CallOption) (*CreateFoldResp, error)
+	UpdateFold(ctx context.Context, in *UpdateFoldReq, opts ...grpc.CallOption) (*UpdateFoldResp, error)
 	SetConversationFold(ctx context.Context, in *SetConversationFoldReq, opts ...grpc.CallOption) (*SetConversationFoldResp, error)
 	GetFoldConversationList(ctx context.Context, in *GetFoldConversationListReq, opts ...grpc.CallOption) (*GetFoldConversationListResp, error)
 	GetAllFolds(ctx context.Context, in *GetAllFoldsReq, opts ...grpc.CallOption) (*GetAllFoldsResp, error)
-	GetFoldDetail(ctx context.Context, in *GetFoldDetailReq, opts ...grpc.CallOption) (*GetFoldDetailResp, error)
-	PinFold(ctx context.Context, in *PinFoldReq, opts ...grpc.CallOption) (*PinFoldResp, error)
-	SetFoldRecvMsgOpt(ctx context.Context, in *SetFoldRecvMsgOptReq, opts ...grpc.CallOption) (*SetFoldRecvMsgOptResp, error)
 	RemoveFold(ctx context.Context, in *RemoveFoldReq, opts ...grpc.CallOption) (*RemoveFoldResp, error)
 }
 
@@ -538,30 +530,20 @@ func (c *conversationClient) GetConversationIDsByGroupID(ctx context.Context, in
 	return out, nil
 }
 
-func (c *conversationClient) CreateFoldConversation(ctx context.Context, in *CreateFoldConversationReq, opts ...grpc.CallOption) (*CreateFoldConversationResp, error) {
+func (c *conversationClient) CreateFold(ctx context.Context, in *CreateFoldReq, opts ...grpc.CallOption) (*CreateFoldResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateFoldConversationResp)
-	err := c.cc.Invoke(ctx, Conversation_CreateFoldConversation_FullMethodName, in, out, cOpts...)
+	out := new(CreateFoldResp)
+	err := c.cc.Invoke(ctx, Conversation_CreateFold_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *conversationClient) UpdateFoldInfo(ctx context.Context, in *UpdateFoldInfoReq, opts ...grpc.CallOption) (*UpdateFoldInfoResp, error) {
+func (c *conversationClient) UpdateFold(ctx context.Context, in *UpdateFoldReq, opts ...grpc.CallOption) (*UpdateFoldResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateFoldInfoResp)
-	err := c.cc.Invoke(ctx, Conversation_UpdateFoldInfo_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *conversationClient) GetFoldInfo(ctx context.Context, in *GetFoldInfoReq, opts ...grpc.CallOption) (*GetFoldInfoResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFoldInfoResp)
-	err := c.cc.Invoke(ctx, Conversation_GetFoldInfo_FullMethodName, in, out, cOpts...)
+	out := new(UpdateFoldResp)
+	err := c.cc.Invoke(ctx, Conversation_UpdateFold_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -592,36 +574,6 @@ func (c *conversationClient) GetAllFolds(ctx context.Context, in *GetAllFoldsReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAllFoldsResp)
 	err := c.cc.Invoke(ctx, Conversation_GetAllFolds_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *conversationClient) GetFoldDetail(ctx context.Context, in *GetFoldDetailReq, opts ...grpc.CallOption) (*GetFoldDetailResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetFoldDetailResp)
-	err := c.cc.Invoke(ctx, Conversation_GetFoldDetail_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *conversationClient) PinFold(ctx context.Context, in *PinFoldReq, opts ...grpc.CallOption) (*PinFoldResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PinFoldResp)
-	err := c.cc.Invoke(ctx, Conversation_PinFold_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *conversationClient) SetFoldRecvMsgOpt(ctx context.Context, in *SetFoldRecvMsgOptReq, opts ...grpc.CallOption) (*SetFoldRecvMsgOptResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetFoldRecvMsgOptResp)
-	err := c.cc.Invoke(ctx, Conversation_SetFoldRecvMsgOpt_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -682,15 +634,11 @@ type ConversationServer interface {
 	RemoveConversationsFromGroup(context.Context, *RemoveConversationsFromGroupReq) (*RemoveConversationsFromGroupResp, error)
 	GetConversationIDsByGroupID(context.Context, *GetConversationIDsByGroupIDReq) (*GetConversationIDsByGroupIDResp, error)
 	// 会话折叠相关接口（折叠会话模式）
-	CreateFoldConversation(context.Context, *CreateFoldConversationReq) (*CreateFoldConversationResp, error)
-	UpdateFoldInfo(context.Context, *UpdateFoldInfoReq) (*UpdateFoldInfoResp, error)
-	GetFoldInfo(context.Context, *GetFoldInfoReq) (*GetFoldInfoResp, error)
+	CreateFold(context.Context, *CreateFoldReq) (*CreateFoldResp, error)
+	UpdateFold(context.Context, *UpdateFoldReq) (*UpdateFoldResp, error)
 	SetConversationFold(context.Context, *SetConversationFoldReq) (*SetConversationFoldResp, error)
 	GetFoldConversationList(context.Context, *GetFoldConversationListReq) (*GetFoldConversationListResp, error)
 	GetAllFolds(context.Context, *GetAllFoldsReq) (*GetAllFoldsResp, error)
-	GetFoldDetail(context.Context, *GetFoldDetailReq) (*GetFoldDetailResp, error)
-	PinFold(context.Context, *PinFoldReq) (*PinFoldResp, error)
-	SetFoldRecvMsgOpt(context.Context, *SetFoldRecvMsgOptReq) (*SetFoldRecvMsgOptResp, error)
 	RemoveFold(context.Context, *RemoveFoldReq) (*RemoveFoldResp, error)
 	mustEmbedUnimplementedConversationServer()
 }
@@ -819,14 +767,11 @@ func (UnimplementedConversationServer) RemoveConversationsFromGroup(context.Cont
 func (UnimplementedConversationServer) GetConversationIDsByGroupID(context.Context, *GetConversationIDsByGroupIDReq) (*GetConversationIDsByGroupIDResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetConversationIDsByGroupID not implemented")
 }
-func (UnimplementedConversationServer) CreateFoldConversation(context.Context, *CreateFoldConversationReq) (*CreateFoldConversationResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateFoldConversation not implemented")
+func (UnimplementedConversationServer) CreateFold(context.Context, *CreateFoldReq) (*CreateFoldResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateFold not implemented")
 }
-func (UnimplementedConversationServer) UpdateFoldInfo(context.Context, *UpdateFoldInfoReq) (*UpdateFoldInfoResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateFoldInfo not implemented")
-}
-func (UnimplementedConversationServer) GetFoldInfo(context.Context, *GetFoldInfoReq) (*GetFoldInfoResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetFoldInfo not implemented")
+func (UnimplementedConversationServer) UpdateFold(context.Context, *UpdateFoldReq) (*UpdateFoldResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateFold not implemented")
 }
 func (UnimplementedConversationServer) SetConversationFold(context.Context, *SetConversationFoldReq) (*SetConversationFoldResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetConversationFold not implemented")
@@ -836,15 +781,6 @@ func (UnimplementedConversationServer) GetFoldConversationList(context.Context, 
 }
 func (UnimplementedConversationServer) GetAllFolds(context.Context, *GetAllFoldsReq) (*GetAllFoldsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllFolds not implemented")
-}
-func (UnimplementedConversationServer) GetFoldDetail(context.Context, *GetFoldDetailReq) (*GetFoldDetailResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetFoldDetail not implemented")
-}
-func (UnimplementedConversationServer) PinFold(context.Context, *PinFoldReq) (*PinFoldResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method PinFold not implemented")
-}
-func (UnimplementedConversationServer) SetFoldRecvMsgOpt(context.Context, *SetFoldRecvMsgOptReq) (*SetFoldRecvMsgOptResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetFoldRecvMsgOpt not implemented")
 }
 func (UnimplementedConversationServer) RemoveFold(context.Context, *RemoveFoldReq) (*RemoveFoldResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RemoveFold not implemented")
@@ -1572,56 +1508,38 @@ func _Conversation_GetConversationIDsByGroupID_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Conversation_CreateFoldConversation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateFoldConversationReq)
+func _Conversation_CreateFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFoldReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConversationServer).CreateFoldConversation(ctx, in)
+		return srv.(ConversationServer).CreateFold(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Conversation_CreateFoldConversation_FullMethodName,
+		FullMethod: Conversation_CreateFold_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).CreateFoldConversation(ctx, req.(*CreateFoldConversationReq))
+		return srv.(ConversationServer).CreateFold(ctx, req.(*CreateFoldReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Conversation_UpdateFoldInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFoldInfoReq)
+func _Conversation_UpdateFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFoldReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConversationServer).UpdateFoldInfo(ctx, in)
+		return srv.(ConversationServer).UpdateFold(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Conversation_UpdateFoldInfo_FullMethodName,
+		FullMethod: Conversation_UpdateFold_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).UpdateFoldInfo(ctx, req.(*UpdateFoldInfoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Conversation_GetFoldInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFoldInfoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConversationServer).GetFoldInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Conversation_GetFoldInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).GetFoldInfo(ctx, req.(*GetFoldInfoReq))
+		return srv.(ConversationServer).UpdateFold(ctx, req.(*UpdateFoldReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1676,60 +1594,6 @@ func _Conversation_GetAllFolds_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ConversationServer).GetAllFolds(ctx, req.(*GetAllFoldsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Conversation_GetFoldDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFoldDetailReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConversationServer).GetFoldDetail(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Conversation_GetFoldDetail_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).GetFoldDetail(ctx, req.(*GetFoldDetailReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Conversation_PinFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PinFoldReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConversationServer).PinFold(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Conversation_PinFold_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).PinFold(ctx, req.(*PinFoldReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Conversation_SetFoldRecvMsgOpt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetFoldRecvMsgOptReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConversationServer).SetFoldRecvMsgOpt(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Conversation_SetFoldRecvMsgOpt_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversationServer).SetFoldRecvMsgOpt(ctx, req.(*SetFoldRecvMsgOptReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1916,16 +1780,12 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Conversation_GetConversationIDsByGroupID_Handler,
 		},
 		{
-			MethodName: "CreateFoldConversation",
-			Handler:    _Conversation_CreateFoldConversation_Handler,
+			MethodName: "CreateFold",
+			Handler:    _Conversation_CreateFold_Handler,
 		},
 		{
-			MethodName: "UpdateFoldInfo",
-			Handler:    _Conversation_UpdateFoldInfo_Handler,
-		},
-		{
-			MethodName: "GetFoldInfo",
-			Handler:    _Conversation_GetFoldInfo_Handler,
+			MethodName: "UpdateFold",
+			Handler:    _Conversation_UpdateFold_Handler,
 		},
 		{
 			MethodName: "SetConversationFold",
@@ -1938,18 +1798,6 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllFolds",
 			Handler:    _Conversation_GetAllFolds_Handler,
-		},
-		{
-			MethodName: "GetFoldDetail",
-			Handler:    _Conversation_GetFoldDetail_Handler,
-		},
-		{
-			MethodName: "PinFold",
-			Handler:    _Conversation_PinFold_Handler,
-		},
-		{
-			MethodName: "SetFoldRecvMsgOpt",
-			Handler:    _Conversation_SetFoldRecvMsgOpt_Handler,
 		},
 		{
 			MethodName: "RemoveFold",

@@ -5014,21 +5014,20 @@ func (x *ConversationFold) GetEx() string {
 	return ""
 }
 
-// FoldInfo 折叠信息（带统计数据，用于列表展示）
+// FoldInfo 折叠信息（包含 Conversation_fold 表的字段和是否系统默认）
 type FoldInfo struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	FoldConversationID string                 `protobuf:"bytes,1,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	FoldName           string                 `protobuf:"bytes,2,opt,name=foldName,proto3" json:"foldName"`                     // 折叠名称
-	FaceURL            string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`                       // 头像URL
-	Description        string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description"`               // 描述
-	FoldType           int32                  `protobuf:"varint,5,opt,name=foldType,proto3" json:"foldType"`                    // 折叠类型: 1=普通折叠, 2=通知折叠
-	ConversationCount  int64                  `protobuf:"varint,6,opt,name=conversationCount,proto3" json:"conversationCount"`  // 分组内的会话数量
-	UnreadCount        int32                  `protobuf:"varint,7,opt,name=unreadCount,proto3" json:"unreadCount"`              // 分组内的未读消息总数
-	LatestMsgTime      int64                  `protobuf:"varint,8,opt,name=latestMsgTime,proto3" json:"latestMsgTime"`          // 分组内最后一条消息的时间
-	IsPinned           bool                   `protobuf:"varint,9,opt,name=isPinned,proto3" json:"isPinned"`                    // 是否置顶（来自折叠会话）
-	RecvMsgOpt         int32                  `protobuf:"varint,10,opt,name=recvMsgOpt,proto3" json:"recvMsgOpt"`               // 接收消息选项（来自折叠会话）
-	IsSystemDefault    bool                   `protobuf:"varint,11,opt,name=isSystemDefault,proto3" json:"isSystemDefault"`     // 是否为系统默认分组
-	SortOrder          int32                  `protobuf:"varint,12,opt,name=sortOrder,proto3" json:"sortOrder"`                 // 排序顺序
+	OwnerUserID        string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID"`               // 用户ID（折叠所属用户）
+	FoldName           string                 `protobuf:"bytes,3,opt,name=foldName,proto3" json:"foldName"`                     // 折叠名称
+	FaceURL            string                 `protobuf:"bytes,4,opt,name=faceURL,proto3" json:"faceURL"`                       // 头像URL
+	Description        string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description"`               // 描述
+	FoldType           int32                  `protobuf:"varint,6,opt,name=foldType,proto3" json:"foldType"`                    // 折叠类型: 1=普通折叠, 2=通知折叠
+	SortOrder          int32                  `protobuf:"varint,7,opt,name=sortOrder,proto3" json:"sortOrder"`                  // 排序顺序
+	CreateTime         int64                  `protobuf:"varint,8,opt,name=createTime,proto3" json:"createTime"`                // 创建时间
+	UpdateTime         int64                  `protobuf:"varint,9,opt,name=updateTime,proto3" json:"updateTime"`                // 更新时间
+	Ex                 string                 `protobuf:"bytes,10,opt,name=ex,proto3" json:"ex"`                                // 扩展字段
+	IsSystemDefault    bool                   `protobuf:"varint,11,opt,name=isSystemDefault,proto3" json:"isSystemDefault"`     // 是否为系统默认折叠
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -5070,6 +5069,13 @@ func (x *FoldInfo) GetFoldConversationID() string {
 	return ""
 }
 
+func (x *FoldInfo) GetOwnerUserID() string {
+	if x != nil {
+		return x.OwnerUserID
+	}
+	return ""
+}
+
 func (x *FoldInfo) GetFoldName() string {
 	if x != nil {
 		return x.FoldName
@@ -5098,39 +5104,32 @@ func (x *FoldInfo) GetFoldType() int32 {
 	return 0
 }
 
-func (x *FoldInfo) GetConversationCount() int64 {
+func (x *FoldInfo) GetSortOrder() int32 {
 	if x != nil {
-		return x.ConversationCount
+		return x.SortOrder
 	}
 	return 0
 }
 
-func (x *FoldInfo) GetUnreadCount() int32 {
+func (x *FoldInfo) GetCreateTime() int64 {
 	if x != nil {
-		return x.UnreadCount
+		return x.CreateTime
 	}
 	return 0
 }
 
-func (x *FoldInfo) GetLatestMsgTime() int64 {
+func (x *FoldInfo) GetUpdateTime() int64 {
 	if x != nil {
-		return x.LatestMsgTime
+		return x.UpdateTime
 	}
 	return 0
 }
 
-func (x *FoldInfo) GetIsPinned() bool {
+func (x *FoldInfo) GetEx() string {
 	if x != nil {
-		return x.IsPinned
+		return x.Ex
 	}
-	return false
-}
-
-func (x *FoldInfo) GetRecvMsgOpt() int32 {
-	if x != nil {
-		return x.RecvMsgOpt
-	}
-	return 0
+	return ""
 }
 
 func (x *FoldInfo) GetIsSystemDefault() bool {
@@ -5138,13 +5137,6 @@ func (x *FoldInfo) GetIsSystemDefault() bool {
 		return x.IsSystemDefault
 	}
 	return false
-}
-
-func (x *FoldInfo) GetSortOrder() int32 {
-	if x != nil {
-		return x.SortOrder
-	}
-	return 0
 }
 
 type GetAllFoldsResp struct {
@@ -5191,415 +5183,6 @@ func (x *GetAllFoldsResp) GetGroups() []*FoldInfo {
 	return nil
 }
 
-type GetFoldDetailReq struct {
-	state              protoimpl.MessageState   `protogen:"open.v1"`
-	UserID             string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	FoldConversationID string                   `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	Pagination         *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *GetFoldDetailReq) Reset() {
-	*x = GetFoldDetailReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[92]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetFoldDetailReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetFoldDetailReq) ProtoMessage() {}
-
-func (x *GetFoldDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[92]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetFoldDetailReq.ProtoReflect.Descriptor instead.
-func (*GetFoldDetailReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{92}
-}
-
-func (x *GetFoldDetailReq) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-func (x *GetFoldDetailReq) GetFoldConversationID() string {
-	if x != nil {
-		return x.FoldConversationID
-	}
-	return ""
-}
-
-func (x *GetFoldDetailReq) GetPagination() *sdkws.RequestPagination {
-	if x != nil {
-		return x.Pagination
-	}
-	return nil
-}
-
-type GetFoldDetailResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	UnreadTotal   int32                  `protobuf:"varint,2,opt,name=unreadTotal,proto3" json:"unreadTotal"` // 未读总数
-	Conversations []*Conversation        `protobuf:"bytes,3,rep,name=conversations,proto3" json:"conversations"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetFoldDetailResp) Reset() {
-	*x = GetFoldDetailResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[93]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetFoldDetailResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetFoldDetailResp) ProtoMessage() {}
-
-func (x *GetFoldDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[93]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetFoldDetailResp.ProtoReflect.Descriptor instead.
-func (*GetFoldDetailResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{93}
-}
-
-func (x *GetFoldDetailResp) GetTotal() int64 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-func (x *GetFoldDetailResp) GetUnreadTotal() int32 {
-	if x != nil {
-		return x.UnreadTotal
-	}
-	return 0
-}
-
-func (x *GetFoldDetailResp) GetConversations() []*Conversation {
-	if x != nil {
-		return x.Conversations
-	}
-	return nil
-}
-
-type PinFoldReq struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	UserID             string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	FoldConversationID string                 `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	IsPinned           bool                   `protobuf:"varint,3,opt,name=isPinned,proto3" json:"isPinned"`                    // true=置顶, false=取消置顶
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *PinFoldReq) Reset() {
-	*x = PinFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[94]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PinFoldReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PinFoldReq) ProtoMessage() {}
-
-func (x *PinFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[94]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PinFoldReq.ProtoReflect.Descriptor instead.
-func (*PinFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{94}
-}
-
-func (x *PinFoldReq) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-func (x *PinFoldReq) GetFoldConversationID() string {
-	if x != nil {
-		return x.FoldConversationID
-	}
-	return ""
-}
-
-func (x *PinFoldReq) GetIsPinned() bool {
-	if x != nil {
-		return x.IsPinned
-	}
-	return false
-}
-
-type PinFoldResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PinFoldResp) Reset() {
-	*x = PinFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[95]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PinFoldResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PinFoldResp) ProtoMessage() {}
-
-func (x *PinFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[95]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PinFoldResp.ProtoReflect.Descriptor instead.
-func (*PinFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{95}
-}
-
-type SetFoldRecvMsgOptReq struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	UserID             string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	FoldConversationID string                 `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	RecvMsgOpt         int32                  `protobuf:"varint,3,opt,name=recvMsgOpt,proto3" json:"recvMsgOpt"`                // 接收消息选项：0=接收消息, 1=不接收消息, 2=接收消息但不通知（免打扰）
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *SetFoldRecvMsgOptReq) Reset() {
-	*x = SetFoldRecvMsgOptReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[96]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SetFoldRecvMsgOptReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SetFoldRecvMsgOptReq) ProtoMessage() {}
-
-func (x *SetFoldRecvMsgOptReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[96]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SetFoldRecvMsgOptReq.ProtoReflect.Descriptor instead.
-func (*SetFoldRecvMsgOptReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{96}
-}
-
-func (x *SetFoldRecvMsgOptReq) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-func (x *SetFoldRecvMsgOptReq) GetFoldConversationID() string {
-	if x != nil {
-		return x.FoldConversationID
-	}
-	return ""
-}
-
-func (x *SetFoldRecvMsgOptReq) GetRecvMsgOpt() int32 {
-	if x != nil {
-		return x.RecvMsgOpt
-	}
-	return 0
-}
-
-type SetFoldRecvMsgOptResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SetFoldRecvMsgOptResp) Reset() {
-	*x = SetFoldRecvMsgOptResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[97]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SetFoldRecvMsgOptResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SetFoldRecvMsgOptResp) ProtoMessage() {}
-
-func (x *SetFoldRecvMsgOptResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[97]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SetFoldRecvMsgOptResp.ProtoReflect.Descriptor instead.
-func (*SetFoldRecvMsgOptResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{97}
-}
-
-// GetFoldInfo 获取折叠属性
-type GetFoldInfoReq struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	UserID             string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	FoldConversationID string                 `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *GetFoldInfoReq) Reset() {
-	*x = GetFoldInfoReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[98]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetFoldInfoReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetFoldInfoReq) ProtoMessage() {}
-
-func (x *GetFoldInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[98]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetFoldInfoReq.ProtoReflect.Descriptor instead.
-func (*GetFoldInfoReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{98}
-}
-
-func (x *GetFoldInfoReq) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-func (x *GetFoldInfoReq) GetFoldConversationID() string {
-	if x != nil {
-		return x.FoldConversationID
-	}
-	return ""
-}
-
-type GetFoldInfoResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Fold          *ConversationFold      `protobuf:"bytes,1,opt,name=fold,proto3" json:"fold"` // 折叠属性
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetFoldInfoResp) Reset() {
-	*x = GetFoldInfoResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[99]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetFoldInfoResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetFoldInfoResp) ProtoMessage() {}
-
-func (x *GetFoldInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[99]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetFoldInfoResp.ProtoReflect.Descriptor instead.
-func (*GetFoldInfoResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{99}
-}
-
-func (x *GetFoldInfoResp) GetFold() *ConversationFold {
-	if x != nil {
-		return x.Fold
-	}
-	return nil
-}
-
 type RemoveFoldReq struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	UserID             string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
@@ -5610,7 +5193,7 @@ type RemoveFoldReq struct {
 
 func (x *RemoveFoldReq) Reset() {
 	*x = RemoveFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[100]
+	mi := &file_conversation_conversation_proto_msgTypes[92]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5622,7 +5205,7 @@ func (x *RemoveFoldReq) String() string {
 func (*RemoveFoldReq) ProtoMessage() {}
 
 func (x *RemoveFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[100]
+	mi := &file_conversation_conversation_proto_msgTypes[92]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5635,7 +5218,7 @@ func (x *RemoveFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFoldReq.ProtoReflect.Descriptor instead.
 func (*RemoveFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{100}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *RemoveFoldReq) GetUserID() string {
@@ -5661,7 +5244,7 @@ type RemoveFoldResp struct {
 
 func (x *RemoveFoldResp) Reset() {
 	*x = RemoveFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[101]
+	mi := &file_conversation_conversation_proto_msgTypes[93]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5673,7 +5256,7 @@ func (x *RemoveFoldResp) String() string {
 func (*RemoveFoldResp) ProtoMessage() {}
 
 func (x *RemoveFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[101]
+	mi := &file_conversation_conversation_proto_msgTypes[93]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5686,7 +5269,7 @@ func (x *RemoveFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFoldResp.ProtoReflect.Descriptor instead.
 func (*RemoveFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{101}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *RemoveFoldResp) GetMovedCount() int32 {
@@ -5696,8 +5279,8 @@ func (x *RemoveFoldResp) GetMovedCount() int32 {
 	return 0
 }
 
-// CreateFoldConversation 创建折叠会话（同时创建折叠会话和折叠属性）
-type CreateFoldConversationReq struct {
+// CreateFold 创建折叠会话（同时创建折叠会话和折叠属性）
+type CreateFoldReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`           // 用户ID
 	FoldName      string                 `protobuf:"bytes,2,opt,name=foldName,proto3" json:"foldName"`       // 折叠名称
@@ -5708,21 +5291,21 @@ type CreateFoldConversationReq struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateFoldConversationReq) Reset() {
-	*x = CreateFoldConversationReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[102]
+func (x *CreateFoldReq) Reset() {
+	*x = CreateFoldReq{}
+	mi := &file_conversation_conversation_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateFoldConversationReq) String() string {
+func (x *CreateFoldReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateFoldConversationReq) ProtoMessage() {}
+func (*CreateFoldReq) ProtoMessage() {}
 
-func (x *CreateFoldConversationReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[102]
+func (x *CreateFoldReq) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5733,68 +5316,68 @@ func (x *CreateFoldConversationReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateFoldConversationReq.ProtoReflect.Descriptor instead.
-func (*CreateFoldConversationReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{102}
+// Deprecated: Use CreateFoldReq.ProtoReflect.Descriptor instead.
+func (*CreateFoldReq) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{94}
 }
 
-func (x *CreateFoldConversationReq) GetUserID() string {
+func (x *CreateFoldReq) GetUserID() string {
 	if x != nil {
 		return x.UserID
 	}
 	return ""
 }
 
-func (x *CreateFoldConversationReq) GetFoldName() string {
+func (x *CreateFoldReq) GetFoldName() string {
 	if x != nil {
 		return x.FoldName
 	}
 	return ""
 }
 
-func (x *CreateFoldConversationReq) GetFaceURL() string {
+func (x *CreateFoldReq) GetFaceURL() string {
 	if x != nil {
 		return x.FaceURL
 	}
 	return ""
 }
 
-func (x *CreateFoldConversationReq) GetDescription() string {
+func (x *CreateFoldReq) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *CreateFoldConversationReq) GetFoldType() int32 {
+func (x *CreateFoldReq) GetFoldType() int32 {
 	if x != nil {
 		return x.FoldType
 	}
 	return 0
 }
 
-type CreateFoldConversationResp struct {
+type CreateFoldResp struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	FoldConversationID string                 `protobuf:"bytes,1,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 创建的折叠会话ID（同时也是fold表的关联ID）
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
-func (x *CreateFoldConversationResp) Reset() {
-	*x = CreateFoldConversationResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[103]
+func (x *CreateFoldResp) Reset() {
+	*x = CreateFoldResp{}
+	mi := &file_conversation_conversation_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateFoldConversationResp) String() string {
+func (x *CreateFoldResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateFoldConversationResp) ProtoMessage() {}
+func (*CreateFoldResp) ProtoMessage() {}
 
-func (x *CreateFoldConversationResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[103]
+func (x *CreateFoldResp) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5805,20 +5388,20 @@ func (x *CreateFoldConversationResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateFoldConversationResp.ProtoReflect.Descriptor instead.
-func (*CreateFoldConversationResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{103}
+// Deprecated: Use CreateFoldResp.ProtoReflect.Descriptor instead.
+func (*CreateFoldResp) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{95}
 }
 
-func (x *CreateFoldConversationResp) GetFoldConversationID() string {
+func (x *CreateFoldResp) GetFoldConversationID() string {
 	if x != nil {
 		return x.FoldConversationID
 	}
 	return ""
 }
 
-// UpdateFoldInfo 更新折叠属性（不更新会话本身）
-type UpdateFoldInfoReq struct {
+// UpdateFold 更新折叠属性（不更新会话本身）
+type UpdateFoldReq struct {
 	state              protoimpl.MessageState  `protogen:"open.v1"`
 	UserID             string                  `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                         // 用户ID
 	FoldConversationID string                  `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
@@ -5829,21 +5412,21 @@ type UpdateFoldInfoReq struct {
 	sizeCache          protoimpl.SizeCache
 }
 
-func (x *UpdateFoldInfoReq) Reset() {
-	*x = UpdateFoldInfoReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[104]
+func (x *UpdateFoldReq) Reset() {
+	*x = UpdateFoldReq{}
+	mi := &file_conversation_conversation_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateFoldInfoReq) String() string {
+func (x *UpdateFoldReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateFoldInfoReq) ProtoMessage() {}
+func (*UpdateFoldReq) ProtoMessage() {}
 
-func (x *UpdateFoldInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[104]
+func (x *UpdateFoldReq) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5854,67 +5437,67 @@ func (x *UpdateFoldInfoReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateFoldInfoReq.ProtoReflect.Descriptor instead.
-func (*UpdateFoldInfoReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{104}
+// Deprecated: Use UpdateFoldReq.ProtoReflect.Descriptor instead.
+func (*UpdateFoldReq) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{96}
 }
 
-func (x *UpdateFoldInfoReq) GetUserID() string {
+func (x *UpdateFoldReq) GetUserID() string {
 	if x != nil {
 		return x.UserID
 	}
 	return ""
 }
 
-func (x *UpdateFoldInfoReq) GetFoldConversationID() string {
+func (x *UpdateFoldReq) GetFoldConversationID() string {
 	if x != nil {
 		return x.FoldConversationID
 	}
 	return ""
 }
 
-func (x *UpdateFoldInfoReq) GetFoldName() *wrapperspb.StringValue {
+func (x *UpdateFoldReq) GetFoldName() *wrapperspb.StringValue {
 	if x != nil {
 		return x.FoldName
 	}
 	return nil
 }
 
-func (x *UpdateFoldInfoReq) GetFaceURL() *wrapperspb.StringValue {
+func (x *UpdateFoldReq) GetFaceURL() *wrapperspb.StringValue {
 	if x != nil {
 		return x.FaceURL
 	}
 	return nil
 }
 
-func (x *UpdateFoldInfoReq) GetDescription() *wrapperspb.StringValue {
+func (x *UpdateFoldReq) GetDescription() *wrapperspb.StringValue {
 	if x != nil {
 		return x.Description
 	}
 	return nil
 }
 
-type UpdateFoldInfoResp struct {
+type UpdateFoldResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateFoldInfoResp) Reset() {
-	*x = UpdateFoldInfoResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[105]
+func (x *UpdateFoldResp) Reset() {
+	*x = UpdateFoldResp{}
+	mi := &file_conversation_conversation_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateFoldInfoResp) String() string {
+func (x *UpdateFoldResp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateFoldInfoResp) ProtoMessage() {}
+func (*UpdateFoldResp) ProtoMessage() {}
 
-func (x *UpdateFoldInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[105]
+func (x *UpdateFoldResp) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5925,9 +5508,9 @@ func (x *UpdateFoldInfoResp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateFoldInfoResp.ProtoReflect.Descriptor instead.
-func (*UpdateFoldInfoResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{105}
+// Deprecated: Use UpdateFoldResp.ProtoReflect.Descriptor instead.
+func (*UpdateFoldResp) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{97}
 }
 
 var File_conversation_conversation_proto protoreflect.FileDescriptor
@@ -6270,75 +5853,48 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"updateTime\x18\t \x01(\x03R\n" +
 	"updateTime\x12\x0e\n" +
 	"\x02ex\x18\n" +
-	" \x01(\tR\x02ex\"\xa8\x03\n" +
+	" \x01(\tR\x02ex\"\xe8\x02\n" +
 	"\bFoldInfo\x12.\n" +
-	"\x12foldConversationID\x18\x01 \x01(\tR\x12foldConversationID\x12\x1a\n" +
-	"\bfoldName\x18\x02 \x01(\tR\bfoldName\x12\x18\n" +
-	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bfoldType\x18\x05 \x01(\x05R\bfoldType\x12,\n" +
-	"\x11conversationCount\x18\x06 \x01(\x03R\x11conversationCount\x12 \n" +
-	"\vunreadCount\x18\a \x01(\x05R\vunreadCount\x12$\n" +
-	"\rlatestMsgTime\x18\b \x01(\x03R\rlatestMsgTime\x12\x1a\n" +
-	"\bisPinned\x18\t \x01(\bR\bisPinned\x12\x1e\n" +
+	"\x12foldConversationID\x18\x01 \x01(\tR\x12foldConversationID\x12 \n" +
+	"\vownerUserID\x18\x02 \x01(\tR\vownerUserID\x12\x1a\n" +
+	"\bfoldName\x18\x03 \x01(\tR\bfoldName\x12\x18\n" +
+	"\afaceURL\x18\x04 \x01(\tR\afaceURL\x12 \n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bfoldType\x18\x06 \x01(\x05R\bfoldType\x12\x1c\n" +
+	"\tsortOrder\x18\a \x01(\x05R\tsortOrder\x12\x1e\n" +
 	"\n" +
-	"recvMsgOpt\x18\n" +
-	" \x01(\x05R\n" +
-	"recvMsgOpt\x12(\n" +
-	"\x0fisSystemDefault\x18\v \x01(\bR\x0fisSystemDefault\x12\x1c\n" +
-	"\tsortOrder\x18\f \x01(\x05R\tsortOrder\"H\n" +
+	"createTime\x18\b \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\t \x01(\x03R\n" +
+	"updateTime\x12\x0e\n" +
+	"\x02ex\x18\n" +
+	" \x01(\tR\x02ex\x12(\n" +
+	"\x0fisSystemDefault\x18\v \x01(\bR\x0fisSystemDefault\"H\n" +
 	"\x0fGetAllFoldsResp\x125\n" +
-	"\x06groups\x18\x01 \x03(\v2\x1d.openim.conversation.FoldInfoR\x06groups\"\x9b\x01\n" +
-	"\x10GetFoldDetailReq\x12\x16\n" +
-	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
-	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12?\n" +
-	"\n" +
-	"pagination\x18\x03 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"\x94\x01\n" +
-	"\x11GetFoldDetailResp\x12\x14\n" +
-	"\x05total\x18\x01 \x01(\x03R\x05total\x12 \n" +
-	"\vunreadTotal\x18\x02 \x01(\x05R\vunreadTotal\x12G\n" +
-	"\rconversations\x18\x03 \x03(\v2!.openim.conversation.ConversationR\rconversations\"p\n" +
-	"\n" +
-	"PinFoldReq\x12\x16\n" +
-	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
-	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12\x1a\n" +
-	"\bisPinned\x18\x03 \x01(\bR\bisPinned\"\r\n" +
-	"\vPinFoldResp\"~\n" +
-	"\x14SetFoldRecvMsgOptReq\x12\x16\n" +
-	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
-	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12\x1e\n" +
-	"\n" +
-	"recvMsgOpt\x18\x03 \x01(\x05R\n" +
-	"recvMsgOpt\"\x17\n" +
-	"\x15SetFoldRecvMsgOptResp\"X\n" +
-	"\x0eGetFoldInfoReq\x12\x16\n" +
-	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
-	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\"L\n" +
-	"\x0fGetFoldInfoResp\x129\n" +
-	"\x04fold\x18\x01 \x01(\v2%.openim.conversation.ConversationFoldR\x04fold\"W\n" +
+	"\x06groups\x18\x01 \x03(\v2\x1d.openim.conversation.FoldInfoR\x06groups\"W\n" +
 	"\rRemoveFoldReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\"0\n" +
 	"\x0eRemoveFoldResp\x12\x1e\n" +
 	"\n" +
 	"movedCount\x18\x01 \x01(\x05R\n" +
-	"movedCount\"\xa7\x01\n" +
-	"\x19CreateFoldConversationReq\x12\x16\n" +
+	"movedCount\"\x9b\x01\n" +
+	"\rCreateFoldReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bfoldName\x18\x02 \x01(\tR\bfoldName\x12\x18\n" +
 	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bfoldType\x18\x05 \x01(\x05R\bfoldType\"L\n" +
-	"\x1aCreateFoldConversationResp\x12.\n" +
-	"\x12foldConversationID\x18\x01 \x01(\tR\x12foldConversationID\"\x8d\x02\n" +
-	"\x11UpdateFoldInfoReq\x12\x16\n" +
+	"\bfoldType\x18\x05 \x01(\x05R\bfoldType\"@\n" +
+	"\x0eCreateFoldResp\x12.\n" +
+	"\x12foldConversationID\x18\x01 \x01(\tR\x12foldConversationID\"\x89\x02\n" +
+	"\rUpdateFoldReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x128\n" +
 	"\bfoldName\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\bfoldName\x126\n" +
 	"\afaceURL\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\afaceURL\x12>\n" +
-	"\vdescription\x18\x05 \x01(\v2\x1c.openim.protobuf.StringValueR\vdescription\"\x14\n" +
-	"\x12UpdateFoldInfoResp2\xb7/\n" +
+	"\vdescription\x18\x05 \x01(\v2\x1c.openim.protobuf.StringValueR\vdescription\"\x10\n" +
+	"\x0eUpdateFoldResp2\x93,\n" +
 	"\fconversation\x12d\n" +
 	"\x0fGetConversation\x12'.openim.conversation.GetConversationReq\x1a(.openim.conversation.GetConversationResp\x12\x82\x01\n" +
 	"\x19GetSortedConversationList\x121.openim.conversation.GetSortedConversationListReq\x1a2.openim.conversation.GetSortedConversationListResp\x12p\n" +
@@ -6378,16 +5934,14 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x1eSetConversationGroupVisibility\x126.openim.conversation.SetConversationGroupVisibilityReq\x1a7.openim.conversation.SetConversationGroupVisibilityResp\x12|\n" +
 	"\x17AddConversationsToGroup\x12/.openim.conversation.AddConversationsToGroupReq\x1a0.openim.conversation.AddConversationsToGroupResp\x12\x8b\x01\n" +
 	"\x1cRemoveConversationsFromGroup\x124.openim.conversation.RemoveConversationsFromGroupReq\x1a5.openim.conversation.RemoveConversationsFromGroupResp\x12\x88\x01\n" +
-	"\x1bGetConversationIDsByGroupID\x123.openim.conversation.GetConversationIDsByGroupIDReq\x1a4.openim.conversation.GetConversationIDsByGroupIDResp\x12y\n" +
-	"\x16CreateFoldConversation\x12..openim.conversation.CreateFoldConversationReq\x1a/.openim.conversation.CreateFoldConversationResp\x12a\n" +
-	"\x0eUpdateFoldInfo\x12&.openim.conversation.UpdateFoldInfoReq\x1a'.openim.conversation.UpdateFoldInfoResp\x12X\n" +
-	"\vGetFoldInfo\x12#.openim.conversation.GetFoldInfoReq\x1a$.openim.conversation.GetFoldInfoResp\x12p\n" +
+	"\x1bGetConversationIDsByGroupID\x123.openim.conversation.GetConversationIDsByGroupIDReq\x1a4.openim.conversation.GetConversationIDsByGroupIDResp\x12U\n" +
+	"\n" +
+	"CreateFold\x12\".openim.conversation.CreateFoldReq\x1a#.openim.conversation.CreateFoldResp\x12U\n" +
+	"\n" +
+	"UpdateFold\x12\".openim.conversation.UpdateFoldReq\x1a#.openim.conversation.UpdateFoldResp\x12p\n" +
 	"\x13SetConversationFold\x12+.openim.conversation.SetConversationFoldReq\x1a,.openim.conversation.SetConversationFoldResp\x12|\n" +
 	"\x17GetFoldConversationList\x12/.openim.conversation.GetFoldConversationListReq\x1a0.openim.conversation.GetFoldConversationListResp\x12X\n" +
-	"\vGetAllFolds\x12#.openim.conversation.GetAllFoldsReq\x1a$.openim.conversation.GetAllFoldsResp\x12^\n" +
-	"\rGetFoldDetail\x12%.openim.conversation.GetFoldDetailReq\x1a&.openim.conversation.GetFoldDetailResp\x12L\n" +
-	"\aPinFold\x12\x1f.openim.conversation.PinFoldReq\x1a .openim.conversation.PinFoldResp\x12j\n" +
-	"\x11SetFoldRecvMsgOpt\x12).openim.conversation.SetFoldRecvMsgOptReq\x1a*.openim.conversation.SetFoldRecvMsgOptResp\x12U\n" +
+	"\vGetAllFolds\x12#.openim.conversation.GetAllFoldsReq\x1a$.openim.conversation.GetAllFoldsResp\x12U\n" +
 	"\n" +
 	"RemoveFold\x12\".openim.conversation.RemoveFoldReq\x1a#.openim.conversation.RemoveFoldRespB,Z*github.com/openimsdk/protocol/conversationb\x06proto3"
 
@@ -6403,7 +5957,7 @@ func file_conversation_conversation_proto_rawDescGZIP() []byte {
 	return file_conversation_conversation_proto_rawDescData
 }
 
-var file_conversation_conversation_proto_msgTypes = make([]protoimpl.MessageInfo, 106)
+var file_conversation_conversation_proto_msgTypes = make([]protoimpl.MessageInfo, 98)
 var file_conversation_conversation_proto_goTypes = []any{
 	(*Conversation)(nil),                                // 0: openim.conversation.Conversation
 	(*ConversationReq)(nil),                             // 1: openim.conversation.ConversationReq
@@ -6497,187 +6051,168 @@ var file_conversation_conversation_proto_goTypes = []any{
 	(*ConversationFold)(nil),                            // 89: openim.conversation.ConversationFold
 	(*FoldInfo)(nil),                                    // 90: openim.conversation.FoldInfo
 	(*GetAllFoldsResp)(nil),                             // 91: openim.conversation.GetAllFoldsResp
-	(*GetFoldDetailReq)(nil),                            // 92: openim.conversation.GetFoldDetailReq
-	(*GetFoldDetailResp)(nil),                           // 93: openim.conversation.GetFoldDetailResp
-	(*PinFoldReq)(nil),                                  // 94: openim.conversation.PinFoldReq
-	(*PinFoldResp)(nil),                                 // 95: openim.conversation.PinFoldResp
-	(*SetFoldRecvMsgOptReq)(nil),                        // 96: openim.conversation.SetFoldRecvMsgOptReq
-	(*SetFoldRecvMsgOptResp)(nil),                       // 97: openim.conversation.SetFoldRecvMsgOptResp
-	(*GetFoldInfoReq)(nil),                              // 98: openim.conversation.GetFoldInfoReq
-	(*GetFoldInfoResp)(nil),                             // 99: openim.conversation.GetFoldInfoResp
-	(*RemoveFoldReq)(nil),                               // 100: openim.conversation.RemoveFoldReq
-	(*RemoveFoldResp)(nil),                              // 101: openim.conversation.RemoveFoldResp
-	(*CreateFoldConversationReq)(nil),                   // 102: openim.conversation.CreateFoldConversationReq
-	(*CreateFoldConversationResp)(nil),                  // 103: openim.conversation.CreateFoldConversationResp
-	(*UpdateFoldInfoReq)(nil),                           // 104: openim.conversation.UpdateFoldInfoReq
-	(*UpdateFoldInfoResp)(nil),                          // 105: openim.conversation.UpdateFoldInfoResp
-	(*wrapperspb.Int32Value)(nil),                       // 106: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),                        // 107: openim.protobuf.BoolValue
-	(*wrapperspb.StringValue)(nil),                      // 108: openim.protobuf.StringValue
-	(*wrapperspb.Int64Value)(nil),                       // 109: openim.protobuf.Int64Value
-	(*sdkws.RequestPagination)(nil),                     // 110: openim.sdkws.RequestPagination
+	(*RemoveFoldReq)(nil),                               // 92: openim.conversation.RemoveFoldReq
+	(*RemoveFoldResp)(nil),                              // 93: openim.conversation.RemoveFoldResp
+	(*CreateFoldReq)(nil),                               // 94: openim.conversation.CreateFoldReq
+	(*CreateFoldResp)(nil),                              // 95: openim.conversation.CreateFoldResp
+	(*UpdateFoldReq)(nil),                               // 96: openim.conversation.UpdateFoldReq
+	(*UpdateFoldResp)(nil),                              // 97: openim.conversation.UpdateFoldResp
+	(*wrapperspb.Int32Value)(nil),                       // 98: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),                        // 99: openim.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil),                      // 100: openim.protobuf.StringValue
+	(*wrapperspb.Int64Value)(nil),                       // 101: openim.protobuf.Int64Value
+	(*sdkws.RequestPagination)(nil),                     // 102: openim.sdkws.RequestPagination
 }
 var file_conversation_conversation_proto_depIdxs = []int32{
-	106, // 0: openim.conversation.ConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
-	107, // 1: openim.conversation.ConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
-	108, // 2: openim.conversation.ConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
-	107, // 3: openim.conversation.ConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
-	108, // 4: openim.conversation.ConversationReq.ex:type_name -> openim.protobuf.StringValue
-	106, // 5: openim.conversation.ConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
-	109, // 6: openim.conversation.ConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
-	109, // 7: openim.conversation.ConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
-	106, // 8: openim.conversation.ConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
-	109, // 9: openim.conversation.ConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 10: openim.conversation.ConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
-	107, // 11: openim.conversation.ConversationReq.isMark:type_name -> openim.protobuf.BoolValue
-	106, // 12: openim.conversation.ConversationReq.unreadCount:type_name -> openim.protobuf.Int32Value
-	109, // 13: openim.conversation.ConversationReq.updateUnreadCountTime:type_name -> openim.protobuf.Int64Value
-	108, // 14: openim.conversation.ConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
+	98,  // 0: openim.conversation.ConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
+	99,  // 1: openim.conversation.ConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
+	100, // 2: openim.conversation.ConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
+	99,  // 3: openim.conversation.ConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
+	100, // 4: openim.conversation.ConversationReq.ex:type_name -> openim.protobuf.StringValue
+	98,  // 5: openim.conversation.ConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
+	101, // 6: openim.conversation.ConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
+	101, // 7: openim.conversation.ConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
+	98,  // 8: openim.conversation.ConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
+	101, // 9: openim.conversation.ConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
+	99,  // 10: openim.conversation.ConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
+	99,  // 11: openim.conversation.ConversationReq.isMark:type_name -> openim.protobuf.BoolValue
+	98,  // 12: openim.conversation.ConversationReq.unreadCount:type_name -> openim.protobuf.Int32Value
+	101, // 13: openim.conversation.ConversationReq.updateUnreadCountTime:type_name -> openim.protobuf.Int64Value
+	100, // 14: openim.conversation.ConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
 	0,   // 15: openim.conversation.SetConversationReq.conversation:type_name -> openim.conversation.Conversation
 	0,   // 16: openim.conversation.GetConversationResp.conversation:type_name -> openim.conversation.Conversation
-	110, // 17: openim.conversation.GetSortedConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	102, // 17: openim.conversation.GetSortedConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	8,   // 18: openim.conversation.GetSortedConversationListResp.conversationElems:type_name -> openim.conversation.ConversationElem
 	9,   // 19: openim.conversation.ConversationElem.msgInfo:type_name -> openim.conversation.MsgInfo
 	0,   // 20: openim.conversation.GetConversationsResp.conversations:type_name -> openim.conversation.Conversation
 	0,   // 21: openim.conversation.GetAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
 	1,   // 22: openim.conversation.SetConversationsReq.conversation:type_name -> openim.conversation.ConversationReq
 	0,   // 23: openim.conversation.GetConversationsByConversationIDResp.conversations:type_name -> openim.conversation.Conversation
-	106, // 24: openim.conversation.UpdateConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
-	107, // 25: openim.conversation.UpdateConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
-	108, // 26: openim.conversation.UpdateConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
-	107, // 27: openim.conversation.UpdateConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
-	108, // 28: openim.conversation.UpdateConversationReq.ex:type_name -> openim.protobuf.StringValue
-	106, // 29: openim.conversation.UpdateConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
-	109, // 30: openim.conversation.UpdateConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
-	109, // 31: openim.conversation.UpdateConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
-	106, // 32: openim.conversation.UpdateConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
-	109, // 33: openim.conversation.UpdateConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 34: openim.conversation.UpdateConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
-	109, // 35: openim.conversation.UpdateConversationReq.latestMsgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 36: openim.conversation.UpdateConversationReq.isMark:type_name -> openim.protobuf.BoolValue
-	108, // 37: openim.conversation.UpdateConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
+	98,  // 24: openim.conversation.UpdateConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
+	99,  // 25: openim.conversation.UpdateConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
+	100, // 26: openim.conversation.UpdateConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
+	99,  // 27: openim.conversation.UpdateConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
+	100, // 28: openim.conversation.UpdateConversationReq.ex:type_name -> openim.protobuf.StringValue
+	98,  // 29: openim.conversation.UpdateConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
+	101, // 30: openim.conversation.UpdateConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
+	101, // 31: openim.conversation.UpdateConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
+	98,  // 32: openim.conversation.UpdateConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
+	101, // 33: openim.conversation.UpdateConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
+	99,  // 34: openim.conversation.UpdateConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
+	101, // 35: openim.conversation.UpdateConversationReq.latestMsgDestructTime:type_name -> openim.protobuf.Int64Value
+	99,  // 36: openim.conversation.UpdateConversationReq.isMark:type_name -> openim.protobuf.BoolValue
+	100, // 37: openim.conversation.UpdateConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
 	0,   // 38: openim.conversation.GetIncrementalConversationResp.insert:type_name -> openim.conversation.Conversation
 	0,   // 39: openim.conversation.GetIncrementalConversationResp.update:type_name -> openim.conversation.Conversation
-	110, // 40: openim.conversation.GetOwnerConversationReq.pagination:type_name -> openim.sdkws.RequestPagination
+	102, // 40: openim.conversation.GetOwnerConversationReq.pagination:type_name -> openim.sdkws.RequestPagination
 	0,   // 41: openim.conversation.GetOwnerConversationResp.conversations:type_name -> openim.conversation.Conversation
 	0,   // 42: openim.conversation.GetConversationsNeedClearMsgResp.conversations:type_name -> openim.conversation.Conversation
-	108, // 43: openim.conversation.UpdateConversationsByUserReq.ex:type_name -> openim.protobuf.StringValue
+	100, // 43: openim.conversation.UpdateConversationsByUserReq.ex:type_name -> openim.protobuf.StringValue
 	60,  // 44: openim.conversation.GetAllConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
 	60,  // 45: openim.conversation.GetVisibleConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
 	60,  // 46: openim.conversation.CreateConversationGroupResp.group:type_name -> openim.conversation.ConversationGroup
 	61,  // 47: openim.conversation.UpdateConversationGroupSortReq.groupOrders:type_name -> openim.conversation.GroupOrder
-	110, // 48: openim.conversation.GetFoldConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	102, // 48: openim.conversation.GetFoldConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	0,   // 49: openim.conversation.GetFoldConversationListResp.conversations:type_name -> openim.conversation.Conversation
 	90,  // 50: openim.conversation.GetAllFoldsResp.groups:type_name -> openim.conversation.FoldInfo
-	110, // 51: openim.conversation.GetFoldDetailReq.pagination:type_name -> openim.sdkws.RequestPagination
-	0,   // 52: openim.conversation.GetFoldDetailResp.conversations:type_name -> openim.conversation.Conversation
-	89,  // 53: openim.conversation.GetFoldInfoResp.fold:type_name -> openim.conversation.ConversationFold
-	108, // 54: openim.conversation.UpdateFoldInfoReq.foldName:type_name -> openim.protobuf.StringValue
-	108, // 55: openim.conversation.UpdateFoldInfoReq.faceURL:type_name -> openim.protobuf.StringValue
-	108, // 56: openim.conversation.UpdateFoldInfoReq.description:type_name -> openim.protobuf.StringValue
-	4,   // 57: openim.conversation.conversation.GetConversation:input_type -> openim.conversation.GetConversationReq
-	6,   // 58: openim.conversation.conversation.GetSortedConversationList:input_type -> openim.conversation.GetSortedConversationListReq
-	12,  // 59: openim.conversation.conversation.GetAllConversations:input_type -> openim.conversation.GetAllConversationsReq
-	10,  // 60: openim.conversation.conversation.GetConversations:input_type -> openim.conversation.GetConversationsReq
-	2,   // 61: openim.conversation.conversation.SetConversation:input_type -> openim.conversation.SetConversationReq
-	14,  // 62: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:input_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsReq
-	16,  // 63: openim.conversation.conversation.CreateSingleChatConversations:input_type -> openim.conversation.CreateSingleChatConversationsReq
-	18,  // 64: openim.conversation.conversation.CreateGroupChatConversations:input_type -> openim.conversation.CreateGroupChatConversationsReq
-	20,  // 65: openim.conversation.conversation.SetConversationMaxSeq:input_type -> openim.conversation.SetConversationMaxSeqReq
-	22,  // 66: openim.conversation.conversation.SetConversationMinSeq:input_type -> openim.conversation.SetConversationMinSeqReq
-	24,  // 67: openim.conversation.conversation.GetConversationIDs:input_type -> openim.conversation.GetConversationIDsReq
-	26,  // 68: openim.conversation.conversation.SetConversations:input_type -> openim.conversation.SetConversationsReq
-	28,  // 69: openim.conversation.conversation.GetUserConversationIDsHash:input_type -> openim.conversation.GetUserConversationIDsHashReq
-	30,  // 70: openim.conversation.conversation.GetConversationsByConversationID:input_type -> openim.conversation.GetConversationsByConversationIDReq
-	32,  // 71: openim.conversation.conversation.GetConversationOfflinePushUserIDs:input_type -> openim.conversation.GetConversationOfflinePushUserIDsReq
-	34,  // 72: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:input_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsReq
-	36,  // 73: openim.conversation.conversation.UpdateConversation:input_type -> openim.conversation.UpdateConversationReq
-	38,  // 74: openim.conversation.conversation.GetFullOwnerConversationIDs:input_type -> openim.conversation.GetFullOwnerConversationIDsReq
-	40,  // 75: openim.conversation.conversation.GetIncrementalConversation:input_type -> openim.conversation.GetIncrementalConversationReq
-	42,  // 76: openim.conversation.conversation.GetOwnerConversation:input_type -> openim.conversation.GetOwnerConversationReq
-	44,  // 77: openim.conversation.conversation.GetConversationsNeedClearMsg:input_type -> openim.conversation.GetConversationsNeedClearMsgReq
-	46,  // 78: openim.conversation.conversation.GetNotNotifyConversationIDs:input_type -> openim.conversation.GetNotNotifyConversationIDsReq
-	48,  // 79: openim.conversation.conversation.GetPinnedConversationIDs:input_type -> openim.conversation.GetPinnedConversationIDsReq
-	50,  // 80: openim.conversation.conversation.MarkConversation:input_type -> openim.conversation.MarkConversationReq
-	52,  // 81: openim.conversation.conversation.MarkConversationAsUnread:input_type -> openim.conversation.MarkConversationAsUnreadReq
-	54,  // 82: openim.conversation.conversation.ClearUserConversationMsg:input_type -> openim.conversation.ClearUserConversationMsgReq
-	56,  // 83: openim.conversation.conversation.UpdateConversationsByUser:input_type -> openim.conversation.UpdateConversationsByUserReq
-	58,  // 84: openim.conversation.conversation.DeleteConversations:input_type -> openim.conversation.DeleteConversationsReq
-	62,  // 85: openim.conversation.conversation.InitConversationGroups:input_type -> openim.conversation.InitConversationGroupsReq
-	64,  // 86: openim.conversation.conversation.GetAllConversationGroups:input_type -> openim.conversation.GetAllConversationGroupsReq
-	66,  // 87: openim.conversation.conversation.GetVisibleConversationGroups:input_type -> openim.conversation.GetVisibleConversationGroupsReq
-	68,  // 88: openim.conversation.conversation.CreateConversationGroup:input_type -> openim.conversation.CreateConversationGroupReq
-	70,  // 89: openim.conversation.conversation.UpdateConversationGroup:input_type -> openim.conversation.UpdateConversationGroupReq
-	72,  // 90: openim.conversation.conversation.DeleteConversationGroup:input_type -> openim.conversation.DeleteConversationGroupReq
-	74,  // 91: openim.conversation.conversation.UpdateConversationGroupSort:input_type -> openim.conversation.UpdateConversationGroupSortReq
-	76,  // 92: openim.conversation.conversation.SetConversationGroupVisibility:input_type -> openim.conversation.SetConversationGroupVisibilityReq
-	78,  // 93: openim.conversation.conversation.AddConversationsToGroup:input_type -> openim.conversation.AddConversationsToGroupReq
-	80,  // 94: openim.conversation.conversation.RemoveConversationsFromGroup:input_type -> openim.conversation.RemoveConversationsFromGroupReq
-	82,  // 95: openim.conversation.conversation.GetConversationIDsByGroupID:input_type -> openim.conversation.GetConversationIDsByGroupIDReq
-	102, // 96: openim.conversation.conversation.CreateFoldConversation:input_type -> openim.conversation.CreateFoldConversationReq
-	104, // 97: openim.conversation.conversation.UpdateFoldInfo:input_type -> openim.conversation.UpdateFoldInfoReq
-	98,  // 98: openim.conversation.conversation.GetFoldInfo:input_type -> openim.conversation.GetFoldInfoReq
-	84,  // 99: openim.conversation.conversation.SetConversationFold:input_type -> openim.conversation.SetConversationFoldReq
-	86,  // 100: openim.conversation.conversation.GetFoldConversationList:input_type -> openim.conversation.GetFoldConversationListReq
-	88,  // 101: openim.conversation.conversation.GetAllFolds:input_type -> openim.conversation.GetAllFoldsReq
-	92,  // 102: openim.conversation.conversation.GetFoldDetail:input_type -> openim.conversation.GetFoldDetailReq
-	94,  // 103: openim.conversation.conversation.PinFold:input_type -> openim.conversation.PinFoldReq
-	96,  // 104: openim.conversation.conversation.SetFoldRecvMsgOpt:input_type -> openim.conversation.SetFoldRecvMsgOptReq
-	100, // 105: openim.conversation.conversation.RemoveFold:input_type -> openim.conversation.RemoveFoldReq
-	5,   // 106: openim.conversation.conversation.GetConversation:output_type -> openim.conversation.GetConversationResp
-	7,   // 107: openim.conversation.conversation.GetSortedConversationList:output_type -> openim.conversation.GetSortedConversationListResp
-	13,  // 108: openim.conversation.conversation.GetAllConversations:output_type -> openim.conversation.GetAllConversationsResp
-	11,  // 109: openim.conversation.conversation.GetConversations:output_type -> openim.conversation.GetConversationsResp
-	3,   // 110: openim.conversation.conversation.SetConversation:output_type -> openim.conversation.SetConversationResp
-	15,  // 111: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:output_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsResp
-	17,  // 112: openim.conversation.conversation.CreateSingleChatConversations:output_type -> openim.conversation.CreateSingleChatConversationsResp
-	19,  // 113: openim.conversation.conversation.CreateGroupChatConversations:output_type -> openim.conversation.CreateGroupChatConversationsResp
-	21,  // 114: openim.conversation.conversation.SetConversationMaxSeq:output_type -> openim.conversation.SetConversationMaxSeqResp
-	23,  // 115: openim.conversation.conversation.SetConversationMinSeq:output_type -> openim.conversation.SetConversationMinSeqResp
-	25,  // 116: openim.conversation.conversation.GetConversationIDs:output_type -> openim.conversation.GetConversationIDsResp
-	27,  // 117: openim.conversation.conversation.SetConversations:output_type -> openim.conversation.SetConversationsResp
-	29,  // 118: openim.conversation.conversation.GetUserConversationIDsHash:output_type -> openim.conversation.GetUserConversationIDsHashResp
-	31,  // 119: openim.conversation.conversation.GetConversationsByConversationID:output_type -> openim.conversation.GetConversationsByConversationIDResp
-	33,  // 120: openim.conversation.conversation.GetConversationOfflinePushUserIDs:output_type -> openim.conversation.GetConversationOfflinePushUserIDsResp
-	35,  // 121: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:output_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsResp
-	37,  // 122: openim.conversation.conversation.UpdateConversation:output_type -> openim.conversation.UpdateConversationResp
-	39,  // 123: openim.conversation.conversation.GetFullOwnerConversationIDs:output_type -> openim.conversation.GetFullOwnerConversationIDsResp
-	41,  // 124: openim.conversation.conversation.GetIncrementalConversation:output_type -> openim.conversation.GetIncrementalConversationResp
-	43,  // 125: openim.conversation.conversation.GetOwnerConversation:output_type -> openim.conversation.GetOwnerConversationResp
-	45,  // 126: openim.conversation.conversation.GetConversationsNeedClearMsg:output_type -> openim.conversation.GetConversationsNeedClearMsgResp
-	47,  // 127: openim.conversation.conversation.GetNotNotifyConversationIDs:output_type -> openim.conversation.GetNotNotifyConversationIDsResp
-	49,  // 128: openim.conversation.conversation.GetPinnedConversationIDs:output_type -> openim.conversation.GetPinnedConversationIDsResp
-	51,  // 129: openim.conversation.conversation.MarkConversation:output_type -> openim.conversation.MarkConversationResp
-	53,  // 130: openim.conversation.conversation.MarkConversationAsUnread:output_type -> openim.conversation.MarkConversationAsUnreadResp
-	55,  // 131: openim.conversation.conversation.ClearUserConversationMsg:output_type -> openim.conversation.ClearUserConversationMsgResp
-	57,  // 132: openim.conversation.conversation.UpdateConversationsByUser:output_type -> openim.conversation.UpdateConversationsByUserResp
-	59,  // 133: openim.conversation.conversation.DeleteConversations:output_type -> openim.conversation.DeleteConversationsResp
-	63,  // 134: openim.conversation.conversation.InitConversationGroups:output_type -> openim.conversation.InitConversationGroupsResp
-	65,  // 135: openim.conversation.conversation.GetAllConversationGroups:output_type -> openim.conversation.GetAllConversationGroupsResp
-	67,  // 136: openim.conversation.conversation.GetVisibleConversationGroups:output_type -> openim.conversation.GetVisibleConversationGroupsResp
-	69,  // 137: openim.conversation.conversation.CreateConversationGroup:output_type -> openim.conversation.CreateConversationGroupResp
-	71,  // 138: openim.conversation.conversation.UpdateConversationGroup:output_type -> openim.conversation.UpdateConversationGroupResp
-	73,  // 139: openim.conversation.conversation.DeleteConversationGroup:output_type -> openim.conversation.DeleteConversationGroupResp
-	75,  // 140: openim.conversation.conversation.UpdateConversationGroupSort:output_type -> openim.conversation.UpdateConversationGroupSortResp
-	77,  // 141: openim.conversation.conversation.SetConversationGroupVisibility:output_type -> openim.conversation.SetConversationGroupVisibilityResp
-	79,  // 142: openim.conversation.conversation.AddConversationsToGroup:output_type -> openim.conversation.AddConversationsToGroupResp
-	81,  // 143: openim.conversation.conversation.RemoveConversationsFromGroup:output_type -> openim.conversation.RemoveConversationsFromGroupResp
-	83,  // 144: openim.conversation.conversation.GetConversationIDsByGroupID:output_type -> openim.conversation.GetConversationIDsByGroupIDResp
-	103, // 145: openim.conversation.conversation.CreateFoldConversation:output_type -> openim.conversation.CreateFoldConversationResp
-	105, // 146: openim.conversation.conversation.UpdateFoldInfo:output_type -> openim.conversation.UpdateFoldInfoResp
-	99,  // 147: openim.conversation.conversation.GetFoldInfo:output_type -> openim.conversation.GetFoldInfoResp
-	85,  // 148: openim.conversation.conversation.SetConversationFold:output_type -> openim.conversation.SetConversationFoldResp
-	87,  // 149: openim.conversation.conversation.GetFoldConversationList:output_type -> openim.conversation.GetFoldConversationListResp
-	91,  // 150: openim.conversation.conversation.GetAllFolds:output_type -> openim.conversation.GetAllFoldsResp
-	93,  // 151: openim.conversation.conversation.GetFoldDetail:output_type -> openim.conversation.GetFoldDetailResp
-	95,  // 152: openim.conversation.conversation.PinFold:output_type -> openim.conversation.PinFoldResp
-	97,  // 153: openim.conversation.conversation.SetFoldRecvMsgOpt:output_type -> openim.conversation.SetFoldRecvMsgOptResp
-	101, // 154: openim.conversation.conversation.RemoveFold:output_type -> openim.conversation.RemoveFoldResp
-	106, // [106:155] is the sub-list for method output_type
-	57,  // [57:106] is the sub-list for method input_type
-	57,  // [57:57] is the sub-list for extension type_name
-	57,  // [57:57] is the sub-list for extension extendee
-	0,   // [0:57] is the sub-list for field type_name
+	100, // 51: openim.conversation.UpdateFoldReq.foldName:type_name -> openim.protobuf.StringValue
+	100, // 52: openim.conversation.UpdateFoldReq.faceURL:type_name -> openim.protobuf.StringValue
+	100, // 53: openim.conversation.UpdateFoldReq.description:type_name -> openim.protobuf.StringValue
+	4,   // 54: openim.conversation.conversation.GetConversation:input_type -> openim.conversation.GetConversationReq
+	6,   // 55: openim.conversation.conversation.GetSortedConversationList:input_type -> openim.conversation.GetSortedConversationListReq
+	12,  // 56: openim.conversation.conversation.GetAllConversations:input_type -> openim.conversation.GetAllConversationsReq
+	10,  // 57: openim.conversation.conversation.GetConversations:input_type -> openim.conversation.GetConversationsReq
+	2,   // 58: openim.conversation.conversation.SetConversation:input_type -> openim.conversation.SetConversationReq
+	14,  // 59: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:input_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsReq
+	16,  // 60: openim.conversation.conversation.CreateSingleChatConversations:input_type -> openim.conversation.CreateSingleChatConversationsReq
+	18,  // 61: openim.conversation.conversation.CreateGroupChatConversations:input_type -> openim.conversation.CreateGroupChatConversationsReq
+	20,  // 62: openim.conversation.conversation.SetConversationMaxSeq:input_type -> openim.conversation.SetConversationMaxSeqReq
+	22,  // 63: openim.conversation.conversation.SetConversationMinSeq:input_type -> openim.conversation.SetConversationMinSeqReq
+	24,  // 64: openim.conversation.conversation.GetConversationIDs:input_type -> openim.conversation.GetConversationIDsReq
+	26,  // 65: openim.conversation.conversation.SetConversations:input_type -> openim.conversation.SetConversationsReq
+	28,  // 66: openim.conversation.conversation.GetUserConversationIDsHash:input_type -> openim.conversation.GetUserConversationIDsHashReq
+	30,  // 67: openim.conversation.conversation.GetConversationsByConversationID:input_type -> openim.conversation.GetConversationsByConversationIDReq
+	32,  // 68: openim.conversation.conversation.GetConversationOfflinePushUserIDs:input_type -> openim.conversation.GetConversationOfflinePushUserIDsReq
+	34,  // 69: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:input_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsReq
+	36,  // 70: openim.conversation.conversation.UpdateConversation:input_type -> openim.conversation.UpdateConversationReq
+	38,  // 71: openim.conversation.conversation.GetFullOwnerConversationIDs:input_type -> openim.conversation.GetFullOwnerConversationIDsReq
+	40,  // 72: openim.conversation.conversation.GetIncrementalConversation:input_type -> openim.conversation.GetIncrementalConversationReq
+	42,  // 73: openim.conversation.conversation.GetOwnerConversation:input_type -> openim.conversation.GetOwnerConversationReq
+	44,  // 74: openim.conversation.conversation.GetConversationsNeedClearMsg:input_type -> openim.conversation.GetConversationsNeedClearMsgReq
+	46,  // 75: openim.conversation.conversation.GetNotNotifyConversationIDs:input_type -> openim.conversation.GetNotNotifyConversationIDsReq
+	48,  // 76: openim.conversation.conversation.GetPinnedConversationIDs:input_type -> openim.conversation.GetPinnedConversationIDsReq
+	50,  // 77: openim.conversation.conversation.MarkConversation:input_type -> openim.conversation.MarkConversationReq
+	52,  // 78: openim.conversation.conversation.MarkConversationAsUnread:input_type -> openim.conversation.MarkConversationAsUnreadReq
+	54,  // 79: openim.conversation.conversation.ClearUserConversationMsg:input_type -> openim.conversation.ClearUserConversationMsgReq
+	56,  // 80: openim.conversation.conversation.UpdateConversationsByUser:input_type -> openim.conversation.UpdateConversationsByUserReq
+	58,  // 81: openim.conversation.conversation.DeleteConversations:input_type -> openim.conversation.DeleteConversationsReq
+	62,  // 82: openim.conversation.conversation.InitConversationGroups:input_type -> openim.conversation.InitConversationGroupsReq
+	64,  // 83: openim.conversation.conversation.GetAllConversationGroups:input_type -> openim.conversation.GetAllConversationGroupsReq
+	66,  // 84: openim.conversation.conversation.GetVisibleConversationGroups:input_type -> openim.conversation.GetVisibleConversationGroupsReq
+	68,  // 85: openim.conversation.conversation.CreateConversationGroup:input_type -> openim.conversation.CreateConversationGroupReq
+	70,  // 86: openim.conversation.conversation.UpdateConversationGroup:input_type -> openim.conversation.UpdateConversationGroupReq
+	72,  // 87: openim.conversation.conversation.DeleteConversationGroup:input_type -> openim.conversation.DeleteConversationGroupReq
+	74,  // 88: openim.conversation.conversation.UpdateConversationGroupSort:input_type -> openim.conversation.UpdateConversationGroupSortReq
+	76,  // 89: openim.conversation.conversation.SetConversationGroupVisibility:input_type -> openim.conversation.SetConversationGroupVisibilityReq
+	78,  // 90: openim.conversation.conversation.AddConversationsToGroup:input_type -> openim.conversation.AddConversationsToGroupReq
+	80,  // 91: openim.conversation.conversation.RemoveConversationsFromGroup:input_type -> openim.conversation.RemoveConversationsFromGroupReq
+	82,  // 92: openim.conversation.conversation.GetConversationIDsByGroupID:input_type -> openim.conversation.GetConversationIDsByGroupIDReq
+	94,  // 93: openim.conversation.conversation.CreateFold:input_type -> openim.conversation.CreateFoldReq
+	96,  // 94: openim.conversation.conversation.UpdateFold:input_type -> openim.conversation.UpdateFoldReq
+	84,  // 95: openim.conversation.conversation.SetConversationFold:input_type -> openim.conversation.SetConversationFoldReq
+	86,  // 96: openim.conversation.conversation.GetFoldConversationList:input_type -> openim.conversation.GetFoldConversationListReq
+	88,  // 97: openim.conversation.conversation.GetAllFolds:input_type -> openim.conversation.GetAllFoldsReq
+	92,  // 98: openim.conversation.conversation.RemoveFold:input_type -> openim.conversation.RemoveFoldReq
+	5,   // 99: openim.conversation.conversation.GetConversation:output_type -> openim.conversation.GetConversationResp
+	7,   // 100: openim.conversation.conversation.GetSortedConversationList:output_type -> openim.conversation.GetSortedConversationListResp
+	13,  // 101: openim.conversation.conversation.GetAllConversations:output_type -> openim.conversation.GetAllConversationsResp
+	11,  // 102: openim.conversation.conversation.GetConversations:output_type -> openim.conversation.GetConversationsResp
+	3,   // 103: openim.conversation.conversation.SetConversation:output_type -> openim.conversation.SetConversationResp
+	15,  // 104: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:output_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsResp
+	17,  // 105: openim.conversation.conversation.CreateSingleChatConversations:output_type -> openim.conversation.CreateSingleChatConversationsResp
+	19,  // 106: openim.conversation.conversation.CreateGroupChatConversations:output_type -> openim.conversation.CreateGroupChatConversationsResp
+	21,  // 107: openim.conversation.conversation.SetConversationMaxSeq:output_type -> openim.conversation.SetConversationMaxSeqResp
+	23,  // 108: openim.conversation.conversation.SetConversationMinSeq:output_type -> openim.conversation.SetConversationMinSeqResp
+	25,  // 109: openim.conversation.conversation.GetConversationIDs:output_type -> openim.conversation.GetConversationIDsResp
+	27,  // 110: openim.conversation.conversation.SetConversations:output_type -> openim.conversation.SetConversationsResp
+	29,  // 111: openim.conversation.conversation.GetUserConversationIDsHash:output_type -> openim.conversation.GetUserConversationIDsHashResp
+	31,  // 112: openim.conversation.conversation.GetConversationsByConversationID:output_type -> openim.conversation.GetConversationsByConversationIDResp
+	33,  // 113: openim.conversation.conversation.GetConversationOfflinePushUserIDs:output_type -> openim.conversation.GetConversationOfflinePushUserIDsResp
+	35,  // 114: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:output_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsResp
+	37,  // 115: openim.conversation.conversation.UpdateConversation:output_type -> openim.conversation.UpdateConversationResp
+	39,  // 116: openim.conversation.conversation.GetFullOwnerConversationIDs:output_type -> openim.conversation.GetFullOwnerConversationIDsResp
+	41,  // 117: openim.conversation.conversation.GetIncrementalConversation:output_type -> openim.conversation.GetIncrementalConversationResp
+	43,  // 118: openim.conversation.conversation.GetOwnerConversation:output_type -> openim.conversation.GetOwnerConversationResp
+	45,  // 119: openim.conversation.conversation.GetConversationsNeedClearMsg:output_type -> openim.conversation.GetConversationsNeedClearMsgResp
+	47,  // 120: openim.conversation.conversation.GetNotNotifyConversationIDs:output_type -> openim.conversation.GetNotNotifyConversationIDsResp
+	49,  // 121: openim.conversation.conversation.GetPinnedConversationIDs:output_type -> openim.conversation.GetPinnedConversationIDsResp
+	51,  // 122: openim.conversation.conversation.MarkConversation:output_type -> openim.conversation.MarkConversationResp
+	53,  // 123: openim.conversation.conversation.MarkConversationAsUnread:output_type -> openim.conversation.MarkConversationAsUnreadResp
+	55,  // 124: openim.conversation.conversation.ClearUserConversationMsg:output_type -> openim.conversation.ClearUserConversationMsgResp
+	57,  // 125: openim.conversation.conversation.UpdateConversationsByUser:output_type -> openim.conversation.UpdateConversationsByUserResp
+	59,  // 126: openim.conversation.conversation.DeleteConversations:output_type -> openim.conversation.DeleteConversationsResp
+	63,  // 127: openim.conversation.conversation.InitConversationGroups:output_type -> openim.conversation.InitConversationGroupsResp
+	65,  // 128: openim.conversation.conversation.GetAllConversationGroups:output_type -> openim.conversation.GetAllConversationGroupsResp
+	67,  // 129: openim.conversation.conversation.GetVisibleConversationGroups:output_type -> openim.conversation.GetVisibleConversationGroupsResp
+	69,  // 130: openim.conversation.conversation.CreateConversationGroup:output_type -> openim.conversation.CreateConversationGroupResp
+	71,  // 131: openim.conversation.conversation.UpdateConversationGroup:output_type -> openim.conversation.UpdateConversationGroupResp
+	73,  // 132: openim.conversation.conversation.DeleteConversationGroup:output_type -> openim.conversation.DeleteConversationGroupResp
+	75,  // 133: openim.conversation.conversation.UpdateConversationGroupSort:output_type -> openim.conversation.UpdateConversationGroupSortResp
+	77,  // 134: openim.conversation.conversation.SetConversationGroupVisibility:output_type -> openim.conversation.SetConversationGroupVisibilityResp
+	79,  // 135: openim.conversation.conversation.AddConversationsToGroup:output_type -> openim.conversation.AddConversationsToGroupResp
+	81,  // 136: openim.conversation.conversation.RemoveConversationsFromGroup:output_type -> openim.conversation.RemoveConversationsFromGroupResp
+	83,  // 137: openim.conversation.conversation.GetConversationIDsByGroupID:output_type -> openim.conversation.GetConversationIDsByGroupIDResp
+	95,  // 138: openim.conversation.conversation.CreateFold:output_type -> openim.conversation.CreateFoldResp
+	97,  // 139: openim.conversation.conversation.UpdateFold:output_type -> openim.conversation.UpdateFoldResp
+	85,  // 140: openim.conversation.conversation.SetConversationFold:output_type -> openim.conversation.SetConversationFoldResp
+	87,  // 141: openim.conversation.conversation.GetFoldConversationList:output_type -> openim.conversation.GetFoldConversationListResp
+	91,  // 142: openim.conversation.conversation.GetAllFolds:output_type -> openim.conversation.GetAllFoldsResp
+	93,  // 143: openim.conversation.conversation.RemoveFold:output_type -> openim.conversation.RemoveFoldResp
+	99,  // [99:144] is the sub-list for method output_type
+	54,  // [54:99] is the sub-list for method input_type
+	54,  // [54:54] is the sub-list for extension type_name
+	54,  // [54:54] is the sub-list for extension extendee
+	0,   // [0:54] is the sub-list for field type_name
 }
 
 func init() { file_conversation_conversation_proto_init() }
@@ -6691,7 +6226,7 @@ func file_conversation_conversation_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conversation_conversation_proto_rawDesc), len(file_conversation_conversation_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   106,
+			NumMessages:   98,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
