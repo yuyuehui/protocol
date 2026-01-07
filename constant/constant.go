@@ -95,6 +95,7 @@ const (
 	SummaryRecordAddNotification      = 1320 // 总结记录新增通知（通知群成员或对方）
 	SummaryRecordDeleteNotification   = 1321 // 总结记录删除通知
 	SummaryRecordFavoriteNotification = 1322 // 总结记录收藏状态变更通知
+	SummaryRecordPublishNotification  = 1323 // 总结记录发布通知（多端同步）
 
 	UserNotificationEnd = 1399
 	OANotification      = 1400 // OA通知

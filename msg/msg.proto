@@ -643,6 +643,7 @@ message SummaryRecord {
   int64 updateTime = 22;          // 更新时间
   string ex = 23;                 // 扩展字段
   bool isFavorite = 24;           // 是否收藏
+  int32 status = 25;              // 状态: 0=草稿(不显示), 1=已发布(显示)
 }
 
 // 创建总结记录请求
@@ -715,6 +716,14 @@ message SetSummaryFavoriteReq {
 
 // 设置总结收藏状态响应
 message SetSummaryFavoriteResp {}
+
+// 发布总结（将草稿状态改为已发布）
+message PublishSummaryReq {
+  string summaryID = 1;           // 总结ID
+}
+
+// 发布总结响应
+message PublishSummaryResp {}
 
 // 同步总结记录请求（用于从服务端同步）
 message SyncSummaryRecordsReq {
@@ -808,5 +817,6 @@ service msg {
   rpc GetSummaryRecordList(GetSummaryRecordListReq) returns (GetSummaryRecordListResp);
   rpc GetSummaryRecord(GetSummaryRecordReq) returns (GetSummaryRecordResp);
   rpc SetSummaryFavorite(SetSummaryFavoriteReq) returns (SetSummaryFavoriteResp);
+  rpc PublishSummary(PublishSummaryReq) returns (PublishSummaryResp);
   rpc SyncSummaryRecords(SyncSummaryRecordsReq) returns (SyncSummaryRecordsResp);
 }

@@ -659,6 +659,12 @@ message SummaryRecordFavoriteTips {
   bool isFavorite = 3;           // 是否收藏
 }
 
+// 智能总结记录发布通知（多端同步）
+message SummaryRecordPublishTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string summaryID = 2;          // 总结记录ID
+}
+
 //////////////////////conversation/////////////////////
 message ConversationUpdateTips {
   string userID = 1;

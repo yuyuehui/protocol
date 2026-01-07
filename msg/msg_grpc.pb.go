@@ -84,6 +84,7 @@ const (
 	Msg_GetSummaryRecordList_FullMethodName             = "/openim.msg.msg/GetSummaryRecordList"
 	Msg_GetSummaryRecord_FullMethodName                 = "/openim.msg.msg/GetSummaryRecord"
 	Msg_SetSummaryFavorite_FullMethodName               = "/openim.msg.msg/SetSummaryFavorite"
+	Msg_PublishSummary_FullMethodName                   = "/openim.msg.msg/PublishSummary"
 	Msg_SyncSummaryRecords_FullMethodName               = "/openim.msg.msg/SyncSummaryRecords"
 )
 
@@ -160,6 +161,7 @@ type MsgClient interface {
 	GetSummaryRecordList(ctx context.Context, in *GetSummaryRecordListReq, opts ...grpc.CallOption) (*GetSummaryRecordListResp, error)
 	GetSummaryRecord(ctx context.Context, in *GetSummaryRecordReq, opts ...grpc.CallOption) (*GetSummaryRecordResp, error)
 	SetSummaryFavorite(ctx context.Context, in *SetSummaryFavoriteReq, opts ...grpc.CallOption) (*SetSummaryFavoriteResp, error)
+	PublishSummary(ctx context.Context, in *PublishSummaryReq, opts ...grpc.CallOption) (*PublishSummaryResp, error)
 	SyncSummaryRecords(ctx context.Context, in *SyncSummaryRecordsReq, opts ...grpc.CallOption) (*SyncSummaryRecordsResp, error)
 }
 
@@ -671,6 +673,16 @@ func (c *msgClient) SetSummaryFavorite(ctx context.Context, in *SetSummaryFavori
 	return out, nil
 }
 
+func (c *msgClient) PublishSummary(ctx context.Context, in *PublishSummaryReq, opts ...grpc.CallOption) (*PublishSummaryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishSummaryResp)
+	err := c.cc.Invoke(ctx, Msg_PublishSummary_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) SyncSummaryRecords(ctx context.Context, in *SyncSummaryRecordsReq, opts ...grpc.CallOption) (*SyncSummaryRecordsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SyncSummaryRecordsResp)
@@ -754,6 +766,7 @@ type MsgServer interface {
 	GetSummaryRecordList(context.Context, *GetSummaryRecordListReq) (*GetSummaryRecordListResp, error)
 	GetSummaryRecord(context.Context, *GetSummaryRecordReq) (*GetSummaryRecordResp, error)
 	SetSummaryFavorite(context.Context, *SetSummaryFavoriteReq) (*SetSummaryFavoriteResp, error)
+	PublishSummary(context.Context, *PublishSummaryReq) (*PublishSummaryResp, error)
 	SyncSummaryRecords(context.Context, *SyncSummaryRecordsReq) (*SyncSummaryRecordsResp, error)
 	mustEmbedUnimplementedMsgServer()
 }
@@ -914,6 +927,9 @@ func (UnimplementedMsgServer) GetSummaryRecord(context.Context, *GetSummaryRecor
 }
 func (UnimplementedMsgServer) SetSummaryFavorite(context.Context, *SetSummaryFavoriteReq) (*SetSummaryFavoriteResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetSummaryFavorite not implemented")
+}
+func (UnimplementedMsgServer) PublishSummary(context.Context, *PublishSummaryReq) (*PublishSummaryResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublishSummary not implemented")
 }
 func (UnimplementedMsgServer) SyncSummaryRecords(context.Context, *SyncSummaryRecordsReq) (*SyncSummaryRecordsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SyncSummaryRecords not implemented")
@@ -1839,6 +1855,24 @@ func _Msg_SetSummaryFavorite_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_PublishSummary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishSummaryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).PublishSummary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_PublishSummary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).PublishSummary(ctx, req.(*PublishSummaryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_SyncSummaryRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SyncSummaryRecordsReq)
 	if err := dec(in); err != nil {
@@ -2063,6 +2097,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetSummaryFavorite",
 			Handler:    _Msg_SetSummaryFavorite_Handler,
+		},
+		{
+			MethodName: "PublishSummary",
+			Handler:    _Msg_PublishSummary_Handler,
 		},
 		{
 			MethodName: "SyncSummaryRecords",
