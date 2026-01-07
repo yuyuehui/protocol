@@ -631,16 +631,17 @@ message SummaryRecord {
   int64 endTime = 10;             // 总结的消息结束时间
   string timeDescription = 11;    // 时间描述
   int32 messageCount = 12;        // 消息数量
-  string contents = 13;           // 用户输入的总结请求内容
-  string overview = 14;           // 总结概述
-  string keyPoints = 15;          // 关键点（JSON格式）
-  string actionItems = 16;        // 待办事项（JSON格式）
-  string statistics = 17;         // 统计信息（JSON格式）
-  string creatorNickname = 18;    // 创建者昵称
-  string creatorFaceURL = 19;     // 创建者头像
-  int64 createTime = 20;          // 创建时间
-  int64 updateTime = 21;          // 更新时间
-  string ex = 22;                 // 扩展字段
+  int32 conversationCount = 13;   // 会话数量
+  string contents = 14;           // 用户输入的总结请求内容
+  string overview = 15;           // 总结概述
+  string keyPoints = 16;          // 关键点（JSON格式）
+  string actionItems = 17;        // 待办事项（JSON格式）
+  string statistics = 18;         // 统计信息（JSON格式）
+  string creatorNickname = 19;    // 创建者昵称
+  string creatorFaceURL = 20;     // 创建者头像
+  int64 createTime = 21;          // 创建时间
+  int64 updateTime = 22;          // 更新时间
+  string ex = 23;                 // 扩展字段
 }
 
 // 创建总结记录请求
@@ -655,14 +656,15 @@ message CreateSummaryRecordReq {
   int64 endTime = 8;              // 消息结束时间
   string timeDescription = 9;     // 时间描述
   int32 messageCount = 10;        // 消息数量
-  string contents = 11;           // 用户输入的总结请求
-  string overview = 12;           // 总结概述
-  string keyPoints = 13;          // 关键点（JSON格式）
-  string actionItems = 14;        // 待办事项（JSON格式）
-  string statistics = 15;         // 统计信息（JSON格式）
-  string creatorNickname = 16;    // 创建者昵称
-  string creatorFaceURL = 17;     // 创建者头像
-  string ex = 18;                 // 扩展字段
+  int32 conversationCount = 11;   // 会话数量
+  string contents = 12;           // 用户输入的总结请求
+  string overview = 13;           // 总结概述
+  string keyPoints = 14;          // 关键点（JSON格式）
+  string actionItems = 15;        // 待办事项（JSON格式）
+  string statistics = 16;         // 统计信息（JSON格式）
+  string creatorNickname = 17;    // 创建者昵称
+  string creatorFaceURL = 18;     // 创建者头像
+  string ex = 19;                 // 扩展字段
 }
 
 // 创建总结记录响应
