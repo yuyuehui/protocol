@@ -805,7 +805,7 @@ message ConversationGroupChangeTips {
 message ConversationFoldNotificationTips {
   string userID = 1;                    // 用户ID
   string foldConversationID = 2;        // 折叠会话ID
-  string action = 3;                    // 操作类型: "created"=创建, "updated"=更新, "deleted"=删除, "conversation_added"=会话移入, "conversation_removed"=会话移出
+  string action = 3;                    // 操作类型: "created"=创建, "updated"=更新, "deleted"=删除, "cleared"=清空, "conversation_added"=会话移入, "conversation_removed"=会话移出
   string conversationID = 4;            // 变更的会话ID（会话移入/移出时使用）
   string foldName = 5;                  // 折叠名称（创建/更新时）
   int32 foldType = 6;                   // 折叠类型: 1=普通折叠, 2=通知折叠（创建时）

@@ -61,6 +61,7 @@ const (
 	Conversation_ClearUserConversationMsg_FullMethodName                = "/openim.conversation.conversation/ClearUserConversationMsg"
 	Conversation_UpdateConversationsByUser_FullMethodName               = "/openim.conversation.conversation/UpdateConversationsByUser"
 	Conversation_DeleteConversations_FullMethodName                     = "/openim.conversation.conversation/DeleteConversations"
+	Conversation_UnhideConversationsIfNeeded_FullMethodName             = "/openim.conversation.conversation/UnhideConversationsIfNeeded"
 	Conversation_InitConversationGroups_FullMethodName                  = "/openim.conversation.conversation/InitConversationGroups"
 	Conversation_GetAllConversationGroups_FullMethodName                = "/openim.conversation.conversation/GetAllConversationGroups"
 	Conversation_GetVisibleConversationGroups_FullMethodName            = "/openim.conversation.conversation/GetVisibleConversationGroups"
@@ -78,6 +79,7 @@ const (
 	Conversation_GetFoldConversationList_FullMethodName                 = "/openim.conversation.conversation/GetFoldConversationList"
 	Conversation_GetAllFolds_FullMethodName                             = "/openim.conversation.conversation/GetAllFolds"
 	Conversation_RemoveFold_FullMethodName                              = "/openim.conversation.conversation/RemoveFold"
+	Conversation_ClearFold_FullMethodName                               = "/openim.conversation.conversation/ClearFold"
 )
 
 // ConversationClient is the client API for Conversation service.
@@ -112,6 +114,7 @@ type ConversationClient interface {
 	ClearUserConversationMsg(ctx context.Context, in *ClearUserConversationMsgReq, opts ...grpc.CallOption) (*ClearUserConversationMsgResp, error)
 	UpdateConversationsByUser(ctx context.Context, in *UpdateConversationsByUserReq, opts ...grpc.CallOption) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(ctx context.Context, in *DeleteConversationsReq, opts ...grpc.CallOption) (*DeleteConversationsResp, error)
+	UnhideConversationsIfNeeded(ctx context.Context, in *UnhideConversationsIfNeededReq, opts ...grpc.CallOption) (*UnhideConversationsIfNeededResp, error)
 	InitConversationGroups(ctx context.Context, in *InitConversationGroupsReq, opts ...grpc.CallOption) (*InitConversationGroupsResp, error)
 	GetAllConversationGroups(ctx context.Context, in *GetAllConversationGroupsReq, opts ...grpc.CallOption) (*GetAllConversationGroupsResp, error)
 	GetVisibleConversationGroups(ctx context.Context, in *GetVisibleConversationGroupsReq, opts ...grpc.CallOption) (*GetVisibleConversationGroupsResp, error)
@@ -130,6 +133,7 @@ type ConversationClient interface {
 	GetFoldConversationList(ctx context.Context, in *GetFoldConversationListReq, opts ...grpc.CallOption) (*GetFoldConversationListResp, error)
 	GetAllFolds(ctx context.Context, in *GetAllFoldsReq, opts ...grpc.CallOption) (*GetAllFoldsResp, error)
 	RemoveFold(ctx context.Context, in *RemoveFoldReq, opts ...grpc.CallOption) (*RemoveFoldResp, error)
+	ClearFold(ctx context.Context, in *ClearFoldReq, opts ...grpc.CallOption) (*ClearFoldResp, error)
 }
 
 type conversationClient struct {
@@ -420,6 +424,16 @@ func (c *conversationClient) DeleteConversations(ctx context.Context, in *Delete
 	return out, nil
 }
 
+func (c *conversationClient) UnhideConversationsIfNeeded(ctx context.Context, in *UnhideConversationsIfNeededReq, opts ...grpc.CallOption) (*UnhideConversationsIfNeededResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnhideConversationsIfNeededResp)
+	err := c.cc.Invoke(ctx, Conversation_UnhideConversationsIfNeeded_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *conversationClient) InitConversationGroups(ctx context.Context, in *InitConversationGroupsReq, opts ...grpc.CallOption) (*InitConversationGroupsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(InitConversationGroupsResp)
@@ -590,6 +604,16 @@ func (c *conversationClient) RemoveFold(ctx context.Context, in *RemoveFoldReq, 
 	return out, nil
 }
 
+func (c *conversationClient) ClearFold(ctx context.Context, in *ClearFoldReq, opts ...grpc.CallOption) (*ClearFoldResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClearFoldResp)
+	err := c.cc.Invoke(ctx, Conversation_ClearFold_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConversationServer is the server API for Conversation service.
 // All implementations must embed UnimplementedConversationServer
 // for forward compatibility.
@@ -622,6 +646,7 @@ type ConversationServer interface {
 	ClearUserConversationMsg(context.Context, *ClearUserConversationMsgReq) (*ClearUserConversationMsgResp, error)
 	UpdateConversationsByUser(context.Context, *UpdateConversationsByUserReq) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(context.Context, *DeleteConversationsReq) (*DeleteConversationsResp, error)
+	UnhideConversationsIfNeeded(context.Context, *UnhideConversationsIfNeededReq) (*UnhideConversationsIfNeededResp, error)
 	InitConversationGroups(context.Context, *InitConversationGroupsReq) (*InitConversationGroupsResp, error)
 	GetAllConversationGroups(context.Context, *GetAllConversationGroupsReq) (*GetAllConversationGroupsResp, error)
 	GetVisibleConversationGroups(context.Context, *GetVisibleConversationGroupsReq) (*GetVisibleConversationGroupsResp, error)
@@ -640,6 +665,7 @@ type ConversationServer interface {
 	GetFoldConversationList(context.Context, *GetFoldConversationListReq) (*GetFoldConversationListResp, error)
 	GetAllFolds(context.Context, *GetAllFoldsReq) (*GetAllFoldsResp, error)
 	RemoveFold(context.Context, *RemoveFoldReq) (*RemoveFoldResp, error)
+	ClearFold(context.Context, *ClearFoldReq) (*ClearFoldResp, error)
 	mustEmbedUnimplementedConversationServer()
 }
 
@@ -734,6 +760,9 @@ func (UnimplementedConversationServer) UpdateConversationsByUser(context.Context
 func (UnimplementedConversationServer) DeleteConversations(context.Context, *DeleteConversationsReq) (*DeleteConversationsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteConversations not implemented")
 }
+func (UnimplementedConversationServer) UnhideConversationsIfNeeded(context.Context, *UnhideConversationsIfNeededReq) (*UnhideConversationsIfNeededResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UnhideConversationsIfNeeded not implemented")
+}
 func (UnimplementedConversationServer) InitConversationGroups(context.Context, *InitConversationGroupsReq) (*InitConversationGroupsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method InitConversationGroups not implemented")
 }
@@ -784,6 +813,9 @@ func (UnimplementedConversationServer) GetAllFolds(context.Context, *GetAllFolds
 }
 func (UnimplementedConversationServer) RemoveFold(context.Context, *RemoveFoldReq) (*RemoveFoldResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RemoveFold not implemented")
+}
+func (UnimplementedConversationServer) ClearFold(context.Context, *ClearFoldReq) (*ClearFoldResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClearFold not implemented")
 }
 func (UnimplementedConversationServer) mustEmbedUnimplementedConversationServer() {}
 func (UnimplementedConversationServer) testEmbeddedByValue()                      {}
@@ -1310,6 +1342,24 @@ func _Conversation_DeleteConversations_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Conversation_UnhideConversationsIfNeeded_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnhideConversationsIfNeededReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConversationServer).UnhideConversationsIfNeeded(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Conversation_UnhideConversationsIfNeeded_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConversationServer).UnhideConversationsIfNeeded(ctx, req.(*UnhideConversationsIfNeededReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Conversation_InitConversationGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InitConversationGroupsReq)
 	if err := dec(in); err != nil {
@@ -1616,6 +1666,24 @@ func _Conversation_RemoveFold_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Conversation_ClearFold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearFoldReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConversationServer).ClearFold(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Conversation_ClearFold_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConversationServer).ClearFold(ctx, req.(*ClearFoldReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Conversation_ServiceDesc is the grpc.ServiceDesc for Conversation service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1736,6 +1804,10 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Conversation_DeleteConversations_Handler,
 		},
 		{
+			MethodName: "UnhideConversationsIfNeeded",
+			Handler:    _Conversation_UnhideConversationsIfNeeded_Handler,
+		},
+		{
 			MethodName: "InitConversationGroups",
 			Handler:    _Conversation_InitConversationGroups_Handler,
 		},
@@ -1802,6 +1874,10 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveFold",
 			Handler:    _Conversation_RemoveFold_Handler,
+		},
+		{
+			MethodName: "ClearFold",
+			Handler:    _Conversation_ClearFold_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

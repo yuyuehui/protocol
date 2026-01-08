@@ -7177,7 +7177,7 @@ type ConversationFoldNotificationTips struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	UserID             string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                         // 用户ID
 	FoldConversationID string                 `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID
-	Action             string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`                         // 操作类型: "created"=创建, "updated"=更新, "deleted"=删除, "conversation_added"=会话移入, "conversation_removed"=会话移出
+	Action             string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`                         // 操作类型: "created"=创建, "updated"=更新, "deleted"=删除, "cleared"=清空, "conversation_added"=会话移入, "conversation_removed"=会话移出
 	ConversationID     string                 `protobuf:"bytes,4,opt,name=conversationID,proto3" json:"conversationID"`         // 变更的会话ID（会话移入/移出时使用）
 	FoldName           string                 `protobuf:"bytes,5,opt,name=foldName,proto3" json:"foldName"`                     // 折叠名称（创建/更新时）
 	FoldType           int32                  `protobuf:"varint,6,opt,name=foldType,proto3" json:"foldType"`                    // 折叠类型: 1=普通折叠, 2=通知折叠（创建时）
