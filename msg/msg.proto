@@ -648,25 +648,26 @@ message SummaryRecord {
 
 // 创建总结记录请求
 message CreateSummaryRecordReq {
-  string conversationID = 1;      // 会话ID
-  int32 conversationType = 2;     // 会话类型
-  string showName = 3;            // 会话显示名称
-  string faceURL = 4;             // 会话头像
-  string title = 5;               // 总结标题
-  int32 summaryType = 6;          // 总结类型
-  int64 startTime = 7;            // 消息开始时间
-  int64 endTime = 8;              // 消息结束时间
-  string timeDescription = 9;     // 时间描述
-  int32 messageCount = 10;        // 消息数量
-  int32 conversationCount = 11;   // 会话数量
-  string contents = 12;           // 用户输入的总结请求
-  string overview = 13;           // 总结概述
-  string keyPoints = 14;          // 关键点（JSON格式）
-  string actionItems = 15;        // 待办事项（JSON格式）
-  string statistics = 16;         // 统计信息（JSON格式）
-  string creatorNickname = 17;    // 创建者昵称
-  string creatorFaceURL = 18;     // 创建者头像
-  string ex = 19;                 // 扩展字段
+  string summaryID = 1;           // 总结ID（客户端提供，保持本地和远程一致）
+  string conversationID = 2;      // 会话ID
+  int32 conversationType = 3;     // 会话类型
+  string showName = 4;            // 会话显示名称
+  string faceURL = 5;             // 会话头像
+  string title = 6;               // 总结标题
+  int32 summaryType = 7;          // 总结类型
+  int64 startTime = 8;            // 消息开始时间
+  int64 endTime = 9;              // 消息结束时间
+  string timeDescription = 10;    // 时间描述
+  int32 messageCount = 11;        // 消息数量
+  int32 conversationCount = 12;   // 会话数量
+  string contents = 13;           // 用户输入的总结请求
+  string overview = 14;           // 总结概述
+  string keyPoints = 15;          // 关键点（JSON格式）
+  string actionItems = 16;        // 待办事项（JSON格式）
+  string statistics = 17;         // 统计信息（JSON格式）
+  string creatorNickname = 18;    // 创建者昵称
+  string creatorFaceURL = 19;     // 创建者头像
+  string ex = 20;                 // 扩展字段
 }
 
 // 创建总结记录响应

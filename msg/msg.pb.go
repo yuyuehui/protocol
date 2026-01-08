@@ -6331,25 +6331,26 @@ func (x *SummaryRecord) GetStatus() int32 {
 // 创建总结记录请求
 type CreateSummaryRecordReq struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	ConversationID    string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"`         // 会话ID
-	ConversationType  int32                  `protobuf:"varint,2,opt,name=conversationType,proto3" json:"conversationType"`    // 会话类型
-	ShowName          string                 `protobuf:"bytes,3,opt,name=showName,proto3" json:"showName"`                     // 会话显示名称
-	FaceURL           string                 `protobuf:"bytes,4,opt,name=faceURL,proto3" json:"faceURL"`                       // 会话头像
-	Title             string                 `protobuf:"bytes,5,opt,name=title,proto3" json:"title"`                           // 总结标题
-	SummaryType       int32                  `protobuf:"varint,6,opt,name=summaryType,proto3" json:"summaryType"`              // 总结类型
-	StartTime         int64                  `protobuf:"varint,7,opt,name=startTime,proto3" json:"startTime"`                  // 消息开始时间
-	EndTime           int64                  `protobuf:"varint,8,opt,name=endTime,proto3" json:"endTime"`                      // 消息结束时间
-	TimeDescription   string                 `protobuf:"bytes,9,opt,name=timeDescription,proto3" json:"timeDescription"`       // 时间描述
-	MessageCount      int32                  `protobuf:"varint,10,opt,name=messageCount,proto3" json:"messageCount"`           // 消息数量
-	ConversationCount int32                  `protobuf:"varint,11,opt,name=conversationCount,proto3" json:"conversationCount"` // 会话数量
-	Contents          string                 `protobuf:"bytes,12,opt,name=contents,proto3" json:"contents"`                    // 用户输入的总结请求
-	Overview          string                 `protobuf:"bytes,13,opt,name=overview,proto3" json:"overview"`                    // 总结概述
-	KeyPoints         string                 `protobuf:"bytes,14,opt,name=keyPoints,proto3" json:"keyPoints"`                  // 关键点（JSON格式）
-	ActionItems       string                 `protobuf:"bytes,15,opt,name=actionItems,proto3" json:"actionItems"`              // 待办事项（JSON格式）
-	Statistics        string                 `protobuf:"bytes,16,opt,name=statistics,proto3" json:"statistics"`                // 统计信息（JSON格式）
-	CreatorNickname   string                 `protobuf:"bytes,17,opt,name=creatorNickname,proto3" json:"creatorNickname"`      // 创建者昵称
-	CreatorFaceURL    string                 `protobuf:"bytes,18,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL"`        // 创建者头像
-	Ex                string                 `protobuf:"bytes,19,opt,name=ex,proto3" json:"ex"`                                // 扩展字段
+	SummaryID         string                 `protobuf:"bytes,1,opt,name=summaryID,proto3" json:"summaryID"`                   // 总结ID（客户端提供，保持本地和远程一致）
+	ConversationID    string                 `protobuf:"bytes,2,opt,name=conversationID,proto3" json:"conversationID"`         // 会话ID
+	ConversationType  int32                  `protobuf:"varint,3,opt,name=conversationType,proto3" json:"conversationType"`    // 会话类型
+	ShowName          string                 `protobuf:"bytes,4,opt,name=showName,proto3" json:"showName"`                     // 会话显示名称
+	FaceURL           string                 `protobuf:"bytes,5,opt,name=faceURL,proto3" json:"faceURL"`                       // 会话头像
+	Title             string                 `protobuf:"bytes,6,opt,name=title,proto3" json:"title"`                           // 总结标题
+	SummaryType       int32                  `protobuf:"varint,7,opt,name=summaryType,proto3" json:"summaryType"`              // 总结类型
+	StartTime         int64                  `protobuf:"varint,8,opt,name=startTime,proto3" json:"startTime"`                  // 消息开始时间
+	EndTime           int64                  `protobuf:"varint,9,opt,name=endTime,proto3" json:"endTime"`                      // 消息结束时间
+	TimeDescription   string                 `protobuf:"bytes,10,opt,name=timeDescription,proto3" json:"timeDescription"`      // 时间描述
+	MessageCount      int32                  `protobuf:"varint,11,opt,name=messageCount,proto3" json:"messageCount"`           // 消息数量
+	ConversationCount int32                  `protobuf:"varint,12,opt,name=conversationCount,proto3" json:"conversationCount"` // 会话数量
+	Contents          string                 `protobuf:"bytes,13,opt,name=contents,proto3" json:"contents"`                    // 用户输入的总结请求
+	Overview          string                 `protobuf:"bytes,14,opt,name=overview,proto3" json:"overview"`                    // 总结概述
+	KeyPoints         string                 `protobuf:"bytes,15,opt,name=keyPoints,proto3" json:"keyPoints"`                  // 关键点（JSON格式）
+	ActionItems       string                 `protobuf:"bytes,16,opt,name=actionItems,proto3" json:"actionItems"`              // 待办事项（JSON格式）
+	Statistics        string                 `protobuf:"bytes,17,opt,name=statistics,proto3" json:"statistics"`                // 统计信息（JSON格式）
+	CreatorNickname   string                 `protobuf:"bytes,18,opt,name=creatorNickname,proto3" json:"creatorNickname"`      // 创建者昵称
+	CreatorFaceURL    string                 `protobuf:"bytes,19,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL"`        // 创建者头像
+	Ex                string                 `protobuf:"bytes,20,opt,name=ex,proto3" json:"ex"`                                // 扩展字段
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -6382,6 +6383,13 @@ func (x *CreateSummaryRecordReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateSummaryRecordReq.ProtoReflect.Descriptor instead.
 func (*CreateSummaryRecordReq) Descriptor() ([]byte, []int) {
 	return file_msg_msg_proto_rawDescGZIP(), []int{107}
+}
+
+func (x *CreateSummaryRecordReq) GetSummaryID() string {
+	if x != nil {
+		return x.SummaryID
+	}
+	return ""
 }
 
 func (x *CreateSummaryRecordReq) GetConversationID() string {
@@ -7661,30 +7669,31 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\n" +
 	"isFavorite\x18\x18 \x01(\bR\n" +
 	"isFavorite\x12\x16\n" +
-	"\x06status\x18\x19 \x01(\x05R\x06status\"\x88\x05\n" +
-	"\x16CreateSummaryRecordReq\x12&\n" +
-	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12*\n" +
-	"\x10conversationType\x18\x02 \x01(\x05R\x10conversationType\x12\x1a\n" +
-	"\bshowName\x18\x03 \x01(\tR\bshowName\x12\x18\n" +
-	"\afaceURL\x18\x04 \x01(\tR\afaceURL\x12\x14\n" +
-	"\x05title\x18\x05 \x01(\tR\x05title\x12 \n" +
-	"\vsummaryType\x18\x06 \x01(\x05R\vsummaryType\x12\x1c\n" +
-	"\tstartTime\x18\a \x01(\x03R\tstartTime\x12\x18\n" +
-	"\aendTime\x18\b \x01(\x03R\aendTime\x12(\n" +
-	"\x0ftimeDescription\x18\t \x01(\tR\x0ftimeDescription\x12\"\n" +
-	"\fmessageCount\x18\n" +
-	" \x01(\x05R\fmessageCount\x12,\n" +
-	"\x11conversationCount\x18\v \x01(\x05R\x11conversationCount\x12\x1a\n" +
-	"\bcontents\x18\f \x01(\tR\bcontents\x12\x1a\n" +
-	"\boverview\x18\r \x01(\tR\boverview\x12\x1c\n" +
-	"\tkeyPoints\x18\x0e \x01(\tR\tkeyPoints\x12 \n" +
-	"\vactionItems\x18\x0f \x01(\tR\vactionItems\x12\x1e\n" +
+	"\x06status\x18\x19 \x01(\x05R\x06status\"\xa6\x05\n" +
+	"\x16CreateSummaryRecordReq\x12\x1c\n" +
+	"\tsummaryID\x18\x01 \x01(\tR\tsummaryID\x12&\n" +
+	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12*\n" +
+	"\x10conversationType\x18\x03 \x01(\x05R\x10conversationType\x12\x1a\n" +
+	"\bshowName\x18\x04 \x01(\tR\bshowName\x12\x18\n" +
+	"\afaceURL\x18\x05 \x01(\tR\afaceURL\x12\x14\n" +
+	"\x05title\x18\x06 \x01(\tR\x05title\x12 \n" +
+	"\vsummaryType\x18\a \x01(\x05R\vsummaryType\x12\x1c\n" +
+	"\tstartTime\x18\b \x01(\x03R\tstartTime\x12\x18\n" +
+	"\aendTime\x18\t \x01(\x03R\aendTime\x12(\n" +
+	"\x0ftimeDescription\x18\n" +
+	" \x01(\tR\x0ftimeDescription\x12\"\n" +
+	"\fmessageCount\x18\v \x01(\x05R\fmessageCount\x12,\n" +
+	"\x11conversationCount\x18\f \x01(\x05R\x11conversationCount\x12\x1a\n" +
+	"\bcontents\x18\r \x01(\tR\bcontents\x12\x1a\n" +
+	"\boverview\x18\x0e \x01(\tR\boverview\x12\x1c\n" +
+	"\tkeyPoints\x18\x0f \x01(\tR\tkeyPoints\x12 \n" +
+	"\vactionItems\x18\x10 \x01(\tR\vactionItems\x12\x1e\n" +
 	"\n" +
-	"statistics\x18\x10 \x01(\tR\n" +
+	"statistics\x18\x11 \x01(\tR\n" +
 	"statistics\x12(\n" +
-	"\x0fcreatorNickname\x18\x11 \x01(\tR\x0fcreatorNickname\x12&\n" +
-	"\x0ecreatorFaceURL\x18\x12 \x01(\tR\x0ecreatorFaceURL\x12\x0e\n" +
-	"\x02ex\x18\x13 \x01(\tR\x02ex\"7\n" +
+	"\x0fcreatorNickname\x18\x12 \x01(\tR\x0fcreatorNickname\x12&\n" +
+	"\x0ecreatorFaceURL\x18\x13 \x01(\tR\x0ecreatorFaceURL\x12\x0e\n" +
+	"\x02ex\x18\x14 \x01(\tR\x02ex\"7\n" +
 	"\x17CreateSummaryRecordResp\x12\x1c\n" +
 	"\tsummaryID\x18\x01 \x01(\tR\tsummaryID\"^\n" +
 	"\x16DeleteSummaryRecordReq\x12\x1c\n" +
