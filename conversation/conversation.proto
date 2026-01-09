@@ -65,6 +65,7 @@ message ConversationReq {
   openim.protobuf.Int32Value unreadCount = 17;  // 手动设置的未读数
   openim.protobuf.Int64Value updateUnreadCountTime = 18;  // 手动更新未读数的时间戳
   openim.protobuf.StringValue parentConversationID = 19;  // 父折叠会话ID
+  openim.protobuf.BoolValue isHidden = 20;  // 是否隐藏会话（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 }
 
 message SetConversationReq {
