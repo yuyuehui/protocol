@@ -42,6 +42,7 @@ message Conversation {
   int32 unreadCount = 19;  // 手动设置的未读数，用于多设备同步
   int64 updateUnreadCountTime = 20;  // 手动更新未读数的时间戳（毫秒），用于多端同步时判断最新值
   string parentConversationID = 21;  // 父折叠会话ID，非空表示该会话被折叠（父会话conversationType=5）
+  bool isSystemDefault = 22;  // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
 }
 
 message ConversationReq {
@@ -347,6 +348,17 @@ message DeleteConversationsReq {
 }
 message DeleteConversationsResp {}
 
+// UnhideConversationsIfNeeded 取消隐藏会话（如果消息 seq > hiddenSeq）
+// 用于处理收到新消息时自动取消隐藏的场景（参考微信的会话删除机制）
+message UnhideConversationsIfNeededReq {
+  string conversationID = 1;       // 会话ID
+  repeated string userIDs = 2;     // 需要检查的用户ID列表
+  int64 msgSeq = 3;                // 消息的 seq，用于判断是否需要取消隐藏
+}
+message UnhideConversationsIfNeededResp {
+  repeated string unhiddenUserIDs = 1;  // 被取消隐藏的用户ID列表
+}
+
 // 会话分组
 message ConversationGroup {
     string groupID = 1;
@@ -470,6 +482,7 @@ service conversation {
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
+  rpc UnhideConversationsIfNeeded(UnhideConversationsIfNeededReq) returns (UnhideConversationsIfNeededResp);  // 收到新消息时取消隐藏会话
   rpc InitConversationGroups(InitConversationGroupsReq) returns (InitConversationGroupsResp);
   rpc GetAllConversationGroups(GetAllConversationGroupsReq) returns (GetAllConversationGroupsResp);
   rpc GetVisibleConversationGroups(GetVisibleConversationGroupsReq) returns (GetVisibleConversationGroupsResp);
@@ -489,6 +502,7 @@ service conversation {
   rpc GetFoldConversationList(GetFoldConversationListReq) returns (GetFoldConversationListResp);  // 获取折叠内的会话列表
   rpc GetAllFolds(GetAllFoldsReq) returns (GetAllFoldsResp);  // 获取所有折叠会话列表
   rpc RemoveFold(RemoveFoldReq) returns (RemoveFoldResp);  // 删除折叠
+  rpc ClearFold(ClearFoldReq) returns (ClearFoldResp);  // 清空折叠会话（子会话设为非免打扰，移出折叠，删除折叠会话）
 }
 
 // 会话折叠相关消息定义
@@ -585,3 +599,13 @@ message UpdateFoldReq {
 }
 
 message UpdateFoldResp {}
+
+// ClearFold 清空折叠会话（将子会话设为非免打扰、移出折叠、删除折叠会话）
+message ClearFoldReq {
+  string userID = 1;                  // 用户ID
+  string foldConversationID = 2;      // 要清空的折叠会话ID
+}
+
+message ClearFoldResp {
+  int32 clearedCount = 1;             // 清空的子会话数量
+}
