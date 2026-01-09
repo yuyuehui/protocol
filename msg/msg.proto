@@ -631,38 +631,43 @@ message SummaryRecord {
   int64 endTime = 10;             // 总结的消息结束时间
   string timeDescription = 11;    // 时间描述
   int32 messageCount = 12;        // 消息数量
-  string contents = 13;           // 用户输入的总结请求内容
+  int32 conversationCount = 13;   // 会话数量
+  string contents = 14;           // 用户输入的总结请求内容
+  string overview = 15;           // 总结概述
+  string keyPoints = 16;          // 关键点（JSON格式）
+  string actionItems = 17;        // 待办事项（JSON格式）
+  string statistics = 18;         // 统计信息（JSON格式）
+  string creatorNickname = 19;    // 创建者昵称
+  string creatorFaceURL = 20;     // 创建者头像
+  int64 createTime = 21;          // 创建时间
+  int64 updateTime = 22;          // 更新时间
+  string ex = 23;                 // 扩展字段
+  bool isFavorite = 24;           // 是否收藏
+  int32 status = 25;              // 状态: 0=草稿(不显示), 1=已发布(显示)
+}
+
+// 创建总结记录请求
+message CreateSummaryRecordReq {
+  string summaryID = 1;           // 总结ID（客户端提供，保持本地和远程一致）
+  string conversationID = 2;      // 会话ID
+  int32 conversationType = 3;     // 会话类型
+  string showName = 4;            // 会话显示名称
+  string faceURL = 5;             // 会话头像
+  string title = 6;               // 总结标题
+  int32 summaryType = 7;          // 总结类型
+  int64 startTime = 8;            // 消息开始时间
+  int64 endTime = 9;              // 消息结束时间
+  string timeDescription = 10;    // 时间描述
+  int32 messageCount = 11;        // 消息数量
+  int32 conversationCount = 12;   // 会话数量
+  string contents = 13;           // 用户输入的总结请求
   string overview = 14;           // 总结概述
   string keyPoints = 15;          // 关键点（JSON格式）
   string actionItems = 16;        // 待办事项（JSON格式）
   string statistics = 17;         // 统计信息（JSON格式）
   string creatorNickname = 18;    // 创建者昵称
   string creatorFaceURL = 19;     // 创建者头像
-  int64 createTime = 20;          // 创建时间
-  int64 updateTime = 21;          // 更新时间
-  string ex = 22;                 // 扩展字段
-}
-
-// 创建总结记录请求
-message CreateSummaryRecordReq {
-  string conversationID = 1;      // 会话ID
-  int32 conversationType = 2;     // 会话类型
-  string showName = 3;            // 会话显示名称
-  string faceURL = 4;             // 会话头像
-  string title = 5;               // 总结标题
-  int32 summaryType = 6;          // 总结类型
-  int64 startTime = 7;            // 消息开始时间
-  int64 endTime = 8;              // 消息结束时间
-  string timeDescription = 9;     // 时间描述
-  int32 messageCount = 10;        // 消息数量
-  string contents = 11;           // 用户输入的总结请求
-  string overview = 12;           // 总结概述
-  string keyPoints = 13;          // 关键点（JSON格式）
-  string actionItems = 14;        // 待办事项（JSON格式）
-  string statistics = 15;         // 统计信息（JSON格式）
-  string creatorNickname = 16;    // 创建者昵称
-  string creatorFaceURL = 17;     // 创建者头像
-  string ex = 18;                 // 扩展字段
+  string ex = 20;                 // 扩展字段
 }
 
 // 创建总结记录响应
@@ -703,6 +708,23 @@ message GetSummaryRecordReq {
 message GetSummaryRecordResp {
   SummaryRecord record = 1;       // 总结记录
 }
+
+// 设置总结收藏状态请求
+message SetSummaryFavoriteReq {
+  string summaryID = 1;           // 总结ID
+  bool isFavorite = 2;            // 是否收藏
+}
+
+// 设置总结收藏状态响应
+message SetSummaryFavoriteResp {}
+
+// 发布总结（将草稿状态改为已发布）
+message PublishSummaryReq {
+  string summaryID = 1;           // 总结ID
+}
+
+// 发布总结响应
+message PublishSummaryResp {}
 
 // 同步总结记录请求（用于从服务端同步）
 message SyncSummaryRecordsReq {
@@ -795,5 +817,7 @@ service msg {
   rpc DeleteSummaryRecord(DeleteSummaryRecordReq) returns (DeleteSummaryRecordResp);
   rpc GetSummaryRecordList(GetSummaryRecordListReq) returns (GetSummaryRecordListResp);
   rpc GetSummaryRecord(GetSummaryRecordReq) returns (GetSummaryRecordResp);
+  rpc SetSummaryFavorite(SetSummaryFavoriteReq) returns (SetSummaryFavoriteResp);
+  rpc PublishSummary(PublishSummaryReq) returns (PublishSummaryResp);
   rpc SyncSummaryRecords(SyncSummaryRecordsReq) returns (SyncSummaryRecordsResp);
 }

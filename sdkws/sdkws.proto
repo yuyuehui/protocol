@@ -652,6 +652,19 @@ message SummaryRecordDeleteTips {
   string summaryID = 4;          // 被删除的总结记录ID
 }
 
+// 智能总结记录收藏状态变更通知
+message SummaryRecordFavoriteTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string summaryID = 2;          // 总结记录ID
+  bool isFavorite = 3;           // 是否收藏
+}
+
+// 智能总结记录发布通知（多端同步）
+message SummaryRecordPublishTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string summaryID = 2;          // 总结记录ID
+}
+
 //////////////////////conversation/////////////////////
 message ConversationUpdateTips {
   string userID = 1;
