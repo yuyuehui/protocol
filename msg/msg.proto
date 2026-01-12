@@ -569,17 +569,6 @@ message UnmarkMsgResp {
   bool success = 1;               // 是否成功
 }
 
-// 搜索标记消息请求
-message SearchMarkedMsgReq {
-  string conversationID = 1;      // 会话ID（必填）
-  string keyword = 2;             // 关键词（搜索消息内容，可选）
-  string senderID = 3;            // 发送人ID筛选（可选）
-  int64 startTime = 4;            // 开始时间（毫秒，可选）
-  int64 endTime = 5;              // 结束时间（毫秒，可选）
-  int32 offset = 6;               // 分页偏移量
-  int32 count = 7;                // 每页数量
-}
-
 // 标记消息详情（用于标记列表展示）
 message MarkedMsgDetail {
   string conversationID = 1;      // 会话ID
@@ -597,17 +586,16 @@ message MarkedMsgDetail {
   int64 markTime = 13;            // 标记时间
 }
 
-// 搜索标记消息响应
-message SearchMarkedMsgResp {
-  repeated MarkedMsgDetail markedMsgs = 1;  // 标记消息列表
-  int32 total = 2;                          // 总数
-}
-
-// 获取会话标记消息列表请求
+// 获取会话标记消息列表请求（支持可选筛选条件）
+// 不传筛选参数时返回所有标记消息，传参数时进行筛选
 message GetMarkedMsgListReq {
-  string conversationID = 1;      // 会话ID
-  int32 offset = 2;               // 分页偏移量
-  int32 count = 3;                // 每页数量
+  string conversationID = 1;      // 会话ID（必填）
+  string keyword = 2;             // 关键词（搜索消息内容，可选）
+  string senderID = 3;            // 发送人ID筛选（可选）
+  int64 startTime = 4;            // 开始时间（毫秒，可选）
+  int64 endTime = 5;              // 结束时间（毫秒，可选）
+  int32 offset = 6;               // 分页偏移量
+  int32 count = 7;                // 每页数量
 }
 
 // 获取会话标记消息列表响应
@@ -809,7 +797,6 @@ service msg {
 	// 消息标记相关接口
   rpc MarkMessage(MarkMsgReq) returns (MarkMsgResp);
   rpc UnmarkMessage(UnmarkMsgReq) returns (UnmarkMsgResp);
-  rpc SearchMarkedMessage(SearchMarkedMsgReq) returns (SearchMarkedMsgResp);
   rpc GetMarkedMessageList(GetMarkedMsgListReq) returns (GetMarkedMsgListResp);
 	
   // 智能总结相关接口
