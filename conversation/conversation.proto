@@ -522,6 +522,7 @@ message GetFoldConversationListReq {
   string userID = 1;
   string foldConversationID = 2;      // 折叠会话ID（也就是子会话的parentConversationID）
   openim.sdkws.RequestPagination pagination = 3;
+  string conversationGroupID = 4;     // 会话分组ID（可选，如果指定则只查询属于该分组的子会话）
 }
 
 message GetFoldConversationListResp {

@@ -21,14 +21,13 @@
 package conversation
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	sdkws "github.com/openimsdk/protocol/sdkws"
 	wrapperspb "github.com/openimsdk/protocol/wrapperspb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -271,7 +270,7 @@ type ConversationReq struct {
 	UnreadCount           *wrapperspb.Int32Value  `protobuf:"bytes,17,opt,name=unreadCount,proto3" json:"unreadCount"`                     // 手动设置的未读数
 	UpdateUnreadCountTime *wrapperspb.Int64Value  `protobuf:"bytes,18,opt,name=updateUnreadCountTime,proto3" json:"updateUnreadCountTime"` // 手动更新未读数的时间戳
 	ParentConversationID  *wrapperspb.StringValue `protobuf:"bytes,19,opt,name=parentConversationID,proto3" json:"parentConversationID"`   // 父折叠会话ID
-	IsHidden              *wrapperspb.BoolValue   `protobuf:"bytes,20,opt,name=isHidden,proto3" json:"is_hidden"`                          // 是否隐藏会话（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
+	IsHidden              *wrapperspb.BoolValue   `protobuf:"bytes,20,opt,name=isHidden,proto3" json:"isHidden"`                           // 是否隐藏会话（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -4856,12 +4855,13 @@ func (*SetConversationFoldResp) Descriptor() ([]byte, []int) {
 // GetFoldConversationList 获取折叠内的会话列表
 // 查询 parentConversationID = foldConversationID 的所有会话
 type GetFoldConversationListReq struct {
-	state              protoimpl.MessageState   `protogen:"open.v1"`
-	UserID             string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	FoldConversationID string                   `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID（也就是子会话的parentConversationID）
-	Pagination         *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state               protoimpl.MessageState   `protogen:"open.v1"`
+	UserID              string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	FoldConversationID  string                   `protobuf:"bytes,2,opt,name=foldConversationID,proto3" json:"foldConversationID"` // 折叠会话ID（也就是子会话的parentConversationID）
+	Pagination          *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`
+	ConversationGroupID string                   `protobuf:"bytes,4,opt,name=conversationGroupID,proto3" json:"conversationGroupID"` // 会话分组ID（可选，如果指定则只查询属于该分组的子会话）
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *GetFoldConversationListReq) Reset() {
@@ -4913,6 +4913,13 @@ func (x *GetFoldConversationListReq) GetPagination() *sdkws.RequestPagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+func (x *GetFoldConversationListReq) GetConversationGroupID() string {
+	if x != nil {
+		return x.ConversationGroupID
+	}
+	return ""
 }
 
 type GetFoldConversationListResp struct {
@@ -6053,13 +6060,14 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x16SetConversationFoldReq\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x122\n" +
 	"\x14parentConversationID\x18\x02 \x01(\tR\x14parentConversationID\"\x19\n" +
-	"\x17SetConversationFoldResp\"\xa5\x01\n" +
+	"\x17SetConversationFoldResp\"\xd7\x01\n" +
 	"\x1aGetFoldConversationListReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12?\n" +
 	"\n" +
 	"pagination\x18\x03 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"|\n" +
+	"pagination\x120\n" +
+	"\x13conversationGroupID\x18\x04 \x01(\tR\x13conversationGroupID\"|\n" +
 	"\x1bGetFoldConversationListResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x12G\n" +
 	"\rconversations\x18\x02 \x03(\v2!.openim.conversation.ConversationR\rconversations\"D\n" +
