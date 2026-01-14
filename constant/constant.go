@@ -92,12 +92,6 @@ const (
 
 	UserSubscribeOnlineStatusNotification = 1308 // 用户在线状态订阅通知
 
-	// 智能总结相关通知
-	SummaryRecordAddNotification      = 1320 // 总结记录新增通知（通知群成员或对方）
-	SummaryRecordDeleteNotification   = 1321 // 总结记录删除通知
-	SummaryRecordFavoriteNotification = 1322 // 总结记录收藏状态变更通知
-	SummaryRecordPublishNotification  = 1323 // 总结记录发布通知（多端同步）
-
 	UserNotificationEnd = 1399
 	OANotification      = 1400 // OA通知
 
@@ -155,7 +149,14 @@ const (
 	LikeMsgNotification    = 2103 // 点赞消息通知
 	MarkMsgNotification    = 2104 // 标记消息通知
 	UnmarkMsgNotification  = 2105 // 取消标记消息通知
-	HasReadReceipt         = 2200 // 已读回执
+
+	// 智能总结相关通知
+	SummaryRecordAddNotification      = 2106 // 总结记录新增通知
+	SummaryRecordDeleteNotification   = 2107 // 总结记录删除通知
+	SummaryRecordFavoriteNotification = 2108 // 总结记录收藏状态变更通知
+	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
+
+	HasReadReceipt = 2200 // 已读回执
 
 	NotificationEnd = 5000 // 通知类型结束标记
 
