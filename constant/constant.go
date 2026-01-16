@@ -156,6 +156,9 @@ const (
 	SummaryRecordFavoriteNotification = 2108 // 总结记录收藏状态变更通知
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
 
+	// 截屏通知
+	ScreenshotNotification = 2110 // 截屏通知（XXX进行了截屏）
+
 	HasReadReceipt = 2200 // 已读回执
 
 	NotificationEnd = 5000 // 通知类型结束标记
