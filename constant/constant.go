@@ -52,7 +52,8 @@ const (
 	CustomNotification = 203 // 自定义通知
 	MixedTextPicture   = 204 // 混合文本图片消息
 	Code               = 205 // 代码消息
-	SignalingRecord    = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
+	SignalingRecord        = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
+	ScreenshotNotification = 207 // 截屏通知消息（XXX进行了截屏）
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -155,9 +156,6 @@ const (
 	SummaryRecordDeleteNotification   = 2107 // 总结记录删除通知
 	SummaryRecordFavoriteNotification = 2108 // 总结记录收藏状态变更通知
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
-
-	// 截屏通知
-	ScreenshotNotification = 2110 // 截屏通知（XXX进行了截屏）
 
 	HasReadReceipt = 2200 // 已读回执
 
