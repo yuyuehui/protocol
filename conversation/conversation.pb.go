@@ -61,6 +61,7 @@ type Conversation struct {
 	UpdateUnreadCountTime int64                  `protobuf:"varint,20,opt,name=updateUnreadCountTime,proto3" json:"updateUnreadCountTime"` // 手动更新未读数的时间戳（毫秒），用于多端同步时判断最新值
 	ParentConversationID  string                 `protobuf:"bytes,21,opt,name=parentConversationID,proto3" json:"parentConversationID"`    // 父折叠会话ID，非空表示该会话被折叠（父会话conversationType=5）
 	IsSystemDefault       bool                   `protobuf:"varint,22,opt,name=isSystemDefault,proto3" json:"isSystemDefault"`             // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
+	IsHidden              bool                   `protobuf:"varint,23,opt,name=isHidden,proto3" json:"isHidden"`                           // 是否隐藏（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -245,6 +246,13 @@ func (x *Conversation) GetParentConversationID() string {
 func (x *Conversation) GetIsSystemDefault() bool {
 	if x != nil {
 		return x.IsSystemDefault
+	}
+	return false
+}
+
+func (x *Conversation) GetIsHidden() bool {
+	if x != nil {
+		return x.IsHidden
 	}
 	return false
 }
@@ -5744,7 +5752,7 @@ var File_conversation_conversation_proto protoreflect.FileDescriptor
 
 const file_conversation_conversation_proto_rawDesc = "" +
 	"\n" +
-	"\x1fconversation/conversation.proto\x12\x13openim.conversation\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\x96\x06\n" +
+	"\x1fconversation/conversation.proto\x12\x13openim.conversation\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\xb2\x06\n" +
 	"\fConversation\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12\x1e\n" +
@@ -5770,7 +5778,8 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\vunreadCount\x18\x13 \x01(\x05R\vunreadCount\x124\n" +
 	"\x15updateUnreadCountTime\x18\x14 \x01(\x03R\x15updateUnreadCountTime\x122\n" +
 	"\x14parentConversationID\x18\x15 \x01(\tR\x14parentConversationID\x12(\n" +
-	"\x0fisSystemDefault\x18\x16 \x01(\bR\x0fisSystemDefault\"\x81\t\n" +
+	"\x0fisSystemDefault\x18\x16 \x01(\bR\x0fisSystemDefault\x12\x1a\n" +
+	"\bisHidden\x18\x17 \x01(\bR\bisHidden\"\x81\t\n" +
 	"\x0fConversationReq\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12*\n" +
 	"\x10conversationType\x18\x02 \x01(\x05R\x10conversationType\x12\x16\n" +

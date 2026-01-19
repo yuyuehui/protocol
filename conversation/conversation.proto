@@ -43,6 +43,7 @@ message Conversation {
   int64 updateUnreadCountTime = 20;  // 手动更新未读数的时间戳（毫秒），用于多端同步时判断最新值
   string parentConversationID = 21;  // 父折叠会话ID，非空表示该会话被折叠（父会话conversationType=5）
   bool isSystemDefault = 22;  // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
+  bool isHidden = 23;  // 是否隐藏（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 }
 
 message ConversationReq {
@@ -245,6 +246,7 @@ message UpdateConversationReq {
   openim.protobuf.Int64Value latestMsgDestructTime = 14;
   openim.protobuf.BoolValue isMark = 15;
   openim.protobuf.StringValue parentConversationID = 16;  // 父折叠会话ID
+  openim.protobuf.BoolValue isHidden = 17;  // 是否隐藏会话（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 }
 
 message UpdateConversationResp {}
