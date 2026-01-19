@@ -7154,6 +7154,7 @@ type ConversationDeleteTips struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	UserID          string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	ConversationIDs []string               `protobuf:"bytes,2,rep,name=conversationIDs,proto3" json:"conversationIDs"`
+	IsHidden        bool                   `protobuf:"varint,3,opt,name=isHidden,proto3" json:"isHidden"` // 是否隐藏（true=隐藏会话，false=真正删除会话）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -7200,6 +7201,13 @@ func (x *ConversationDeleteTips) GetConversationIDs() []string {
 		return x.ConversationIDs
 	}
 	return nil
+}
+
+func (x *ConversationDeleteTips) GetIsHidden() bool {
+	if x != nil {
+		return x.IsHidden
+	}
+	return false
 }
 
 type ConversationGroupChangeTips struct {
@@ -8081,10 +8089,11 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"startIndex\x18\x03 \x01(\x03R\n" +
 	"startIndex\x12\x18\n" +
 	"\apackets\x18\x04 \x03(\tR\apackets\x12\x10\n" +
-	"\x03end\x18\x05 \x01(\bR\x03end\"Z\n" +
+	"\x03end\x18\x05 \x01(\bR\x03end\"v\n" +
 	"\x16ConversationDeleteTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12(\n" +
-	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\"\xcf\x01\n" +
+	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\x12\x1a\n" +
+	"\bisHidden\x18\x03 \x01(\bR\bisHidden\"\xcf\x01\n" +
 	"\x1bConversationGroupChangeTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
 	"\agroupID\x18\x02 \x01(\tR\agroupID\x12\x16\n" +

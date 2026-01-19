@@ -803,6 +803,7 @@ message StreamMsgTips {
 message ConversationDeleteTips {
   string userID = 1;
   repeated string conversationIDs = 2;
+  bool isHidden = 3;  // 是否隐藏（true=隐藏会话，false=真正删除会话）
 }
 
 message ConversationGroupChangeTips {
