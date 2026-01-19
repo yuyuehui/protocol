@@ -642,6 +642,7 @@ message SummaryRecordAddTips {
   string creatorFaceURL = 9;     // 创建者头像
   string contents = 10;          // 用户输入的总结请求
   int32 summaryType = 11;        // 总结类型：1=自动生成，2=手动生成
+  string timeDescription = 12;   // 时间范围描述
 }
 
 // 智能总结记录删除通知
