@@ -66,6 +66,7 @@ message GroupMemberFullInfo {
   string ex = 10;
   int64 muteEndTime = 11;
   string inviterUserID = 12;
+  string pinyin = 13; // 用户拼音字段，用于拼音搜索
 }
 
 message PublicUserInfo {
