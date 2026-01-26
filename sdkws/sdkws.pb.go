@@ -377,6 +377,7 @@ type GroupMemberFullInfo struct {
 	Ex             string                 `protobuf:"bytes,10,opt,name=ex,proto3" json:"ex"`
 	MuteEndTime    int64                  `protobuf:"varint,11,opt,name=muteEndTime,proto3" json:"muteEndTime"`
 	InviterUserID  string                 `protobuf:"bytes,12,opt,name=inviterUserID,proto3" json:"inviterUserID"`
+	Pinyin         string                 `protobuf:"bytes,13,opt,name=pinyin,proto3" json:"pinyin"` // 用户拼音字段，用于拼音搜索
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -491,6 +492,13 @@ func (x *GroupMemberFullInfo) GetMuteEndTime() int64 {
 func (x *GroupMemberFullInfo) GetInviterUserID() string {
 	if x != nil {
 		return x.InviterUserID
+	}
+	return ""
+}
+
+func (x *GroupMemberFullInfo) GetPinyin() string {
+	if x != nil {
+		return x.Pinyin
 	}
 	return ""
 }
@@ -7446,7 +7454,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x02ex\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\x02ex\x12G\n" +
 	"\x10needVerification\x18\a \x01(\v2\x1b.openim.protobuf.Int32ValueR\x10needVerification\x12C\n" +
 	"\x0elookMemberInfo\x18\b \x01(\v2\x1b.openim.protobuf.Int32ValueR\x0elookMemberInfo\x12I\n" +
-	"\x11applyMemberFriend\x18\t \x01(\v2\x1b.openim.protobuf.Int32ValueR\x11applyMemberFriend\"\xff\x02\n" +
+	"\x11applyMemberFriend\x18\t \x01(\v2\x1b.openim.protobuf.Int32ValueR\x11applyMemberFriend\"\x97\x03\n" +
 	"\x13GroupMemberFullInfo\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x1c\n" +
@@ -7462,7 +7470,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x02ex\x18\n" +
 	" \x01(\tR\x02ex\x12 \n" +
 	"\vmuteEndTime\x18\v \x01(\x03R\vmuteEndTime\x12$\n" +
-	"\rinviterUserID\x18\f \x01(\tR\rinviterUserID\"n\n" +
+	"\rinviterUserID\x18\f \x01(\tR\rinviterUserID\x12\x16\n" +
+	"\x06pinyin\x18\r \x01(\tR\x06pinyin\"n\n" +
 	"\x0ePublicUserInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
