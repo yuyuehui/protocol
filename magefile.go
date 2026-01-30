@@ -62,6 +62,7 @@ var protoModules = []string{
 	"push",
 	"relation",
 	"rtc",
+	"schedule",
 	"sdkws",
 	"third",
 	"user",

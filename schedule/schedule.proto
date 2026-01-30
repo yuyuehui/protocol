@@ -1,0 +1,483 @@
+// Copyright © 2023 OpenIM. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openim.schedule;
+
+import "sdkws/sdkws.proto";
+
+option go_package = "github.com/openimsdk/protocol/schedule";
+
+// DayOfWeek 星期枚举
+enum DayOfWeek {
+  SUNDAY = 0;
+  MONDAY = 1;
+  TUESDAY = 2;
+  WEDNESDAY = 3;
+  THURSDAY = 4;
+  FRIDAY = 5;
+  SATURDAY = 6;
+}
+
+// ScheduleType 日程类型枚举
+enum ScheduleType {
+  SCHEDULE = 0;  // 日程
+  MEETING = 1;   // 会议
+}
+
+// CallReminderType 会议开始时来电提醒类型枚举
+enum CallReminderType {
+  CALL_REMINDER_NONE = 0;        // 不提醒
+  CALL_REMINDER_ALL_MEMBERS = 1; // 所有成员
+  CALL_REMINDER_SPECIFIED = 2;   // 指定成员
+  CALL_REMINDER_HOST_ONLY = 3;   // 仅主持人
+}
+
+// MuteOnJoinType 成员入会时静音类型枚举
+enum MuteOnJoinType {
+  MUTE_ON_JOIN_OFF = 0;              // 关闭
+  MUTE_ON_JOIN_ON = 1;                // 开启
+  MUTE_ON_JOIN_AUTO_AFTER_6 = 2;     // 超过6人后自动开启
+}
+
+// WatermarkType 屏幕共享水印类型枚举
+enum WatermarkType {
+  WATERMARK_SINGLE_ROW = 0;  // 单排水印
+  WATERMARK_MULTI_ROW = 1;   // 多排水印
+}
+
+// ScheduleRepeatInfo 重复规则
+message ScheduleRepeatInfo {
+  int64 endDate = 1;                    // 重复结束日期（时间戳）
+  int32 repeatTimes = 2;                // 重复次数
+  string repeatType = 3;                // 重复类型：daily/weekly/monthly/yearly
+  string unitType = 4;                  // 单位类型
+  int32 interval = 5;                   // 重复间隔（如每2周）
+  repeated DayOfWeek repeatDaysOfWeek = 6; // 每周重复的星期几
+}
+
+// ScheduleReminderInfo 提醒信息
+message ScheduleReminderInfo {
+  int32 reminderType = 1;               // 提醒类型：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前 5=自定义
+  int64 reminderTime = 2;              // 提醒时间（时间戳，自定义时使用）
+  bool notified = 3;                   // 是否已通知
+}
+
+// ScheduleAttendeeInfo 参与者信息
+message ScheduleAttendeeInfo {
+  string userID = 1;                    // 用户ID
+  string nickname = 2;                  // 用户昵称
+  string faceURL = 3;                   // 头像URL
+  int32 status = 4;                     // 状态：0=待确认 1=已接受 2=已拒绝
+  int32 permission = 5;                 // 权限：0=仅查看 1=可编辑
+  int64 replyTime = 6;                  // 回复时间（时间戳）
+}
+
+// MeetingSettings 会议设置信息
+message MeetingSettings {
+  bool enablePassword = 1;                    // 是否启用入会密码
+  string password = 2;                        // 入会密码（4-6位数字）
+  bool autoTranscribe = 3;                     // 自动开启文字转写
+  bool enableWaitingRoom = 4;                 // 开启等候室
+  bool allowMemberJoinBeforeHost = 5;          // 允许成员在主持人进会前加入
+  bool enableScreenShareWatermark = 6;         // 开启屏幕共享水印
+  WatermarkType watermarkType = 7;             // 水印类型：0=单排水印 1=多排水印
+  bool allowMemberViewMinutes = 8;             // 允许成员查看会议纪要文档
+  bool allowMultiDeviceJoin = 9;                // 允许成员使用多个设备入会
+  CallReminderType callReminder = 10;          // 会议开始时来电提醒：0=不提醒 1=所有成员 2=指定成员 3=仅主持人
+  repeated string callReminderUserIDs = 11;     // 指定成员列表（callReminder为2时使用）
+  MuteOnJoinType muteOnJoin = 12;              // 成员入会时静音：0=关闭 1=开启 2=超过6人后自动开启
+}
+
+// ScheduleInfo 完整的日程信息（扁平结构）
+message ScheduleInfo {
+  // 系统生成的字段（只读）
+  string scheduleID = 1;              // 日程ID（唯一标识）
+  string creatorUserID = 2;           // 创建者用户ID
+  string creatorNickname = 3;         // 创建者昵称
+  string status = 4;                  // 状态：pending/accepted/rejected/cancelled/completed
+  int64 createTime = 5;               // 创建时间（时间戳）
+  
+  // 用户定义的字段（可修改）
+  string title = 6;                   // 日程标题
+  int64 startTime = 7;                // 开始时间（时间戳）
+  int64 endTime = 8;                  // 结束时间（时间戳）
+  string location = 9;                // 地点
+  string roomID = 10;                 // 会议室ID
+  string description = 11;            // 描述/备注
+  string timeZone = 12;               // 时区
+  int32 visibility = 13;              // 可见性：1=个人 2=团队 3=公开
+  bool allDay = 14;                   // 是否全天
+  repeated string attachmentURLs = 15; // 附件URL列表
+  string scheduleGroupID = 16;        // 所属日程分组ID
+  bool allowMemberJoin = 17;          // 允许成员主动加入
+  bool notifyByEmail = 18;            // 同时通过邮件通知参与人
+  ScheduleType type = 19;             // 日程类型：0=日程 1=会议
+  MeetingSettings meetingSettings = 20; // 会议设置（仅当type为MEETING时有效）
+  bool isTemporary = 21;              // 是否是临时会议（仅当type为MEETING时有效），临时会议不显示在日程中
+  string meetingMinutesID = 22;        // 会议纪要文档ID
+  
+  // 其他字段
+  ScheduleRepeatInfo repeatInfo = 23;            // 重复规则
+  repeated ScheduleAttendeeInfo attendees = 24; // 参与者列表
+  repeated ScheduleReminderInfo reminders = 25;  // 提醒列表
+}
+
+// CreateScheduleReq 创建日程请求
+message CreateScheduleReq {
+  string creatorUserID = 1;           // 创建者用户ID（可选，不传则使用当前登录用户）
+  string title = 2;                   // 日程标题（必填）
+  int64 startTime = 3;                // 开始时间（时间戳，必填）
+  int64 endTime = 4;                  // 结束时间（时间戳，必填）
+  string location = 5;                // 地点（可选）
+  string roomID = 6;                  // 会议室ID（可选）
+  string description = 7;             // 描述/备注（可选）
+  string timeZone = 8;                // 时区（可选，默认Asia/Shanghai）
+  int32 visibility = 9;               // 可见性：1=个人 2=团队 3=公开（可选，默认2）
+  bool allDay = 10;                   // 是否全天（可选，默认false）
+  repeated string attachmentURLs = 11; // 附件URL列表（可选）
+  string scheduleGroupID = 12;        // 所属日程分组ID（可选）
+  bool allowMemberJoin = 13;          // 允许成员主动加入（可选，默认true）
+  bool notifyByEmail = 14;             // 同时通过邮件通知参与人（可选，默认false）
+  ScheduleType type = 15;             // 日程类型：0=日程 1=会议（可选，默认0）
+  MeetingSettings meetingSettings = 16; // 会议设置（可选，仅当type为MEETING时有效）
+  bool isTemporary = 17;              // 是否是临时会议（可选，仅当type为MEETING时有效）
+  ScheduleRepeatInfo repeatInfo = 18; // 重复规则（可选）
+  repeated string attendeeUserIDs = 19; // 参与者用户ID列表（可选）
+  repeated ScheduleReminderInfo reminders = 20; // 提醒列表（可选）
+  bool sendToChat = 21; // 是否发送消息到聊天（可选，默认false）
+  string messageContent = 22; // 消息内容（可选，当sendToChat为true时使用，不传则使用默认内容）
+}
+
+// CreateScheduleResp 创建日程响应
+message CreateScheduleResp {
+  ScheduleInfo scheduleInfo = 1;
+}
+
+// SendScheduleMessageReq 发送日程消息到聊天请求
+message SendScheduleMessageReq {
+  repeated string scheduleIDs = 1;       // 日程ID列表（必填，至少一个）
+  string messageContent = 2;             // 消息内容（可选，不传则使用默认内容）
+  repeated string userIDs = 3;           // 目标用户ID列表（可选，根据sendMode决定用途）
+  repeated string groupIDs = 4;           // 目标群组ID列表（可选，仅转发模式有效，与userIDs不能同时设置）
+  int32 sendMode = 5;                    // 发送模式：0=创建日程发送消息（默认，用userIDs创建群聊并发送消息），1=转发消息（userIDs每个人发消息，groupIDs分别发群消息，可以同时存在）。未设置时默认为0（创建日程发送消息）
+}
+
+// SendScheduleMessageResult 单个发送结果
+message SendScheduleMessageResult {
+  string conversationID = 1;             // 会话ID（单聊或群聊）
+  int32 conversationType = 2;            // 会话类型：1=单聊，2=群聊
+  string groupID = 3;                    // 群组ID（仅当conversationType=2时有效）
+  string serverMsgID = 4;                // 服务器消息ID
+  string targetID = 5;                   // 目标ID（用户ID或群组ID）
+}
+
+// SendScheduleMessageResp 发送日程消息到聊天响应
+message SendScheduleMessageResp {
+  repeated SendScheduleMessageResult results = 1; // 发送结果列表（批量发送时返回多个结果）
+}
+
+// UpdateScheduleReq 更新日程请求（扁平结构，使用 optional 支持部分更新）
+message UpdateScheduleReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+  optional string title = 3;                   // 日程标题（可选）
+  optional int64 startTime = 4;                // 开始时间（时间戳，可选）
+  optional int64 endTime = 5;                  // 结束时间（时间戳，可选）
+  optional string location = 6;                 // 地点（可选）
+  optional string roomID = 7;                  // 会议室ID（可选）
+  optional string description = 8;              // 描述/备注（可选）
+  optional string timeZone = 9;                // 时区（可选）
+  optional int32 visibility = 10;              // 可见性：1=个人 2=团队 3=公开（可选）
+  optional bool allDay = 11;                   // 是否全天（可选）
+  repeated string attachmentURLs = 12;         // 附件URL列表（可选，传空数组表示清空）
+  optional string scheduleGroupID = 13;        // 所属日程分组ID（可选）
+  optional bool allowMemberJoin = 14;          // 允许成员主动加入（可选）
+  optional bool notifyByEmail = 15;             // 同时通过邮件通知参与人（可选）
+  optional string meetingMinutesID = 19;        // 会议纪要文档ID（可选）
+  optional ScheduleRepeatInfo repeatInfo = 16;  // 重复规则（可选）
+  repeated string attendeeUserIDs = 17;         // 更新参与者列表（可选，传空数组表示清空）
+  repeated ScheduleReminderInfo reminders = 18; // 更新提醒列表（可选，传空数组表示清空）
+  optional int32 type = 20;                     // 日程类型：0=日程 1=会议（可选）
+  optional MeetingSettings meetingSettings = 21; // 会议设置（可选，仅当type为MEETING时有效）
+  optional bool isTemporary = 22;              // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
+}
+
+// UpdateScheduleResp 更新日程响应
+message UpdateScheduleResp {
+  ScheduleInfo scheduleInfo = 1;
+}
+
+// DeleteScheduleReq 删除日程请求
+message DeleteScheduleReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+}
+
+// DeleteScheduleResp 删除日程响应
+message DeleteScheduleResp {
+}
+
+// GetScheduleReq 查询日程详情请求
+message GetScheduleReq {
+  string scheduleID = 1;
+  string userID = 2;
+}
+
+// GetScheduleResp 查询日程详情响应
+message GetScheduleResp {
+  ScheduleInfo scheduleInfo = 1;
+}
+
+// GetSchedulesReq 查询日程列表请求
+message GetSchedulesReq {
+  string userID = 1;
+  int64 startTime = 2;                  // 开始时间范围（时间戳）
+  int64 endTime = 3;                    // 结束时间范围（时间戳）
+  int32 status = 4;                     // 状态筛选：0=全部 1=待确认 2=已接受 3=已拒绝
+  string keyword = 5;                   // 关键词搜索
+  repeated string scheduleGroupIDs = 7;  // 日程分组ID列表（可选，用于筛选指定分组的日程）
+  sdkws.RequestPagination pagination = 6;
+}
+
+// GetSchedulesResp 查询日程列表响应
+message GetSchedulesResp {
+  repeated ScheduleInfo schedules = 1;
+  int32 total = 2;
+}
+
+// AcceptScheduleReq 接受日程邀请请求
+message AcceptScheduleReq {
+  string scheduleID = 1;
+  string userID = 2;
+}
+
+// AcceptScheduleResp 接受日程邀请响应
+message AcceptScheduleResp {
+}
+
+// RejectScheduleReq 拒绝日程邀请请求
+message RejectScheduleReq {
+  string scheduleID = 1;
+  string userID = 2;
+}
+
+// RejectScheduleResp 拒绝日程邀请响应
+message RejectScheduleResp {
+}
+
+// SetReminderReq 设置提醒请求
+message SetReminderReq {
+  string scheduleID = 1;
+  string userID = 2;
+  repeated ScheduleReminderInfo reminders = 3;
+}
+
+// SetReminderResp 设置提醒响应
+message SetReminderResp {
+}
+
+// BusySlot 忙碌时间段
+message BusySlot {
+  string slotId = 1;    // 用户id和startTime/endTime时间和busy生成的MD5唯一值
+  int64 startTime = 2;   // 开始时间（时间戳，秒）
+  int64 endTime = 3;     // 结束时间（时间戳，秒）
+  bool busy = 4;         // 是否忙碌
+}
+
+// BusySlotList 忙碌时间段列表
+message BusySlotList {
+  repeated BusySlot slots = 1;
+}
+
+// CheckConflictReq 查询日程冲突请求
+message CheckConflictReq {
+  int64 startTime = 1;                  // 查询开始（时间戳，秒）
+  int64 endTime = 2;                    // 查询结束（时间戳，秒），必须 > startTime
+  repeated string userIDs = 3;          // 需要检查的成员 userID 列表
+}
+
+// CheckConflictResp 查询日程冲突响应
+message CheckConflictResp {
+  repeated string busyUserIDs = 1;      // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+  map<string, BusySlotList> busyByUserId = 2; // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
+}
+
+// GetScheduleDatesReq 查询某个月有参与日程的日期列表请求
+message GetScheduleDatesReq {
+  string userID = 1;                     // 用户ID（必填）
+  int32 year = 2;                        // 年份（必填，如 2026）
+  int32 month = 3;                       // 月份（必填，1-12）
+  repeated string scheduleGroupIDs = 4;   // 日程分组ID列表（可选，用于筛选指定分组的日程）
+}
+
+// GetScheduleDatesResp 查询某个月有参与日程的日期列表响应
+message GetScheduleDatesResp {
+  repeated int32 dates = 1;              // 有日程的日期列表（1-31，如 [2, 5, 9, 16, 23, 30]）
+}
+
+// GetScheduleMonthViewReq 查询某个月每天的所有日程请求（月历视图）
+message GetScheduleMonthViewReq {
+  string userID = 1;                     // 用户ID（必填）
+  int32 year = 2;                        // 年份（必填，如 2026）
+  int32 month = 3;                       // 月份（必填，1-12）
+  repeated string scheduleGroupIDs = 4;   // 日程分组ID列表（可选，用于筛选指定分组的日程）
+}
+
+// ScheduleDayInfo 某一天的日程信息
+message ScheduleDayInfo {
+  int32 day = 1;                         // 日期（1-31）
+  repeated ScheduleInfo schedules = 2;    // 该天的所有日程列表
+}
+
+// GetScheduleMonthViewResp 查询某个月每天的所有日程响应（月历视图）
+message GetScheduleMonthViewResp {
+  repeated ScheduleDayInfo days = 1;     // 每天及其对应的日程列表
+}
+
+// Schedule 日程服务
+service Schedule {
+  // 创建日程
+  rpc CreateSchedule(CreateScheduleReq) returns (CreateScheduleResp);
+  
+  // 更新日程
+  rpc UpdateSchedule(UpdateScheduleReq) returns (UpdateScheduleResp);
+  
+  // 删除日程
+  rpc DeleteSchedule(DeleteScheduleReq) returns (DeleteScheduleResp);
+  
+  // 查询日程详情
+  rpc GetSchedule(GetScheduleReq) returns (GetScheduleResp);
+  
+  // 查询日程列表
+  rpc GetSchedules(GetSchedulesReq) returns (GetSchedulesResp);
+  
+  // 接受日程邀请
+  rpc AcceptSchedule(AcceptScheduleReq) returns (AcceptScheduleResp);
+  
+  // 拒绝日程邀请
+  rpc RejectSchedule(RejectScheduleReq) returns (RejectScheduleResp);
+  
+  // 设置提醒
+  rpc SetReminder(SetReminderReq) returns (SetReminderResp);
+  
+  // 查询日程冲突
+  rpc CheckConflict(CheckConflictReq) returns (CheckConflictResp);
+  
+  // 查询某个月有参与日程的日期列表（用于日历标记）
+  rpc GetScheduleDates(GetScheduleDatesReq) returns (GetScheduleDatesResp);
+  
+  // 查询某个月每天的所有日程（月历视图）
+  rpc GetScheduleMonthView(GetScheduleMonthViewReq) returns (GetScheduleMonthViewResp);
+  
+  // 发送日程消息到聊天（2个人是单聊，3个及以上是群聊）
+  rpc SendScheduleMessage(SendScheduleMessageReq) returns (SendScheduleMessageResp);
+  
+  // ==================== 日程分组相关接口 ====================
+  
+  // 初始化日程分组（创建默认分组）
+  rpc InitScheduleGroups(InitScheduleGroupsReq) returns (InitScheduleGroupsResp);
+  
+  // 获取所有日程分组
+  rpc GetAllScheduleGroups(GetAllScheduleGroupsReq) returns (GetAllScheduleGroupsResp);
+  
+  // 创建自定义日程分组
+  rpc CreateScheduleGroup(CreateScheduleGroupReq) returns (CreateScheduleGroupResp);
+  
+  // 更新日程分组信息
+  rpc UpdateScheduleGroup(UpdateScheduleGroupReq) returns (UpdateScheduleGroupResp);
+  
+  // 删除日程分组
+  rpc DeleteScheduleGroup(DeleteScheduleGroupReq) returns (DeleteScheduleGroupResp);
+}
+
+// ==================== 日程分组相关消息定义 ====================
+
+// ScheduleGroup 日程分组信息
+message ScheduleGroup {
+  string groupID = 1;        // 分组ID
+  string ownerUserID = 2;    // 所有者用户ID
+  string groupName = 3;      // 分组名称
+  int32 groupType = 4;       // 分组类型：0=系统默认分组（只可能有一个），1=个人/团队，2=订阅公共日历
+  int32 sortOrder = 5;       // 排序顺序
+  bool isVisible = 6;        // 是否可见
+  int64 createTime = 7;      // 创建时间（时间戳）
+  int64 updateTime = 8;      // 更新时间（时间戳）
+  string ex = 9;             // 扩展字段
+  repeated GroupShareInfo shares = 10;  // 共享信息列表（包含权限）
+  string subscribedPublicCalendarID = 11;  // 订阅的公共日历ID（仅当groupType=2时有效）
+}
+
+// GroupShareInfo 分组共享信息
+message GroupShareInfo {
+  string userID = 1;         // 用户ID
+  int32 permission = 2;      // 权限：1=可查看, 2=可编辑, 3=可管理
+  bool onlyBusyFree = 3;     // 是否仅查看闲忙状态
+}
+
+// InitScheduleGroupsReq 初始化日程分组请求
+message InitScheduleGroupsReq {
+  string ownerUserID = 1;    // 所有者用户ID
+}
+
+// InitScheduleGroupsResp 初始化日程分组响应
+message InitScheduleGroupsResp {}
+
+// GetAllScheduleGroupsReq 获取所有日程分组请求
+message GetAllScheduleGroupsReq {
+  string ownerUserID = 1;    // 所有者用户ID
+}
+
+// GetAllScheduleGroupsResp 获取所有日程分组响应
+message GetAllScheduleGroupsResp {
+  repeated ScheduleGroup myGroups = 1;      // 我的日程分组列表（ownerUserID等于当前用户的分组）
+  repeated ScheduleGroup sharedGroups = 2;  // 共享的日程分组列表（通过shares共享给当前用户的分组）
+}
+
+// CreateScheduleGroupReq 创建日程分组请求
+message CreateScheduleGroupReq {
+  string ownerUserID = 1;    // 所有者用户ID
+  string groupName = 2;      // 分组名称（必填）
+  string groupID = 3;        // 分组ID（可选，不传则自动生成）
+  int32 groupType = 4;       // 分组类型（可选，默认1=个人/团队）：1=个人/团队，2=订阅公共日历
+  repeated GroupShareInfo shares = 5;  // 共享信息列表（可选）
+  string subscribedPublicCalendarID = 6;  // 订阅的公共日历ID（可选，仅当groupType=2时有效）
+  string ex = 7;             // 扩展字段（可选）
+}
+
+// CreateScheduleGroupResp 创建日程分组响应
+message CreateScheduleGroupResp {
+  ScheduleGroup group = 1;    // 创建的分组信息
+}
+
+// UpdateScheduleGroupReq 更新日程分组请求
+message UpdateScheduleGroupReq {
+  string groupID = 1;        // 分组ID（必填）
+  optional string groupName = 2;      // 分组名称（可选）
+  optional bool isVisible = 3;        // 是否可见（可选）
+  repeated GroupShareInfo shares = 4;  // 更新共享信息列表（可选，传空数组表示清空）
+  optional string ex = 5;             // 扩展字段（可选）
+}
+
+// UpdateScheduleGroupResp 更新日程分组响应
+message UpdateScheduleGroupResp {}
+
+// DeleteScheduleGroupReq 删除日程分组请求
+message DeleteScheduleGroupReq {
+  string groupID = 1;        // 分组ID（必填）
+}
+
+// DeleteScheduleGroupResp 删除日程分组响应
+message DeleteScheduleGroupResp {}
+

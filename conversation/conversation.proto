@@ -24,7 +24,7 @@ message Conversation {
   string ownerUserID = 1;
   string conversationID = 2;
   int32 recvMsgOpt = 3;
-  int32 conversationType = 4;  // 会话类型: 1=单聊, 2=可写群聊, 3=只读群聊, 4=通知, 5=折叠会话
+  int32 conversationType = 4;  // 会话类型: 1=单聊, 2=可写群聊, 3=只读群聊, 4=通知, 5=折叠会话, 6=日程会话
   string userID = 5;
   string groupID = 6;
   bool isPinned = 7;
@@ -48,7 +48,7 @@ message Conversation {
 
 message ConversationReq {
   string conversationID = 1;
-  int32 conversationType = 2;  // 会话类型: 1=单聊, 2=可写群聊, 3=只读群聊, 4=通知, 5=折叠会话
+  int32 conversationType = 2;  // 会话类型: 1=单聊, 2=可写群聊, 3=只读群聊, 4=通知, 5=折叠会话, 6=日程会话
   string userID = 3;
   string groupID = 4;
   openim.protobuf.Int32Value recvMsgOpt = 5;

@@ -85,6 +85,7 @@ message UserInfo {
   int32 appMangerLevel = 6;
   int32 globalRecvMsgOpt = 7;
   string pinyin = 8;
+  string pinyinInitials = 27;  // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
   string status = 9;
   string signature = 10;  // 用户签名
   repeated PlatformDetail onlineStatus = 11; // 平台详细状态列表（包含平台ID和在线状态）
@@ -120,6 +121,7 @@ message UserInfoWithEx {
   openim.protobuf.StringValue ex = 4;
   openim.protobuf.Int32Value globalRecvMsgOpt = 7;
   openim.protobuf.StringValue pinyin = 8;
+  openim.protobuf.StringValue pinyinInitials = 27;  // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
   openim.protobuf.StringValue status = 9;
   openim.protobuf.StringValue signature = 10;  // 用户签名
 }
@@ -667,6 +669,20 @@ message SummaryRecordPublishTips {
   string summaryID = 2;          // 总结记录ID
 }
 
+//////////////////////schedule/////////////////////
+// 日程通知（统一通知，通过action字段区分操作类型，多端同步）
+// action: "created"=创建, "updated"=更新, "deleted"=删除, "shared"=分享, "unshared"=取消分享, "accepted"=接受, "rejected"=拒绝
+message ScheduleNotificationTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string scheduleID = 2;          // 日程ID
+  string action = 3;              // 操作类型：created/updated/deleted/shared/unshared/accepted/rejected
+  int64 timestamp = 4;            // 操作时间（时间戳）
+  // 以下字段根据action类型选择性使用
+  repeated string shareToUserIDs = 5;     // 分享操作：被分享的用户ID列表
+  repeated string unshareFromUserIDs = 6; // 取消分享操作：取消分享的用户ID列表
+  string creatorUserID = 7;               // 接受/拒绝操作：创建者用户ID
+}
+
 //////////////////////conversation/////////////////////
 message ConversationUpdateTips {
   string userID = 1;
@@ -815,6 +831,16 @@ message ConversationGroupChangeTips {
   string groupName = 4;
   repeated string conversationIDs = 5;
   int64 updateTime = 6;
+}
+
+// 日程分组变更通知（多端同步）
+message ScheduleGroupChangeTips {
+  string userID = 1;                    // 用户ID
+  string groupID = 2;                   // 分组ID
+  string action = 3;                    // 操作类型: "create"=创建, "update"=更新, "delete"=删除, "sort"=排序, "addSchedule"=添加日程, "removeSchedule"=移除日程
+  string groupName = 4;                  // 分组名称（创建/更新时）
+  repeated string scheduleIDs = 5;       // 变更的日程ID列表（addSchedule/removeSchedule时返回）
+  int64 updateTime = 6;                  // 更新时间
 }
 
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
