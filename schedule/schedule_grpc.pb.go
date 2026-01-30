@@ -33,23 +33,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Schedule_CreateSchedule_FullMethodName       = "/openim.schedule.Schedule/CreateSchedule"
-	Schedule_UpdateSchedule_FullMethodName       = "/openim.schedule.Schedule/UpdateSchedule"
-	Schedule_DeleteSchedule_FullMethodName       = "/openim.schedule.Schedule/DeleteSchedule"
-	Schedule_GetSchedule_FullMethodName          = "/openim.schedule.Schedule/GetSchedule"
-	Schedule_GetSchedules_FullMethodName         = "/openim.schedule.Schedule/GetSchedules"
-	Schedule_AcceptSchedule_FullMethodName       = "/openim.schedule.Schedule/AcceptSchedule"
-	Schedule_RejectSchedule_FullMethodName       = "/openim.schedule.Schedule/RejectSchedule"
-	Schedule_SetReminder_FullMethodName          = "/openim.schedule.Schedule/SetReminder"
-	Schedule_CheckConflict_FullMethodName        = "/openim.schedule.Schedule/CheckConflict"
-	Schedule_GetScheduleDates_FullMethodName     = "/openim.schedule.Schedule/GetScheduleDates"
-	Schedule_GetScheduleMonthView_FullMethodName = "/openim.schedule.Schedule/GetScheduleMonthView"
-	Schedule_SendScheduleMessage_FullMethodName  = "/openim.schedule.Schedule/SendScheduleMessage"
-	Schedule_InitScheduleGroups_FullMethodName   = "/openim.schedule.Schedule/InitScheduleGroups"
-	Schedule_GetAllScheduleGroups_FullMethodName = "/openim.schedule.Schedule/GetAllScheduleGroups"
-	Schedule_CreateScheduleGroup_FullMethodName  = "/openim.schedule.Schedule/CreateScheduleGroup"
-	Schedule_UpdateScheduleGroup_FullMethodName  = "/openim.schedule.Schedule/UpdateScheduleGroup"
-	Schedule_DeleteScheduleGroup_FullMethodName  = "/openim.schedule.Schedule/DeleteScheduleGroup"
+	Schedule_CreateSchedule_FullMethodName        = "/openim.schedule.Schedule/CreateSchedule"
+	Schedule_UpdateSchedule_FullMethodName        = "/openim.schedule.Schedule/UpdateSchedule"
+	Schedule_DeleteSchedule_FullMethodName        = "/openim.schedule.Schedule/DeleteSchedule"
+	Schedule_GetSchedule_FullMethodName           = "/openim.schedule.Schedule/GetSchedule"
+	Schedule_GetSchedules_FullMethodName          = "/openim.schedule.Schedule/GetSchedules"
+	Schedule_AcceptSchedule_FullMethodName        = "/openim.schedule.Schedule/AcceptSchedule"
+	Schedule_RejectSchedule_FullMethodName        = "/openim.schedule.Schedule/RejectSchedule"
+	Schedule_SetReminder_FullMethodName           = "/openim.schedule.Schedule/SetReminder"
+	Schedule_CheckConflict_FullMethodName         = "/openim.schedule.Schedule/CheckConflict"
+	Schedule_GetScheduleDates_FullMethodName      = "/openim.schedule.Schedule/GetScheduleDates"
+	Schedule_GetScheduleMonthView_FullMethodName  = "/openim.schedule.Schedule/GetScheduleMonthView"
+	Schedule_CreateScheduleMessage_FullMethodName = "/openim.schedule.Schedule/createScheduleMessage"
+	Schedule_InitScheduleGroups_FullMethodName    = "/openim.schedule.Schedule/InitScheduleGroups"
+	Schedule_GetAllScheduleGroups_FullMethodName  = "/openim.schedule.Schedule/GetAllScheduleGroups"
+	Schedule_CreateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/CreateScheduleGroup"
+	Schedule_UpdateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/UpdateScheduleGroup"
+	Schedule_DeleteScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/DeleteScheduleGroup"
 )
 
 // ScheduleClient is the client API for Schedule service.
@@ -81,7 +81,7 @@ type ScheduleClient interface {
 	// 查询某个月每天的所有日程（月历视图）
 	GetScheduleMonthView(ctx context.Context, in *GetScheduleMonthViewReq, opts ...grpc.CallOption) (*GetScheduleMonthViewResp, error)
 	// 发送日程消息到聊天（2个人是单聊，3个及以上是群聊）
-	SendScheduleMessage(ctx context.Context, in *SendScheduleMessageReq, opts ...grpc.CallOption) (*SendScheduleMessageResp, error)
+	CreateScheduleMessage(ctx context.Context, in *CreateScheduleMessageReq, opts ...grpc.CallOption) (*CreateScheduleMessageResp, error)
 	// 初始化日程分组（创建默认分组）
 	InitScheduleGroups(ctx context.Context, in *InitScheduleGroupsReq, opts ...grpc.CallOption) (*InitScheduleGroupsResp, error)
 	// 获取所有日程分组
@@ -212,10 +212,10 @@ func (c *scheduleClient) GetScheduleMonthView(ctx context.Context, in *GetSchedu
 	return out, nil
 }
 
-func (c *scheduleClient) SendScheduleMessage(ctx context.Context, in *SendScheduleMessageReq, opts ...grpc.CallOption) (*SendScheduleMessageResp, error) {
+func (c *scheduleClient) CreateScheduleMessage(ctx context.Context, in *CreateScheduleMessageReq, opts ...grpc.CallOption) (*CreateScheduleMessageResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SendScheduleMessageResp)
-	err := c.cc.Invoke(ctx, Schedule_SendScheduleMessage_FullMethodName, in, out, cOpts...)
+	out := new(CreateScheduleMessageResp)
+	err := c.cc.Invoke(ctx, Schedule_CreateScheduleMessage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +301,7 @@ type ScheduleServer interface {
 	// 查询某个月每天的所有日程（月历视图）
 	GetScheduleMonthView(context.Context, *GetScheduleMonthViewReq) (*GetScheduleMonthViewResp, error)
 	// 发送日程消息到聊天（2个人是单聊，3个及以上是群聊）
-	SendScheduleMessage(context.Context, *SendScheduleMessageReq) (*SendScheduleMessageResp, error)
+	CreateScheduleMessage(context.Context, *CreateScheduleMessageReq) (*CreateScheduleMessageResp, error)
 	// 初始化日程分组（创建默认分组）
 	InitScheduleGroups(context.Context, *InitScheduleGroupsReq) (*InitScheduleGroupsResp, error)
 	// 获取所有日程分组
@@ -355,8 +355,8 @@ func (UnimplementedScheduleServer) GetScheduleDates(context.Context, *GetSchedul
 func (UnimplementedScheduleServer) GetScheduleMonthView(context.Context, *GetScheduleMonthViewReq) (*GetScheduleMonthViewResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetScheduleMonthView not implemented")
 }
-func (UnimplementedScheduleServer) SendScheduleMessage(context.Context, *SendScheduleMessageReq) (*SendScheduleMessageResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SendScheduleMessage not implemented")
+func (UnimplementedScheduleServer) CreateScheduleMessage(context.Context, *CreateScheduleMessageReq) (*CreateScheduleMessageResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateScheduleMessage not implemented")
 }
 func (UnimplementedScheduleServer) InitScheduleGroups(context.Context, *InitScheduleGroupsReq) (*InitScheduleGroupsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method InitScheduleGroups not implemented")
@@ -592,20 +592,20 @@ func _Schedule_GetScheduleMonthView_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Schedule_SendScheduleMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendScheduleMessageReq)
+func _Schedule_CreateScheduleMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateScheduleMessageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ScheduleServer).SendScheduleMessage(ctx, in)
+		return srv.(ScheduleServer).CreateScheduleMessage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Schedule_SendScheduleMessage_FullMethodName,
+		FullMethod: Schedule_CreateScheduleMessage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScheduleServer).SendScheduleMessage(ctx, req.(*SendScheduleMessageReq))
+		return srv.(ScheduleServer).CreateScheduleMessage(ctx, req.(*CreateScheduleMessageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -752,8 +752,8 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Schedule_GetScheduleMonthView_Handler,
 		},
 		{
-			MethodName: "SendScheduleMessage",
-			Handler:    _Schedule_SendScheduleMessage_Handler,
+			MethodName: "createScheduleMessage",
+			Handler:    _Schedule_CreateScheduleMessage_Handler,
 		},
 		{
 			MethodName: "InitScheduleGroups",

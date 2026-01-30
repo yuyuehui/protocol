@@ -165,8 +165,8 @@ message CreateScheduleResp {
   ScheduleInfo scheduleInfo = 1;
 }
 
-// SendScheduleMessageReq 发送日程消息到聊天请求
-message SendScheduleMessageReq {
+// createScheduleMessageReq 发送日程消息到聊天请求
+message createScheduleMessageReq {
   repeated string scheduleIDs = 1;       // 日程ID列表（必填，至少一个）
   string messageContent = 2;             // 消息内容（可选，不传则使用默认内容）
   repeated string userIDs = 3;           // 目标用户ID列表（可选，根据sendMode决定用途）
@@ -174,8 +174,8 @@ message SendScheduleMessageReq {
   int32 sendMode = 5;                    // 发送模式：0=创建日程发送消息（默认，用userIDs创建群聊并发送消息），1=转发消息（userIDs每个人发消息，groupIDs分别发群消息，可以同时存在）。未设置时默认为0（创建日程发送消息）
 }
 
-// SendScheduleMessageResult 单个发送结果
-message SendScheduleMessageResult {
+// createScheduleMessageResult 单个发送结果
+message createScheduleMessageResult {
   string conversationID = 1;             // 会话ID（单聊或群聊）
   int32 conversationType = 2;            // 会话类型：1=单聊，2=群聊
   string groupID = 3;                    // 群组ID（仅当conversationType=2时有效）
@@ -183,9 +183,9 @@ message SendScheduleMessageResult {
   string targetID = 5;                   // 目标ID（用户ID或群组ID）
 }
 
-// SendScheduleMessageResp 发送日程消息到聊天响应
-message SendScheduleMessageResp {
-  repeated SendScheduleMessageResult results = 1; // 发送结果列表（批量发送时返回多个结果）
+// createScheduleMessageResp 发送日程消息到聊天响应
+message createScheduleMessageResp {
+  repeated createScheduleMessageResult results = 1; // 发送结果列表（批量发送时返回多个结果）
 }
 
 // UpdateScheduleReq 更新日程请求（扁平结构，使用 optional 支持部分更新）
@@ -382,7 +382,7 @@ service Schedule {
   rpc GetScheduleMonthView(GetScheduleMonthViewReq) returns (GetScheduleMonthViewResp);
   
   // 发送日程消息到聊天（2个人是单聊，3个及以上是群聊）
-  rpc SendScheduleMessage(SendScheduleMessageReq) returns (SendScheduleMessageResp);
+  rpc createScheduleMessage(createScheduleMessageReq) returns (createScheduleMessageResp);
   
   // ==================== 日程分组相关接口 ====================
   
