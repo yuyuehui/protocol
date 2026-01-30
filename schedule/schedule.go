@@ -342,8 +342,8 @@ func (x *GetScheduleMonthViewReq) Check() error {
 	return nil
 }
 
-// SendScheduleMessageReq Check 发送日程消息到聊天请求参数校验
-func (x *SendScheduleMessageReq) Check() error {
+// CreateScheduleMessageReq Check 发送日程消息到聊天请求参数校验
+func (x *CreateScheduleMessageReq) Check() error {
 	if len(x.ScheduleIDs) == 0 {
 		return errs.ErrArgs.WrapMsg("scheduleIDs is empty, at least one scheduleID is required")
 	}
