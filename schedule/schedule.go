@@ -179,9 +179,7 @@ func (x *UpdateScheduleReq) Check() error {
 	if x.ScheduleID == "" {
 		return errs.ErrArgs.WrapMsg("scheduleID is empty")
 	}
-	if x.OperatorUserID == "" {
-		return errs.ErrArgs.WrapMsg("operatorUserID is empty")
-	}
+	// operatorUserID 可选，如果不传则使用 context 中的当前用户
 	// 如果提供了时间，需要校验时间有效性
 	if x.StartTime != nil && x.EndTime != nil {
 		if *x.StartTime <= 0 {
@@ -231,9 +229,7 @@ func (x *DeleteScheduleReq) Check() error {
 	if x.ScheduleID == "" {
 		return errs.ErrArgs.WrapMsg("scheduleID is empty")
 	}
-	if x.OperatorUserID == "" {
-		return errs.ErrArgs.WrapMsg("operatorUserID is empty")
-	}
+	// operatorUserID 可选，如果不传则使用 context 中的当前用户
 	return nil
 }
 
