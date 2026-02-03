@@ -316,9 +316,7 @@ func (x *CheckConflictReq) Check() error {
 
 // GetScheduleDatesReq Check 查询某个月有参与日程的日期列表请求参数校验
 func (x *GetScheduleDatesReq) Check() error {
-	if x.UserID == "" {
-		return errs.ErrArgs.WrapMsg("userID is empty")
-	}
+	// userID 可选，如果不传则使用 context 中的当前用户
 	if x.Year <= 0 {
 		return errs.ErrArgs.WrapMsg("year is invalid")
 	}
@@ -330,9 +328,7 @@ func (x *GetScheduleDatesReq) Check() error {
 
 // GetScheduleMonthViewReq Check 查询某个月每天的所有日程请求参数校验
 func (x *GetScheduleMonthViewReq) Check() error {
-	if x.UserID == "" {
-		return errs.ErrArgs.WrapMsg("userID is empty")
-	}
+	// userID 可选，如果不传则使用 context 中的当前用户
 	if x.Year <= 0 {
 		return errs.ErrArgs.WrapMsg("year is invalid")
 	}
