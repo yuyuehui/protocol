@@ -163,6 +163,8 @@ message CreateScheduleReq {
 // CreateScheduleResp 创建日程响应
 message CreateScheduleResp {
   ScheduleInfo scheduleInfo = 1;
+  string conversationID = 2; // 会话ID（当发送消息到聊天时返回，单聊或群聊）
+  string targetID = 3; // 目标ID（用户ID或群组ID，当发送消息到聊天时返回）
 }
 
 // CreateScheduleMessageReq 发送日程消息到聊天请求
@@ -258,6 +260,7 @@ message GetSchedulesResp {
 }
 
 // AcceptScheduleReq 接受日程邀请请求
+// 支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程
 message AcceptScheduleReq {
   string scheduleID = 1;
   string userID = 2;
@@ -268,6 +271,7 @@ message AcceptScheduleResp {
 }
 
 // RejectScheduleReq 拒绝日程邀请请求
+// 支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程
 message RejectScheduleReq {
   string scheduleID = 1;
   string userID = 2;
@@ -306,6 +310,7 @@ message CheckConflictReq {
   int64 startTime = 1;                  // 查询开始（时间戳，秒）
   int64 endTime = 2;                    // 查询结束（时间戳，秒），必须 > startTime
   repeated string userIDs = 3;          // 需要检查的成员 userID 列表
+  repeated string scheduleIDs = 4;      // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
 }
 
 // CheckConflictResp 查询日程冲突响应
@@ -363,10 +368,10 @@ service Schedule {
   // 查询日程列表
   rpc GetSchedules(GetSchedulesReq) returns (GetSchedulesResp);
   
-  // 接受日程邀请
+  // 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
   rpc AcceptSchedule(AcceptScheduleReq) returns (AcceptScheduleResp);
   
-  // 拒绝日程邀请
+  // 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
   rpc RejectSchedule(RejectScheduleReq) returns (RejectScheduleResp);
   
   // 设置提醒
@@ -400,6 +405,9 @@ service Schedule {
   
   // 删除日程分组
   rpc DeleteScheduleGroup(DeleteScheduleGroupReq) returns (DeleteScheduleGroupResp);
+
+  // 退出日程分组（被共享的用户主动退出他人共享的分组）
+  rpc QuitScheduleGroup(QuitScheduleGroupReq) returns (QuitScheduleGroupResp);
 }
 
 // ==================== 日程分组相关消息定义 ====================
@@ -480,4 +488,12 @@ message DeleteScheduleGroupReq {
 
 // DeleteScheduleGroupResp 删除日程分组响应
 message DeleteScheduleGroupResp {}
+
+// QuitScheduleGroupReq 退出日程分组请求（被共享的用户主动退出）
+message QuitScheduleGroupReq {
+  string groupID = 1;  // 要退出的分组ID（必填）
+}
+
+// QuitScheduleGroupResp 退出日程分组响应
+message QuitScheduleGroupResp {}
 

@@ -159,9 +159,10 @@ const (
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
 
 	// 日程相关通知（统一通知，通过action字段区分操作类型）
-	ScheduleNotification      = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
-	ScheduleGroupNotification = 2111 // 日程分组变更通知（多端同步）
-	HasReadReceipt            = 2200 // 已读回执
+	ScheduleNotification           = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
+	ScheduleGroupNotification      = 2111 // 日程分组变更通知（多端同步）
+	ScheduleGroupShareNotification = 2112 // 日程分组共享通知（当分组被共享给其他人时发送）
+	HasReadReceipt                 = 2200 // 已读回执
 
 	NotificationEnd = 5000 // 通知类型结束标记
 
@@ -180,6 +181,9 @@ const (
 	NotificationChatType = 4 // 通知会话
 	FoldChatType         = 5 // 折叠会话（虚拟会话，用于折叠其他会话）
 	ScheduleChatType     = 6 // 日程会话（只读接收型会话，用于接收日程通知）
+
+	// 日程相关常量
+	NotificationUserID = "oa" // 日程通知接收者ID（固定为 "oa"，实际用户ID）
 
 	// 折叠类型
 	FoldTypeNormal       = 1 // 普通折叠（单聊、群聊）

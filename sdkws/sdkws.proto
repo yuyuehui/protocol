@@ -928,6 +928,19 @@ message ScheduleGroupChangeTips {
   optional string subscribedPublicCalendarID = 14;  // 订阅的公共日历ID（仅当groupType=2时有效）
 }
 
+// 日程分组共享通知（当分组被共享给其他人时发送）
+message ScheduleGroupShareTips {
+  string sharerUserID = 1;      // 共享者用户ID
+  string sharerNickname = 2;    // 共享者昵称
+  string sharerFaceURL = 3;     // 共享者头像URL
+  string groupID = 4;           // 分组ID
+  string groupName = 5;         // 分组名称
+  int32 permission = 6;         // 被共享者的权限：1=可查看详情, 2=可编辑, 3=可管理
+  bool onlyBusyFree = 7;        // 是否仅查看闲忙状态
+  int64 timestamp = 8;          // 共享时间戳
+  string action = 9;            // 操作类型: "shared"=共享, "permission_updated"=权限更新
+}
+
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
 message ConversationFoldNotificationTips {
   string userID = 1;                    // 用户ID

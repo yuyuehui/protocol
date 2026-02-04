@@ -50,6 +50,7 @@ const (
 	Schedule_CreateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/CreateScheduleGroup"
 	Schedule_UpdateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/UpdateScheduleGroup"
 	Schedule_DeleteScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/DeleteScheduleGroup"
+	Schedule_QuitScheduleGroup_FullMethodName     = "/openim.schedule.Schedule/QuitScheduleGroup"
 )
 
 // ScheduleClient is the client API for Schedule service.
@@ -68,9 +69,9 @@ type ScheduleClient interface {
 	GetSchedule(ctx context.Context, in *GetScheduleReq, opts ...grpc.CallOption) (*GetScheduleResp, error)
 	// 查询日程列表
 	GetSchedules(ctx context.Context, in *GetSchedulesReq, opts ...grpc.CallOption) (*GetSchedulesResp, error)
-	// 接受日程邀请
+	// 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
 	AcceptSchedule(ctx context.Context, in *AcceptScheduleReq, opts ...grpc.CallOption) (*AcceptScheduleResp, error)
-	// 拒绝日程邀请
+	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
 	RejectSchedule(ctx context.Context, in *RejectScheduleReq, opts ...grpc.CallOption) (*RejectScheduleResp, error)
 	// 设置提醒
 	SetReminder(ctx context.Context, in *SetReminderReq, opts ...grpc.CallOption) (*SetReminderResp, error)
@@ -92,6 +93,8 @@ type ScheduleClient interface {
 	UpdateScheduleGroup(ctx context.Context, in *UpdateScheduleGroupReq, opts ...grpc.CallOption) (*UpdateScheduleGroupResp, error)
 	// 删除日程分组
 	DeleteScheduleGroup(ctx context.Context, in *DeleteScheduleGroupReq, opts ...grpc.CallOption) (*DeleteScheduleGroupResp, error)
+	// 退出日程分组（被共享的用户主动退出他人共享的分组）
+	QuitScheduleGroup(ctx context.Context, in *QuitScheduleGroupReq, opts ...grpc.CallOption) (*QuitScheduleGroupResp, error)
 }
 
 type scheduleClient struct {
@@ -272,6 +275,16 @@ func (c *scheduleClient) DeleteScheduleGroup(ctx context.Context, in *DeleteSche
 	return out, nil
 }
 
+func (c *scheduleClient) QuitScheduleGroup(ctx context.Context, in *QuitScheduleGroupReq, opts ...grpc.CallOption) (*QuitScheduleGroupResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QuitScheduleGroupResp)
+	err := c.cc.Invoke(ctx, Schedule_QuitScheduleGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServer is the server API for Schedule service.
 // All implementations must embed UnimplementedScheduleServer
 // for forward compatibility.
@@ -288,9 +301,9 @@ type ScheduleServer interface {
 	GetSchedule(context.Context, *GetScheduleReq) (*GetScheduleResp, error)
 	// 查询日程列表
 	GetSchedules(context.Context, *GetSchedulesReq) (*GetSchedulesResp, error)
-	// 接受日程邀请
+	// 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
 	AcceptSchedule(context.Context, *AcceptScheduleReq) (*AcceptScheduleResp, error)
-	// 拒绝日程邀请
+	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
 	RejectSchedule(context.Context, *RejectScheduleReq) (*RejectScheduleResp, error)
 	// 设置提醒
 	SetReminder(context.Context, *SetReminderReq) (*SetReminderResp, error)
@@ -312,6 +325,8 @@ type ScheduleServer interface {
 	UpdateScheduleGroup(context.Context, *UpdateScheduleGroupReq) (*UpdateScheduleGroupResp, error)
 	// 删除日程分组
 	DeleteScheduleGroup(context.Context, *DeleteScheduleGroupReq) (*DeleteScheduleGroupResp, error)
+	// 退出日程分组（被共享的用户主动退出他人共享的分组）
+	QuitScheduleGroup(context.Context, *QuitScheduleGroupReq) (*QuitScheduleGroupResp, error)
 	mustEmbedUnimplementedScheduleServer()
 }
 
@@ -372,6 +387,9 @@ func (UnimplementedScheduleServer) UpdateScheduleGroup(context.Context, *UpdateS
 }
 func (UnimplementedScheduleServer) DeleteScheduleGroup(context.Context, *DeleteScheduleGroupReq) (*DeleteScheduleGroupResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteScheduleGroup not implemented")
+}
+func (UnimplementedScheduleServer) QuitScheduleGroup(context.Context, *QuitScheduleGroupReq) (*QuitScheduleGroupResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method QuitScheduleGroup not implemented")
 }
 func (UnimplementedScheduleServer) mustEmbedUnimplementedScheduleServer() {}
 func (UnimplementedScheduleServer) testEmbeddedByValue()                  {}
@@ -700,6 +718,24 @@ func _Schedule_DeleteScheduleGroup_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Schedule_QuitScheduleGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuitScheduleGroupReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).QuitScheduleGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_QuitScheduleGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).QuitScheduleGroup(ctx, req.(*QuitScheduleGroupReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Schedule_ServiceDesc is the grpc.ServiceDesc for Schedule service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -774,6 +810,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteScheduleGroup",
 			Handler:    _Schedule_DeleteScheduleGroup_Handler,
+		},
+		{
+			MethodName: "QuitScheduleGroup",
+			Handler:    _Schedule_QuitScheduleGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

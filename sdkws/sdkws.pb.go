@@ -8182,6 +8182,115 @@ func (x *ScheduleGroupChangeTips) GetSubscribedPublicCalendarID() string {
 	return ""
 }
 
+// 日程分组共享通知（当分组被共享给其他人时发送）
+type ScheduleGroupShareTips struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SharerUserID   string                 `protobuf:"bytes,1,opt,name=sharerUserID,proto3" json:"sharerUserID"`     // 共享者用户ID
+	SharerNickname string                 `protobuf:"bytes,2,opt,name=sharerNickname,proto3" json:"sharerNickname"` // 共享者昵称
+	SharerFaceURL  string                 `protobuf:"bytes,3,opt,name=sharerFaceURL,proto3" json:"sharerFaceURL"`   // 共享者头像URL
+	GroupID        string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupID"`               // 分组ID
+	GroupName      string                 `protobuf:"bytes,5,opt,name=groupName,proto3" json:"groupName"`           // 分组名称
+	Permission     int32                  `protobuf:"varint,6,opt,name=permission,proto3" json:"permission"`        // 被共享者的权限：1=可查看详情, 2=可编辑, 3=可管理
+	OnlyBusyFree   bool                   `protobuf:"varint,7,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"`    // 是否仅查看闲忙状态
+	Timestamp      int64                  `protobuf:"varint,8,opt,name=timestamp,proto3" json:"timestamp"`          // 共享时间戳
+	Action         string                 `protobuf:"bytes,9,opt,name=action,proto3" json:"action"`                 // 操作类型: "shared"=共享, "permission_updated"=权限更新
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ScheduleGroupShareTips) Reset() {
+	*x = ScheduleGroupShareTips{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleGroupShareTips) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleGroupShareTips) ProtoMessage() {}
+
+func (x *ScheduleGroupShareTips) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleGroupShareTips.ProtoReflect.Descriptor instead.
+func (*ScheduleGroupShareTips) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{102}
+}
+
+func (x *ScheduleGroupShareTips) GetSharerUserID() string {
+	if x != nil {
+		return x.SharerUserID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareTips) GetSharerNickname() string {
+	if x != nil {
+		return x.SharerNickname
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareTips) GetSharerFaceURL() string {
+	if x != nil {
+		return x.SharerFaceURL
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareTips) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareTips) GetGroupName() string {
+	if x != nil {
+		return x.GroupName
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareTips) GetPermission() int32 {
+	if x != nil {
+		return x.Permission
+	}
+	return 0
+}
+
+func (x *ScheduleGroupShareTips) GetOnlyBusyFree() bool {
+	if x != nil {
+		return x.OnlyBusyFree
+	}
+	return false
+}
+
+func (x *ScheduleGroupShareTips) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *ScheduleGroupShareTips) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
 type ConversationFoldNotificationTips struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
@@ -8200,7 +8309,7 @@ type ConversationFoldNotificationTips struct {
 
 func (x *ConversationFoldNotificationTips) Reset() {
 	*x = ConversationFoldNotificationTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	mi := &file_sdkws_sdkws_proto_msgTypes[103]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8212,7 +8321,7 @@ func (x *ConversationFoldNotificationTips) String() string {
 func (*ConversationFoldNotificationTips) ProtoMessage() {}
 
 func (x *ConversationFoldNotificationTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	mi := &file_sdkws_sdkws_proto_msgTypes[103]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8225,7 +8334,7 @@ func (x *ConversationFoldNotificationTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationFoldNotificationTips.ProtoReflect.Descriptor instead.
 func (*ConversationFoldNotificationTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{102}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{103}
 }
 
 func (x *ConversationFoldNotificationTips) GetUserID() string {
@@ -9132,6 +9241,18 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\v_createTimeB\x05\n" +
 	"\x03_exB\x1d\n" +
 	"\x1b_subscribedPublicCalendarID\"\xbc\x02\n" +
+	"\x16ScheduleGroupShareTips\x12\"\n" +
+	"\fsharerUserID\x18\x01 \x01(\tR\fsharerUserID\x12&\n" +
+	"\x0esharerNickname\x18\x02 \x01(\tR\x0esharerNickname\x12$\n" +
+	"\rsharerFaceURL\x18\x03 \x01(\tR\rsharerFaceURL\x12\x18\n" +
+	"\agroupID\x18\x04 \x01(\tR\agroupID\x12\x1c\n" +
+	"\tgroupName\x18\x05 \x01(\tR\tgroupName\x12\x1e\n" +
+	"\n" +
+	"permission\x18\x06 \x01(\x05R\n" +
+	"permission\x12\"\n" +
+	"\fonlyBusyFree\x18\a \x01(\bR\fonlyBusyFree\x12\x1c\n" +
+	"\ttimestamp\x18\b \x01(\x03R\ttimestamp\x12\x16\n" +
+	"\x06action\x18\t \x01(\tR\x06action\"\xbc\x02\n" +
 	" ConversationFoldNotificationTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12\x16\n" +
@@ -9159,7 +9280,7 @@ func file_sdkws_sdkws_proto_rawDescGZIP() []byte {
 }
 
 var file_sdkws_sdkws_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 111)
+var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 112)
 var file_sdkws_sdkws_proto_goTypes = []any{
 	(PullOrder)(0),                              // 0: openim.sdkws.PullOrder
 	(*GroupInfo)(nil),                           // 1: openim.sdkws.GroupInfo
@@ -9264,32 +9385,33 @@ var file_sdkws_sdkws_proto_goTypes = []any{
 	(*ConversationGroupChangeTips)(nil),         // 100: openim.sdkws.ConversationGroupChangeTips
 	(*ScheduleGroupNotificationShareInfo)(nil),  // 101: openim.sdkws.ScheduleGroupNotificationShareInfo
 	(*ScheduleGroupChangeTips)(nil),             // 102: openim.sdkws.ScheduleGroupChangeTips
-	(*ConversationFoldNotificationTips)(nil),    // 103: openim.sdkws.ConversationFoldNotificationTips
-	nil,                                         // 104: openim.sdkws.PullMessageBySeqsResp.MsgsEntry
-	nil,                                         // 105: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
-	nil,                                         // 106: openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
-	nil,                                         // 107: openim.sdkws.GetMaxSeqResp.MinSeqsEntry
-	nil,                                         // 108: openim.sdkws.MsgData.OptionsEntry
-	nil,                                         // 109: openim.sdkws.PushMessages.MsgsEntry
-	nil,                                         // 110: openim.sdkws.PushMessages.NotificationMsgsEntry
-	nil,                                         // 111: openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
-	(*wrapperspb.StringValue)(nil),              // 112: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),               // 113: openim.protobuf.Int32Value
+	(*ScheduleGroupShareTips)(nil),              // 103: openim.sdkws.ScheduleGroupShareTips
+	(*ConversationFoldNotificationTips)(nil),    // 104: openim.sdkws.ConversationFoldNotificationTips
+	nil,                                         // 105: openim.sdkws.PullMessageBySeqsResp.MsgsEntry
+	nil,                                         // 106: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
+	nil,                                         // 107: openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
+	nil,                                         // 108: openim.sdkws.GetMaxSeqResp.MinSeqsEntry
+	nil,                                         // 109: openim.sdkws.MsgData.OptionsEntry
+	nil,                                         // 110: openim.sdkws.PushMessages.MsgsEntry
+	nil,                                         // 111: openim.sdkws.PushMessages.NotificationMsgsEntry
+	nil,                                         // 112: openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	(*wrapperspb.StringValue)(nil),              // 113: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),               // 114: openim.protobuf.Int32Value
 }
 var file_sdkws_sdkws_proto_depIdxs = []int32{
-	112, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
-	113, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
-	113, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
-	113, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
+	113, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
+	114, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
+	114, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
+	114, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
 	6,   // 4: openim.sdkws.UserInfo.onlineStatus:type_name -> openim.sdkws.PlatformDetail
-	112, // 5: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
-	112, // 6: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
-	112, // 7: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
-	113, // 8: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
-	112, // 9: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
-	112, // 10: openim.sdkws.UserInfoWithEx.pinyinInitials:type_name -> openim.protobuf.StringValue
-	112, // 11: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
-	112, // 12: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
+	113, // 5: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
+	113, // 6: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
+	113, // 7: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
+	114, // 8: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
+	113, // 9: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
+	113, // 10: openim.sdkws.UserInfoWithEx.pinyinInitials:type_name -> openim.protobuf.StringValue
+	113, // 11: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
+	113, // 12: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
 	5,   // 13: openim.sdkws.FriendInfo.friendUser:type_name -> openim.sdkws.UserInfo
 	4,   // 14: openim.sdkws.BlackInfo.blackUserInfo:type_name -> openim.sdkws.PublicUserInfo
 	4,   // 15: openim.sdkws.GroupRequest.userInfo:type_name -> openim.sdkws.PublicUserInfo
@@ -9297,17 +9419,17 @@ var file_sdkws_sdkws_proto_depIdxs = []int32{
 	13,  // 17: openim.sdkws.PullMessageBySeqsReq.seqRanges:type_name -> openim.sdkws.SeqRange
 	0,   // 18: openim.sdkws.PullMessageBySeqsReq.order:type_name -> openim.sdkws.PullOrder
 	19,  // 19: openim.sdkws.PullMsgs.Msgs:type_name -> openim.sdkws.MsgData
-	104, // 20: openim.sdkws.PullMessageBySeqsResp.msgs:type_name -> openim.sdkws.PullMessageBySeqsResp.MsgsEntry
-	105, // 21: openim.sdkws.PullMessageBySeqsResp.notificationMsgs:type_name -> openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
-	106, // 22: openim.sdkws.GetMaxSeqResp.maxSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
-	107, // 23: openim.sdkws.GetMaxSeqResp.minSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MinSeqsEntry
-	108, // 24: openim.sdkws.MsgData.options:type_name -> openim.sdkws.MsgData.OptionsEntry
+	105, // 20: openim.sdkws.PullMessageBySeqsResp.msgs:type_name -> openim.sdkws.PullMessageBySeqsResp.MsgsEntry
+	106, // 21: openim.sdkws.PullMessageBySeqsResp.notificationMsgs:type_name -> openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
+	107, // 22: openim.sdkws.GetMaxSeqResp.maxSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
+	108, // 23: openim.sdkws.GetMaxSeqResp.minSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MinSeqsEntry
+	109, // 24: openim.sdkws.MsgData.options:type_name -> openim.sdkws.MsgData.OptionsEntry
 	26,  // 25: openim.sdkws.MsgData.offlinePushInfo:type_name -> openim.sdkws.OfflinePushInfo
 	20,  // 26: openim.sdkws.MsgData.likeInfo:type_name -> openim.sdkws.LikeInfo
 	23,  // 27: openim.sdkws.MsgData.markInfo:type_name -> openim.sdkws.MarkInfo
 	21,  // 28: openim.sdkws.LikeInfo.like_users:type_name -> openim.sdkws.LikeUser
-	109, // 29: openim.sdkws.PushMessages.msgs:type_name -> openim.sdkws.PushMessages.MsgsEntry
-	110, // 30: openim.sdkws.PushMessages.notificationMsgs:type_name -> openim.sdkws.PushMessages.NotificationMsgsEntry
+	110, // 29: openim.sdkws.PushMessages.msgs:type_name -> openim.sdkws.PushMessages.MsgsEntry
+	111, // 30: openim.sdkws.PushMessages.notificationMsgs:type_name -> openim.sdkws.PushMessages.NotificationMsgsEntry
 	1,   // 31: openim.sdkws.GroupCreatedTips.group:type_name -> openim.sdkws.GroupInfo
 	3,   // 32: openim.sdkws.GroupCreatedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
 	3,   // 33: openim.sdkws.GroupCreatedTips.memberList:type_name -> openim.sdkws.GroupMemberFullInfo
@@ -9374,7 +9496,7 @@ var file_sdkws_sdkws_proto_depIdxs = []int32{
 	75,  // 94: openim.sdkws.ScheduleNotificationTips.attendees:type_name -> openim.sdkws.ScheduleNotificationAttendeeInfo
 	74,  // 95: openim.sdkws.ScheduleNotificationTips.reminders:type_name -> openim.sdkws.ScheduleNotificationReminderInfo
 	47,  // 96: openim.sdkws.FriendsInfoUpdateTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	111, // 97: openim.sdkws.SubUserOnlineStatusElem.platformDetails:type_name -> openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	112, // 97: openim.sdkws.SubUserOnlineStatusElem.platformDetails:type_name -> openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
 	95,  // 98: openim.sdkws.SubUserOnlineStatusTips.subscribers:type_name -> openim.sdkws.SubUserOnlineStatusElem
 	101, // 99: openim.sdkws.ScheduleGroupChangeTips.shares:type_name -> openim.sdkws.ScheduleGroupNotificationShareInfo
 	14,  // 100: openim.sdkws.PullMessageBySeqsResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
@@ -9401,7 +9523,7 @@ func file_sdkws_sdkws_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sdkws_sdkws_proto_rawDesc), len(file_sdkws_sdkws_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   111,
+			NumMessages:   112,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
