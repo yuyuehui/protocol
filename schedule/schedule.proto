@@ -132,6 +132,11 @@ message ScheduleInfo {
   ScheduleRepeatInfo repeatInfo = 23;            // 重复规则
   repeated ScheduleAttendeeInfo attendees = 24; // 参与者列表
   repeated ScheduleReminderInfo reminders = 25;  // 提醒列表
+  
+  // 权限相关字段（计算字段，不存储在数据库中）
+  bool isJoined = 26;    // 是否参与了这个日程（当前用户是否在参与者列表中）
+  bool canEdit = 27;      // 是否有编辑权限：创建者可编辑/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程
+  bool canDelete = 28;    // 是否能删除/退出：创建者可删除/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程/加入的日程
 }
 
 // CreateScheduleReq 创建日程请求

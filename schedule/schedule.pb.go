@@ -687,9 +687,13 @@ type ScheduleInfo struct {
 	IsTemporary      bool             `protobuf:"varint,21,opt,name=isTemporary,proto3" json:"isTemporary"`                     // 是否是临时会议（仅当type为MEETING时有效），临时会议不显示在日程中
 	MeetingMinutesID string           `protobuf:"bytes,22,opt,name=meetingMinutesID,proto3" json:"meetingMinutesID"`            // 会议纪要文档ID
 	// 其他字段
-	RepeatInfo    *ScheduleRepeatInfo     `protobuf:"bytes,23,opt,name=repeatInfo,proto3" json:"repeatInfo"` // 重复规则
-	Attendees     []*ScheduleAttendeeInfo `protobuf:"bytes,24,rep,name=attendees,proto3" json:"attendees"`   // 参与者列表
-	Reminders     []*ScheduleReminderInfo `protobuf:"bytes,25,rep,name=reminders,proto3" json:"reminders"`   // 提醒列表
+	RepeatInfo *ScheduleRepeatInfo     `protobuf:"bytes,23,opt,name=repeatInfo,proto3" json:"repeatInfo"` // 重复规则
+	Attendees  []*ScheduleAttendeeInfo `protobuf:"bytes,24,rep,name=attendees,proto3" json:"attendees"`   // 参与者列表
+	Reminders  []*ScheduleReminderInfo `protobuf:"bytes,25,rep,name=reminders,proto3" json:"reminders"`   // 提醒列表
+	// 权限相关字段（计算字段，不存储在数据库中）
+	IsJoined      bool `protobuf:"varint,26,opt,name=isJoined,proto3" json:"isJoined"`   // 是否参与了这个日程（当前用户是否在参与者列表中）
+	CanEdit       bool `protobuf:"varint,27,opt,name=canEdit,proto3" json:"canEdit"`     // 是否有编辑权限：创建者可编辑/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程
+	CanDelete     bool `protobuf:"varint,28,opt,name=canDelete,proto3" json:"canDelete"` // 是否能删除/退出：创建者可删除/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程/加入的日程
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -897,6 +901,27 @@ func (x *ScheduleInfo) GetReminders() []*ScheduleReminderInfo {
 		return x.Reminders
 	}
 	return nil
+}
+
+func (x *ScheduleInfo) GetIsJoined() bool {
+	if x != nil {
+		return x.IsJoined
+	}
+	return false
+}
+
+func (x *ScheduleInfo) GetCanEdit() bool {
+	if x != nil {
+		return x.CanEdit
+	}
+	return false
+}
+
+func (x *ScheduleInfo) GetCanDelete() bool {
+	if x != nil {
+		return x.CanDelete
+	}
+	return false
 }
 
 // CreateScheduleReq 创建日程请求
@@ -3585,7 +3610,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x13callReminderUserIDs\x18\v \x03(\tR\x13callReminderUserIDs\x12?\n" +
 	"\n" +
 	"muteOnJoin\x18\f \x01(\x0e2\x1f.openim.schedule.MuteOnJoinTypeR\n" +
-	"muteOnJoin\"\xec\a\n" +
+	"muteOnJoin\"\xc0\b\n" +
 	"\fScheduleInfo\x12\x1e\n" +
 	"\n" +
 	"scheduleID\x18\x01 \x01(\tR\n" +
@@ -3620,7 +3645,10 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"repeatInfo\x18\x17 \x01(\v2#.openim.schedule.ScheduleRepeatInfoR\n" +
 	"repeatInfo\x12C\n" +
 	"\tattendees\x18\x18 \x03(\v2%.openim.schedule.ScheduleAttendeeInfoR\tattendees\x12C\n" +
-	"\treminders\x18\x19 \x03(\v2%.openim.schedule.ScheduleReminderInfoR\treminders\"\xf0\x06\n" +
+	"\treminders\x18\x19 \x03(\v2%.openim.schedule.ScheduleReminderInfoR\treminders\x12\x1a\n" +
+	"\bisJoined\x18\x1a \x01(\bR\bisJoined\x12\x18\n" +
+	"\acanEdit\x18\x1b \x01(\bR\acanEdit\x12\x1c\n" +
+	"\tcanDelete\x18\x1c \x01(\bR\tcanDelete\"\xf0\x06\n" +
 	"\x11CreateScheduleReq\x12$\n" +
 	"\rcreatorUserID\x18\x01 \x01(\tR\rcreatorUserID\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1c\n" +
