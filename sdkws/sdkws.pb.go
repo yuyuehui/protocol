@@ -8183,7 +8183,7 @@ func (x *ScheduleGroupChangeTips) GetSubscribedPublicCalendarID() string {
 }
 
 // 日程分组共享通知（当分组被共享给其他人时发送）
-type ScheduleGroupShareTips struct {
+type ScheduleGroupShareElem struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	SharerUserID   string                 `protobuf:"bytes,1,opt,name=sharerUserID,proto3" json:"sharerUserID"`     // 共享者用户ID
 	SharerNickname string                 `protobuf:"bytes,2,opt,name=sharerNickname,proto3" json:"sharerNickname"` // 共享者昵称
@@ -8198,20 +8198,20 @@ type ScheduleGroupShareTips struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *ScheduleGroupShareTips) Reset() {
-	*x = ScheduleGroupShareTips{}
+func (x *ScheduleGroupShareElem) Reset() {
+	*x = ScheduleGroupShareElem{}
 	mi := &file_sdkws_sdkws_proto_msgTypes[102]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ScheduleGroupShareTips) String() string {
+func (x *ScheduleGroupShareElem) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ScheduleGroupShareTips) ProtoMessage() {}
+func (*ScheduleGroupShareElem) ProtoMessage() {}
 
-func (x *ScheduleGroupShareTips) ProtoReflect() protoreflect.Message {
+func (x *ScheduleGroupShareElem) ProtoReflect() protoreflect.Message {
 	mi := &file_sdkws_sdkws_proto_msgTypes[102]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -8223,68 +8223,68 @@ func (x *ScheduleGroupShareTips) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ScheduleGroupShareTips.ProtoReflect.Descriptor instead.
-func (*ScheduleGroupShareTips) Descriptor() ([]byte, []int) {
+// Deprecated: Use ScheduleGroupShareElem.ProtoReflect.Descriptor instead.
+func (*ScheduleGroupShareElem) Descriptor() ([]byte, []int) {
 	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{102}
 }
 
-func (x *ScheduleGroupShareTips) GetSharerUserID() string {
+func (x *ScheduleGroupShareElem) GetSharerUserID() string {
 	if x != nil {
 		return x.SharerUserID
 	}
 	return ""
 }
 
-func (x *ScheduleGroupShareTips) GetSharerNickname() string {
+func (x *ScheduleGroupShareElem) GetSharerNickname() string {
 	if x != nil {
 		return x.SharerNickname
 	}
 	return ""
 }
 
-func (x *ScheduleGroupShareTips) GetSharerFaceURL() string {
+func (x *ScheduleGroupShareElem) GetSharerFaceURL() string {
 	if x != nil {
 		return x.SharerFaceURL
 	}
 	return ""
 }
 
-func (x *ScheduleGroupShareTips) GetGroupID() string {
+func (x *ScheduleGroupShareElem) GetGroupID() string {
 	if x != nil {
 		return x.GroupID
 	}
 	return ""
 }
 
-func (x *ScheduleGroupShareTips) GetGroupName() string {
+func (x *ScheduleGroupShareElem) GetGroupName() string {
 	if x != nil {
 		return x.GroupName
 	}
 	return ""
 }
 
-func (x *ScheduleGroupShareTips) GetPermission() int32 {
+func (x *ScheduleGroupShareElem) GetPermission() int32 {
 	if x != nil {
 		return x.Permission
 	}
 	return 0
 }
 
-func (x *ScheduleGroupShareTips) GetOnlyBusyFree() bool {
+func (x *ScheduleGroupShareElem) GetOnlyBusyFree() bool {
 	if x != nil {
 		return x.OnlyBusyFree
 	}
 	return false
 }
 
-func (x *ScheduleGroupShareTips) GetTimestamp() int64 {
+func (x *ScheduleGroupShareElem) GetTimestamp() int64 {
 	if x != nil {
 		return x.Timestamp
 	}
 	return 0
 }
 
-func (x *ScheduleGroupShareTips) GetAction() string {
+func (x *ScheduleGroupShareElem) GetAction() string {
 	if x != nil {
 		return x.Action
 	}
@@ -9241,7 +9241,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\v_createTimeB\x05\n" +
 	"\x03_exB\x1d\n" +
 	"\x1b_subscribedPublicCalendarID\"\xbc\x02\n" +
-	"\x16ScheduleGroupShareTips\x12\"\n" +
+	"\x16ScheduleGroupShareElem\x12\"\n" +
 	"\fsharerUserID\x18\x01 \x01(\tR\fsharerUserID\x12&\n" +
 	"\x0esharerNickname\x18\x02 \x01(\tR\x0esharerNickname\x12$\n" +
 	"\rsharerFaceURL\x18\x03 \x01(\tR\rsharerFaceURL\x12\x18\n" +
@@ -9385,7 +9385,7 @@ var file_sdkws_sdkws_proto_goTypes = []any{
 	(*ConversationGroupChangeTips)(nil),         // 100: openim.sdkws.ConversationGroupChangeTips
 	(*ScheduleGroupNotificationShareInfo)(nil),  // 101: openim.sdkws.ScheduleGroupNotificationShareInfo
 	(*ScheduleGroupChangeTips)(nil),             // 102: openim.sdkws.ScheduleGroupChangeTips
-	(*ScheduleGroupShareTips)(nil),              // 103: openim.sdkws.ScheduleGroupShareTips
+	(*ScheduleGroupShareElem)(nil),              // 103: openim.sdkws.ScheduleGroupShareElem
 	(*ConversationFoldNotificationTips)(nil),    // 104: openim.sdkws.ConversationFoldNotificationTips
 	nil,                                         // 105: openim.sdkws.PullMessageBySeqsResp.MsgsEntry
 	nil,                                         // 106: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry

@@ -929,7 +929,7 @@ message ScheduleGroupChangeTips {
 }
 
 // 日程分组共享通知（当分组被共享给其他人时发送）
-message ScheduleGroupShareTips {
+message ScheduleGroupShareElem {
   string sharerUserID = 1;      // 共享者用户ID
   string sharerNickname = 2;    // 共享者昵称
   string sharerFaceURL = 3;     // 共享者头像URL
