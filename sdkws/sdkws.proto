@@ -928,6 +928,30 @@ message ScheduleGroupChangeTips {
   optional string subscribedPublicCalendarID = 14;  // 订阅的公共日历ID（仅当groupType=2时有效）
 }
 
+// 共享者用户信息
+message ShareUserInfo {
+  string userID = 1;    // 用户ID
+  string nickname = 2; // 用户昵称
+  string faceURL = 3;  // 用户头像URL
+}
+
+// 创建者用户信息（用于日程变更消息）
+message CreatorUserInfo {
+  string userID = 1;        // 用户ID
+  string nickname = 2;      // 用户昵称
+  string faceURL = 3;       // 用户头像URL
+  string signature = 4;     // 用户签名
+  string jobName = 5;       // 职位名称
+  string departmentName = 6; // 部门名称
+}
+
+// 操作者用户信息（用于日程变更消息）
+message ChangeUserInfo {
+  string userID = 1;    // 用户ID
+  string nickname = 2;  // 用户昵称
+  string faceURL = 3;   // 用户头像URL
+}
+
 // 日程分组共享通知（当分组被共享给其他人时发送）
 message ScheduleGroupShareElem {
   string sharerUserID = 1;      // 共享者用户ID
@@ -939,6 +963,37 @@ message ScheduleGroupShareElem {
   bool onlyBusyFree = 7;        // 是否仅查看闲忙状态
   int64 timestamp = 8;          // 共享时间戳
   string action = 9;            // 操作类型: "shared"=共享, "permission_updated"=权限更新
+  ShareUserInfo shareUser = 10; // 共享者完整信息（用于前端显示共享者头像、昵称等）
+}
+
+// 日程变更消息内容（schedule_change，用于 sc_ 通知会话消息）
+message ScheduleChangeElem {
+  string msgType = 1;        // 消息类型："schedule_change"
+  string action = 2;         // 操作类型："created"=创建，"updated"=修改
+  optional string changeType = 3;     // 修改类型（仅当 action="updated" 时有效），如"时间"、"地点"、"标题"等
+  CreatorUserInfo creator = 4; // 创建者信息
+  ChangeUserInfo changeUser = 5; // 操作者信息（用于前端显示修改者头像、昵称等）
+  string scheduleID = 6;     // 日程ID
+  string title = 7;          // 日程标题
+  string subTitle = 8;       // 邀请标题
+  int64 startTime = 9;       // 开始时间
+  int64 endTime = 10;        // 结束时间
+  optional string location = 11;      // 地点
+  optional string roomID = 12;        // 会议室ID
+  optional string description = 13;   // 描述
+  optional string timeZone = 14;      // 时区
+  int32 visibility = 15;     // 可见性
+  bool allDay = 16;          // 是否全天
+  repeated string attachmentURLs = 17; // 附件URL列表
+  optional string scheduleGroupID = 18; // 日程分组ID
+  bool allowMemberJoin = 19;   // 是否允许成员加入
+  bool notifyByEmail = 20;     // 是否邮件通知
+  int32 type = 21;            // 日程类型：0=SCHEDULE, 1=MEETING
+  bool isTemporary = 22;      // 是否临时日程
+  string status = 23;         // 状态
+  optional ScheduleNotificationRepeatInfo repeatInfo = 24; // 重复规则
+  optional ScheduleNotificationMeetingSettings meetingSettings = 25; // 会议设置
+  repeated ScheduleNotificationAttendeeInfo attendees = 26; // 参与者列表
 }
 
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
