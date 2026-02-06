@@ -33,24 +33,26 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Schedule_CreateSchedule_FullMethodName        = "/openim.schedule.Schedule/CreateSchedule"
-	Schedule_UpdateSchedule_FullMethodName        = "/openim.schedule.Schedule/UpdateSchedule"
-	Schedule_DeleteSchedule_FullMethodName        = "/openim.schedule.Schedule/DeleteSchedule"
-	Schedule_GetSchedule_FullMethodName           = "/openim.schedule.Schedule/GetSchedule"
-	Schedule_GetSchedules_FullMethodName          = "/openim.schedule.Schedule/GetSchedules"
-	Schedule_AcceptSchedule_FullMethodName        = "/openim.schedule.Schedule/AcceptSchedule"
-	Schedule_RejectSchedule_FullMethodName        = "/openim.schedule.Schedule/RejectSchedule"
-	Schedule_SetReminder_FullMethodName           = "/openim.schedule.Schedule/SetReminder"
-	Schedule_CheckConflict_FullMethodName         = "/openim.schedule.Schedule/CheckConflict"
-	Schedule_GetScheduleDates_FullMethodName      = "/openim.schedule.Schedule/GetScheduleDates"
-	Schedule_GetScheduleMonthView_FullMethodName  = "/openim.schedule.Schedule/GetScheduleMonthView"
-	Schedule_CreateScheduleMessage_FullMethodName = "/openim.schedule.Schedule/CreateScheduleMessage"
-	Schedule_InitScheduleGroups_FullMethodName    = "/openim.schedule.Schedule/InitScheduleGroups"
-	Schedule_GetAllScheduleGroups_FullMethodName  = "/openim.schedule.Schedule/GetAllScheduleGroups"
-	Schedule_CreateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/CreateScheduleGroup"
-	Schedule_UpdateScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/UpdateScheduleGroup"
-	Schedule_DeleteScheduleGroup_FullMethodName   = "/openim.schedule.Schedule/DeleteScheduleGroup"
-	Schedule_QuitScheduleGroup_FullMethodName     = "/openim.schedule.Schedule/QuitScheduleGroup"
+	Schedule_CreateSchedule_FullMethodName         = "/openim.schedule.Schedule/CreateSchedule"
+	Schedule_UpdateSchedule_FullMethodName         = "/openim.schedule.Schedule/UpdateSchedule"
+	Schedule_DeleteSchedule_FullMethodName         = "/openim.schedule.Schedule/DeleteSchedule"
+	Schedule_GetSchedule_FullMethodName            = "/openim.schedule.Schedule/GetSchedule"
+	Schedule_GetSchedules_FullMethodName           = "/openim.schedule.Schedule/GetSchedules"
+	Schedule_AcceptSchedule_FullMethodName         = "/openim.schedule.Schedule/AcceptSchedule"
+	Schedule_RejectSchedule_FullMethodName         = "/openim.schedule.Schedule/RejectSchedule"
+	Schedule_JoinSchedule_FullMethodName           = "/openim.schedule.Schedule/JoinSchedule"
+	Schedule_SetReminder_FullMethodName            = "/openim.schedule.Schedule/SetReminder"
+	Schedule_CheckConflict_FullMethodName          = "/openim.schedule.Schedule/CheckConflict"
+	Schedule_GetScheduleDates_FullMethodName       = "/openim.schedule.Schedule/GetScheduleDates"
+	Schedule_GetScheduleMonthView_FullMethodName   = "/openim.schedule.Schedule/GetScheduleMonthView"
+	Schedule_CreateScheduleMessage_FullMethodName  = "/openim.schedule.Schedule/CreateScheduleMessage"
+	Schedule_InitScheduleGroups_FullMethodName     = "/openim.schedule.Schedule/InitScheduleGroups"
+	Schedule_GetAllScheduleGroups_FullMethodName   = "/openim.schedule.Schedule/GetAllScheduleGroups"
+	Schedule_CreateScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/CreateScheduleGroup"
+	Schedule_UpdateScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/UpdateScheduleGroup"
+	Schedule_DeleteScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/DeleteScheduleGroup"
+	Schedule_QuitScheduleGroup_FullMethodName      = "/openim.schedule.Schedule/QuitScheduleGroup"
+	Schedule_GetScheduleGroupDetail_FullMethodName = "/openim.schedule.Schedule/GetScheduleGroupDetail"
 )
 
 // ScheduleClient is the client API for Schedule service.
@@ -73,6 +75,8 @@ type ScheduleClient interface {
 	AcceptSchedule(ctx context.Context, in *AcceptScheduleReq, opts ...grpc.CallOption) (*AcceptScheduleResp, error)
 	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
 	RejectSchedule(ctx context.Context, in *RejectScheduleReq, opts ...grpc.CallOption) (*RejectScheduleResp, error)
+	// 加入日程（主动加入，不是接受邀请。加入后会自动发送日程会话消息给创建者）
+	JoinSchedule(ctx context.Context, in *JoinScheduleReq, opts ...grpc.CallOption) (*JoinScheduleResp, error)
 	// 设置提醒
 	SetReminder(ctx context.Context, in *SetReminderReq, opts ...grpc.CallOption) (*SetReminderResp, error)
 	// 查询日程冲突
@@ -95,6 +99,8 @@ type ScheduleClient interface {
 	DeleteScheduleGroup(ctx context.Context, in *DeleteScheduleGroupReq, opts ...grpc.CallOption) (*DeleteScheduleGroupResp, error)
 	// 退出日程分组（被共享的用户主动退出他人共享的分组）
 	QuitScheduleGroup(ctx context.Context, in *QuitScheduleGroupReq, opts ...grpc.CallOption) (*QuitScheduleGroupResp, error)
+	// 获取日程分组详情
+	GetScheduleGroupDetail(ctx context.Context, in *GetScheduleGroupDetailReq, opts ...grpc.CallOption) (*GetScheduleGroupDetailResp, error)
 }
 
 type scheduleClient struct {
@@ -169,6 +175,16 @@ func (c *scheduleClient) RejectSchedule(ctx context.Context, in *RejectScheduleR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RejectScheduleResp)
 	err := c.cc.Invoke(ctx, Schedule_RejectSchedule_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleClient) JoinSchedule(ctx context.Context, in *JoinScheduleReq, opts ...grpc.CallOption) (*JoinScheduleResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(JoinScheduleResp)
+	err := c.cc.Invoke(ctx, Schedule_JoinSchedule_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -285,6 +301,16 @@ func (c *scheduleClient) QuitScheduleGroup(ctx context.Context, in *QuitSchedule
 	return out, nil
 }
 
+func (c *scheduleClient) GetScheduleGroupDetail(ctx context.Context, in *GetScheduleGroupDetailReq, opts ...grpc.CallOption) (*GetScheduleGroupDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetScheduleGroupDetailResp)
+	err := c.cc.Invoke(ctx, Schedule_GetScheduleGroupDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServer is the server API for Schedule service.
 // All implementations must embed UnimplementedScheduleServer
 // for forward compatibility.
@@ -305,6 +331,8 @@ type ScheduleServer interface {
 	AcceptSchedule(context.Context, *AcceptScheduleReq) (*AcceptScheduleResp, error)
 	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
 	RejectSchedule(context.Context, *RejectScheduleReq) (*RejectScheduleResp, error)
+	// 加入日程（主动加入，不是接受邀请。加入后会自动发送日程会话消息给创建者）
+	JoinSchedule(context.Context, *JoinScheduleReq) (*JoinScheduleResp, error)
 	// 设置提醒
 	SetReminder(context.Context, *SetReminderReq) (*SetReminderResp, error)
 	// 查询日程冲突
@@ -327,6 +355,8 @@ type ScheduleServer interface {
 	DeleteScheduleGroup(context.Context, *DeleteScheduleGroupReq) (*DeleteScheduleGroupResp, error)
 	// 退出日程分组（被共享的用户主动退出他人共享的分组）
 	QuitScheduleGroup(context.Context, *QuitScheduleGroupReq) (*QuitScheduleGroupResp, error)
+	// 获取日程分组详情
+	GetScheduleGroupDetail(context.Context, *GetScheduleGroupDetailReq) (*GetScheduleGroupDetailResp, error)
 	mustEmbedUnimplementedScheduleServer()
 }
 
@@ -357,6 +387,9 @@ func (UnimplementedScheduleServer) AcceptSchedule(context.Context, *AcceptSchedu
 }
 func (UnimplementedScheduleServer) RejectSchedule(context.Context, *RejectScheduleReq) (*RejectScheduleResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RejectSchedule not implemented")
+}
+func (UnimplementedScheduleServer) JoinSchedule(context.Context, *JoinScheduleReq) (*JoinScheduleResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method JoinSchedule not implemented")
 }
 func (UnimplementedScheduleServer) SetReminder(context.Context, *SetReminderReq) (*SetReminderResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetReminder not implemented")
@@ -390,6 +423,9 @@ func (UnimplementedScheduleServer) DeleteScheduleGroup(context.Context, *DeleteS
 }
 func (UnimplementedScheduleServer) QuitScheduleGroup(context.Context, *QuitScheduleGroupReq) (*QuitScheduleGroupResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method QuitScheduleGroup not implemented")
+}
+func (UnimplementedScheduleServer) GetScheduleGroupDetail(context.Context, *GetScheduleGroupDetailReq) (*GetScheduleGroupDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetScheduleGroupDetail not implemented")
 }
 func (UnimplementedScheduleServer) mustEmbedUnimplementedScheduleServer() {}
 func (UnimplementedScheduleServer) testEmbeddedByValue()                  {}
@@ -534,6 +570,24 @@ func _Schedule_RejectSchedule_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ScheduleServer).RejectSchedule(ctx, req.(*RejectScheduleReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Schedule_JoinSchedule_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JoinScheduleReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).JoinSchedule(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_JoinSchedule_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).JoinSchedule(ctx, req.(*JoinScheduleReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -736,6 +790,24 @@ func _Schedule_QuitScheduleGroup_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Schedule_GetScheduleGroupDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetScheduleGroupDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).GetScheduleGroupDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_GetScheduleGroupDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).GetScheduleGroupDetail(ctx, req.(*GetScheduleGroupDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Schedule_ServiceDesc is the grpc.ServiceDesc for Schedule service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -770,6 +842,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RejectSchedule",
 			Handler:    _Schedule_RejectSchedule_Handler,
+		},
+		{
+			MethodName: "JoinSchedule",
+			Handler:    _Schedule_JoinSchedule_Handler,
 		},
 		{
 			MethodName: "SetReminder",
@@ -814,6 +890,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QuitScheduleGroup",
 			Handler:    _Schedule_QuitScheduleGroup_Handler,
+		},
+		{
+			MethodName: "GetScheduleGroupDetail",
+			Handler:    _Schedule_GetScheduleGroupDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -286,6 +286,16 @@ message RejectScheduleReq {
 message RejectScheduleResp {
 }
 
+// JoinScheduleReq 加入日程请求（主动加入，不是接受邀请）
+message JoinScheduleReq {
+  string scheduleID = 1; // 日程ID（必填）
+  string userID = 2;     // 用户ID（可选，不传则使用当前登录用户）
+}
+
+// JoinScheduleResp 加入日程响应
+message JoinScheduleResp {
+}
+
 // SetReminderReq 设置提醒请求
 message SetReminderReq {
   string scheduleID = 1;
@@ -379,6 +389,9 @@ service Schedule {
   // 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
   rpc RejectSchedule(RejectScheduleReq) returns (RejectScheduleResp);
   
+  // 加入日程（主动加入，不是接受邀请。加入后会自动发送日程会话消息给创建者）
+  rpc JoinSchedule(JoinScheduleReq) returns (JoinScheduleResp);
+  
   // 设置提醒
   rpc SetReminder(SetReminderReq) returns (SetReminderResp);
   
@@ -413,6 +426,9 @@ service Schedule {
 
   // 退出日程分组（被共享的用户主动退出他人共享的分组）
   rpc QuitScheduleGroup(QuitScheduleGroupReq) returns (QuitScheduleGroupResp);
+
+  // 获取日程分组详情
+  rpc GetScheduleGroupDetail(GetScheduleGroupDetailReq) returns (GetScheduleGroupDetailResp);
 }
 
 // ==================== 日程分组相关消息定义 ====================
@@ -502,4 +518,14 @@ message QuitScheduleGroupReq {
 
 // QuitScheduleGroupResp 退出日程分组响应
 message QuitScheduleGroupResp {}
+
+// GetScheduleGroupDetailReq 获取日程分组详情请求
+message GetScheduleGroupDetailReq {
+  string scheduleGroupID = 1;  // 分组ID（必填）
+}
+
+// GetScheduleGroupDetailResp 获取日程分组详情响应
+message GetScheduleGroupDetailResp {
+  ScheduleGroup group = 1;     // 分组详情
+}
 

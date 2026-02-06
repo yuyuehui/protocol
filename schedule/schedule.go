@@ -406,3 +406,20 @@ func (x *DeleteScheduleGroupReq) Check() error {
 	}
 	return nil
 }
+
+// GetScheduleGroupDetailReq Check 获取日程分组详情请求参数校验
+func (x *GetScheduleGroupDetailReq) Check() error {
+	if x.ScheduleGroupID == "" {
+		return errs.ErrArgs.WrapMsg("scheduleGroupID is required")
+	}
+	return nil
+}
+
+// JoinScheduleReq Check 加入日程请求参数校验
+func (x *JoinScheduleReq) Check() error {
+	if x.ScheduleID == "" {
+		return errs.ErrArgs.WrapMsg("scheduleID is required")
+	}
+	// userID 可选，如果不传则使用 context 中的当前用户
+	return nil
+}
