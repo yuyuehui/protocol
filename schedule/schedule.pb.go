@@ -2917,6 +2917,7 @@ type GroupShareInfo struct {
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`              // 用户ID
 	Permission    int32                  `protobuf:"varint,2,opt,name=permission,proto3" json:"permission"`     // 权限：1=可查看, 2=可编辑, 3=可管理
 	OnlyBusyFree  bool                   `protobuf:"varint,3,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"` // 是否仅查看闲忙状态
+	IsVisible     bool                   `protobuf:"varint,4,opt,name=isVisible,proto3" json:"isVisible"`       // 用户级别的选中状态（是否显示该分组，每个用户独立）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2968,6 +2969,13 @@ func (x *GroupShareInfo) GetPermission() int32 {
 func (x *GroupShareInfo) GetOnlyBusyFree() bool {
 	if x != nil {
 		return x.OnlyBusyFree
+	}
+	return false
+}
+
+func (x *GroupShareInfo) GetIsVisible() bool {
+	if x != nil {
+		return x.IsVisible
 	}
 	return false
 }
@@ -3845,13 +3853,14 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x02ex\x18\t \x01(\tR\x02ex\x127\n" +
 	"\x06shares\x18\n" +
 	" \x03(\v2\x1f.openim.schedule.GroupShareInfoR\x06shares\x12>\n" +
-	"\x1asubscribedPublicCalendarID\x18\v \x01(\tR\x1asubscribedPublicCalendarID\"l\n" +
+	"\x1asubscribedPublicCalendarID\x18\v \x01(\tR\x1asubscribedPublicCalendarID\"\x8a\x01\n" +
 	"\x0eGroupShareInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1e\n" +
 	"\n" +
 	"permission\x18\x02 \x01(\x05R\n" +
 	"permission\x12\"\n" +
-	"\fonlyBusyFree\x18\x03 \x01(\bR\fonlyBusyFree\"9\n" +
+	"\fonlyBusyFree\x18\x03 \x01(\bR\fonlyBusyFree\x12\x1c\n" +
+	"\tisVisible\x18\x04 \x01(\bR\tisVisible\"9\n" +
 	"\x15InitScheduleGroupsReq\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\"\x18\n" +
 	"\x16InitScheduleGroupsResp\";\n" +

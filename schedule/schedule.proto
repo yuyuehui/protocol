@@ -437,6 +437,7 @@ message GroupShareInfo {
   string userID = 1;         // 用户ID
   int32 permission = 2;      // 权限：1=可查看, 2=可编辑, 3=可管理
   bool onlyBusyFree = 3;     // 是否仅查看闲忙状态
+  bool isVisible = 4;        // 用户级别的选中状态（是否显示该分组，每个用户独立）
 }
 
 // InitScheduleGroupsReq 初始化日程分组请求
