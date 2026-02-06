@@ -2176,7 +2176,7 @@ func (*RejectScheduleResp) Descriptor() ([]byte, []int) {
 type JoinScheduleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"` // 日程ID（必填）
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`         // 用户ID（必填）
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`         // 用户ID（可选，不传则使用当前登录用户）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2603,6 +2603,7 @@ type GetScheduleDatesReq struct {
 	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year"`                        // 年份（必填，如 2026）
 	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month"`                      // 月份（必填，1-12）
 	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
+	IDs              []string               `protobuf:"bytes,5,rep,name=IDs,proto3" json:"IDs"`                           // 日程分组ID列表（可选，用于筛选指定分组的日程，与scheduleGroupIDs功能相同）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -2665,6 +2666,13 @@ func (x *GetScheduleDatesReq) GetScheduleGroupIDs() []string {
 	return nil
 }
 
+func (x *GetScheduleDatesReq) GetIDs() []string {
+	if x != nil {
+		return x.IDs
+	}
+	return nil
+}
+
 // GetScheduleDatesResp 查询某个月有参与日程的日期列表响应
 type GetScheduleDatesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -2717,6 +2725,7 @@ type GetScheduleMonthViewReq struct {
 	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year"`                        // 年份（必填，如 2026）
 	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month"`                      // 月份（必填，1-12）
 	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
+	IDs              []string               `protobuf:"bytes,5,rep,name=IDs,proto3" json:"IDs"`                           // 日程分组ID列表（可选，用于筛选指定分组的日程，与scheduleGroupIDs功能相同）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -2775,6 +2784,13 @@ func (x *GetScheduleMonthViewReq) GetMonth() int32 {
 func (x *GetScheduleMonthViewReq) GetScheduleGroupIDs() []string {
 	if x != nil {
 		return x.ScheduleGroupIDs
+	}
+	return nil
+}
+
+func (x *GetScheduleMonthViewReq) GetIDs() []string {
+	if x != nil {
+		return x.IDs
 	}
 	return nil
 }
@@ -3392,11 +3408,12 @@ func (x *CreateScheduleGroupResp) GetGroup() *ScheduleGroup {
 // UpdateScheduleGroupReq 更新日程分组请求
 type UpdateScheduleGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`            // 分组ID（必填）
-	GroupName     *string                `protobuf:"bytes,2,opt,name=groupName,proto3,oneof" json:"groupName"`  // 分组名称（可选）
-	IsVisible     *bool                  `protobuf:"varint,3,opt,name=isVisible,proto3,oneof" json:"isVisible"` // 是否可见（可选）
-	Shares        []*GroupShareInfo      `protobuf:"bytes,4,rep,name=shares,proto3" json:"shares"`              // 更新共享信息列表（可选，传空数组表示清空）
-	Ex            *string                `protobuf:"bytes,5,opt,name=ex,proto3,oneof" json:"ex"`                // 扩展字段（可选）
+	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`                  // 分组ID（必填）
+	GroupName     *string                `protobuf:"bytes,2,opt,name=groupName,proto3,oneof" json:"groupName"`        // 分组名称（可选）
+	IsVisible     *bool                  `protobuf:"varint,3,opt,name=isVisible,proto3,oneof" json:"isVisible"`       // 是否可见（可选）
+	Shares        []*GroupShareInfo      `protobuf:"bytes,4,rep,name=shares,proto3" json:"shares"`                    // 更新共享信息列表（可选，传空数组表示清空）
+	Ex            *string                `protobuf:"bytes,5,opt,name=ex,proto3,oneof" json:"ex"`                      // 扩展字段（可选）
+	UpdateShares  *bool                  `protobuf:"varint,6,opt,name=updateShares,proto3,oneof" json:"updateShares"` // 是否更新共享人列表（当需要更新shares时设为true，包括清空场景，解决protobuf空repeated字段传输丢失问题）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3464,6 +3481,13 @@ func (x *UpdateScheduleGroupReq) GetEx() string {
 		return *x.Ex
 	}
 	return ""
+}
+
+func (x *UpdateScheduleGroupReq) GetUpdateShares() bool {
+	if x != nil && x.UpdateShares != nil {
+		return *x.UpdateShares
+	}
+	return false
 }
 
 // UpdateScheduleGroupResp 更新日程分组响应
@@ -4006,19 +4030,21 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\fbusyByUserId\x18\x02 \x03(\v24.openim.schedule.CheckConflictResp.BusyByUserIdEntryR\fbusyByUserId\x1a^\n" +
 	"\x11BusyByUserIdEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x123\n" +
-	"\x05value\x18\x02 \x01(\v2\x1d.openim.schedule.BusySlotListR\x05value:\x028\x01\"\x83\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.openim.schedule.BusySlotListR\x05value:\x028\x01\"\x95\x01\n" +
 	"\x13GetScheduleDatesReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x12\n" +
 	"\x04year\x18\x02 \x01(\x05R\x04year\x12\x14\n" +
 	"\x05month\x18\x03 \x01(\x05R\x05month\x12*\n" +
-	"\x10scheduleGroupIDs\x18\x04 \x03(\tR\x10scheduleGroupIDs\",\n" +
+	"\x10scheduleGroupIDs\x18\x04 \x03(\tR\x10scheduleGroupIDs\x12\x10\n" +
+	"\x03IDs\x18\x05 \x03(\tR\x03IDs\",\n" +
 	"\x14GetScheduleDatesResp\x12\x14\n" +
-	"\x05dates\x18\x01 \x03(\x05R\x05dates\"\x87\x01\n" +
+	"\x05dates\x18\x01 \x03(\x05R\x05dates\"\x99\x01\n" +
 	"\x17GetScheduleMonthViewReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x12\n" +
 	"\x04year\x18\x02 \x01(\x05R\x04year\x12\x14\n" +
 	"\x05month\x18\x03 \x01(\x05R\x05month\x12*\n" +
-	"\x10scheduleGroupIDs\x18\x04 \x03(\tR\x10scheduleGroupIDs\"`\n" +
+	"\x10scheduleGroupIDs\x18\x04 \x03(\tR\x10scheduleGroupIDs\x12\x10\n" +
+	"\x03IDs\x18\x05 \x03(\tR\x03IDs\"`\n" +
 	"\x0fScheduleDayInfo\x12\x10\n" +
 	"\x03day\x18\x01 \x01(\x05R\x03day\x12;\n" +
 	"\tschedules\x18\x02 \x03(\v2\x1d.openim.schedule.ScheduleInfoR\tschedules\"P\n" +
@@ -4065,18 +4091,20 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x1asubscribedPublicCalendarID\x18\x06 \x01(\tR\x1asubscribedPublicCalendarID\x12\x0e\n" +
 	"\x02ex\x18\a \x01(\tR\x02ex\"O\n" +
 	"\x17CreateScheduleGroupResp\x124\n" +
-	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"\xe9\x01\n" +
+	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"\xa3\x02\n" +
 	"\x16UpdateScheduleGroupReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12!\n" +
 	"\tgroupName\x18\x02 \x01(\tH\x00R\tgroupName\x88\x01\x01\x12!\n" +
 	"\tisVisible\x18\x03 \x01(\bH\x01R\tisVisible\x88\x01\x01\x127\n" +
 	"\x06shares\x18\x04 \x03(\v2\x1f.openim.schedule.GroupShareInfoR\x06shares\x12\x13\n" +
-	"\x02ex\x18\x05 \x01(\tH\x02R\x02ex\x88\x01\x01B\f\n" +
+	"\x02ex\x18\x05 \x01(\tH\x02R\x02ex\x88\x01\x01\x12'\n" +
+	"\fupdateShares\x18\x06 \x01(\bH\x03R\fupdateShares\x88\x01\x01B\f\n" +
 	"\n" +
 	"_groupNameB\f\n" +
 	"\n" +
 	"_isVisibleB\x05\n" +
-	"\x03_ex\"\x19\n" +
+	"\x03_exB\x0f\n" +
+	"\r_updateShares\"\x19\n" +
 	"\x17UpdateScheduleGroupResp\"2\n" +
 	"\x16DeleteScheduleGroupReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\"\x19\n" +
