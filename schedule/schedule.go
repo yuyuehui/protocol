@@ -84,6 +84,29 @@ func (x *ScheduleRepeatInfo) Check() error {
 			return errs.ErrArgs.WrapMsg("repeatDaysOfWeek values must be between 0 (Sunday) and 6 (Saturday)")
 		}
 	}
+	
+	// 验证每月重复的具体日期
+	// 当 repeatType 为 monthly 时，必须指定 repeatDaysOfMonth
+	if x.RepeatType == "monthly" && len(x.RepeatDaysOfMonth) == 0 {
+		return errs.ErrArgs.WrapMsg("repeatDaysOfMonth is required when repeatType is monthly")
+	}
+	// 验证 repeatDaysOfMonth 的值范围（1-31）
+	for _, day := range x.RepeatDaysOfMonth {
+		if day < 1 || day > 31 {
+			return errs.ErrArgs.WrapMsg("repeatDaysOfMonth values must be between 1 and 31")
+		}
+	}
+	
+	// 验证按年重复的月份和日期
+	// 当 repeatType 为 yearly 时，必须指定 repeatMonth 和 repeatDayOfMonth
+	if x.RepeatType == "yearly" {
+		if x.RepeatMonth < 1 || x.RepeatMonth > 12 {
+			return errs.ErrArgs.WrapMsg("repeatMonth must be between 1 and 12 when repeatType is yearly")
+		}
+		if x.RepeatDayOfMonth < 1 || x.RepeatDayOfMonth > 31 {
+			return errs.ErrArgs.WrapMsg("repeatDayOfMonth must be between 1 and 31 when repeatType is yearly")
+		}
+	}
 
 	// 验证结束条件：endDate 和 repeatTimes 不能同时设置
 	if x.EndDate > 0 && x.RepeatTimes > 0 {

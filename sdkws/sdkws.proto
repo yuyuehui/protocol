@@ -674,20 +674,23 @@ message SummaryRecordPublishTips {
 // action: "created"=创建, "updated"=更新, "deleted"=删除, "shared"=分享, "unshared"=取消分享, "accepted"=接受, "rejected"=拒绝
 // ScheduleNotificationRepeatInfo 重复规则（用于通知）
 message ScheduleNotificationRepeatInfo {
-  int64 endDate = 1;                    // 重复结束日期（时间戳）
-  int32 repeatTimes = 2;                // 重复次数
+  int64 endDate = 1;                    // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
+  int32 repeatTimes = 2;                // 重复次数（与endDate二选一，都不设置表示永不结束）
   string repeatType = 3;                // 重复类型：daily/weekly/monthly/yearly
-  string unitType = 4;                  // 单位类型
-  int32 interval = 5;                   // 重复间隔（如每2周）
-  repeated int32 repeatDaysOfWeek = 6;   // 每周重复的星期几（0=周日，1=周一，...）
+  string unitType = 4;                  // 单位类型：day/weekday/week/month/year
+  int32 interval = 5;                   // 重复间隔（如每2周、每3个月）
+  repeated int32 repeatDaysOfWeek = 6;   // 每周重复的星期几（仅当repeatType=weekly时使用，可多选，0=周日，1=周一，...）
+  repeated int32 repeatDaysOfMonth = 7;  // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
+  int32 repeatMonth = 8;                // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
+  int32 repeatDayOfMonth = 9;           // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
 }
 
-// ScheduleNotificationReminderInfo 提醒信息（用于通知）
-message ScheduleNotificationReminderInfo {
-  int32 reminderType = 1;               // 提醒类型：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前 5=自定义
-  int64 reminderTime = 2;              // 提醒时间（时间戳，自定义时使用）
-  bool notified = 3;                   // 是否已通知
-}
+// ScheduleNotificationReminderInfo 提醒信息（用于通知，已废弃，使用 reminders 数组代替）
+// message ScheduleNotificationReminderInfo {
+//   int32 reminderType = 1;               // 提醒类型：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前 5=自定义
+//   int64 reminderTime = 2;              // 提醒时间（时间戳，自定义时使用）
+//   bool notified = 3;                   // 是否已通知
+// }
 
 // ScheduleNotificationAttendeeInfo 参与者信息（用于通知）
 message ScheduleNotificationAttendeeInfo {
@@ -748,7 +751,7 @@ message ScheduleNotificationTips {
   optional string meetingMinutesID = 27;   // 会议纪要文档ID
   optional ScheduleNotificationRepeatInfo repeatInfo = 28; // 重复规则
   repeated ScheduleNotificationAttendeeInfo attendees = 29; // 参与者列表
-  repeated ScheduleNotificationReminderInfo reminders = 30; // 提醒列表
+  repeated int32 reminders = 30; // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
 }
 
 //////////////////////conversation/////////////////////

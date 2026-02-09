@@ -59,19 +59,15 @@ enum WatermarkType {
 
 // ScheduleRepeatInfo 重复规则
 message ScheduleRepeatInfo {
-  int64 endDate = 1;                    // 重复结束日期（时间戳）
-  int32 repeatTimes = 2;                // 重复次数
+  int64 endDate = 1;                    // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
+  int32 repeatTimes = 2;                // 重复次数（与endDate二选一，都不设置表示永不结束）
   string repeatType = 3;                // 重复类型：daily/weekly/monthly/yearly
-  string unitType = 4;                  // 单位类型
-  int32 interval = 5;                   // 重复间隔（如每2周）
-  repeated DayOfWeek repeatDaysOfWeek = 6; // 每周重复的星期几
-}
-
-// ScheduleReminderInfo 提醒信息
-message ScheduleReminderInfo {
-  int32 reminderType = 1;               // 提醒类型：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前 5=自定义
-  int64 reminderTime = 2;              // 提醒时间（时间戳，自定义时使用）
-  bool notified = 3;                   // 是否已通知
+  string unitType = 4;                  // 单位类型：day/weekday/week/month/year
+  int32 interval = 5;                   // 重复间隔（如每2周、每3个月）
+  repeated DayOfWeek repeatDaysOfWeek = 6; // 每周重复的星期几（仅当repeatType=weekly时使用，可多选）
+  repeated int32 repeatDaysOfMonth = 7;   // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
+  int32 repeatMonth = 8;                 // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
+  int32 repeatDayOfMonth = 9;           // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
 }
 
 // ScheduleAttendeeInfo 参与者信息
@@ -131,7 +127,7 @@ message ScheduleInfo {
   // 其他字段
   ScheduleRepeatInfo repeatInfo = 23;            // 重复规则
   repeated ScheduleAttendeeInfo attendees = 24; // 参与者列表
-  repeated ScheduleReminderInfo reminders = 25;  // 提醒列表
+  repeated int32 reminders = 25;  // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
   
   // 权限相关字段（计算字段，不存储在数据库中）
   bool isJoined = 26;    // 是否参与了这个日程（当前用户是否在参与者列表中）
@@ -160,7 +156,7 @@ message CreateScheduleReq {
   bool isTemporary = 17;              // 是否是临时会议（可选，仅当type为MEETING时有效）
   ScheduleRepeatInfo repeatInfo = 18; // 重复规则（可选）
   repeated string attendeeUserIDs = 19; // 参与者用户ID列表（可选）
-  repeated ScheduleReminderInfo reminders = 20; // 提醒列表（可选）
+  repeated int32 reminders = 20; // 提醒类型列表（可选，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
   bool sendToChat = 21; // 是否发送消息到聊天（可选，默认false）
   string messageContent = 22; // 消息内容（可选，当sendToChat为true时使用，不传则使用默认内容）
 }
@@ -215,7 +211,7 @@ message UpdateScheduleReq {
   optional string meetingMinutesID = 19;        // 会议纪要文档ID（可选）
   optional ScheduleRepeatInfo repeatInfo = 16;  // 重复规则（可选）
   repeated string attendeeUserIDs = 17;         // 更新参与者列表（可选，传空数组表示清空）
-  repeated ScheduleReminderInfo reminders = 18; // 更新提醒列表（可选，传空数组表示清空）
+  repeated int32 reminders = 18; // 更新提醒类型列表（可选，传空数组表示清空，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
   optional int32 type = 20;                     // 日程类型：0=日程 1=会议（可选）
   optional MeetingSettings meetingSettings = 21; // 会议设置（可选，仅当type为MEETING时有效）
   optional bool isTemporary = 22;              // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
@@ -300,7 +296,7 @@ message JoinScheduleResp {
 message SetReminderReq {
   string scheduleID = 1;
   string userID = 2;
-  repeated ScheduleReminderInfo reminders = 3;
+  repeated int32 reminders = 3; // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
 }
 
 // SetReminderResp 设置提醒响应
