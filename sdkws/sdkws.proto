@@ -67,6 +67,7 @@ message GroupMemberFullInfo {
   int64 muteEndTime = 11;
   string inviterUserID = 12;
   string pinyin = 13; // 用户拼音字段，用于拼音搜索
+  string pinyinInitials = 14; // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
 }
 
 message PublicUserInfo {
