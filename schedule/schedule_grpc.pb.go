@@ -1,4 +1,4 @@
-﻿// Copyright © 2023 OpenIM. All rights reserved.
+// Copyright © 2023 OpenIM. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,26 +33,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Schedule_CreateSchedule_FullMethodName         = "/openim.schedule.Schedule/CreateSchedule"
-	Schedule_UpdateSchedule_FullMethodName         = "/openim.schedule.Schedule/UpdateSchedule"
-	Schedule_DeleteSchedule_FullMethodName         = "/openim.schedule.Schedule/DeleteSchedule"
-	Schedule_GetSchedule_FullMethodName            = "/openim.schedule.Schedule/GetSchedule"
-	Schedule_GetSchedules_FullMethodName           = "/openim.schedule.Schedule/GetSchedules"
-	Schedule_AcceptSchedule_FullMethodName         = "/openim.schedule.Schedule/AcceptSchedule"
-	Schedule_RejectSchedule_FullMethodName         = "/openim.schedule.Schedule/RejectSchedule"
-	Schedule_JoinSchedule_FullMethodName           = "/openim.schedule.Schedule/JoinSchedule"
-	Schedule_SetReminder_FullMethodName            = "/openim.schedule.Schedule/SetReminder"
-	Schedule_CheckConflict_FullMethodName          = "/openim.schedule.Schedule/CheckConflict"
-	Schedule_GetScheduleDates_FullMethodName       = "/openim.schedule.Schedule/GetScheduleDates"
-	Schedule_GetScheduleMonthView_FullMethodName   = "/openim.schedule.Schedule/GetScheduleMonthView"
-	Schedule_CreateScheduleMessage_FullMethodName  = "/openim.schedule.Schedule/CreateScheduleMessage"
-	Schedule_InitScheduleGroups_FullMethodName     = "/openim.schedule.Schedule/InitScheduleGroups"
-	Schedule_GetAllScheduleGroups_FullMethodName   = "/openim.schedule.Schedule/GetAllScheduleGroups"
-	Schedule_CreateScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/CreateScheduleGroup"
-	Schedule_UpdateScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/UpdateScheduleGroup"
-	Schedule_DeleteScheduleGroup_FullMethodName    = "/openim.schedule.Schedule/DeleteScheduleGroup"
-	Schedule_QuitScheduleGroup_FullMethodName      = "/openim.schedule.Schedule/QuitScheduleGroup"
-	Schedule_GetScheduleGroupDetail_FullMethodName = "/openim.schedule.Schedule/GetScheduleGroupDetail"
+	Schedule_CreateSchedule_FullMethodName                 = "/openim.schedule.Schedule/CreateSchedule"
+	Schedule_UpdateSchedule_FullMethodName                 = "/openim.schedule.Schedule/UpdateSchedule"
+	Schedule_DeleteSchedule_FullMethodName                 = "/openim.schedule.Schedule/DeleteSchedule"
+	Schedule_GetSchedule_FullMethodName                    = "/openim.schedule.Schedule/GetSchedule"
+	Schedule_GetSchedules_FullMethodName                   = "/openim.schedule.Schedule/GetSchedules"
+	Schedule_AcceptSchedule_FullMethodName                 = "/openim.schedule.Schedule/AcceptSchedule"
+	Schedule_RejectSchedule_FullMethodName                 = "/openim.schedule.Schedule/RejectSchedule"
+	Schedule_JoinSchedule_FullMethodName                   = "/openim.schedule.Schedule/JoinSchedule"
+	Schedule_SetReminder_FullMethodName                    = "/openim.schedule.Schedule/SetReminder"
+	Schedule_CheckConflict_FullMethodName                  = "/openim.schedule.Schedule/CheckConflict"
+	Schedule_GetScheduleDates_FullMethodName               = "/openim.schedule.Schedule/GetScheduleDates"
+	Schedule_GetScheduleMonthView_FullMethodName           = "/openim.schedule.Schedule/GetScheduleMonthView"
+	Schedule_CreateScheduleMessage_FullMethodName          = "/openim.schedule.Schedule/CreateScheduleMessage"
+	Schedule_InitScheduleGroups_FullMethodName             = "/openim.schedule.Schedule/InitScheduleGroups"
+	Schedule_GetAllScheduleGroups_FullMethodName           = "/openim.schedule.Schedule/GetAllScheduleGroups"
+	Schedule_CreateScheduleGroup_FullMethodName            = "/openim.schedule.Schedule/CreateScheduleGroup"
+	Schedule_UpdateScheduleGroup_FullMethodName            = "/openim.schedule.Schedule/UpdateScheduleGroup"
+	Schedule_DeleteScheduleGroup_FullMethodName            = "/openim.schedule.Schedule/DeleteScheduleGroup"
+	Schedule_QuitScheduleGroup_FullMethodName              = "/openim.schedule.Schedule/QuitScheduleGroup"
+	Schedule_GetScheduleGroupDetail_FullMethodName         = "/openim.schedule.Schedule/GetScheduleGroupDetail"
+	Schedule_SendScheduleNotificationsByIDs_FullMethodName = "/openim.schedule.Schedule/SendScheduleNotificationsByIDs"
 )
 
 // ScheduleClient is the client API for Schedule service.
@@ -101,6 +102,8 @@ type ScheduleClient interface {
 	QuitScheduleGroup(ctx context.Context, in *QuitScheduleGroupReq, opts ...grpc.CallOption) (*QuitScheduleGroupResp, error)
 	// 获取日程分组详情
 	GetScheduleGroupDetail(ctx context.Context, in *GetScheduleGroupDetailReq, opts ...grpc.CallOption) (*GetScheduleGroupDetailResp, error)
+	// 根据日程IDs向所有参与者发送日程通知消息（除了自己）
+	SendScheduleNotificationsByIDs(ctx context.Context, in *SendScheduleNotificationsByIDsReq, opts ...grpc.CallOption) (*SendScheduleNotificationsByIDsResp, error)
 }
 
 type scheduleClient struct {
@@ -311,6 +314,16 @@ func (c *scheduleClient) GetScheduleGroupDetail(ctx context.Context, in *GetSche
 	return out, nil
 }
 
+func (c *scheduleClient) SendScheduleNotificationsByIDs(ctx context.Context, in *SendScheduleNotificationsByIDsReq, opts ...grpc.CallOption) (*SendScheduleNotificationsByIDsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendScheduleNotificationsByIDsResp)
+	err := c.cc.Invoke(ctx, Schedule_SendScheduleNotificationsByIDs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServer is the server API for Schedule service.
 // All implementations must embed UnimplementedScheduleServer
 // for forward compatibility.
@@ -357,6 +370,8 @@ type ScheduleServer interface {
 	QuitScheduleGroup(context.Context, *QuitScheduleGroupReq) (*QuitScheduleGroupResp, error)
 	// 获取日程分组详情
 	GetScheduleGroupDetail(context.Context, *GetScheduleGroupDetailReq) (*GetScheduleGroupDetailResp, error)
+	// 根据日程IDs向所有参与者发送日程通知消息（除了自己）
+	SendScheduleNotificationsByIDs(context.Context, *SendScheduleNotificationsByIDsReq) (*SendScheduleNotificationsByIDsResp, error)
 	mustEmbedUnimplementedScheduleServer()
 }
 
@@ -426,6 +441,9 @@ func (UnimplementedScheduleServer) QuitScheduleGroup(context.Context, *QuitSched
 }
 func (UnimplementedScheduleServer) GetScheduleGroupDetail(context.Context, *GetScheduleGroupDetailReq) (*GetScheduleGroupDetailResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetScheduleGroupDetail not implemented")
+}
+func (UnimplementedScheduleServer) SendScheduleNotificationsByIDs(context.Context, *SendScheduleNotificationsByIDsReq) (*SendScheduleNotificationsByIDsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SendScheduleNotificationsByIDs not implemented")
 }
 func (UnimplementedScheduleServer) mustEmbedUnimplementedScheduleServer() {}
 func (UnimplementedScheduleServer) testEmbeddedByValue()                  {}
@@ -808,6 +826,24 @@ func _Schedule_GetScheduleGroupDetail_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Schedule_SendScheduleNotificationsByIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendScheduleNotificationsByIDsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).SendScheduleNotificationsByIDs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_SendScheduleNotificationsByIDs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).SendScheduleNotificationsByIDs(ctx, req.(*SendScheduleNotificationsByIDsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Schedule_ServiceDesc is the grpc.ServiceDesc for Schedule service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -894,6 +930,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetScheduleGroupDetail",
 			Handler:    _Schedule_GetScheduleGroupDetail_Handler,
+		},
+		{
+			MethodName: "SendScheduleNotificationsByIDs",
+			Handler:    _Schedule_SendScheduleNotificationsByIDs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

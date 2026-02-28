@@ -446,3 +446,11 @@ func (x *JoinScheduleReq) Check() error {
 	// userID 可选，如果不传则使用 context 中的当前用户
 	return nil
 }
+
+// SendScheduleNotificationsByIDsReq Check 根据日程IDs发送通知请求参数校验
+func (x *SendScheduleNotificationsByIDsReq) Check() error {
+	if len(x.ScheduleIDs) == 0 {
+		return errs.ErrArgs.WrapMsg("scheduleIDs is required and cannot be empty")
+	}
+	return nil
+}
