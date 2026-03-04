@@ -48,11 +48,16 @@ const (
 	FavoriteTypeFile         = 3 // 文件
 	FavoriteTypeNote         = 4 // 笔记
 
-	SignalMsg          = 202 // 信令消息
-	CustomNotification = 203 // 自定义通知
-	MixedTextPicture   = 204 // 混合文本图片消息
-	Code               = 205 // 代码消息
-	SignalingRecord    = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
+	SignalMsg              = 202 // 信令消息
+	CustomNotification     = 203 // 自定义通知
+	MixedTextPicture       = 204 // 混合文本图片消息
+	Code                   = 205 // 代码消息
+	SignalingRecord        = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
+	ScreenshotNotification          = 207 // 截屏通知消息（XXX进行了截屏）
+	ScheduleMessage                 = 208 // 日程消息（普通日程消息，自己创建的日程）
+	ScheduleChangeMessage           = 209 // 日程变更消息（创建/修改日程时发送给参与者的消息，标题根据变更类型显示：xxx创建了日程/xxx修改了日程时间等）
+	ScheduleGroupShareMessage       = 210 // 日程分组共享消息（显示为卡片：XXX将日历共享给你）
+	ScheduleGroupPermissionMessage  = 211 // 日程分组权限修改消息（显示为：XXX将你对"日历名"的权限修改为了「可管理」）
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -156,7 +161,10 @@ const (
 	SummaryRecordFavoriteNotification = 2108 // 总结记录收藏状态变更通知
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
 
-	HasReadReceipt = 2200 // 已读回执
+	// 日程相关通知（统一通知，通过action字段区分操作类型）
+	ScheduleNotification           = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
+	ScheduleGroupNotification      = 2111 // 日程分组变更通知（多端同步，包含创建、更新、删除、排序、添加日程、移除日程、共享、权限更新等操作）
+	HasReadReceipt                 = 2200 // 已读回执
 
 	// LiveKit会议相关通知 (1800-1899)
 	MeetingNotificationBegin             = 1800 // 会议通知类型开始
@@ -191,6 +199,10 @@ const (
 	ReadGroupChatType    = 3 // 群聊(读权限)
 	NotificationChatType = 4 // 通知会话
 	FoldChatType         = 5 // 折叠会话（虚拟会话，用于折叠其他会话）
+	ScheduleChatType     = 6 // 日程会话（只读接收型会话，用于接收日程通知）
+
+	// 日程相关常量
+	NotificationUserID = "oa" // 日程通知接收者ID（固定为 "oa"，实际用户ID）
 
 	// 折叠类型
 	FoldTypeNormal       = 1 // 普通折叠（单聊、群聊）

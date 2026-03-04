@@ -377,6 +377,8 @@ type GroupMemberFullInfo struct {
 	Ex             string                 `protobuf:"bytes,10,opt,name=ex,proto3" json:"ex"`
 	MuteEndTime    int64                  `protobuf:"varint,11,opt,name=muteEndTime,proto3" json:"muteEndTime"`
 	InviterUserID  string                 `protobuf:"bytes,12,opt,name=inviterUserID,proto3" json:"inviterUserID"`
+	Pinyin         string                 `protobuf:"bytes,13,opt,name=pinyin,proto3" json:"pinyin"`                 // 用户拼音字段，用于拼音搜索
+	PinyinInitials string                 `protobuf:"bytes,14,opt,name=pinyinInitials,proto3" json:"pinyinInitials"` // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -495,6 +497,20 @@ func (x *GroupMemberFullInfo) GetInviterUserID() string {
 	return ""
 }
 
+func (x *GroupMemberFullInfo) GetPinyin() string {
+	if x != nil {
+		return x.Pinyin
+	}
+	return ""
+}
+
+func (x *GroupMemberFullInfo) GetPinyinInitials() string {
+	if x != nil {
+		return x.PinyinInitials
+	}
+	return ""
+}
+
 type PublicUserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
@@ -573,6 +589,7 @@ type UserInfo struct {
 	AppMangerLevel   int32                  `protobuf:"varint,6,opt,name=appMangerLevel,proto3" json:"appMangerLevel"`
 	GlobalRecvMsgOpt int32                  `protobuf:"varint,7,opt,name=globalRecvMsgOpt,proto3" json:"globalRecvMsgOpt"`
 	Pinyin           string                 `protobuf:"bytes,8,opt,name=pinyin,proto3" json:"pinyin"`
+	PinyinInitials   string                 `protobuf:"bytes,27,opt,name=pinyinInitials,proto3" json:"pinyinInitials"` // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
 	Status           string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status"`
 	Signature        string                 `protobuf:"bytes,10,opt,name=signature,proto3" json:"signature"`       // 用户签名
 	OnlineStatus     []*PlatformDetail      `protobuf:"bytes,11,rep,name=onlineStatus,proto3" json:"onlineStatus"` // 平台详细状态列表（包含平台ID和在线状态）
@@ -679,6 +696,13 @@ func (x *UserInfo) GetGlobalRecvMsgOpt() int32 {
 func (x *UserInfo) GetPinyin() string {
 	if x != nil {
 		return x.Pinyin
+	}
+	return ""
+}
+
+func (x *UserInfo) GetPinyinInitials() string {
+	if x != nil {
+		return x.PinyinInitials
 	}
 	return ""
 }
@@ -870,6 +894,7 @@ type UserInfoWithEx struct {
 	Ex               *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=ex,proto3" json:"ex"`
 	GlobalRecvMsgOpt *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=globalRecvMsgOpt,proto3" json:"globalRecvMsgOpt"`
 	Pinyin           *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=pinyin,proto3" json:"pinyin"`
+	PinyinInitials   *wrapperspb.StringValue `protobuf:"bytes,27,opt,name=pinyinInitials,proto3" json:"pinyinInitials"` // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
 	Status           *wrapperspb.StringValue `protobuf:"bytes,9,opt,name=status,proto3" json:"status"`
 	Signature        *wrapperspb.StringValue `protobuf:"bytes,10,opt,name=signature,proto3" json:"signature"` // 用户签名
 	unknownFields    protoimpl.UnknownFields
@@ -944,6 +969,13 @@ func (x *UserInfoWithEx) GetGlobalRecvMsgOpt() *wrapperspb.Int32Value {
 func (x *UserInfoWithEx) GetPinyin() *wrapperspb.StringValue {
 	if x != nil {
 		return x.Pinyin
+	}
+	return nil
+}
+
+func (x *UserInfoWithEx) GetPinyinInitials() *wrapperspb.StringValue {
+	if x != nil {
+		return x.PinyinInitials
 	}
 	return nil
 }
@@ -5521,6 +5553,7 @@ type SummaryRecordAddTips struct {
 	CreatorFaceURL   string                 `protobuf:"bytes,9,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL"`      // 创建者头像
 	Contents         string                 `protobuf:"bytes,10,opt,name=contents,proto3" json:"contents"`                 // 用户输入的总结请求
 	SummaryType      int32                  `protobuf:"varint,11,opt,name=summaryType,proto3" json:"summaryType"`          // 总结类型：1=自动生成，2=手动生成
+	TimeDescription  string                 `protobuf:"bytes,12,opt,name=timeDescription,proto3" json:"timeDescription"`   // 时间范围描述
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -5630,6 +5663,13 @@ func (x *SummaryRecordAddTips) GetSummaryType() int32 {
 		return x.SummaryType
 	}
 	return 0
+}
+
+func (x *SummaryRecordAddTips) GetTimeDescription() string {
+	if x != nil {
+		return x.TimeDescription
+	}
+	return ""
 }
 
 // 智能总结记录删除通知
@@ -5815,6 +5855,614 @@ func (x *SummaryRecordPublishTips) GetSummaryID() string {
 	return ""
 }
 
+// ////////////////////schedule/////////////////////
+// 日程通知（统一通知，通过action字段区分操作类型，多端同步）
+// action: "created"=创建, "updated"=更新, "deleted"=删除, "shared"=分享, "unshared"=取消分享, "accepted"=接受, "rejected"=拒绝
+// ScheduleNotificationRepeatInfo 重复规则（用于通知）
+type ScheduleNotificationRepeatInfo struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	EndDate           int64                  `protobuf:"varint,1,opt,name=endDate,proto3" json:"endDate"`                            // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
+	RepeatTimes       int32                  `protobuf:"varint,2,opt,name=repeatTimes,proto3" json:"repeatTimes"`                    // 重复次数（与endDate二选一，都不设置表示永不结束）
+	RepeatType        string                 `protobuf:"bytes,3,opt,name=repeatType,proto3" json:"repeatType"`                       // 重复类型：daily/weekly/monthly/yearly
+	UnitType          string                 `protobuf:"bytes,4,opt,name=unitType,proto3" json:"unitType"`                           // 单位类型：day/weekday/week/month/year
+	Interval          int32                  `protobuf:"varint,5,opt,name=interval,proto3" json:"interval"`                          // 重复间隔（如每2周、每3个月）
+	RepeatDaysOfWeek  []int32                `protobuf:"varint,6,rep,packed,name=repeatDaysOfWeek,proto3" json:"repeatDaysOfWeek"`   // 每周重复的星期几（仅当repeatType=weekly时使用，可多选，0=周日，1=周一，...）
+	RepeatDaysOfMonth []int32                `protobuf:"varint,7,rep,packed,name=repeatDaysOfMonth,proto3" json:"repeatDaysOfMonth"` // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
+	RepeatMonth       int32                  `protobuf:"varint,8,opt,name=repeatMonth,proto3" json:"repeatMonth"`                    // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
+	RepeatDayOfMonth  int32                  `protobuf:"varint,9,opt,name=repeatDayOfMonth,proto3" json:"repeatDayOfMonth"`          // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ScheduleNotificationRepeatInfo) Reset() {
+	*x = ScheduleNotificationRepeatInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[72]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleNotificationRepeatInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleNotificationRepeatInfo) ProtoMessage() {}
+
+func (x *ScheduleNotificationRepeatInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[72]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleNotificationRepeatInfo.ProtoReflect.Descriptor instead.
+func (*ScheduleNotificationRepeatInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{72}
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetEndDate() int64 {
+	if x != nil {
+		return x.EndDate
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatTimes() int32 {
+	if x != nil {
+		return x.RepeatTimes
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatType() string {
+	if x != nil {
+		return x.RepeatType
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetUnitType() string {
+	if x != nil {
+		return x.UnitType
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetInterval() int32 {
+	if x != nil {
+		return x.Interval
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatDaysOfWeek() []int32 {
+	if x != nil {
+		return x.RepeatDaysOfWeek
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatDaysOfMonth() []int32 {
+	if x != nil {
+		return x.RepeatDaysOfMonth
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatMonth() int32 {
+	if x != nil {
+		return x.RepeatMonth
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationRepeatInfo) GetRepeatDayOfMonth() int32 {
+	if x != nil {
+		return x.RepeatDayOfMonth
+	}
+	return 0
+}
+
+// ScheduleNotificationAttendeeInfo 参与者信息（用于通知）
+type ScheduleNotificationAttendeeInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`          // 用户ID
+	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`      // 用户昵称
+	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`        // 头像URL
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status"`         // 状态：0=待确认 1=已接受 2=已拒绝
+	Permission    int32                  `protobuf:"varint,5,opt,name=permission,proto3" json:"permission"` // 权限：0=仅查看 1=可编辑
+	ReplyTime     int64                  `protobuf:"varint,6,opt,name=replyTime,proto3" json:"replyTime"`   // 回复时间（时间戳）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScheduleNotificationAttendeeInfo) Reset() {
+	*x = ScheduleNotificationAttendeeInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[73]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleNotificationAttendeeInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleNotificationAttendeeInfo) ProtoMessage() {}
+
+func (x *ScheduleNotificationAttendeeInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[73]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleNotificationAttendeeInfo.ProtoReflect.Descriptor instead.
+func (*ScheduleNotificationAttendeeInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{73}
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetFaceURL() string {
+	if x != nil {
+		return x.FaceURL
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetPermission() int32 {
+	if x != nil {
+		return x.Permission
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationAttendeeInfo) GetReplyTime() int64 {
+	if x != nil {
+		return x.ReplyTime
+	}
+	return 0
+}
+
+// ScheduleNotificationMeetingSettings 会议设置信息（用于通知）
+type ScheduleNotificationMeetingSettings struct {
+	state                      protoimpl.MessageState `protogen:"open.v1"`
+	EnablePassword             bool                   `protobuf:"varint,1,opt,name=enablePassword,proto3" json:"enablePassword"`                         // 是否启用入会密码
+	Password                   string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password"`                                      // 入会密码（4-6位数字）
+	AutoTranscribe             bool                   `protobuf:"varint,3,opt,name=autoTranscribe,proto3" json:"autoTranscribe"`                         // 自动开启文字转写
+	EnableWaitingRoom          bool                   `protobuf:"varint,4,opt,name=enableWaitingRoom,proto3" json:"enableWaitingRoom"`                   // 开启等候室
+	AllowMemberJoinBeforeHost  bool                   `protobuf:"varint,5,opt,name=allowMemberJoinBeforeHost,proto3" json:"allowMemberJoinBeforeHost"`   // 允许成员在主持人进会前加入
+	EnableScreenShareWatermark bool                   `protobuf:"varint,6,opt,name=enableScreenShareWatermark,proto3" json:"enableScreenShareWatermark"` // 开启屏幕共享水印
+	WatermarkType              int32                  `protobuf:"varint,7,opt,name=watermarkType,proto3" json:"watermarkType"`                           // 水印类型：0=单排水印 1=多排水印
+	AllowMemberViewMinutes     bool                   `protobuf:"varint,8,opt,name=allowMemberViewMinutes,proto3" json:"allowMemberViewMinutes"`         // 允许成员查看会议纪要文档
+	AllowMultiDeviceJoin       bool                   `protobuf:"varint,9,opt,name=allowMultiDeviceJoin,proto3" json:"allowMultiDeviceJoin"`             // 允许成员使用多个设备入会
+	CallReminder               int32                  `protobuf:"varint,10,opt,name=callReminder,proto3" json:"callReminder"`                            // 会议开始时来电提醒：0=不提醒 1=所有成员 2=指定成员 3=仅主持人
+	CallReminderUserIDs        []string               `protobuf:"bytes,11,rep,name=callReminderUserIDs,proto3" json:"callReminderUserIDs"`               // 指定成员列表（callReminder为2时使用）
+	MuteOnJoin                 int32                  `protobuf:"varint,12,opt,name=muteOnJoin,proto3" json:"muteOnJoin"`                                // 成员入会时静音：0=关闭 1=开启 2=超过6人后自动开启
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
+}
+
+func (x *ScheduleNotificationMeetingSettings) Reset() {
+	*x = ScheduleNotificationMeetingSettings{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[74]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleNotificationMeetingSettings) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleNotificationMeetingSettings) ProtoMessage() {}
+
+func (x *ScheduleNotificationMeetingSettings) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[74]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleNotificationMeetingSettings.ProtoReflect.Descriptor instead.
+func (*ScheduleNotificationMeetingSettings) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{74}
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetEnablePassword() bool {
+	if x != nil {
+		return x.EnablePassword
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetAutoTranscribe() bool {
+	if x != nil {
+		return x.AutoTranscribe
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetEnableWaitingRoom() bool {
+	if x != nil {
+		return x.EnableWaitingRoom
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetAllowMemberJoinBeforeHost() bool {
+	if x != nil {
+		return x.AllowMemberJoinBeforeHost
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetEnableScreenShareWatermark() bool {
+	if x != nil {
+		return x.EnableScreenShareWatermark
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetWatermarkType() int32 {
+	if x != nil {
+		return x.WatermarkType
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetAllowMemberViewMinutes() bool {
+	if x != nil {
+		return x.AllowMemberViewMinutes
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetAllowMultiDeviceJoin() bool {
+	if x != nil {
+		return x.AllowMultiDeviceJoin
+	}
+	return false
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetCallReminder() int32 {
+	if x != nil {
+		return x.CallReminder
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetCallReminderUserIDs() []string {
+	if x != nil {
+		return x.CallReminderUserIDs
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationMeetingSettings) GetMuteOnJoin() int32 {
+	if x != nil {
+		return x.MuteOnJoin
+	}
+	return 0
+}
+
+type ScheduleNotificationTips struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OperatorUserID string                 `protobuf:"bytes,1,opt,name=operatorUserID,proto3" json:"operatorUserID"` // 操作者用户ID
+	ScheduleID     string                 `protobuf:"bytes,2,opt,name=scheduleID,proto3" json:"scheduleID"`         // 日程ID
+	Action         string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`                 // 操作类型：created/updated/deleted/shared/unshared/accepted/rejected
+	Timestamp      int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp"`          // 操作时间（时间戳）
+	// 以下字段根据action类型选择性使用
+	ShareToUserIDs     []string `protobuf:"bytes,5,rep,name=shareToUserIDs,proto3" json:"shareToUserIDs"`         // 分享操作：被分享的用户ID列表
+	UnshareFromUserIDs []string `protobuf:"bytes,6,rep,name=unshareFromUserIDs,proto3" json:"unshareFromUserIDs"` // 取消分享操作：取消分享的用户ID列表
+	CreatorUserID      string   `protobuf:"bytes,7,opt,name=creatorUserID,proto3" json:"creatorUserID"`           // 接受/拒绝操作：创建者用户ID
+	// 完整的日程信息字段（可选，deleted操作时为空）
+	CreatorNickname  *string                              `protobuf:"bytes,8,opt,name=creatorNickname,proto3,oneof" json:"creatorNickname"`    // 创建者昵称
+	Status           *string                              `protobuf:"bytes,9,opt,name=status,proto3,oneof" json:"status"`                      // 状态：pending/accepted/rejected/cancelled/completed
+	CreateTime       *int64                               `protobuf:"varint,10,opt,name=createTime,proto3,oneof" json:"createTime"`            // 创建时间（时间戳）
+	Title            *string                              `protobuf:"bytes,11,opt,name=title,proto3,oneof" json:"title"`                       // 日程标题
+	StartTime        *int64                               `protobuf:"varint,12,opt,name=startTime,proto3,oneof" json:"startTime"`              // 开始时间（时间戳）
+	EndTime          *int64                               `protobuf:"varint,13,opt,name=endTime,proto3,oneof" json:"endTime"`                  // 结束时间（时间戳）
+	Location         *string                              `protobuf:"bytes,14,opt,name=location,proto3,oneof" json:"location"`                 // 地点
+	RoomID           *string                              `protobuf:"bytes,15,opt,name=roomID,proto3,oneof" json:"roomID"`                     // 会议室ID
+	Description      *string                              `protobuf:"bytes,16,opt,name=description,proto3,oneof" json:"description"`           // 描述/备注
+	TimeZone         *string                              `protobuf:"bytes,17,opt,name=timeZone,proto3,oneof" json:"timeZone"`                 // 时区
+	Visibility       *int32                               `protobuf:"varint,18,opt,name=visibility,proto3,oneof" json:"visibility"`            // 可见性：1=个人 2=团队 3=公开
+	AllDay           *bool                                `protobuf:"varint,19,opt,name=allDay,proto3,oneof" json:"allDay"`                    // 是否全天
+	AttachmentURLs   []string                             `protobuf:"bytes,20,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`           // 附件URL列表
+	ScheduleGroupID  *string                              `protobuf:"bytes,21,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID"`   // 所属日程分组ID
+	AllowMemberJoin  *bool                                `protobuf:"varint,22,opt,name=allowMemberJoin,proto3,oneof" json:"allowMemberJoin"`  // 允许成员主动加入
+	NotifyByEmail    *bool                                `protobuf:"varint,23,opt,name=notifyByEmail,proto3,oneof" json:"notifyByEmail"`      // 同时通过邮件通知参与人
+	Type             *int32                               `protobuf:"varint,24,opt,name=type,proto3,oneof" json:"type"`                        // 日程类型：0=日程 1=会议
+	MeetingSettings  *ScheduleNotificationMeetingSettings `protobuf:"bytes,25,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings"`   // 会议设置（仅当type为MEETING时有效）
+	IsTemporary      *bool                                `protobuf:"varint,26,opt,name=isTemporary,proto3,oneof" json:"isTemporary"`          // 是否是临时会议（仅当type为MEETING时有效）
+	MeetingMinutesID *string                              `protobuf:"bytes,27,opt,name=meetingMinutesID,proto3,oneof" json:"meetingMinutesID"` // 会议纪要文档ID
+	RepeatInfo       *ScheduleNotificationRepeatInfo      `protobuf:"bytes,28,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo"`             // 重复规则
+	Attendees        []*ScheduleNotificationAttendeeInfo  `protobuf:"bytes,29,rep,name=attendees,proto3" json:"attendees"`                     // 参与者列表
+	Reminders        []int32                              `protobuf:"varint,30,rep,packed,name=reminders,proto3" json:"reminders"`             // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *ScheduleNotificationTips) Reset() {
+	*x = ScheduleNotificationTips{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[75]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleNotificationTips) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleNotificationTips) ProtoMessage() {}
+
+func (x *ScheduleNotificationTips) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[75]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleNotificationTips.ProtoReflect.Descriptor instead.
+func (*ScheduleNotificationTips) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{75}
+}
+
+func (x *ScheduleNotificationTips) GetOperatorUserID() string {
+	if x != nil {
+		return x.OperatorUserID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetScheduleID() string {
+	if x != nil {
+		return x.ScheduleID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetShareToUserIDs() []string {
+	if x != nil {
+		return x.ShareToUserIDs
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetUnshareFromUserIDs() []string {
+	if x != nil {
+		return x.UnshareFromUserIDs
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetCreatorUserID() string {
+	if x != nil {
+		return x.CreatorUserID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetCreatorNickname() string {
+	if x != nil && x.CreatorNickname != nil {
+		return *x.CreatorNickname
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetStatus() string {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetCreateTime() int64 {
+	if x != nil && x.CreateTime != nil {
+		return *x.CreateTime
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetTitle() string {
+	if x != nil && x.Title != nil {
+		return *x.Title
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetStartTime() int64 {
+	if x != nil && x.StartTime != nil {
+		return *x.StartTime
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetEndTime() int64 {
+	if x != nil && x.EndTime != nil {
+		return *x.EndTime
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetLocation() string {
+	if x != nil && x.Location != nil {
+		return *x.Location
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetRoomID() string {
+	if x != nil && x.RoomID != nil {
+		return *x.RoomID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetTimeZone() string {
+	if x != nil && x.TimeZone != nil {
+		return *x.TimeZone
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetVisibility() int32 {
+	if x != nil && x.Visibility != nil {
+		return *x.Visibility
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetAllDay() bool {
+	if x != nil && x.AllDay != nil {
+		return *x.AllDay
+	}
+	return false
+}
+
+func (x *ScheduleNotificationTips) GetAttachmentURLs() []string {
+	if x != nil {
+		return x.AttachmentURLs
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetScheduleGroupID() string {
+	if x != nil && x.ScheduleGroupID != nil {
+		return *x.ScheduleGroupID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetAllowMemberJoin() bool {
+	if x != nil && x.AllowMemberJoin != nil {
+		return *x.AllowMemberJoin
+	}
+	return false
+}
+
+func (x *ScheduleNotificationTips) GetNotifyByEmail() bool {
+	if x != nil && x.NotifyByEmail != nil {
+		return *x.NotifyByEmail
+	}
+	return false
+}
+
+func (x *ScheduleNotificationTips) GetType() int32 {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return 0
+}
+
+func (x *ScheduleNotificationTips) GetMeetingSettings() *ScheduleNotificationMeetingSettings {
+	if x != nil {
+		return x.MeetingSettings
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetIsTemporary() bool {
+	if x != nil && x.IsTemporary != nil {
+		return *x.IsTemporary
+	}
+	return false
+}
+
+func (x *ScheduleNotificationTips) GetMeetingMinutesID() string {
+	if x != nil && x.MeetingMinutesID != nil {
+		return *x.MeetingMinutesID
+	}
+	return ""
+}
+
+func (x *ScheduleNotificationTips) GetRepeatInfo() *ScheduleNotificationRepeatInfo {
+	if x != nil {
+		return x.RepeatInfo
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetAttendees() []*ScheduleNotificationAttendeeInfo {
+	if x != nil {
+		return x.Attendees
+	}
+	return nil
+}
+
+func (x *ScheduleNotificationTips) GetReminders() []int32 {
+	if x != nil {
+		return x.Reminders
+	}
+	return nil
+}
+
 // ////////////////////conversation/////////////////////
 type ConversationUpdateTips struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
@@ -5826,7 +6474,7 @@ type ConversationUpdateTips struct {
 
 func (x *ConversationUpdateTips) Reset() {
 	*x = ConversationUpdateTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[72]
+	mi := &file_sdkws_sdkws_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5838,7 +6486,7 @@ func (x *ConversationUpdateTips) String() string {
 func (*ConversationUpdateTips) ProtoMessage() {}
 
 func (x *ConversationUpdateTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[72]
+	mi := &file_sdkws_sdkws_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5851,7 +6499,7 @@ func (x *ConversationUpdateTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationUpdateTips.ProtoReflect.Descriptor instead.
 func (*ConversationUpdateTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{72}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *ConversationUpdateTips) GetUserID() string {
@@ -5880,7 +6528,7 @@ type ConversationSetPrivateTips struct {
 
 func (x *ConversationSetPrivateTips) Reset() {
 	*x = ConversationSetPrivateTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[73]
+	mi := &file_sdkws_sdkws_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5892,7 +6540,7 @@ func (x *ConversationSetPrivateTips) String() string {
 func (*ConversationSetPrivateTips) ProtoMessage() {}
 
 func (x *ConversationSetPrivateTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[73]
+	mi := &file_sdkws_sdkws_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5905,7 +6553,7 @@ func (x *ConversationSetPrivateTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationSetPrivateTips.ProtoReflect.Descriptor instead.
 func (*ConversationSetPrivateTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{73}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *ConversationSetPrivateTips) GetRecvID() string {
@@ -5948,7 +6596,7 @@ type ConversationHasReadTips struct {
 
 func (x *ConversationHasReadTips) Reset() {
 	*x = ConversationHasReadTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[74]
+	mi := &file_sdkws_sdkws_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5960,7 +6608,7 @@ func (x *ConversationHasReadTips) String() string {
 func (*ConversationHasReadTips) ProtoMessage() {}
 
 func (x *ConversationHasReadTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[74]
+	mi := &file_sdkws_sdkws_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5973,7 +6621,7 @@ func (x *ConversationHasReadTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationHasReadTips.ProtoReflect.Descriptor instead.
 func (*ConversationHasReadTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{74}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *ConversationHasReadTips) GetUserID() string {
@@ -6013,7 +6661,7 @@ type NotificationElem struct {
 
 func (x *NotificationElem) Reset() {
 	*x = NotificationElem{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[75]
+	mi := &file_sdkws_sdkws_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6025,7 +6673,7 @@ func (x *NotificationElem) String() string {
 func (*NotificationElem) ProtoMessage() {}
 
 func (x *NotificationElem) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[75]
+	mi := &file_sdkws_sdkws_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6038,7 +6686,7 @@ func (x *NotificationElem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotificationElem.ProtoReflect.Descriptor instead.
 func (*NotificationElem) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{75}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *NotificationElem) GetDetail() string {
@@ -6058,7 +6706,7 @@ type Seqs struct {
 
 func (x *Seqs) Reset() {
 	*x = Seqs{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[76]
+	mi := &file_sdkws_sdkws_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6070,7 +6718,7 @@ func (x *Seqs) String() string {
 func (*Seqs) ProtoMessage() {}
 
 func (x *Seqs) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[76]
+	mi := &file_sdkws_sdkws_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6083,7 +6731,7 @@ func (x *Seqs) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Seqs.ProtoReflect.Descriptor instead.
 func (*Seqs) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{76}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *Seqs) GetSeqs() []int64 {
@@ -6104,7 +6752,7 @@ type DeleteMessageTips struct {
 
 func (x *DeleteMessageTips) Reset() {
 	*x = DeleteMessageTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[77]
+	mi := &file_sdkws_sdkws_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6116,7 +6764,7 @@ func (x *DeleteMessageTips) String() string {
 func (*DeleteMessageTips) ProtoMessage() {}
 
 func (x *DeleteMessageTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[77]
+	mi := &file_sdkws_sdkws_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6129,7 +6777,7 @@ func (x *DeleteMessageTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMessageTips.ProtoReflect.Descriptor instead.
 func (*DeleteMessageTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{77}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *DeleteMessageTips) GetOpUserID() string {
@@ -6168,7 +6816,7 @@ type RevokeMsgTips struct {
 
 func (x *RevokeMsgTips) Reset() {
 	*x = RevokeMsgTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[78]
+	mi := &file_sdkws_sdkws_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6180,7 +6828,7 @@ func (x *RevokeMsgTips) String() string {
 func (*RevokeMsgTips) ProtoMessage() {}
 
 func (x *RevokeMsgTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[78]
+	mi := &file_sdkws_sdkws_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6193,7 +6841,7 @@ func (x *RevokeMsgTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeMsgTips.ProtoReflect.Descriptor instead.
 func (*RevokeMsgTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{78}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *RevokeMsgTips) GetRevokerUserID() string {
@@ -6264,7 +6912,7 @@ type MessageRevokedContent struct {
 
 func (x *MessageRevokedContent) Reset() {
 	*x = MessageRevokedContent{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[79]
+	mi := &file_sdkws_sdkws_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6276,7 +6924,7 @@ func (x *MessageRevokedContent) String() string {
 func (*MessageRevokedContent) ProtoMessage() {}
 
 func (x *MessageRevokedContent) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[79]
+	mi := &file_sdkws_sdkws_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6289,7 +6937,7 @@ func (x *MessageRevokedContent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageRevokedContent.ProtoReflect.Descriptor instead.
 func (*MessageRevokedContent) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{79}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *MessageRevokedContent) GetRevokerID() string {
@@ -6379,7 +7027,7 @@ type ClearConversationTips struct {
 
 func (x *ClearConversationTips) Reset() {
 	*x = ClearConversationTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[80]
+	mi := &file_sdkws_sdkws_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6391,7 +7039,7 @@ func (x *ClearConversationTips) String() string {
 func (*ClearConversationTips) ProtoMessage() {}
 
 func (x *ClearConversationTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[80]
+	mi := &file_sdkws_sdkws_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6404,7 +7052,7 @@ func (x *ClearConversationTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearConversationTips.ProtoReflect.Descriptor instead.
 func (*ClearConversationTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{80}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *ClearConversationTips) GetUserID() string {
@@ -6432,7 +7080,7 @@ type DeleteMsgsTips struct {
 
 func (x *DeleteMsgsTips) Reset() {
 	*x = DeleteMsgsTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[81]
+	mi := &file_sdkws_sdkws_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6444,7 +7092,7 @@ func (x *DeleteMsgsTips) String() string {
 func (*DeleteMsgsTips) ProtoMessage() {}
 
 func (x *DeleteMsgsTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[81]
+	mi := &file_sdkws_sdkws_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6457,7 +7105,7 @@ func (x *DeleteMsgsTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMsgsTips.ProtoReflect.Descriptor instead.
 func (*DeleteMsgsTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{81}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *DeleteMsgsTips) GetUserID() string {
@@ -6493,7 +7141,7 @@ type MarkAsReadTips struct {
 
 func (x *MarkAsReadTips) Reset() {
 	*x = MarkAsReadTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[82]
+	mi := &file_sdkws_sdkws_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6505,7 +7153,7 @@ func (x *MarkAsReadTips) String() string {
 func (*MarkAsReadTips) ProtoMessage() {}
 
 func (x *MarkAsReadTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[82]
+	mi := &file_sdkws_sdkws_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6518,7 +7166,7 @@ func (x *MarkAsReadTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarkAsReadTips.ProtoReflect.Descriptor instead.
 func (*MarkAsReadTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{82}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *MarkAsReadTips) GetMarkAsReadUserID() string {
@@ -6564,7 +7212,7 @@ type GroupMsgReadUser struct {
 
 func (x *GroupMsgReadUser) Reset() {
 	*x = GroupMsgReadUser{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[83]
+	mi := &file_sdkws_sdkws_proto_msgTypes[87]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6576,7 +7224,7 @@ func (x *GroupMsgReadUser) String() string {
 func (*GroupMsgReadUser) ProtoMessage() {}
 
 func (x *GroupMsgReadUser) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[83]
+	mi := &file_sdkws_sdkws_proto_msgTypes[87]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6589,7 +7237,7 @@ func (x *GroupMsgReadUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupMsgReadUser.ProtoReflect.Descriptor instead.
 func (*GroupMsgReadUser) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{83}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *GroupMsgReadUser) GetUserID() string {
@@ -6644,7 +7292,7 @@ type SetAppBackgroundStatusReq struct {
 
 func (x *SetAppBackgroundStatusReq) Reset() {
 	*x = SetAppBackgroundStatusReq{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[84]
+	mi := &file_sdkws_sdkws_proto_msgTypes[88]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6656,7 +7304,7 @@ func (x *SetAppBackgroundStatusReq) String() string {
 func (*SetAppBackgroundStatusReq) ProtoMessage() {}
 
 func (x *SetAppBackgroundStatusReq) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[84]
+	mi := &file_sdkws_sdkws_proto_msgTypes[88]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6669,7 +7317,7 @@ func (x *SetAppBackgroundStatusReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAppBackgroundStatusReq.ProtoReflect.Descriptor instead.
 func (*SetAppBackgroundStatusReq) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{84}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *SetAppBackgroundStatusReq) GetUserID() string {
@@ -6694,7 +7342,7 @@ type SetAppBackgroundStatusResp struct {
 
 func (x *SetAppBackgroundStatusResp) Reset() {
 	*x = SetAppBackgroundStatusResp{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[85]
+	mi := &file_sdkws_sdkws_proto_msgTypes[89]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6706,7 +7354,7 @@ func (x *SetAppBackgroundStatusResp) String() string {
 func (*SetAppBackgroundStatusResp) ProtoMessage() {}
 
 func (x *SetAppBackgroundStatusResp) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[85]
+	mi := &file_sdkws_sdkws_proto_msgTypes[89]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6719,7 +7367,7 @@ func (x *SetAppBackgroundStatusResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetAppBackgroundStatusResp.ProtoReflect.Descriptor instead.
 func (*SetAppBackgroundStatusResp) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{85}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{89}
 }
 
 type ProcessUserCommand struct {
@@ -6735,7 +7383,7 @@ type ProcessUserCommand struct {
 
 func (x *ProcessUserCommand) Reset() {
 	*x = ProcessUserCommand{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[86]
+	mi := &file_sdkws_sdkws_proto_msgTypes[90]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6747,7 +7395,7 @@ func (x *ProcessUserCommand) String() string {
 func (*ProcessUserCommand) ProtoMessage() {}
 
 func (x *ProcessUserCommand) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[86]
+	mi := &file_sdkws_sdkws_proto_msgTypes[90]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6760,7 +7408,7 @@ func (x *ProcessUserCommand) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessUserCommand.ProtoReflect.Descriptor instead.
 func (*ProcessUserCommand) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{86}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *ProcessUserCommand) GetUserID() string {
@@ -6808,7 +7456,7 @@ type RequestPagination struct {
 
 func (x *RequestPagination) Reset() {
 	*x = RequestPagination{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[87]
+	mi := &file_sdkws_sdkws_proto_msgTypes[91]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6820,7 +7468,7 @@ func (x *RequestPagination) String() string {
 func (*RequestPagination) ProtoMessage() {}
 
 func (x *RequestPagination) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[87]
+	mi := &file_sdkws_sdkws_proto_msgTypes[91]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6833,7 +7481,7 @@ func (x *RequestPagination) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestPagination.ProtoReflect.Descriptor instead.
 func (*RequestPagination) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{87}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *RequestPagination) GetPageNumber() int32 {
@@ -6862,7 +7510,7 @@ type FriendsInfoUpdateTips struct {
 
 func (x *FriendsInfoUpdateTips) Reset() {
 	*x = FriendsInfoUpdateTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[88]
+	mi := &file_sdkws_sdkws_proto_msgTypes[92]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6874,7 +7522,7 @@ func (x *FriendsInfoUpdateTips) String() string {
 func (*FriendsInfoUpdateTips) ProtoMessage() {}
 
 func (x *FriendsInfoUpdateTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[88]
+	mi := &file_sdkws_sdkws_proto_msgTypes[92]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6887,7 +7535,7 @@ func (x *FriendsInfoUpdateTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FriendsInfoUpdateTips.ProtoReflect.Descriptor instead.
 func (*FriendsInfoUpdateTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{88}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *FriendsInfoUpdateTips) GetFromToUserID() *FromToUserID {
@@ -6929,7 +7577,7 @@ type SubUserOnlineStatusElem struct {
 
 func (x *SubUserOnlineStatusElem) Reset() {
 	*x = SubUserOnlineStatusElem{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[89]
+	mi := &file_sdkws_sdkws_proto_msgTypes[93]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6941,7 +7589,7 @@ func (x *SubUserOnlineStatusElem) String() string {
 func (*SubUserOnlineStatusElem) ProtoMessage() {}
 
 func (x *SubUserOnlineStatusElem) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[89]
+	mi := &file_sdkws_sdkws_proto_msgTypes[93]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6954,7 +7602,7 @@ func (x *SubUserOnlineStatusElem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubUserOnlineStatusElem.ProtoReflect.Descriptor instead.
 func (*SubUserOnlineStatusElem) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{89}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *SubUserOnlineStatusElem) GetUserID() string {
@@ -6987,7 +7635,7 @@ type SubUserOnlineStatusTips struct {
 
 func (x *SubUserOnlineStatusTips) Reset() {
 	*x = SubUserOnlineStatusTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[90]
+	mi := &file_sdkws_sdkws_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6999,7 +7647,7 @@ func (x *SubUserOnlineStatusTips) String() string {
 func (*SubUserOnlineStatusTips) ProtoMessage() {}
 
 func (x *SubUserOnlineStatusTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[90]
+	mi := &file_sdkws_sdkws_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7012,7 +7660,7 @@ func (x *SubUserOnlineStatusTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubUserOnlineStatusTips.ProtoReflect.Descriptor instead.
 func (*SubUserOnlineStatusTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{90}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *SubUserOnlineStatusTips) GetSubscribers() []*SubUserOnlineStatusElem {
@@ -7032,7 +7680,7 @@ type SubUserOnlineStatus struct {
 
 func (x *SubUserOnlineStatus) Reset() {
 	*x = SubUserOnlineStatus{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[91]
+	mi := &file_sdkws_sdkws_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7044,7 +7692,7 @@ func (x *SubUserOnlineStatus) String() string {
 func (*SubUserOnlineStatus) ProtoMessage() {}
 
 func (x *SubUserOnlineStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[91]
+	mi := &file_sdkws_sdkws_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7057,7 +7705,7 @@ func (x *SubUserOnlineStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubUserOnlineStatus.ProtoReflect.Descriptor instead.
 func (*SubUserOnlineStatus) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{91}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *SubUserOnlineStatus) GetSubscribeUserID() []string {
@@ -7087,7 +7735,7 @@ type StreamMsgTips struct {
 
 func (x *StreamMsgTips) Reset() {
 	*x = StreamMsgTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[92]
+	mi := &file_sdkws_sdkws_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7099,7 +7747,7 @@ func (x *StreamMsgTips) String() string {
 func (*StreamMsgTips) ProtoMessage() {}
 
 func (x *StreamMsgTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[92]
+	mi := &file_sdkws_sdkws_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7112,7 +7760,7 @@ func (x *StreamMsgTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamMsgTips.ProtoReflect.Descriptor instead.
 func (*StreamMsgTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{92}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *StreamMsgTips) GetConversationID() string {
@@ -7154,13 +7802,14 @@ type ConversationDeleteTips struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	UserID          string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	ConversationIDs []string               `protobuf:"bytes,2,rep,name=conversationIDs,proto3" json:"conversationIDs"`
+	IsHidden        bool                   `protobuf:"varint,3,opt,name=isHidden,proto3" json:"isHidden"` // 是否隐藏（true=隐藏会话，false=真正删除会话）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ConversationDeleteTips) Reset() {
 	*x = ConversationDeleteTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[93]
+	mi := &file_sdkws_sdkws_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7172,7 +7821,7 @@ func (x *ConversationDeleteTips) String() string {
 func (*ConversationDeleteTips) ProtoMessage() {}
 
 func (x *ConversationDeleteTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[93]
+	mi := &file_sdkws_sdkws_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7185,7 +7834,7 @@ func (x *ConversationDeleteTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationDeleteTips.ProtoReflect.Descriptor instead.
 func (*ConversationDeleteTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{93}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *ConversationDeleteTips) GetUserID() string {
@@ -7202,6 +7851,13 @@ func (x *ConversationDeleteTips) GetConversationIDs() []string {
 	return nil
 }
 
+func (x *ConversationDeleteTips) GetIsHidden() bool {
+	if x != nil {
+		return x.IsHidden
+	}
+	return false
+}
+
 type ConversationGroupChangeTips struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	UserID          string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
@@ -7216,7 +7872,7 @@ type ConversationGroupChangeTips struct {
 
 func (x *ConversationGroupChangeTips) Reset() {
 	*x = ConversationGroupChangeTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[94]
+	mi := &file_sdkws_sdkws_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7228,7 +7884,7 @@ func (x *ConversationGroupChangeTips) String() string {
 func (*ConversationGroupChangeTips) ProtoMessage() {}
 
 func (x *ConversationGroupChangeTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[94]
+	mi := &file_sdkws_sdkws_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7241,7 +7897,7 @@ func (x *ConversationGroupChangeTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationGroupChangeTips.ProtoReflect.Descriptor instead.
 func (*ConversationGroupChangeTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{94}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *ConversationGroupChangeTips) GetUserID() string {
@@ -7286,6 +7942,786 @@ func (x *ConversationGroupChangeTips) GetUpdateTime() int64 {
 	return 0
 }
 
+// 日程分组变更通知（多端同步）
+// ScheduleGroupNotificationShareInfo 分组共享信息（用于通知）
+type ScheduleGroupNotificationShareInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`              // 用户ID
+	Permission    int32                  `protobuf:"varint,2,opt,name=permission,proto3" json:"permission"`     // 权限：1=可查看, 2=可编辑, 3=可管理
+	OnlyBusyFree  bool                   `protobuf:"varint,3,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"` // 是否仅查看闲忙状态
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ScheduleGroupNotificationShareInfo) Reset() {
+	*x = ScheduleGroupNotificationShareInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[99]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleGroupNotificationShareInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleGroupNotificationShareInfo) ProtoMessage() {}
+
+func (x *ScheduleGroupNotificationShareInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[99]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleGroupNotificationShareInfo.ProtoReflect.Descriptor instead.
+func (*ScheduleGroupNotificationShareInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{99}
+}
+
+func (x *ScheduleGroupNotificationShareInfo) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupNotificationShareInfo) GetPermission() int32 {
+	if x != nil {
+		return x.Permission
+	}
+	return 0
+}
+
+func (x *ScheduleGroupNotificationShareInfo) GetOnlyBusyFree() bool {
+	if x != nil {
+		return x.OnlyBusyFree
+	}
+	return false
+}
+
+type ScheduleGroupChangeTips struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	UserID      string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`           // 用户ID
+	GroupID     string                 `protobuf:"bytes,2,opt,name=groupID,proto3" json:"groupID"`         // 分组ID
+	Action      string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"`           // 操作类型: "create"=创建, "update"=更新, "delete"=删除, "sort"=排序, "addSchedule"=添加日程, "removeSchedule"=移除日程
+	GroupName   string                 `protobuf:"bytes,4,opt,name=groupName,proto3" json:"groupName"`     // 分组名称（创建/更新时）
+	ScheduleIDs []string               `protobuf:"bytes,5,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 变更的日程ID列表（addSchedule/removeSchedule时返回）
+	UpdateTime  int64                  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime"`  // 更新时间
+	// 完整的日程分组信息字段（可选，delete操作时为空）
+	OwnerUserID                *string                               `protobuf:"bytes,7,opt,name=ownerUserID,proto3,oneof" json:"ownerUserID"`                                // 所有者用户ID
+	GroupType                  *int32                                `protobuf:"varint,8,opt,name=groupType,proto3,oneof" json:"groupType"`                                   // 分组类型：0=系统默认分组（只可能有一个），1=个人/团队，2=订阅公共日历
+	SortOrder                  *int32                                `protobuf:"varint,9,opt,name=sortOrder,proto3,oneof" json:"sortOrder"`                                   // 排序顺序
+	IsVisible                  *bool                                 `protobuf:"varint,10,opt,name=isVisible,proto3,oneof" json:"isVisible"`                                  // 是否可见
+	CreateTime                 *int64                                `protobuf:"varint,11,opt,name=createTime,proto3,oneof" json:"createTime"`                                // 创建时间（时间戳）
+	Ex                         *string                               `protobuf:"bytes,12,opt,name=ex,proto3,oneof" json:"ex"`                                                 // 扩展字段
+	Shares                     []*ScheduleGroupNotificationShareInfo `protobuf:"bytes,13,rep,name=shares,proto3" json:"shares"`                                               // 共享信息列表（包含权限）
+	SubscribedPublicCalendarID *string                               `protobuf:"bytes,14,opt,name=subscribedPublicCalendarID,proto3,oneof" json:"subscribedPublicCalendarID"` // 订阅的公共日历ID（仅当groupType=2时有效）
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
+}
+
+func (x *ScheduleGroupChangeTips) Reset() {
+	*x = ScheduleGroupChangeTips{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[100]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleGroupChangeTips) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleGroupChangeTips) ProtoMessage() {}
+
+func (x *ScheduleGroupChangeTips) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[100]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleGroupChangeTips.ProtoReflect.Descriptor instead.
+func (*ScheduleGroupChangeTips) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{100}
+}
+
+func (x *ScheduleGroupChangeTips) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetGroupName() string {
+	if x != nil {
+		return x.GroupName
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetScheduleIDs() []string {
+	if x != nil {
+		return x.ScheduleIDs
+	}
+	return nil
+}
+
+func (x *ScheduleGroupChangeTips) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
+func (x *ScheduleGroupChangeTips) GetOwnerUserID() string {
+	if x != nil && x.OwnerUserID != nil {
+		return *x.OwnerUserID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetGroupType() int32 {
+	if x != nil && x.GroupType != nil {
+		return *x.GroupType
+	}
+	return 0
+}
+
+func (x *ScheduleGroupChangeTips) GetSortOrder() int32 {
+	if x != nil && x.SortOrder != nil {
+		return *x.SortOrder
+	}
+	return 0
+}
+
+func (x *ScheduleGroupChangeTips) GetIsVisible() bool {
+	if x != nil && x.IsVisible != nil {
+		return *x.IsVisible
+	}
+	return false
+}
+
+func (x *ScheduleGroupChangeTips) GetCreateTime() int64 {
+	if x != nil && x.CreateTime != nil {
+		return *x.CreateTime
+	}
+	return 0
+}
+
+func (x *ScheduleGroupChangeTips) GetEx() string {
+	if x != nil && x.Ex != nil {
+		return *x.Ex
+	}
+	return ""
+}
+
+func (x *ScheduleGroupChangeTips) GetShares() []*ScheduleGroupNotificationShareInfo {
+	if x != nil {
+		return x.Shares
+	}
+	return nil
+}
+
+func (x *ScheduleGroupChangeTips) GetSubscribedPublicCalendarID() string {
+	if x != nil && x.SubscribedPublicCalendarID != nil {
+		return *x.SubscribedPublicCalendarID
+	}
+	return ""
+}
+
+// 共享者用户信息
+type ShareUserInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`     // 用户ID
+	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"` // 用户昵称
+	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`   // 用户头像URL
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ShareUserInfo) Reset() {
+	*x = ShareUserInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[101]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShareUserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShareUserInfo) ProtoMessage() {}
+
+func (x *ShareUserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[101]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShareUserInfo.ProtoReflect.Descriptor instead.
+func (*ShareUserInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{101}
+}
+
+func (x *ShareUserInfo) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *ShareUserInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *ShareUserInfo) GetFaceURL() string {
+	if x != nil {
+		return x.FaceURL
+	}
+	return ""
+}
+
+// 创建者用户信息（用于日程变更消息）
+type CreatorUserInfo struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserID         string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                 // 用户ID
+	Nickname       string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`             // 用户昵称
+	FaceURL        string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`               // 用户头像URL
+	Signature      string                 `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature"`           // 用户签名
+	JobName        string                 `protobuf:"bytes,5,opt,name=jobName,proto3" json:"jobName"`               // 职位名称
+	DepartmentName string                 `protobuf:"bytes,6,opt,name=departmentName,proto3" json:"departmentName"` // 部门名称
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CreatorUserInfo) Reset() {
+	*x = CreatorUserInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreatorUserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreatorUserInfo) ProtoMessage() {}
+
+func (x *CreatorUserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[102]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreatorUserInfo.ProtoReflect.Descriptor instead.
+func (*CreatorUserInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{102}
+}
+
+func (x *CreatorUserInfo) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *CreatorUserInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *CreatorUserInfo) GetFaceURL() string {
+	if x != nil {
+		return x.FaceURL
+	}
+	return ""
+}
+
+func (x *CreatorUserInfo) GetSignature() string {
+	if x != nil {
+		return x.Signature
+	}
+	return ""
+}
+
+func (x *CreatorUserInfo) GetJobName() string {
+	if x != nil {
+		return x.JobName
+	}
+	return ""
+}
+
+func (x *CreatorUserInfo) GetDepartmentName() string {
+	if x != nil {
+		return x.DepartmentName
+	}
+	return ""
+}
+
+// 操作者用户信息（用于日程变更消息）
+type ChangeUserInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`     // 用户ID
+	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"` // 用户昵称
+	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`   // 用户头像URL
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeUserInfo) Reset() {
+	*x = ChangeUserInfo{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[103]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeUserInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeUserInfo) ProtoMessage() {}
+
+func (x *ChangeUserInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[103]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeUserInfo.ProtoReflect.Descriptor instead.
+func (*ChangeUserInfo) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{103}
+}
+
+func (x *ChangeUserInfo) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *ChangeUserInfo) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
+func (x *ChangeUserInfo) GetFaceURL() string {
+	if x != nil {
+		return x.FaceURL
+	}
+	return ""
+}
+
+// 日程分组共享通知（当分组被共享给其他人时发送）
+type ScheduleGroupShareElem struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SharerUserID   string                 `protobuf:"bytes,1,opt,name=sharerUserID,proto3" json:"sharerUserID"`     // 共享者用户ID
+	SharerNickname string                 `protobuf:"bytes,2,opt,name=sharerNickname,proto3" json:"sharerNickname"` // 共享者昵称
+	SharerFaceURL  string                 `protobuf:"bytes,3,opt,name=sharerFaceURL,proto3" json:"sharerFaceURL"`   // 共享者头像URL
+	GroupID        string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupID"`               // 分组ID
+	GroupName      string                 `protobuf:"bytes,5,opt,name=groupName,proto3" json:"groupName"`           // 分组名称
+	Permission     int32                  `protobuf:"varint,6,opt,name=permission,proto3" json:"permission"`        // 被共享者的权限：1=可查看详情, 2=可编辑, 3=可管理
+	OnlyBusyFree   bool                   `protobuf:"varint,7,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"`    // 是否仅查看闲忙状态
+	Timestamp      int64                  `protobuf:"varint,8,opt,name=timestamp,proto3" json:"timestamp"`          // 共享时间戳
+	Action         string                 `protobuf:"bytes,9,opt,name=action,proto3" json:"action"`                 // 操作类型: "shared"=共享, "permission_updated"=权限更新
+	ShareUser      *ShareUserInfo         `protobuf:"bytes,10,opt,name=shareUser,proto3" json:"shareUser"`          // 共享者完整信息（用于前端显示共享者头像、昵称等）
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ScheduleGroupShareElem) Reset() {
+	*x = ScheduleGroupShareElem{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[104]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleGroupShareElem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleGroupShareElem) ProtoMessage() {}
+
+func (x *ScheduleGroupShareElem) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[104]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleGroupShareElem.ProtoReflect.Descriptor instead.
+func (*ScheduleGroupShareElem) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{104}
+}
+
+func (x *ScheduleGroupShareElem) GetSharerUserID() string {
+	if x != nil {
+		return x.SharerUserID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetSharerNickname() string {
+	if x != nil {
+		return x.SharerNickname
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetSharerFaceURL() string {
+	if x != nil {
+		return x.SharerFaceURL
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetGroupName() string {
+	if x != nil {
+		return x.GroupName
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetPermission() int32 {
+	if x != nil {
+		return x.Permission
+	}
+	return 0
+}
+
+func (x *ScheduleGroupShareElem) GetOnlyBusyFree() bool {
+	if x != nil {
+		return x.OnlyBusyFree
+	}
+	return false
+}
+
+func (x *ScheduleGroupShareElem) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *ScheduleGroupShareElem) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *ScheduleGroupShareElem) GetShareUser() *ShareUserInfo {
+	if x != nil {
+		return x.ShareUser
+	}
+	return nil
+}
+
+// 日程变更消息内容（schedule_change，用于 sc_ 通知会话消息）
+type ScheduleChangeElem struct {
+	state           protoimpl.MessageState               `protogen:"open.v1"`
+	MsgType         string                               `protobuf:"bytes,1,opt,name=msgType,proto3" json:"msgType"`                        // 消息类型："schedule_change"
+	Action          string                               `protobuf:"bytes,2,opt,name=action,proto3" json:"action"`                          // 操作类型："created"=创建，"updated"=修改
+	ChangeType      *string                              `protobuf:"bytes,3,opt,name=changeType,proto3,oneof" json:"changeType"`            // 修改类型（仅当 action="updated" 时有效），如"时间"、"地点"、"标题"等
+	Creator         *CreatorUserInfo                     `protobuf:"bytes,4,opt,name=creator,proto3" json:"creator"`                        // 创建者信息
+	ChangeUser      *ChangeUserInfo                      `protobuf:"bytes,5,opt,name=changeUser,proto3" json:"changeUser"`                  // 操作者信息（用于前端显示修改者头像、昵称等）
+	ScheduleID      string                               `protobuf:"bytes,6,opt,name=scheduleID,proto3" json:"scheduleID"`                  // 日程ID
+	Title           string                               `protobuf:"bytes,7,opt,name=title,proto3" json:"title"`                            // 日程标题
+	SubTitle        string                               `protobuf:"bytes,8,opt,name=subTitle,proto3" json:"subTitle"`                      // 邀请标题
+	StartTime       int64                                `protobuf:"varint,9,opt,name=startTime,proto3" json:"startTime"`                   // 开始时间
+	EndTime         int64                                `protobuf:"varint,10,opt,name=endTime,proto3" json:"endTime"`                      // 结束时间
+	Location        *string                              `protobuf:"bytes,11,opt,name=location,proto3,oneof" json:"location"`               // 地点
+	RoomID          *string                              `protobuf:"bytes,12,opt,name=roomID,proto3,oneof" json:"roomID"`                   // 会议室ID
+	Description     *string                              `protobuf:"bytes,13,opt,name=description,proto3,oneof" json:"description"`         // 描述
+	TimeZone        *string                              `protobuf:"bytes,14,opt,name=timeZone,proto3,oneof" json:"timeZone"`               // 时区
+	Visibility      int32                                `protobuf:"varint,15,opt,name=visibility,proto3" json:"visibility"`                // 可见性
+	AllDay          bool                                 `protobuf:"varint,16,opt,name=allDay,proto3" json:"allDay"`                        // 是否全天
+	AttachmentURLs  []string                             `protobuf:"bytes,17,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`         // 附件URL列表
+	ScheduleGroupID *string                              `protobuf:"bytes,18,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID"` // 日程分组ID
+	AllowMemberJoin bool                                 `protobuf:"varint,19,opt,name=allowMemberJoin,proto3" json:"allowMemberJoin"`      // 是否允许成员加入
+	NotifyByEmail   bool                                 `protobuf:"varint,20,opt,name=notifyByEmail,proto3" json:"notifyByEmail"`          // 是否邮件通知
+	Type            int32                                `protobuf:"varint,21,opt,name=type,proto3" json:"type"`                            // 日程类型：0=SCHEDULE, 1=MEETING
+	IsTemporary     bool                                 `protobuf:"varint,22,opt,name=isTemporary,proto3" json:"isTemporary"`              // 是否临时日程
+	Status          string                               `protobuf:"bytes,23,opt,name=status,proto3" json:"status"`                         // 状态
+	RepeatInfo      *ScheduleNotificationRepeatInfo      `protobuf:"bytes,24,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo"`           // 重复规则
+	MeetingSettings *ScheduleNotificationMeetingSettings `protobuf:"bytes,25,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings"` // 会议设置
+	Attendees       []*ScheduleNotificationAttendeeInfo  `protobuf:"bytes,26,rep,name=attendees,proto3" json:"attendees"`                   // 参与者列表
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ScheduleChangeElem) Reset() {
+	*x = ScheduleChangeElem{}
+	mi := &file_sdkws_sdkws_proto_msgTypes[105]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ScheduleChangeElem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ScheduleChangeElem) ProtoMessage() {}
+
+func (x *ScheduleChangeElem) ProtoReflect() protoreflect.Message {
+	mi := &file_sdkws_sdkws_proto_msgTypes[105]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ScheduleChangeElem.ProtoReflect.Descriptor instead.
+func (*ScheduleChangeElem) Descriptor() ([]byte, []int) {
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{105}
+}
+
+func (x *ScheduleChangeElem) GetMsgType() string {
+	if x != nil {
+		return x.MsgType
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetChangeType() string {
+	if x != nil && x.ChangeType != nil {
+		return *x.ChangeType
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetCreator() *CreatorUserInfo {
+	if x != nil {
+		return x.Creator
+	}
+	return nil
+}
+
+func (x *ScheduleChangeElem) GetChangeUser() *ChangeUserInfo {
+	if x != nil {
+		return x.ChangeUser
+	}
+	return nil
+}
+
+func (x *ScheduleChangeElem) GetScheduleID() string {
+	if x != nil {
+		return x.ScheduleID
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetSubTitle() string {
+	if x != nil {
+		return x.SubTitle
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetStartTime() int64 {
+	if x != nil {
+		return x.StartTime
+	}
+	return 0
+}
+
+func (x *ScheduleChangeElem) GetEndTime() int64 {
+	if x != nil {
+		return x.EndTime
+	}
+	return 0
+}
+
+func (x *ScheduleChangeElem) GetLocation() string {
+	if x != nil && x.Location != nil {
+		return *x.Location
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetRoomID() string {
+	if x != nil && x.RoomID != nil {
+		return *x.RoomID
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetTimeZone() string {
+	if x != nil && x.TimeZone != nil {
+		return *x.TimeZone
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetVisibility() int32 {
+	if x != nil {
+		return x.Visibility
+	}
+	return 0
+}
+
+func (x *ScheduleChangeElem) GetAllDay() bool {
+	if x != nil {
+		return x.AllDay
+	}
+	return false
+}
+
+func (x *ScheduleChangeElem) GetAttachmentURLs() []string {
+	if x != nil {
+		return x.AttachmentURLs
+	}
+	return nil
+}
+
+func (x *ScheduleChangeElem) GetScheduleGroupID() string {
+	if x != nil && x.ScheduleGroupID != nil {
+		return *x.ScheduleGroupID
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetAllowMemberJoin() bool {
+	if x != nil {
+		return x.AllowMemberJoin
+	}
+	return false
+}
+
+func (x *ScheduleChangeElem) GetNotifyByEmail() bool {
+	if x != nil {
+		return x.NotifyByEmail
+	}
+	return false
+}
+
+func (x *ScheduleChangeElem) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *ScheduleChangeElem) GetIsTemporary() bool {
+	if x != nil {
+		return x.IsTemporary
+	}
+	return false
+}
+
+func (x *ScheduleChangeElem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ScheduleChangeElem) GetRepeatInfo() *ScheduleNotificationRepeatInfo {
+	if x != nil {
+		return x.RepeatInfo
+	}
+	return nil
+}
+
+func (x *ScheduleChangeElem) GetMeetingSettings() *ScheduleNotificationMeetingSettings {
+	if x != nil {
+		return x.MeetingSettings
+	}
+	return nil
+}
+
+func (x *ScheduleChangeElem) GetAttendees() []*ScheduleNotificationAttendeeInfo {
+	if x != nil {
+		return x.Attendees
+	}
+	return nil
+}
+
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
 type ConversationFoldNotificationTips struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
@@ -7304,7 +8740,7 @@ type ConversationFoldNotificationTips struct {
 
 func (x *ConversationFoldNotificationTips) Reset() {
 	*x = ConversationFoldNotificationTips{}
-	mi := &file_sdkws_sdkws_proto_msgTypes[95]
+	mi := &file_sdkws_sdkws_proto_msgTypes[106]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7316,7 +8752,7 @@ func (x *ConversationFoldNotificationTips) String() string {
 func (*ConversationFoldNotificationTips) ProtoMessage() {}
 
 func (x *ConversationFoldNotificationTips) ProtoReflect() protoreflect.Message {
-	mi := &file_sdkws_sdkws_proto_msgTypes[95]
+	mi := &file_sdkws_sdkws_proto_msgTypes[106]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7329,7 +8765,7 @@ func (x *ConversationFoldNotificationTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationFoldNotificationTips.ProtoReflect.Descriptor instead.
 func (*ConversationFoldNotificationTips) Descriptor() ([]byte, []int) {
-	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{95}
+	return file_sdkws_sdkws_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *ConversationFoldNotificationTips) GetUserID() string {
@@ -7430,7 +8866,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x02ex\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\x02ex\x12G\n" +
 	"\x10needVerification\x18\a \x01(\v2\x1b.openim.protobuf.Int32ValueR\x10needVerification\x12C\n" +
 	"\x0elookMemberInfo\x18\b \x01(\v2\x1b.openim.protobuf.Int32ValueR\x0elookMemberInfo\x12I\n" +
-	"\x11applyMemberFriend\x18\t \x01(\v2\x1b.openim.protobuf.Int32ValueR\x11applyMemberFriend\"\xff\x02\n" +
+	"\x11applyMemberFriend\x18\t \x01(\v2\x1b.openim.protobuf.Int32ValueR\x11applyMemberFriend\"\xbf\x03\n" +
 	"\x13GroupMemberFullInfo\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x1c\n" +
@@ -7446,12 +8882,14 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x02ex\x18\n" +
 	" \x01(\tR\x02ex\x12 \n" +
 	"\vmuteEndTime\x18\v \x01(\x03R\vmuteEndTime\x12$\n" +
-	"\rinviterUserID\x18\f \x01(\tR\rinviterUserID\"n\n" +
+	"\rinviterUserID\x18\f \x01(\tR\rinviterUserID\x12\x16\n" +
+	"\x06pinyin\x18\r \x01(\tR\x06pinyin\x12&\n" +
+	"\x0epinyinInitials\x18\x0e \x01(\tR\x0epinyinInitials\"n\n" +
 	"\x0ePublicUserInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
 	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\x0e\n" +
-	"\x02ex\x18\x04 \x01(\tR\x02ex\"\xb4\x06\n" +
+	"\x02ex\x18\x04 \x01(\tR\x02ex\"\xdc\x06\n" +
 	"\bUserInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
@@ -7462,7 +8900,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"createTime\x12&\n" +
 	"\x0eappMangerLevel\x18\x06 \x01(\x05R\x0eappMangerLevel\x12*\n" +
 	"\x10globalRecvMsgOpt\x18\a \x01(\x05R\x10globalRecvMsgOpt\x12\x16\n" +
-	"\x06pinyin\x18\b \x01(\tR\x06pinyin\x12\x16\n" +
+	"\x06pinyin\x18\b \x01(\tR\x06pinyin\x12&\n" +
+	"\x0epinyinInitials\x18\x1b \x01(\tR\x0epinyinInitials\x12\x16\n" +
 	"\x06status\x18\t \x01(\tR\x06status\x12\x1c\n" +
 	"\tsignature\x18\n" +
 	" \x01(\tR\tsignature\x12@\n" +
@@ -7488,14 +8927,15 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\n" +
 	"platformID\x18\x01 \x01(\x05R\n" +
 	"platformID\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\x05R\x06status\"\xb9\x03\n" +
+	"\x06status\x18\x02 \x01(\x05R\x06status\"\xff\x03\n" +
 	"\x0eUserInfoWithEx\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x128\n" +
 	"\bnickname\x18\x02 \x01(\v2\x1c.openim.protobuf.StringValueR\bnickname\x126\n" +
 	"\afaceURL\x18\x03 \x01(\v2\x1c.openim.protobuf.StringValueR\afaceURL\x12,\n" +
 	"\x02ex\x18\x04 \x01(\v2\x1c.openim.protobuf.StringValueR\x02ex\x12G\n" +
 	"\x10globalRecvMsgOpt\x18\a \x01(\v2\x1b.openim.protobuf.Int32ValueR\x10globalRecvMsgOpt\x124\n" +
-	"\x06pinyin\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\x06pinyin\x124\n" +
+	"\x06pinyin\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\x06pinyin\x12D\n" +
+	"\x0epinyinInitials\x18\x1b \x01(\v2\x1c.openim.protobuf.StringValueR\x0epinyinInitials\x124\n" +
 	"\x06status\x18\t \x01(\v2\x1c.openim.protobuf.StringValueR\x06status\x12:\n" +
 	"\tsignature\x18\n" +
 	" \x01(\v2\x1c.openim.protobuf.StringValueR\tsignature\"\x90\x02\n" +
@@ -7939,7 +9379,7 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\btoUserID\x18\x02 \x01(\tR\btoUserID\x12\x18\n" +
 	"\areplyID\x18\x03 \x01(\tR\areplyID\x12\x1a\n" +
 	"\bisPinned\x18\x04 \x01(\bR\bisPinned\x12\x18\n" +
-	"\apinTime\x18\x05 \x01(\x03R\apinTime\"\x92\x03\n" +
+	"\apinTime\x18\x05 \x01(\x03R\apinTime\"\xbc\x03\n" +
 	"\x14SummaryRecordAddTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12*\n" +
@@ -7954,7 +9394,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0ecreatorFaceURL\x18\t \x01(\tR\x0ecreatorFaceURL\x12\x1a\n" +
 	"\bcontents\x18\n" +
 	" \x01(\tR\bcontents\x12 \n" +
-	"\vsummaryType\x18\v \x01(\x05R\vsummaryType\"\xb3\x01\n" +
+	"\vsummaryType\x18\v \x01(\x05R\vsummaryType\x12(\n" +
+	"\x0ftimeDescription\x18\f \x01(\tR\x0ftimeDescription\"\xb3\x01\n" +
 	"\x17SummaryRecordDeleteTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12*\n" +
@@ -7968,7 +9409,107 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"isFavorite\"`\n" +
 	"\x18SummaryRecordPublishTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12\x1c\n" +
-	"\tsummaryID\x18\x02 \x01(\tR\tsummaryID\"`\n" +
+	"\tsummaryID\x18\x02 \x01(\tR\tsummaryID\"\xdc\x02\n" +
+	"\x1eScheduleNotificationRepeatInfo\x12\x18\n" +
+	"\aendDate\x18\x01 \x01(\x03R\aendDate\x12 \n" +
+	"\vrepeatTimes\x18\x02 \x01(\x05R\vrepeatTimes\x12\x1e\n" +
+	"\n" +
+	"repeatType\x18\x03 \x01(\tR\n" +
+	"repeatType\x12\x1a\n" +
+	"\bunitType\x18\x04 \x01(\tR\bunitType\x12\x1a\n" +
+	"\binterval\x18\x05 \x01(\x05R\binterval\x12*\n" +
+	"\x10repeatDaysOfWeek\x18\x06 \x03(\x05R\x10repeatDaysOfWeek\x12,\n" +
+	"\x11repeatDaysOfMonth\x18\a \x03(\x05R\x11repeatDaysOfMonth\x12 \n" +
+	"\vrepeatMonth\x18\b \x01(\x05R\vrepeatMonth\x12*\n" +
+	"\x10repeatDayOfMonth\x18\t \x01(\x05R\x10repeatDayOfMonth\"\xc6\x01\n" +
+	" ScheduleNotificationAttendeeInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\x05R\x06status\x12\x1e\n" +
+	"\n" +
+	"permission\x18\x05 \x01(\x05R\n" +
+	"permission\x12\x1c\n" +
+	"\treplyTime\x18\x06 \x01(\x03R\treplyTime\"\xc5\x04\n" +
+	"#ScheduleNotificationMeetingSettings\x12&\n" +
+	"\x0eenablePassword\x18\x01 \x01(\bR\x0eenablePassword\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12&\n" +
+	"\x0eautoTranscribe\x18\x03 \x01(\bR\x0eautoTranscribe\x12,\n" +
+	"\x11enableWaitingRoom\x18\x04 \x01(\bR\x11enableWaitingRoom\x12<\n" +
+	"\x19allowMemberJoinBeforeHost\x18\x05 \x01(\bR\x19allowMemberJoinBeforeHost\x12>\n" +
+	"\x1aenableScreenShareWatermark\x18\x06 \x01(\bR\x1aenableScreenShareWatermark\x12$\n" +
+	"\rwatermarkType\x18\a \x01(\x05R\rwatermarkType\x126\n" +
+	"\x16allowMemberViewMinutes\x18\b \x01(\bR\x16allowMemberViewMinutes\x122\n" +
+	"\x14allowMultiDeviceJoin\x18\t \x01(\bR\x14allowMultiDeviceJoin\x12\"\n" +
+	"\fcallReminder\x18\n" +
+	" \x01(\x05R\fcallReminder\x120\n" +
+	"\x13callReminderUserIDs\x18\v \x03(\tR\x13callReminderUserIDs\x12\x1e\n" +
+	"\n" +
+	"muteOnJoin\x18\f \x01(\x05R\n" +
+	"muteOnJoin\"\x9b\f\n" +
+	"\x18ScheduleNotificationTips\x12&\n" +
+	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12\x1e\n" +
+	"\n" +
+	"scheduleID\x18\x02 \x01(\tR\n" +
+	"scheduleID\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\tR\x06action\x12\x1c\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\x12&\n" +
+	"\x0eshareToUserIDs\x18\x05 \x03(\tR\x0eshareToUserIDs\x12.\n" +
+	"\x12unshareFromUserIDs\x18\x06 \x03(\tR\x12unshareFromUserIDs\x12$\n" +
+	"\rcreatorUserID\x18\a \x01(\tR\rcreatorUserID\x12-\n" +
+	"\x0fcreatorNickname\x18\b \x01(\tH\x00R\x0fcreatorNickname\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\t \x01(\tH\x01R\x06status\x88\x01\x01\x12#\n" +
+	"\n" +
+	"createTime\x18\n" +
+	" \x01(\x03H\x02R\n" +
+	"createTime\x88\x01\x01\x12\x19\n" +
+	"\x05title\x18\v \x01(\tH\x03R\x05title\x88\x01\x01\x12!\n" +
+	"\tstartTime\x18\f \x01(\x03H\x04R\tstartTime\x88\x01\x01\x12\x1d\n" +
+	"\aendTime\x18\r \x01(\x03H\x05R\aendTime\x88\x01\x01\x12\x1f\n" +
+	"\blocation\x18\x0e \x01(\tH\x06R\blocation\x88\x01\x01\x12\x1b\n" +
+	"\x06roomID\x18\x0f \x01(\tH\aR\x06roomID\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x10 \x01(\tH\bR\vdescription\x88\x01\x01\x12\x1f\n" +
+	"\btimeZone\x18\x11 \x01(\tH\tR\btimeZone\x88\x01\x01\x12#\n" +
+	"\n" +
+	"visibility\x18\x12 \x01(\x05H\n" +
+	"R\n" +
+	"visibility\x88\x01\x01\x12\x1b\n" +
+	"\x06allDay\x18\x13 \x01(\bH\vR\x06allDay\x88\x01\x01\x12&\n" +
+	"\x0eattachmentURLs\x18\x14 \x03(\tR\x0eattachmentURLs\x12-\n" +
+	"\x0fscheduleGroupID\x18\x15 \x01(\tH\fR\x0fscheduleGroupID\x88\x01\x01\x12-\n" +
+	"\x0fallowMemberJoin\x18\x16 \x01(\bH\rR\x0fallowMemberJoin\x88\x01\x01\x12)\n" +
+	"\rnotifyByEmail\x18\x17 \x01(\bH\x0eR\rnotifyByEmail\x88\x01\x01\x12\x17\n" +
+	"\x04type\x18\x18 \x01(\x05H\x0fR\x04type\x88\x01\x01\x12`\n" +
+	"\x0fmeetingSettings\x18\x19 \x01(\v21.openim.sdkws.ScheduleNotificationMeetingSettingsH\x10R\x0fmeetingSettings\x88\x01\x01\x12%\n" +
+	"\visTemporary\x18\x1a \x01(\bH\x11R\visTemporary\x88\x01\x01\x12/\n" +
+	"\x10meetingMinutesID\x18\x1b \x01(\tH\x12R\x10meetingMinutesID\x88\x01\x01\x12Q\n" +
+	"\n" +
+	"repeatInfo\x18\x1c \x01(\v2,.openim.sdkws.ScheduleNotificationRepeatInfoH\x13R\n" +
+	"repeatInfo\x88\x01\x01\x12L\n" +
+	"\tattendees\x18\x1d \x03(\v2..openim.sdkws.ScheduleNotificationAttendeeInfoR\tattendees\x12\x1c\n" +
+	"\treminders\x18\x1e \x03(\x05R\tremindersB\x12\n" +
+	"\x10_creatorNicknameB\t\n" +
+	"\a_statusB\r\n" +
+	"\v_createTimeB\b\n" +
+	"\x06_titleB\f\n" +
+	"\n" +
+	"_startTimeB\n" +
+	"\n" +
+	"\b_endTimeB\v\n" +
+	"\t_locationB\t\n" +
+	"\a_roomIDB\x0e\n" +
+	"\f_descriptionB\v\n" +
+	"\t_timeZoneB\r\n" +
+	"\v_visibilityB\t\n" +
+	"\a_allDayB\x12\n" +
+	"\x10_scheduleGroupIDB\x12\n" +
+	"\x10_allowMemberJoinB\x10\n" +
+	"\x0e_notifyByEmailB\a\n" +
+	"\x05_typeB\x12\n" +
+	"\x10_meetingSettingsB\x0e\n" +
+	"\f_isTemporaryB\x13\n" +
+	"\x11_meetingMinutesIDB\r\n" +
+	"\v_repeatInfo\"`\n" +
 	"\x16ConversationUpdateTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12conversationIDList\x18\x02 \x03(\tR\x12conversationIDList\"\x92\x01\n" +
@@ -8081,10 +9622,11 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"startIndex\x18\x03 \x01(\x03R\n" +
 	"startIndex\x12\x18\n" +
 	"\apackets\x18\x04 \x03(\tR\apackets\x12\x10\n" +
-	"\x03end\x18\x05 \x01(\bR\x03end\"Z\n" +
+	"\x03end\x18\x05 \x01(\bR\x03end\"v\n" +
 	"\x16ConversationDeleteTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12(\n" +
-	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\"\xcf\x01\n" +
+	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\x12\x1a\n" +
+	"\bisHidden\x18\x03 \x01(\bR\bisHidden\"\xcf\x01\n" +
 	"\x1bConversationGroupChangeTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
 	"\agroupID\x18\x02 \x01(\tR\agroupID\x12\x16\n" +
@@ -8093,7 +9635,118 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0fconversationIDs\x18\x05 \x03(\tR\x0fconversationIDs\x12\x1e\n" +
 	"\n" +
 	"updateTime\x18\x06 \x01(\x03R\n" +
-	"updateTime\"\xbc\x02\n" +
+	"updateTime\"\x80\x01\n" +
+	"\"ScheduleGroupNotificationShareInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1e\n" +
+	"\n" +
+	"permission\x18\x02 \x01(\x05R\n" +
+	"permission\x12\"\n" +
+	"\fonlyBusyFree\x18\x03 \x01(\bR\fonlyBusyFree\"\x8b\x05\n" +
+	"\x17ScheduleGroupChangeTips\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
+	"\agroupID\x18\x02 \x01(\tR\agroupID\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\tR\x06action\x12\x1c\n" +
+	"\tgroupName\x18\x04 \x01(\tR\tgroupName\x12 \n" +
+	"\vscheduleIDs\x18\x05 \x03(\tR\vscheduleIDs\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x06 \x01(\x03R\n" +
+	"updateTime\x12%\n" +
+	"\vownerUserID\x18\a \x01(\tH\x00R\vownerUserID\x88\x01\x01\x12!\n" +
+	"\tgroupType\x18\b \x01(\x05H\x01R\tgroupType\x88\x01\x01\x12!\n" +
+	"\tsortOrder\x18\t \x01(\x05H\x02R\tsortOrder\x88\x01\x01\x12!\n" +
+	"\tisVisible\x18\n" +
+	" \x01(\bH\x03R\tisVisible\x88\x01\x01\x12#\n" +
+	"\n" +
+	"createTime\x18\v \x01(\x03H\x04R\n" +
+	"createTime\x88\x01\x01\x12\x13\n" +
+	"\x02ex\x18\f \x01(\tH\x05R\x02ex\x88\x01\x01\x12H\n" +
+	"\x06shares\x18\r \x03(\v20.openim.sdkws.ScheduleGroupNotificationShareInfoR\x06shares\x12C\n" +
+	"\x1asubscribedPublicCalendarID\x18\x0e \x01(\tH\x06R\x1asubscribedPublicCalendarID\x88\x01\x01B\x0e\n" +
+	"\f_ownerUserIDB\f\n" +
+	"\n" +
+	"_groupTypeB\f\n" +
+	"\n" +
+	"_sortOrderB\f\n" +
+	"\n" +
+	"_isVisibleB\r\n" +
+	"\v_createTimeB\x05\n" +
+	"\x03_exB\x1d\n" +
+	"\x1b_subscribedPublicCalendarID\"]\n" +
+	"\rShareUserInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x03 \x01(\tR\afaceURL\"\xbf\x01\n" +
+	"\x0fCreatorUserInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\x1c\n" +
+	"\tsignature\x18\x04 \x01(\tR\tsignature\x12\x18\n" +
+	"\ajobName\x18\x05 \x01(\tR\ajobName\x12&\n" +
+	"\x0edepartmentName\x18\x06 \x01(\tR\x0edepartmentName\"^\n" +
+	"\x0eChangeUserInfo\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
+	"\afaceURL\x18\x03 \x01(\tR\afaceURL\"\xf7\x02\n" +
+	"\x16ScheduleGroupShareElem\x12\"\n" +
+	"\fsharerUserID\x18\x01 \x01(\tR\fsharerUserID\x12&\n" +
+	"\x0esharerNickname\x18\x02 \x01(\tR\x0esharerNickname\x12$\n" +
+	"\rsharerFaceURL\x18\x03 \x01(\tR\rsharerFaceURL\x12\x18\n" +
+	"\agroupID\x18\x04 \x01(\tR\agroupID\x12\x1c\n" +
+	"\tgroupName\x18\x05 \x01(\tR\tgroupName\x12\x1e\n" +
+	"\n" +
+	"permission\x18\x06 \x01(\x05R\n" +
+	"permission\x12\"\n" +
+	"\fonlyBusyFree\x18\a \x01(\bR\fonlyBusyFree\x12\x1c\n" +
+	"\ttimestamp\x18\b \x01(\x03R\ttimestamp\x12\x16\n" +
+	"\x06action\x18\t \x01(\tR\x06action\x129\n" +
+	"\tshareUser\x18\n" +
+	" \x01(\v2\x1b.openim.sdkws.ShareUserInfoR\tshareUser\"\x9d\t\n" +
+	"\x12ScheduleChangeElem\x12\x18\n" +
+	"\amsgType\x18\x01 \x01(\tR\amsgType\x12\x16\n" +
+	"\x06action\x18\x02 \x01(\tR\x06action\x12#\n" +
+	"\n" +
+	"changeType\x18\x03 \x01(\tH\x00R\n" +
+	"changeType\x88\x01\x01\x127\n" +
+	"\acreator\x18\x04 \x01(\v2\x1d.openim.sdkws.CreatorUserInfoR\acreator\x12<\n" +
+	"\n" +
+	"changeUser\x18\x05 \x01(\v2\x1c.openim.sdkws.ChangeUserInfoR\n" +
+	"changeUser\x12\x1e\n" +
+	"\n" +
+	"scheduleID\x18\x06 \x01(\tR\n" +
+	"scheduleID\x12\x14\n" +
+	"\x05title\x18\a \x01(\tR\x05title\x12\x1a\n" +
+	"\bsubTitle\x18\b \x01(\tR\bsubTitle\x12\x1c\n" +
+	"\tstartTime\x18\t \x01(\x03R\tstartTime\x12\x18\n" +
+	"\aendTime\x18\n" +
+	" \x01(\x03R\aendTime\x12\x1f\n" +
+	"\blocation\x18\v \x01(\tH\x01R\blocation\x88\x01\x01\x12\x1b\n" +
+	"\x06roomID\x18\f \x01(\tH\x02R\x06roomID\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\r \x01(\tH\x03R\vdescription\x88\x01\x01\x12\x1f\n" +
+	"\btimeZone\x18\x0e \x01(\tH\x04R\btimeZone\x88\x01\x01\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x0f \x01(\x05R\n" +
+	"visibility\x12\x16\n" +
+	"\x06allDay\x18\x10 \x01(\bR\x06allDay\x12&\n" +
+	"\x0eattachmentURLs\x18\x11 \x03(\tR\x0eattachmentURLs\x12-\n" +
+	"\x0fscheduleGroupID\x18\x12 \x01(\tH\x05R\x0fscheduleGroupID\x88\x01\x01\x12(\n" +
+	"\x0fallowMemberJoin\x18\x13 \x01(\bR\x0fallowMemberJoin\x12$\n" +
+	"\rnotifyByEmail\x18\x14 \x01(\bR\rnotifyByEmail\x12\x12\n" +
+	"\x04type\x18\x15 \x01(\x05R\x04type\x12 \n" +
+	"\visTemporary\x18\x16 \x01(\bR\visTemporary\x12\x16\n" +
+	"\x06status\x18\x17 \x01(\tR\x06status\x12Q\n" +
+	"\n" +
+	"repeatInfo\x18\x18 \x01(\v2,.openim.sdkws.ScheduleNotificationRepeatInfoH\x06R\n" +
+	"repeatInfo\x88\x01\x01\x12`\n" +
+	"\x0fmeetingSettings\x18\x19 \x01(\v21.openim.sdkws.ScheduleNotificationMeetingSettingsH\aR\x0fmeetingSettings\x88\x01\x01\x12L\n" +
+	"\tattendees\x18\x1a \x03(\v2..openim.sdkws.ScheduleNotificationAttendeeInfoR\tattendeesB\r\n" +
+	"\v_changeTypeB\v\n" +
+	"\t_locationB\t\n" +
+	"\a_roomIDB\x0e\n" +
+	"\f_descriptionB\v\n" +
+	"\t_timeZoneB\x12\n" +
+	"\x10_scheduleGroupIDB\r\n" +
+	"\v_repeatInfoB\x12\n" +
+	"\x10_meetingSettings\"\xbc\x02\n" +
 	" ConversationFoldNotificationTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12.\n" +
 	"\x12foldConversationID\x18\x02 \x01(\tR\x12foldConversationID\x12\x16\n" +
@@ -8121,220 +9774,242 @@ func file_sdkws_sdkws_proto_rawDescGZIP() []byte {
 }
 
 var file_sdkws_sdkws_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 104)
+var file_sdkws_sdkws_proto_msgTypes = make([]protoimpl.MessageInfo, 115)
 var file_sdkws_sdkws_proto_goTypes = []any{
-	(PullOrder)(0),                           // 0: openim.sdkws.PullOrder
-	(*GroupInfo)(nil),                        // 1: openim.sdkws.GroupInfo
-	(*GroupInfoForSet)(nil),                  // 2: openim.sdkws.GroupInfoForSet
-	(*GroupMemberFullInfo)(nil),              // 3: openim.sdkws.GroupMemberFullInfo
-	(*PublicUserInfo)(nil),                   // 4: openim.sdkws.PublicUserInfo
-	(*UserInfo)(nil),                         // 5: openim.sdkws.UserInfo
-	(*PlatformDetail)(nil),                   // 6: openim.sdkws.PlatformDetail
-	(*UserInfoWithEx)(nil),                   // 7: openim.sdkws.UserInfoWithEx
-	(*FriendInfo)(nil),                       // 8: openim.sdkws.FriendInfo
-	(*BlackInfo)(nil),                        // 9: openim.sdkws.BlackInfo
-	(*GroupRequest)(nil),                     // 10: openim.sdkws.GroupRequest
-	(*FriendRequest)(nil),                    // 11: openim.sdkws.FriendRequest
-	(*PullMessageBySeqsReq)(nil),             // 12: openim.sdkws.PullMessageBySeqsReq
-	(*SeqRange)(nil),                         // 13: openim.sdkws.SeqRange
-	(*PullMsgs)(nil),                         // 14: openim.sdkws.PullMsgs
-	(*PullMessageBySeqsResp)(nil),            // 15: openim.sdkws.PullMessageBySeqsResp
-	(*GetMaxSeqReq)(nil),                     // 16: openim.sdkws.GetMaxSeqReq
-	(*GetMaxSeqResp)(nil),                    // 17: openim.sdkws.GetMaxSeqResp
-	(*UserSendMsgResp)(nil),                  // 18: openim.sdkws.UserSendMsgResp
-	(*MsgData)(nil),                          // 19: openim.sdkws.MsgData
-	(*LikeInfo)(nil),                         // 20: openim.sdkws.LikeInfo
-	(*LikeUser)(nil),                         // 21: openim.sdkws.LikeUser
-	(*LikeMsgTips)(nil),                      // 22: openim.sdkws.LikeMsgTips
-	(*MarkInfo)(nil),                         // 23: openim.sdkws.MarkInfo
-	(*MarkMsgTips)(nil),                      // 24: openim.sdkws.MarkMsgTips
-	(*PushMessages)(nil),                     // 25: openim.sdkws.PushMessages
-	(*OfflinePushInfo)(nil),                  // 26: openim.sdkws.OfflinePushInfo
-	(*TipsComm)(nil),                         // 27: openim.sdkws.TipsComm
-	(*GroupCreatedTips)(nil),                 // 28: openim.sdkws.GroupCreatedTips
-	(*GroupInfoSetTips)(nil),                 // 29: openim.sdkws.GroupInfoSetTips
-	(*GroupInfoSetNameTips)(nil),             // 30: openim.sdkws.GroupInfoSetNameTips
-	(*GroupInfoSetAnnouncementTips)(nil),     // 31: openim.sdkws.GroupInfoSetAnnouncementTips
-	(*JoinGroupApplicationTips)(nil),         // 32: openim.sdkws.JoinGroupApplicationTips
-	(*MemberQuitTips)(nil),                   // 33: openim.sdkws.MemberQuitTips
-	(*GroupApplicationAcceptedTips)(nil),     // 34: openim.sdkws.GroupApplicationAcceptedTips
-	(*GroupApplicationRejectedTips)(nil),     // 35: openim.sdkws.GroupApplicationRejectedTips
-	(*GroupOwnerTransferredTips)(nil),        // 36: openim.sdkws.GroupOwnerTransferredTips
-	(*MemberKickedTips)(nil),                 // 37: openim.sdkws.MemberKickedTips
-	(*MemberInvitedTips)(nil),                // 38: openim.sdkws.MemberInvitedTips
-	(*MemberEnterTips)(nil),                  // 39: openim.sdkws.MemberEnterTips
-	(*GroupDismissedTips)(nil),               // 40: openim.sdkws.GroupDismissedTips
-	(*GroupMemberMutedTips)(nil),             // 41: openim.sdkws.GroupMemberMutedTips
-	(*GroupMemberCancelMutedTips)(nil),       // 42: openim.sdkws.GroupMemberCancelMutedTips
-	(*GroupMutedTips)(nil),                   // 43: openim.sdkws.GroupMutedTips
-	(*GroupCancelMutedTips)(nil),             // 44: openim.sdkws.GroupCancelMutedTips
-	(*GroupMemberInfoSetTips)(nil),           // 45: openim.sdkws.GroupMemberInfoSetTips
-	(*FriendApplication)(nil),                // 46: openim.sdkws.FriendApplication
-	(*FromToUserID)(nil),                     // 47: openim.sdkws.FromToUserID
-	(*FriendApplicationTips)(nil),            // 48: openim.sdkws.FriendApplicationTips
-	(*FriendApplicationApprovedTips)(nil),    // 49: openim.sdkws.FriendApplicationApprovedTips
-	(*FriendApplicationRejectedTips)(nil),    // 50: openim.sdkws.FriendApplicationRejectedTips
-	(*FriendAddedTips)(nil),                  // 51: openim.sdkws.FriendAddedTips
-	(*FriendDeletedTips)(nil),                // 52: openim.sdkws.FriendDeletedTips
-	(*BlackAddedTips)(nil),                   // 53: openim.sdkws.BlackAddedTips
-	(*BlackDeletedTips)(nil),                 // 54: openim.sdkws.BlackDeletedTips
-	(*FriendInfoChangedTips)(nil),            // 55: openim.sdkws.FriendInfoChangedTips
-	(*UserInfoUpdatedTips)(nil),              // 56: openim.sdkws.UserInfoUpdatedTips
-	(*UserStatusChangeTips)(nil),             // 57: openim.sdkws.UserStatusChangeTips
-	(*UserCommandAddTips)(nil),               // 58: openim.sdkws.UserCommandAddTips
-	(*UserCommandUpdateTips)(nil),            // 59: openim.sdkws.UserCommandUpdateTips
-	(*UserCommandDeleteTips)(nil),            // 60: openim.sdkws.UserCommandDeleteTips
-	(*UserEmojiAddTips)(nil),                 // 61: openim.sdkws.UserEmojiAddTips
-	(*UserEmojiDeleteTips)(nil),              // 62: openim.sdkws.UserEmojiDeleteTips
-	(*UserQuickReplyUpdateTips)(nil),         // 63: openim.sdkws.UserQuickReplyUpdateTips
-	(*UserAIQuickReplyUpdateTips)(nil),       // 64: openim.sdkws.UserAIQuickReplyUpdateTips
-	(*UserQuickReplyAddTips)(nil),            // 65: openim.sdkws.UserQuickReplyAddTips
-	(*UserQuickReplyDeleteTips)(nil),         // 66: openim.sdkws.UserQuickReplyDeleteTips
-	(*UserQuickReplyModifyTips)(nil),         // 67: openim.sdkws.UserQuickReplyModifyTips
-	(*UserQuickReplyPinTips)(nil),            // 68: openim.sdkws.UserQuickReplyPinTips
-	(*SummaryRecordAddTips)(nil),             // 69: openim.sdkws.SummaryRecordAddTips
-	(*SummaryRecordDeleteTips)(nil),          // 70: openim.sdkws.SummaryRecordDeleteTips
-	(*SummaryRecordFavoriteTips)(nil),        // 71: openim.sdkws.SummaryRecordFavoriteTips
-	(*SummaryRecordPublishTips)(nil),         // 72: openim.sdkws.SummaryRecordPublishTips
-	(*ConversationUpdateTips)(nil),           // 73: openim.sdkws.ConversationUpdateTips
-	(*ConversationSetPrivateTips)(nil),       // 74: openim.sdkws.ConversationSetPrivateTips
-	(*ConversationHasReadTips)(nil),          // 75: openim.sdkws.ConversationHasReadTips
-	(*NotificationElem)(nil),                 // 76: openim.sdkws.NotificationElem
-	(*Seqs)(nil),                             // 77: openim.sdkws.seqs
-	(*DeleteMessageTips)(nil),                // 78: openim.sdkws.DeleteMessageTips
-	(*RevokeMsgTips)(nil),                    // 79: openim.sdkws.RevokeMsgTips
-	(*MessageRevokedContent)(nil),            // 80: openim.sdkws.MessageRevokedContent
-	(*ClearConversationTips)(nil),            // 81: openim.sdkws.ClearConversationTips
-	(*DeleteMsgsTips)(nil),                   // 82: openim.sdkws.DeleteMsgsTips
-	(*MarkAsReadTips)(nil),                   // 83: openim.sdkws.MarkAsReadTips
-	(*GroupMsgReadUser)(nil),                 // 84: openim.sdkws.GroupMsgReadUser
-	(*SetAppBackgroundStatusReq)(nil),        // 85: openim.sdkws.SetAppBackgroundStatusReq
-	(*SetAppBackgroundStatusResp)(nil),       // 86: openim.sdkws.SetAppBackgroundStatusResp
-	(*ProcessUserCommand)(nil),               // 87: openim.sdkws.ProcessUserCommand
-	(*RequestPagination)(nil),                // 88: openim.sdkws.RequestPagination
-	(*FriendsInfoUpdateTips)(nil),            // 89: openim.sdkws.FriendsInfoUpdateTips
-	(*SubUserOnlineStatusElem)(nil),          // 90: openim.sdkws.SubUserOnlineStatusElem
-	(*SubUserOnlineStatusTips)(nil),          // 91: openim.sdkws.SubUserOnlineStatusTips
-	(*SubUserOnlineStatus)(nil),              // 92: openim.sdkws.SubUserOnlineStatus
-	(*StreamMsgTips)(nil),                    // 93: openim.sdkws.StreamMsgTips
-	(*ConversationDeleteTips)(nil),           // 94: openim.sdkws.ConversationDeleteTips
-	(*ConversationGroupChangeTips)(nil),      // 95: openim.sdkws.ConversationGroupChangeTips
-	(*ConversationFoldNotificationTips)(nil), // 96: openim.sdkws.ConversationFoldNotificationTips
-	nil,                                      // 97: openim.sdkws.PullMessageBySeqsResp.MsgsEntry
-	nil,                                      // 98: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
-	nil,                                      // 99: openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
-	nil,                                      // 100: openim.sdkws.GetMaxSeqResp.MinSeqsEntry
-	nil,                                      // 101: openim.sdkws.MsgData.OptionsEntry
-	nil,                                      // 102: openim.sdkws.PushMessages.MsgsEntry
-	nil,                                      // 103: openim.sdkws.PushMessages.NotificationMsgsEntry
-	nil,                                      // 104: openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
-	(*wrapperspb.StringValue)(nil),           // 105: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),            // 106: openim.protobuf.Int32Value
+	(PullOrder)(0),                              // 0: openim.sdkws.PullOrder
+	(*GroupInfo)(nil),                           // 1: openim.sdkws.GroupInfo
+	(*GroupInfoForSet)(nil),                     // 2: openim.sdkws.GroupInfoForSet
+	(*GroupMemberFullInfo)(nil),                 // 3: openim.sdkws.GroupMemberFullInfo
+	(*PublicUserInfo)(nil),                      // 4: openim.sdkws.PublicUserInfo
+	(*UserInfo)(nil),                            // 5: openim.sdkws.UserInfo
+	(*PlatformDetail)(nil),                      // 6: openim.sdkws.PlatformDetail
+	(*UserInfoWithEx)(nil),                      // 7: openim.sdkws.UserInfoWithEx
+	(*FriendInfo)(nil),                          // 8: openim.sdkws.FriendInfo
+	(*BlackInfo)(nil),                           // 9: openim.sdkws.BlackInfo
+	(*GroupRequest)(nil),                        // 10: openim.sdkws.GroupRequest
+	(*FriendRequest)(nil),                       // 11: openim.sdkws.FriendRequest
+	(*PullMessageBySeqsReq)(nil),                // 12: openim.sdkws.PullMessageBySeqsReq
+	(*SeqRange)(nil),                            // 13: openim.sdkws.SeqRange
+	(*PullMsgs)(nil),                            // 14: openim.sdkws.PullMsgs
+	(*PullMessageBySeqsResp)(nil),               // 15: openim.sdkws.PullMessageBySeqsResp
+	(*GetMaxSeqReq)(nil),                        // 16: openim.sdkws.GetMaxSeqReq
+	(*GetMaxSeqResp)(nil),                       // 17: openim.sdkws.GetMaxSeqResp
+	(*UserSendMsgResp)(nil),                     // 18: openim.sdkws.UserSendMsgResp
+	(*MsgData)(nil),                             // 19: openim.sdkws.MsgData
+	(*LikeInfo)(nil),                            // 20: openim.sdkws.LikeInfo
+	(*LikeUser)(nil),                            // 21: openim.sdkws.LikeUser
+	(*LikeMsgTips)(nil),                         // 22: openim.sdkws.LikeMsgTips
+	(*MarkInfo)(nil),                            // 23: openim.sdkws.MarkInfo
+	(*MarkMsgTips)(nil),                         // 24: openim.sdkws.MarkMsgTips
+	(*PushMessages)(nil),                        // 25: openim.sdkws.PushMessages
+	(*OfflinePushInfo)(nil),                     // 26: openim.sdkws.OfflinePushInfo
+	(*TipsComm)(nil),                            // 27: openim.sdkws.TipsComm
+	(*GroupCreatedTips)(nil),                    // 28: openim.sdkws.GroupCreatedTips
+	(*GroupInfoSetTips)(nil),                    // 29: openim.sdkws.GroupInfoSetTips
+	(*GroupInfoSetNameTips)(nil),                // 30: openim.sdkws.GroupInfoSetNameTips
+	(*GroupInfoSetAnnouncementTips)(nil),        // 31: openim.sdkws.GroupInfoSetAnnouncementTips
+	(*JoinGroupApplicationTips)(nil),            // 32: openim.sdkws.JoinGroupApplicationTips
+	(*MemberQuitTips)(nil),                      // 33: openim.sdkws.MemberQuitTips
+	(*GroupApplicationAcceptedTips)(nil),        // 34: openim.sdkws.GroupApplicationAcceptedTips
+	(*GroupApplicationRejectedTips)(nil),        // 35: openim.sdkws.GroupApplicationRejectedTips
+	(*GroupOwnerTransferredTips)(nil),           // 36: openim.sdkws.GroupOwnerTransferredTips
+	(*MemberKickedTips)(nil),                    // 37: openim.sdkws.MemberKickedTips
+	(*MemberInvitedTips)(nil),                   // 38: openim.sdkws.MemberInvitedTips
+	(*MemberEnterTips)(nil),                     // 39: openim.sdkws.MemberEnterTips
+	(*GroupDismissedTips)(nil),                  // 40: openim.sdkws.GroupDismissedTips
+	(*GroupMemberMutedTips)(nil),                // 41: openim.sdkws.GroupMemberMutedTips
+	(*GroupMemberCancelMutedTips)(nil),          // 42: openim.sdkws.GroupMemberCancelMutedTips
+	(*GroupMutedTips)(nil),                      // 43: openim.sdkws.GroupMutedTips
+	(*GroupCancelMutedTips)(nil),                // 44: openim.sdkws.GroupCancelMutedTips
+	(*GroupMemberInfoSetTips)(nil),              // 45: openim.sdkws.GroupMemberInfoSetTips
+	(*FriendApplication)(nil),                   // 46: openim.sdkws.FriendApplication
+	(*FromToUserID)(nil),                        // 47: openim.sdkws.FromToUserID
+	(*FriendApplicationTips)(nil),               // 48: openim.sdkws.FriendApplicationTips
+	(*FriendApplicationApprovedTips)(nil),       // 49: openim.sdkws.FriendApplicationApprovedTips
+	(*FriendApplicationRejectedTips)(nil),       // 50: openim.sdkws.FriendApplicationRejectedTips
+	(*FriendAddedTips)(nil),                     // 51: openim.sdkws.FriendAddedTips
+	(*FriendDeletedTips)(nil),                   // 52: openim.sdkws.FriendDeletedTips
+	(*BlackAddedTips)(nil),                      // 53: openim.sdkws.BlackAddedTips
+	(*BlackDeletedTips)(nil),                    // 54: openim.sdkws.BlackDeletedTips
+	(*FriendInfoChangedTips)(nil),               // 55: openim.sdkws.FriendInfoChangedTips
+	(*UserInfoUpdatedTips)(nil),                 // 56: openim.sdkws.UserInfoUpdatedTips
+	(*UserStatusChangeTips)(nil),                // 57: openim.sdkws.UserStatusChangeTips
+	(*UserCommandAddTips)(nil),                  // 58: openim.sdkws.UserCommandAddTips
+	(*UserCommandUpdateTips)(nil),               // 59: openim.sdkws.UserCommandUpdateTips
+	(*UserCommandDeleteTips)(nil),               // 60: openim.sdkws.UserCommandDeleteTips
+	(*UserEmojiAddTips)(nil),                    // 61: openim.sdkws.UserEmojiAddTips
+	(*UserEmojiDeleteTips)(nil),                 // 62: openim.sdkws.UserEmojiDeleteTips
+	(*UserQuickReplyUpdateTips)(nil),            // 63: openim.sdkws.UserQuickReplyUpdateTips
+	(*UserAIQuickReplyUpdateTips)(nil),          // 64: openim.sdkws.UserAIQuickReplyUpdateTips
+	(*UserQuickReplyAddTips)(nil),               // 65: openim.sdkws.UserQuickReplyAddTips
+	(*UserQuickReplyDeleteTips)(nil),            // 66: openim.sdkws.UserQuickReplyDeleteTips
+	(*UserQuickReplyModifyTips)(nil),            // 67: openim.sdkws.UserQuickReplyModifyTips
+	(*UserQuickReplyPinTips)(nil),               // 68: openim.sdkws.UserQuickReplyPinTips
+	(*SummaryRecordAddTips)(nil),                // 69: openim.sdkws.SummaryRecordAddTips
+	(*SummaryRecordDeleteTips)(nil),             // 70: openim.sdkws.SummaryRecordDeleteTips
+	(*SummaryRecordFavoriteTips)(nil),           // 71: openim.sdkws.SummaryRecordFavoriteTips
+	(*SummaryRecordPublishTips)(nil),            // 72: openim.sdkws.SummaryRecordPublishTips
+	(*ScheduleNotificationRepeatInfo)(nil),      // 73: openim.sdkws.ScheduleNotificationRepeatInfo
+	(*ScheduleNotificationAttendeeInfo)(nil),    // 74: openim.sdkws.ScheduleNotificationAttendeeInfo
+	(*ScheduleNotificationMeetingSettings)(nil), // 75: openim.sdkws.ScheduleNotificationMeetingSettings
+	(*ScheduleNotificationTips)(nil),            // 76: openim.sdkws.ScheduleNotificationTips
+	(*ConversationUpdateTips)(nil),              // 77: openim.sdkws.ConversationUpdateTips
+	(*ConversationSetPrivateTips)(nil),          // 78: openim.sdkws.ConversationSetPrivateTips
+	(*ConversationHasReadTips)(nil),             // 79: openim.sdkws.ConversationHasReadTips
+	(*NotificationElem)(nil),                    // 80: openim.sdkws.NotificationElem
+	(*Seqs)(nil),                                // 81: openim.sdkws.seqs
+	(*DeleteMessageTips)(nil),                   // 82: openim.sdkws.DeleteMessageTips
+	(*RevokeMsgTips)(nil),                       // 83: openim.sdkws.RevokeMsgTips
+	(*MessageRevokedContent)(nil),               // 84: openim.sdkws.MessageRevokedContent
+	(*ClearConversationTips)(nil),               // 85: openim.sdkws.ClearConversationTips
+	(*DeleteMsgsTips)(nil),                      // 86: openim.sdkws.DeleteMsgsTips
+	(*MarkAsReadTips)(nil),                      // 87: openim.sdkws.MarkAsReadTips
+	(*GroupMsgReadUser)(nil),                    // 88: openim.sdkws.GroupMsgReadUser
+	(*SetAppBackgroundStatusReq)(nil),           // 89: openim.sdkws.SetAppBackgroundStatusReq
+	(*SetAppBackgroundStatusResp)(nil),          // 90: openim.sdkws.SetAppBackgroundStatusResp
+	(*ProcessUserCommand)(nil),                  // 91: openim.sdkws.ProcessUserCommand
+	(*RequestPagination)(nil),                   // 92: openim.sdkws.RequestPagination
+	(*FriendsInfoUpdateTips)(nil),               // 93: openim.sdkws.FriendsInfoUpdateTips
+	(*SubUserOnlineStatusElem)(nil),             // 94: openim.sdkws.SubUserOnlineStatusElem
+	(*SubUserOnlineStatusTips)(nil),             // 95: openim.sdkws.SubUserOnlineStatusTips
+	(*SubUserOnlineStatus)(nil),                 // 96: openim.sdkws.SubUserOnlineStatus
+	(*StreamMsgTips)(nil),                       // 97: openim.sdkws.StreamMsgTips
+	(*ConversationDeleteTips)(nil),              // 98: openim.sdkws.ConversationDeleteTips
+	(*ConversationGroupChangeTips)(nil),         // 99: openim.sdkws.ConversationGroupChangeTips
+	(*ScheduleGroupNotificationShareInfo)(nil),  // 100: openim.sdkws.ScheduleGroupNotificationShareInfo
+	(*ScheduleGroupChangeTips)(nil),             // 101: openim.sdkws.ScheduleGroupChangeTips
+	(*ShareUserInfo)(nil),                       // 102: openim.sdkws.ShareUserInfo
+	(*CreatorUserInfo)(nil),                     // 103: openim.sdkws.CreatorUserInfo
+	(*ChangeUserInfo)(nil),                      // 104: openim.sdkws.ChangeUserInfo
+	(*ScheduleGroupShareElem)(nil),              // 105: openim.sdkws.ScheduleGroupShareElem
+	(*ScheduleChangeElem)(nil),                  // 106: openim.sdkws.ScheduleChangeElem
+	(*ConversationFoldNotificationTips)(nil),    // 107: openim.sdkws.ConversationFoldNotificationTips
+	nil,                                         // 108: openim.sdkws.PullMessageBySeqsResp.MsgsEntry
+	nil,                                         // 109: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
+	nil,                                         // 110: openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
+	nil,                                         // 111: openim.sdkws.GetMaxSeqResp.MinSeqsEntry
+	nil,                                         // 112: openim.sdkws.MsgData.OptionsEntry
+	nil,                                         // 113: openim.sdkws.PushMessages.MsgsEntry
+	nil,                                         // 114: openim.sdkws.PushMessages.NotificationMsgsEntry
+	nil,                                         // 115: openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	(*wrapperspb.StringValue)(nil),              // 116: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),               // 117: openim.protobuf.Int32Value
 }
 var file_sdkws_sdkws_proto_depIdxs = []int32{
-	105, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
-	106, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
-	106, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
-	106, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
+	116, // 0: openim.sdkws.GroupInfoForSet.ex:type_name -> openim.protobuf.StringValue
+	117, // 1: openim.sdkws.GroupInfoForSet.needVerification:type_name -> openim.protobuf.Int32Value
+	117, // 2: openim.sdkws.GroupInfoForSet.lookMemberInfo:type_name -> openim.protobuf.Int32Value
+	117, // 3: openim.sdkws.GroupInfoForSet.applyMemberFriend:type_name -> openim.protobuf.Int32Value
 	6,   // 4: openim.sdkws.UserInfo.onlineStatus:type_name -> openim.sdkws.PlatformDetail
-	105, // 5: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
-	105, // 6: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
-	105, // 7: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
-	106, // 8: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
-	105, // 9: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
-	105, // 10: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
-	105, // 11: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
-	5,   // 12: openim.sdkws.FriendInfo.friendUser:type_name -> openim.sdkws.UserInfo
-	4,   // 13: openim.sdkws.BlackInfo.blackUserInfo:type_name -> openim.sdkws.PublicUserInfo
-	4,   // 14: openim.sdkws.GroupRequest.userInfo:type_name -> openim.sdkws.PublicUserInfo
-	1,   // 15: openim.sdkws.GroupRequest.groupInfo:type_name -> openim.sdkws.GroupInfo
-	13,  // 16: openim.sdkws.PullMessageBySeqsReq.seqRanges:type_name -> openim.sdkws.SeqRange
-	0,   // 17: openim.sdkws.PullMessageBySeqsReq.order:type_name -> openim.sdkws.PullOrder
-	19,  // 18: openim.sdkws.PullMsgs.Msgs:type_name -> openim.sdkws.MsgData
-	97,  // 19: openim.sdkws.PullMessageBySeqsResp.msgs:type_name -> openim.sdkws.PullMessageBySeqsResp.MsgsEntry
-	98,  // 20: openim.sdkws.PullMessageBySeqsResp.notificationMsgs:type_name -> openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
-	99,  // 21: openim.sdkws.GetMaxSeqResp.maxSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
-	100, // 22: openim.sdkws.GetMaxSeqResp.minSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MinSeqsEntry
-	101, // 23: openim.sdkws.MsgData.options:type_name -> openim.sdkws.MsgData.OptionsEntry
-	26,  // 24: openim.sdkws.MsgData.offlinePushInfo:type_name -> openim.sdkws.OfflinePushInfo
-	20,  // 25: openim.sdkws.MsgData.likeInfo:type_name -> openim.sdkws.LikeInfo
-	23,  // 26: openim.sdkws.MsgData.markInfo:type_name -> openim.sdkws.MarkInfo
-	21,  // 27: openim.sdkws.LikeInfo.like_users:type_name -> openim.sdkws.LikeUser
-	102, // 28: openim.sdkws.PushMessages.msgs:type_name -> openim.sdkws.PushMessages.MsgsEntry
-	103, // 29: openim.sdkws.PushMessages.notificationMsgs:type_name -> openim.sdkws.PushMessages.NotificationMsgsEntry
-	1,   // 30: openim.sdkws.GroupCreatedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 31: openim.sdkws.GroupCreatedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 32: openim.sdkws.GroupCreatedTips.memberList:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 33: openim.sdkws.GroupCreatedTips.groupOwnerUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 34: openim.sdkws.GroupInfoSetTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 35: openim.sdkws.GroupInfoSetTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 36: openim.sdkws.GroupInfoSetNameTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 37: openim.sdkws.GroupInfoSetNameTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 38: openim.sdkws.GroupInfoSetAnnouncementTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 39: openim.sdkws.GroupInfoSetAnnouncementTips.group:type_name -> openim.sdkws.GroupInfo
-	1,   // 40: openim.sdkws.JoinGroupApplicationTips.group:type_name -> openim.sdkws.GroupInfo
-	4,   // 41: openim.sdkws.JoinGroupApplicationTips.applicant:type_name -> openim.sdkws.PublicUserInfo
-	10,  // 42: openim.sdkws.JoinGroupApplicationTips.request:type_name -> openim.sdkws.GroupRequest
-	1,   // 43: openim.sdkws.MemberQuitTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 44: openim.sdkws.MemberQuitTips.quitUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 45: openim.sdkws.GroupApplicationAcceptedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 46: openim.sdkws.GroupApplicationAcceptedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	10,  // 47: openim.sdkws.GroupApplicationAcceptedTips.request:type_name -> openim.sdkws.GroupRequest
-	1,   // 48: openim.sdkws.GroupApplicationRejectedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 49: openim.sdkws.GroupApplicationRejectedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	10,  // 50: openim.sdkws.GroupApplicationRejectedTips.request:type_name -> openim.sdkws.GroupRequest
-	1,   // 51: openim.sdkws.GroupOwnerTransferredTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 52: openim.sdkws.GroupOwnerTransferredTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 53: openim.sdkws.GroupOwnerTransferredTips.newGroupOwner:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 54: openim.sdkws.GroupOwnerTransferredTips.oldGroupOwnerInfo:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 55: openim.sdkws.MemberKickedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 56: openim.sdkws.MemberKickedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 57: openim.sdkws.MemberKickedTips.kickedUserList:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 58: openim.sdkws.MemberInvitedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 59: openim.sdkws.MemberInvitedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 60: openim.sdkws.MemberInvitedTips.invitedUserList:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 61: openim.sdkws.MemberInvitedTips.inviterUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 62: openim.sdkws.MemberEnterTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 63: openim.sdkws.MemberEnterTips.entrantUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 64: openim.sdkws.GroupDismissedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 65: openim.sdkws.GroupDismissedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 66: openim.sdkws.GroupMemberMutedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 67: openim.sdkws.GroupMemberMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 68: openim.sdkws.GroupMemberMutedTips.mutedUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 69: openim.sdkws.GroupMemberCancelMutedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 70: openim.sdkws.GroupMemberCancelMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 71: openim.sdkws.GroupMemberCancelMutedTips.mutedUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 72: openim.sdkws.GroupMutedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 73: openim.sdkws.GroupMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 74: openim.sdkws.GroupCancelMutedTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 75: openim.sdkws.GroupCancelMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	1,   // 76: openim.sdkws.GroupMemberInfoSetTips.group:type_name -> openim.sdkws.GroupInfo
-	3,   // 77: openim.sdkws.GroupMemberInfoSetTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	3,   // 78: openim.sdkws.GroupMemberInfoSetTips.changedUser:type_name -> openim.sdkws.GroupMemberFullInfo
-	47,  // 79: openim.sdkws.FriendApplicationTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	11,  // 80: openim.sdkws.FriendApplicationTips.request:type_name -> openim.sdkws.FriendRequest
-	47,  // 81: openim.sdkws.FriendApplicationApprovedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	11,  // 82: openim.sdkws.FriendApplicationApprovedTips.request:type_name -> openim.sdkws.FriendRequest
-	47,  // 83: openim.sdkws.FriendApplicationRejectedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	11,  // 84: openim.sdkws.FriendApplicationRejectedTips.request:type_name -> openim.sdkws.FriendRequest
-	8,   // 85: openim.sdkws.FriendAddedTips.friend:type_name -> openim.sdkws.FriendInfo
-	4,   // 86: openim.sdkws.FriendAddedTips.opUser:type_name -> openim.sdkws.PublicUserInfo
-	47,  // 87: openim.sdkws.FriendDeletedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	47,  // 88: openim.sdkws.BlackAddedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	47,  // 89: openim.sdkws.BlackDeletedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	47,  // 90: openim.sdkws.FriendInfoChangedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	47,  // 91: openim.sdkws.FriendsInfoUpdateTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
-	104, // 92: openim.sdkws.SubUserOnlineStatusElem.platformDetails:type_name -> openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
-	90,  // 93: openim.sdkws.SubUserOnlineStatusTips.subscribers:type_name -> openim.sdkws.SubUserOnlineStatusElem
-	14,  // 94: openim.sdkws.PullMessageBySeqsResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	14,  // 95: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	14,  // 96: openim.sdkws.PushMessages.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	14,  // 97: openim.sdkws.PushMessages.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	98,  // [98:98] is the sub-list for method output_type
-	98,  // [98:98] is the sub-list for method input_type
-	98,  // [98:98] is the sub-list for extension type_name
-	98,  // [98:98] is the sub-list for extension extendee
-	0,   // [0:98] is the sub-list for field type_name
+	116, // 5: openim.sdkws.UserInfoWithEx.nickname:type_name -> openim.protobuf.StringValue
+	116, // 6: openim.sdkws.UserInfoWithEx.faceURL:type_name -> openim.protobuf.StringValue
+	116, // 7: openim.sdkws.UserInfoWithEx.ex:type_name -> openim.protobuf.StringValue
+	117, // 8: openim.sdkws.UserInfoWithEx.globalRecvMsgOpt:type_name -> openim.protobuf.Int32Value
+	116, // 9: openim.sdkws.UserInfoWithEx.pinyin:type_name -> openim.protobuf.StringValue
+	116, // 10: openim.sdkws.UserInfoWithEx.pinyinInitials:type_name -> openim.protobuf.StringValue
+	116, // 11: openim.sdkws.UserInfoWithEx.status:type_name -> openim.protobuf.StringValue
+	116, // 12: openim.sdkws.UserInfoWithEx.signature:type_name -> openim.protobuf.StringValue
+	5,   // 13: openim.sdkws.FriendInfo.friendUser:type_name -> openim.sdkws.UserInfo
+	4,   // 14: openim.sdkws.BlackInfo.blackUserInfo:type_name -> openim.sdkws.PublicUserInfo
+	4,   // 15: openim.sdkws.GroupRequest.userInfo:type_name -> openim.sdkws.PublicUserInfo
+	1,   // 16: openim.sdkws.GroupRequest.groupInfo:type_name -> openim.sdkws.GroupInfo
+	13,  // 17: openim.sdkws.PullMessageBySeqsReq.seqRanges:type_name -> openim.sdkws.SeqRange
+	0,   // 18: openim.sdkws.PullMessageBySeqsReq.order:type_name -> openim.sdkws.PullOrder
+	19,  // 19: openim.sdkws.PullMsgs.Msgs:type_name -> openim.sdkws.MsgData
+	108, // 20: openim.sdkws.PullMessageBySeqsResp.msgs:type_name -> openim.sdkws.PullMessageBySeqsResp.MsgsEntry
+	109, // 21: openim.sdkws.PullMessageBySeqsResp.notificationMsgs:type_name -> openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry
+	110, // 22: openim.sdkws.GetMaxSeqResp.maxSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MaxSeqsEntry
+	111, // 23: openim.sdkws.GetMaxSeqResp.minSeqs:type_name -> openim.sdkws.GetMaxSeqResp.MinSeqsEntry
+	112, // 24: openim.sdkws.MsgData.options:type_name -> openim.sdkws.MsgData.OptionsEntry
+	26,  // 25: openim.sdkws.MsgData.offlinePushInfo:type_name -> openim.sdkws.OfflinePushInfo
+	20,  // 26: openim.sdkws.MsgData.likeInfo:type_name -> openim.sdkws.LikeInfo
+	23,  // 27: openim.sdkws.MsgData.markInfo:type_name -> openim.sdkws.MarkInfo
+	21,  // 28: openim.sdkws.LikeInfo.like_users:type_name -> openim.sdkws.LikeUser
+	113, // 29: openim.sdkws.PushMessages.msgs:type_name -> openim.sdkws.PushMessages.MsgsEntry
+	114, // 30: openim.sdkws.PushMessages.notificationMsgs:type_name -> openim.sdkws.PushMessages.NotificationMsgsEntry
+	1,   // 31: openim.sdkws.GroupCreatedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 32: openim.sdkws.GroupCreatedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 33: openim.sdkws.GroupCreatedTips.memberList:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 34: openim.sdkws.GroupCreatedTips.groupOwnerUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 35: openim.sdkws.GroupInfoSetTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 36: openim.sdkws.GroupInfoSetTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 37: openim.sdkws.GroupInfoSetNameTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 38: openim.sdkws.GroupInfoSetNameTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 39: openim.sdkws.GroupInfoSetAnnouncementTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 40: openim.sdkws.GroupInfoSetAnnouncementTips.group:type_name -> openim.sdkws.GroupInfo
+	1,   // 41: openim.sdkws.JoinGroupApplicationTips.group:type_name -> openim.sdkws.GroupInfo
+	4,   // 42: openim.sdkws.JoinGroupApplicationTips.applicant:type_name -> openim.sdkws.PublicUserInfo
+	10,  // 43: openim.sdkws.JoinGroupApplicationTips.request:type_name -> openim.sdkws.GroupRequest
+	1,   // 44: openim.sdkws.MemberQuitTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 45: openim.sdkws.MemberQuitTips.quitUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 46: openim.sdkws.GroupApplicationAcceptedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 47: openim.sdkws.GroupApplicationAcceptedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	10,  // 48: openim.sdkws.GroupApplicationAcceptedTips.request:type_name -> openim.sdkws.GroupRequest
+	1,   // 49: openim.sdkws.GroupApplicationRejectedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 50: openim.sdkws.GroupApplicationRejectedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	10,  // 51: openim.sdkws.GroupApplicationRejectedTips.request:type_name -> openim.sdkws.GroupRequest
+	1,   // 52: openim.sdkws.GroupOwnerTransferredTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 53: openim.sdkws.GroupOwnerTransferredTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 54: openim.sdkws.GroupOwnerTransferredTips.newGroupOwner:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 55: openim.sdkws.GroupOwnerTransferredTips.oldGroupOwnerInfo:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 56: openim.sdkws.MemberKickedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 57: openim.sdkws.MemberKickedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 58: openim.sdkws.MemberKickedTips.kickedUserList:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 59: openim.sdkws.MemberInvitedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 60: openim.sdkws.MemberInvitedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 61: openim.sdkws.MemberInvitedTips.invitedUserList:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 62: openim.sdkws.MemberInvitedTips.inviterUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 63: openim.sdkws.MemberEnterTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 64: openim.sdkws.MemberEnterTips.entrantUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 65: openim.sdkws.GroupDismissedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 66: openim.sdkws.GroupDismissedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 67: openim.sdkws.GroupMemberMutedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 68: openim.sdkws.GroupMemberMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 69: openim.sdkws.GroupMemberMutedTips.mutedUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 70: openim.sdkws.GroupMemberCancelMutedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 71: openim.sdkws.GroupMemberCancelMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 72: openim.sdkws.GroupMemberCancelMutedTips.mutedUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 73: openim.sdkws.GroupMutedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 74: openim.sdkws.GroupMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 75: openim.sdkws.GroupCancelMutedTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 76: openim.sdkws.GroupCancelMutedTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	1,   // 77: openim.sdkws.GroupMemberInfoSetTips.group:type_name -> openim.sdkws.GroupInfo
+	3,   // 78: openim.sdkws.GroupMemberInfoSetTips.opUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	3,   // 79: openim.sdkws.GroupMemberInfoSetTips.changedUser:type_name -> openim.sdkws.GroupMemberFullInfo
+	47,  // 80: openim.sdkws.FriendApplicationTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	11,  // 81: openim.sdkws.FriendApplicationTips.request:type_name -> openim.sdkws.FriendRequest
+	47,  // 82: openim.sdkws.FriendApplicationApprovedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	11,  // 83: openim.sdkws.FriendApplicationApprovedTips.request:type_name -> openim.sdkws.FriendRequest
+	47,  // 84: openim.sdkws.FriendApplicationRejectedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	11,  // 85: openim.sdkws.FriendApplicationRejectedTips.request:type_name -> openim.sdkws.FriendRequest
+	8,   // 86: openim.sdkws.FriendAddedTips.friend:type_name -> openim.sdkws.FriendInfo
+	4,   // 87: openim.sdkws.FriendAddedTips.opUser:type_name -> openim.sdkws.PublicUserInfo
+	47,  // 88: openim.sdkws.FriendDeletedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	47,  // 89: openim.sdkws.BlackAddedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	47,  // 90: openim.sdkws.BlackDeletedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	47,  // 91: openim.sdkws.FriendInfoChangedTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	75,  // 92: openim.sdkws.ScheduleNotificationTips.meetingSettings:type_name -> openim.sdkws.ScheduleNotificationMeetingSettings
+	73,  // 93: openim.sdkws.ScheduleNotificationTips.repeatInfo:type_name -> openim.sdkws.ScheduleNotificationRepeatInfo
+	74,  // 94: openim.sdkws.ScheduleNotificationTips.attendees:type_name -> openim.sdkws.ScheduleNotificationAttendeeInfo
+	47,  // 95: openim.sdkws.FriendsInfoUpdateTips.fromToUserID:type_name -> openim.sdkws.FromToUserID
+	115, // 96: openim.sdkws.SubUserOnlineStatusElem.platformDetails:type_name -> openim.sdkws.SubUserOnlineStatusElem.PlatformDetailsEntry
+	94,  // 97: openim.sdkws.SubUserOnlineStatusTips.subscribers:type_name -> openim.sdkws.SubUserOnlineStatusElem
+	100, // 98: openim.sdkws.ScheduleGroupChangeTips.shares:type_name -> openim.sdkws.ScheduleGroupNotificationShareInfo
+	102, // 99: openim.sdkws.ScheduleGroupShareElem.shareUser:type_name -> openim.sdkws.ShareUserInfo
+	103, // 100: openim.sdkws.ScheduleChangeElem.creator:type_name -> openim.sdkws.CreatorUserInfo
+	104, // 101: openim.sdkws.ScheduleChangeElem.changeUser:type_name -> openim.sdkws.ChangeUserInfo
+	73,  // 102: openim.sdkws.ScheduleChangeElem.repeatInfo:type_name -> openim.sdkws.ScheduleNotificationRepeatInfo
+	75,  // 103: openim.sdkws.ScheduleChangeElem.meetingSettings:type_name -> openim.sdkws.ScheduleNotificationMeetingSettings
+	74,  // 104: openim.sdkws.ScheduleChangeElem.attendees:type_name -> openim.sdkws.ScheduleNotificationAttendeeInfo
+	14,  // 105: openim.sdkws.PullMessageBySeqsResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	14,  // 106: openim.sdkws.PullMessageBySeqsResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	14,  // 107: openim.sdkws.PushMessages.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	14,  // 108: openim.sdkws.PushMessages.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	109, // [109:109] is the sub-list for method output_type
+	109, // [109:109] is the sub-list for method input_type
+	109, // [109:109] is the sub-list for extension type_name
+	109, // [109:109] is the sub-list for extension extendee
+	0,   // [0:109] is the sub-list for field type_name
 }
 
 func init() { file_sdkws_sdkws_proto_init() }
@@ -8342,13 +10017,16 @@ func file_sdkws_sdkws_proto_init() {
 	if File_sdkws_sdkws_proto != nil {
 		return
 	}
+	file_sdkws_sdkws_proto_msgTypes[75].OneofWrappers = []any{}
+	file_sdkws_sdkws_proto_msgTypes[100].OneofWrappers = []any{}
+	file_sdkws_sdkws_proto_msgTypes[105].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_sdkws_sdkws_proto_rawDesc), len(file_sdkws_sdkws_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   104,
+			NumMessages:   115,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

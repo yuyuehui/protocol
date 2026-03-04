@@ -66,6 +66,8 @@ message GroupMemberFullInfo {
   string ex = 10;
   int64 muteEndTime = 11;
   string inviterUserID = 12;
+  string pinyin = 13; // 用户拼音字段，用于拼音搜索
+  string pinyinInitials = 14; // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
 }
 
 message PublicUserInfo {
@@ -84,6 +86,7 @@ message UserInfo {
   int32 appMangerLevel = 6;
   int32 globalRecvMsgOpt = 7;
   string pinyin = 8;
+  string pinyinInitials = 27;  // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
   string status = 9;
   string signature = 10;  // 用户签名
   repeated PlatformDetail onlineStatus = 11; // 平台详细状态列表（包含平台ID和在线状态）
@@ -119,6 +122,7 @@ message UserInfoWithEx {
   openim.protobuf.StringValue ex = 4;
   openim.protobuf.Int32Value globalRecvMsgOpt = 7;
   openim.protobuf.StringValue pinyin = 8;
+  openim.protobuf.StringValue pinyinInitials = 27;  // 拼音首字母，用于首字母搜索（如 "limingyue" -> "lmy"）
   openim.protobuf.StringValue status = 9;
   openim.protobuf.StringValue signature = 10;  // 用户签名
 }
@@ -642,6 +646,7 @@ message SummaryRecordAddTips {
   string creatorFaceURL = 9;     // 创建者头像
   string contents = 10;          // 用户输入的总结请求
   int32 summaryType = 11;        // 总结类型：1=自动生成，2=手动生成
+  string timeDescription = 12;   // 时间范围描述
 }
 
 // 智能总结记录删除通知
@@ -663,6 +668,91 @@ message SummaryRecordFavoriteTips {
 message SummaryRecordPublishTips {
   string operatorUserID = 1;     // 操作者用户ID
   string summaryID = 2;          // 总结记录ID
+}
+
+//////////////////////schedule/////////////////////
+// 日程通知（统一通知，通过action字段区分操作类型，多端同步）
+// action: "created"=创建, "updated"=更新, "deleted"=删除, "shared"=分享, "unshared"=取消分享, "accepted"=接受, "rejected"=拒绝
+// ScheduleNotificationRepeatInfo 重复规则（用于通知）
+message ScheduleNotificationRepeatInfo {
+  int64 endDate = 1;                    // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
+  int32 repeatTimes = 2;                // 重复次数（与endDate二选一，都不设置表示永不结束）
+  string repeatType = 3;                // 重复类型：daily/weekly/monthly/yearly
+  string unitType = 4;                  // 单位类型：day/weekday/week/month/year
+  int32 interval = 5;                   // 重复间隔（如每2周、每3个月）
+  repeated int32 repeatDaysOfWeek = 6;   // 每周重复的星期几（仅当repeatType=weekly时使用，可多选，0=周日，1=周一，...）
+  repeated int32 repeatDaysOfMonth = 7;  // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
+  int32 repeatMonth = 8;                // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
+  int32 repeatDayOfMonth = 9;           // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
+}
+
+// ScheduleNotificationReminderInfo 提醒信息（用于通知，已废弃，使用 reminders 数组代替）
+// message ScheduleNotificationReminderInfo {
+//   int32 reminderType = 1;               // 提醒类型：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前 5=自定义
+//   int64 reminderTime = 2;              // 提醒时间（时间戳，自定义时使用）
+//   bool notified = 3;                   // 是否已通知
+// }
+
+// ScheduleNotificationAttendeeInfo 参与者信息（用于通知）
+message ScheduleNotificationAttendeeInfo {
+  string userID = 1;                    // 用户ID
+  string nickname = 2;                  // 用户昵称
+  string faceURL = 3;                   // 头像URL
+  int32 status = 4;                     // 状态：0=待确认 1=已接受 2=已拒绝
+  int32 permission = 5;                 // 权限：0=仅查看 1=可编辑
+  int64 replyTime = 6;                  // 回复时间（时间戳）
+}
+
+// ScheduleNotificationMeetingSettings 会议设置信息（用于通知）
+message ScheduleNotificationMeetingSettings {
+  bool enablePassword = 1;                    // 是否启用入会密码
+  string password = 2;                        // 入会密码（4-6位数字）
+  bool autoTranscribe = 3;                     // 自动开启文字转写
+  bool enableWaitingRoom = 4;                 // 开启等候室
+  bool allowMemberJoinBeforeHost = 5;          // 允许成员在主持人进会前加入
+  bool enableScreenShareWatermark = 6;         // 开启屏幕共享水印
+  int32 watermarkType = 7;                     // 水印类型：0=单排水印 1=多排水印
+  bool allowMemberViewMinutes = 8;             // 允许成员查看会议纪要文档
+  bool allowMultiDeviceJoin = 9;                // 允许成员使用多个设备入会
+  int32 callReminder = 10;                     // 会议开始时来电提醒：0=不提醒 1=所有成员 2=指定成员 3=仅主持人
+  repeated string callReminderUserIDs = 11;      // 指定成员列表（callReminder为2时使用）
+  int32 muteOnJoin = 12;                       // 成员入会时静音：0=关闭 1=开启 2=超过6人后自动开启
+}
+
+message ScheduleNotificationTips {
+  string operatorUserID = 1;     // 操作者用户ID
+  string scheduleID = 2;          // 日程ID
+  string action = 3;              // 操作类型：created/updated/deleted/shared/unshared/accepted/rejected
+  int64 timestamp = 4;            // 操作时间（时间戳）
+  // 以下字段根据action类型选择性使用
+  repeated string shareToUserIDs = 5;     // 分享操作：被分享的用户ID列表
+  repeated string unshareFromUserIDs = 6; // 取消分享操作：取消分享的用户ID列表
+  string creatorUserID = 7;               // 接受/拒绝操作：创建者用户ID
+  
+  // 完整的日程信息字段（可选，deleted操作时为空）
+  optional string creatorNickname = 8;     // 创建者昵称
+  optional string status = 9;             // 状态：pending/accepted/rejected/cancelled/completed
+  optional int64 createTime = 10;         // 创建时间（时间戳）
+  optional string title = 11;             // 日程标题
+  optional int64 startTime = 12;          // 开始时间（时间戳）
+  optional int64 endTime = 13;            // 结束时间（时间戳）
+  optional string location = 14;           // 地点
+  optional string roomID = 15;             // 会议室ID
+  optional string description = 16;        // 描述/备注
+  optional string timeZone = 17;           // 时区
+  optional int32 visibility = 18;         // 可见性：1=个人 2=团队 3=公开
+  optional bool allDay = 19;               // 是否全天
+  repeated string attachmentURLs = 20;     // 附件URL列表
+  optional string scheduleGroupID = 21;     // 所属日程分组ID
+  optional bool allowMemberJoin = 22;      // 允许成员主动加入
+  optional bool notifyByEmail = 23;        // 同时通过邮件通知参与人
+  optional int32 type = 24;               // 日程类型：0=日程 1=会议
+  optional ScheduleNotificationMeetingSettings meetingSettings = 25; // 会议设置（仅当type为MEETING时有效）
+  optional bool isTemporary = 26;         // 是否是临时会议（仅当type为MEETING时有效）
+  optional string meetingMinutesID = 27;   // 会议纪要文档ID
+  optional ScheduleNotificationRepeatInfo repeatInfo = 28; // 重复规则
+  repeated ScheduleNotificationAttendeeInfo attendees = 29; // 参与者列表
+  repeated int32 reminders = 30; // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
 }
 
 //////////////////////conversation/////////////////////
@@ -803,6 +893,7 @@ message StreamMsgTips {
 message ConversationDeleteTips {
   string userID = 1;
   repeated string conversationIDs = 2;
+  bool isHidden = 3;  // 是否隐藏（true=隐藏会话，false=真正删除会话）
 }
 
 message ConversationGroupChangeTips {
@@ -812,6 +903,101 @@ message ConversationGroupChangeTips {
   string groupName = 4;
   repeated string conversationIDs = 5;
   int64 updateTime = 6;
+}
+
+// 日程分组变更通知（多端同步）
+// ScheduleGroupNotificationShareInfo 分组共享信息（用于通知）
+message ScheduleGroupNotificationShareInfo {
+  string userID = 1;         // 用户ID
+  int32 permission = 2;      // 权限：1=可查看, 2=可编辑, 3=可管理
+  bool onlyBusyFree = 3;     // 是否仅查看闲忙状态
+}
+
+message ScheduleGroupChangeTips {
+  string userID = 1;                    // 用户ID
+  string groupID = 2;                   // 分组ID
+  string action = 3;                    // 操作类型: "create"=创建, "update"=更新, "delete"=删除, "sort"=排序, "addSchedule"=添加日程, "removeSchedule"=移除日程
+  string groupName = 4;                  // 分组名称（创建/更新时）
+  repeated string scheduleIDs = 5;       // 变更的日程ID列表（addSchedule/removeSchedule时返回）
+  int64 updateTime = 6;                  // 更新时间
+  
+  // 完整的日程分组信息字段（可选，delete操作时为空）
+  optional string ownerUserID = 7;       // 所有者用户ID
+  optional int32 groupType = 8;           // 分组类型：0=系统默认分组（只可能有一个），1=个人/团队，2=订阅公共日历
+  optional int32 sortOrder = 9;          // 排序顺序
+  optional bool isVisible = 10;          // 是否可见
+  optional int64 createTime = 11;        // 创建时间（时间戳）
+  optional string ex = 12;                // 扩展字段
+  repeated ScheduleGroupNotificationShareInfo shares = 13;  // 共享信息列表（包含权限）
+  optional string subscribedPublicCalendarID = 14;  // 订阅的公共日历ID（仅当groupType=2时有效）
+}
+
+// 共享者用户信息
+message ShareUserInfo {
+  string userID = 1;    // 用户ID
+  string nickname = 2; // 用户昵称
+  string faceURL = 3;  // 用户头像URL
+}
+
+// 创建者用户信息（用于日程变更消息）
+message CreatorUserInfo {
+  string userID = 1;        // 用户ID
+  string nickname = 2;      // 用户昵称
+  string faceURL = 3;       // 用户头像URL
+  string signature = 4;     // 用户签名
+  string jobName = 5;       // 职位名称
+  string departmentName = 6; // 部门名称
+}
+
+// 操作者用户信息（用于日程变更消息）
+message ChangeUserInfo {
+  string userID = 1;    // 用户ID
+  string nickname = 2;  // 用户昵称
+  string faceURL = 3;   // 用户头像URL
+}
+
+// 日程分组共享通知（当分组被共享给其他人时发送）
+message ScheduleGroupShareElem {
+  string sharerUserID = 1;      // 共享者用户ID
+  string sharerNickname = 2;    // 共享者昵称
+  string sharerFaceURL = 3;     // 共享者头像URL
+  string groupID = 4;           // 分组ID
+  string groupName = 5;         // 分组名称
+  int32 permission = 6;         // 被共享者的权限：1=可查看详情, 2=可编辑, 3=可管理
+  bool onlyBusyFree = 7;        // 是否仅查看闲忙状态
+  int64 timestamp = 8;          // 共享时间戳
+  string action = 9;            // 操作类型: "shared"=共享, "permission_updated"=权限更新
+  ShareUserInfo shareUser = 10; // 共享者完整信息（用于前端显示共享者头像、昵称等）
+}
+
+// 日程变更消息内容（schedule_change，用于 sc_ 通知会话消息）
+message ScheduleChangeElem {
+  string msgType = 1;        // 消息类型："schedule_change"
+  string action = 2;         // 操作类型："created"=创建，"updated"=修改
+  optional string changeType = 3;     // 修改类型（仅当 action="updated" 时有效），如"时间"、"地点"、"标题"等
+  CreatorUserInfo creator = 4; // 创建者信息
+  ChangeUserInfo changeUser = 5; // 操作者信息（用于前端显示修改者头像、昵称等）
+  string scheduleID = 6;     // 日程ID
+  string title = 7;          // 日程标题
+  string subTitle = 8;       // 邀请标题
+  int64 startTime = 9;       // 开始时间
+  int64 endTime = 10;        // 结束时间
+  optional string location = 11;      // 地点
+  optional string roomID = 12;        // 会议室ID
+  optional string description = 13;   // 描述
+  optional string timeZone = 14;      // 时区
+  int32 visibility = 15;     // 可见性
+  bool allDay = 16;          // 是否全天
+  repeated string attachmentURLs = 17; // 附件URL列表
+  optional string scheduleGroupID = 18; // 日程分组ID
+  bool allowMemberJoin = 19;   // 是否允许成员加入
+  bool notifyByEmail = 20;     // 是否邮件通知
+  int32 type = 21;            // 日程类型：0=SCHEDULE, 1=MEETING
+  bool isTemporary = 22;      // 是否临时日程
+  string status = 23;         // 状态
+  optional ScheduleNotificationRepeatInfo repeatInfo = 24; // 重复规则
+  optional ScheduleNotificationMeetingSettings meetingSettings = 25; // 会议设置
+  repeated ScheduleNotificationAttendeeInfo attendees = 26; // 参与者列表
 }
 
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
