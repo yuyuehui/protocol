@@ -2,7 +2,7 @@
 setlocal
 
 rem Define array elements
-set "PROTO_NAMES=auth conversation errinfo relation group jssdk msg msggateway push rtc sdkws third user statistics wrapperspb oa"
+set "PROTO_NAMES=auth conversation errinfo relation group jssdk msg msggateway push rtc sdkws third user statistics wrapperspb oa livekit_meeting"
 
 rem Loop through each element in the array
 for %%i in (%PROTO_NAMES%) do (

@@ -158,6 +158,23 @@ const (
 
 	HasReadReceipt = 2200 // 已读回执
 
+	// LiveKit会议相关通知 (1800-1899)
+	MeetingNotificationBegin             = 1800 // 会议通知类型开始
+	MeetingCreatedNotification           = 1801 // 会议创建通知
+	MeetingUpdatedNotification           = 1802 // 会议更新通知
+	MeetingDeletedNotification           = 1803 // 会议删除/取消通知
+	MeetingInvitationNotification        = 1804 // 会议邀请通知
+	MeetingParticipantJoinedNotification = 1805 // 参会者加入通知
+	MeetingParticipantLeftNotification   = 1806 // 参会者离开通知
+	MeetingStartedNotification           = 1807 // 会议开始通知
+	MeetingEndedNotification             = 1808 // 会议结束通知
+	MeetingReminderNotification          = 1809 // 会议提醒通知
+	MeetingParticipantKickedNotification = 1810 // 参会者被踢出通知
+	InvitationRespondedNotification      = 1811 // 邀请响应通知
+	InvitationCancelledNotification      = 1812 // 邀请取消通知
+	ParticipantRoleChangedNotification   = 1813 // 参会者角色变更通知
+	MeetingNotificationEnd               = 1899 // 会议通知类型结束
+
 	NotificationEnd = 5000 // 通知类型结束标记
 
 	// 消息状态
