@@ -191,6 +191,14 @@ message CreateScheduleMessageResp {
   repeated CreateScheduleMessageResult results = 1; // 发送结果列表（批量发送时返回多个结果）
 }
 
+// UpdateScope 修改范围枚举（用于重复日程）
+enum UpdateScope {
+  UPDATE_SCOPE_UNSPECIFIED = 0;           // 未指定（默认：仅修改此日程，如果无重复规则则修改全部）
+  UPDATE_SCOPE_THIS_ONLY = 1;             // 仅修改此日程
+  UPDATE_SCOPE_THIS_AND_FOLLOWING = 2;    // 修改此日程及后续日程
+  UPDATE_SCOPE_ALL = 3;                   // 修改所有日程（包括已过去的）
+}
+
 // UpdateScheduleReq 更新日程请求（扁平结构，使用 optional 支持部分更新）
 message UpdateScheduleReq {
   string scheduleID = 1;
@@ -215,6 +223,7 @@ message UpdateScheduleReq {
   optional int32 type = 20;                     // 日程类型：0=日程 1=会议（可选）
   optional MeetingSettings meetingSettings = 21; // 会议设置（可选，仅当type为MEETING时有效）
   optional bool isTemporary = 22;              // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
+  optional UpdateScope updateScope = 23;        // 修改范围（可选，仅当日程有重复规则时有效）
 }
 
 // UpdateScheduleResp 更新日程响应
@@ -222,10 +231,19 @@ message UpdateScheduleResp {
   ScheduleInfo scheduleInfo = 1;
 }
 
+// DeleteScope 删除范围枚举（用于重复日程）
+enum DeleteScope {
+  DELETE_SCOPE_UNSPECIFIED = 0;           // 未指定（默认：删除所有日程）
+  DELETE_SCOPE_THIS_ONLY = 1;             // 仅删除此日程
+  DELETE_SCOPE_THIS_AND_FOLLOWING = 2;    // 删除此日程及后续日程
+  DELETE_SCOPE_ALL = 3;                   // 删除所有日程（包括已过去的）
+}
+
 // DeleteScheduleReq 删除日程请求
 message DeleteScheduleReq {
   string scheduleID = 1;
   string operatorUserID = 2;
+  optional DeleteScope deleteScope = 3;    // 删除范围（可选，仅当日程有重复规则时有效）
 }
 
 // DeleteScheduleResp 删除日程响应

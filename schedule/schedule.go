@@ -244,6 +244,13 @@ func (x *UpdateScheduleReq) Check() error {
 			return err
 		}
 	}
+	// 验证修改范围（基本校验，详细校验在服务端根据原日程是否有重复规则来判断）
+	if x.UpdateScope != nil {
+		scope := *x.UpdateScope
+		if scope < UpdateScope_UPDATE_SCOPE_UNSPECIFIED || scope > UpdateScope_UPDATE_SCOPE_ALL {
+			return errs.ErrArgs.WrapMsg("updateScope is invalid")
+		}
+	}
 	return nil
 }
 
@@ -253,6 +260,13 @@ func (x *DeleteScheduleReq) Check() error {
 		return errs.ErrArgs.WrapMsg("scheduleID is empty")
 	}
 	// operatorUserID 可选，如果不传则使用 context 中的当前用户
+	// 验证删除范围（基本校验，详细校验在服务端根据原日程是否有重复规则来判断）
+	if x.DeleteScope != nil {
+		scope := *x.DeleteScope
+		if scope < DeleteScope_DELETE_SCOPE_UNSPECIFIED || scope > DeleteScope_DELETE_SCOPE_ALL {
+			return errs.ErrArgs.WrapMsg("deleteScope is invalid")
+		}
+	}
 	return nil
 }
 
