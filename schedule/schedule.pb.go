@@ -21,12 +21,13 @@
 package schedule
 
 import (
-	sdkws "github.com/openimsdk/protocol/sdkws"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	sdkws "github.com/openimsdk/protocol/sdkws"
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -2683,10 +2684,10 @@ func (x *CheckConflictResp) GetBusyByUserId() map[string]*BusySlotList {
 // CompareSchedulesReq 对比日程请求（对比自己和指定用户的忙碌时间）
 type CompareSchedulesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OtherUserID   string                 `protobuf:"bytes,1,opt,name=otherUserID,proto3" json:"other_user_id"` // 要对比的用户ID（必填）
-	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"start_time"`     // 查询开始（时间戳，秒，必填）
-	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"end_time"`         // 查询结束（时间戳，秒，必须 > startTime，必填）
-	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"schedule_ids"`  // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
+	OtherUserID   string                 `protobuf:"bytes,1,opt,name=otherUserID,proto3" json:"otherUserID"` // 要对比的用户ID（必填）
+	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"`    // 查询开始（时间戳，秒，必填）
+	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`        // 查询结束（时间戳，秒，必须 > startTime，必填）
+	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2752,10 +2753,10 @@ func (x *CompareSchedulesReq) GetScheduleIDs() []string {
 // CompareSchedulesResp 对比日程响应
 type CompareSchedulesResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"my_user_id"`                                                                                    // 自己的用户ID
-	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"other_user_id"`                                                                              // 对比的用户ID
-	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busy_user_ids"`                                                                              // 忙的成员 userID 列表（用于顶部头像"忙"icon）
-	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busy_by_user_id" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
+	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"myUserID"`                                                                                   // 自己的用户ID
+	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"otherUserID"`                                                                             // 对比的用户ID
+	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
