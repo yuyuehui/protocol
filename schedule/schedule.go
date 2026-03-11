@@ -84,7 +84,7 @@ func (x *ScheduleRepeatInfo) Check() error {
 			return errs.ErrArgs.WrapMsg("repeatDaysOfWeek values must be between 0 (Sunday) and 6 (Saturday)")
 		}
 	}
-	
+
 	// 验证每月重复的具体日期
 	// 当 repeatType 为 monthly 时，必须指定 repeatDaysOfMonth
 	if x.RepeatType == "monthly" && len(x.RepeatDaysOfMonth) == 0 {
@@ -96,7 +96,7 @@ func (x *ScheduleRepeatInfo) Check() error {
 			return errs.ErrArgs.WrapMsg("repeatDaysOfMonth values must be between 1 and 31")
 		}
 	}
-	
+
 	// 验证按年重复的月份和日期
 	// 当 repeatType 为 yearly 时，必须指定 repeatMonth 和 repeatDayOfMonth
 	if x.RepeatType == "yearly" {
@@ -337,6 +337,20 @@ func (x *SetReminderReq) Check() error {
 func (x *CheckConflictReq) Check() error {
 	if len(x.UserIDs) == 0 {
 		return errs.ErrArgs.WrapMsg("userIDs is required")
+	}
+	if x.StartTime <= 0 {
+		return errs.ErrArgs.WrapMsg("startTime is invalid")
+	}
+	if x.EndTime <= x.StartTime {
+		return errs.ErrArgs.WrapMsg("endTime must be greater than startTime")
+	}
+	return nil
+}
+
+// CompareSchedulesReq Check 对比日程参数校验
+func (x *CompareSchedulesReq) Check() error {
+	if x.OtherUserID == "" {
+		return errs.ErrArgs.WrapMsg("otherUserID is required")
 	}
 	if x.StartTime <= 0 {
 		return errs.ErrArgs.WrapMsg("startTime is invalid")

@@ -348,6 +348,22 @@ message CheckConflictResp {
   map<string, BusySlotList> busyByUserId = 2; // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
 }
 
+// CompareSchedulesReq 对比日程请求（对比自己和指定用户的忙碌时间）
+message CompareSchedulesReq {
+  string otherUserID = 1;              // 要对比的用户ID（必填）
+  int64 startTime = 2;                 // 查询开始（时间戳，秒，必填）
+  int64 endTime = 3;                   // 查询结束（时间戳，秒，必须 > startTime，必填）
+  repeated string scheduleIDs = 4;     // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
+}
+
+// CompareSchedulesResp 对比日程响应
+message CompareSchedulesResp {
+  string myUserID = 1;                 // 自己的用户ID
+  string otherUserID = 2;             // 对比的用户ID
+  repeated string busyUserIDs = 3;     // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+  map<string, BusySlotList> busyByUserId = 4; // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
+}
+
 // GetScheduleDatesReq 查询某个月有参与日程的日期列表请求
 message GetScheduleDatesReq {
   string userID = 1;                     // 用户ID（必填）
@@ -411,6 +427,9 @@ service Schedule {
   
   // 查询日程冲突
   rpc CheckConflict(CheckConflictReq) returns (CheckConflictResp);
+  
+  // 对比日程（对比自己和指定用户的忙碌时间）
+  rpc CompareSchedules(CompareSchedulesReq) returns (CompareSchedulesResp);
   
   // 查询某个月有参与日程的日期列表（用于日历标记）
   rpc GetScheduleDates(GetScheduleDatesReq) returns (GetScheduleDatesResp);
