@@ -69,6 +69,9 @@ message MeetingInfo {
   string ex = 21;
   int32 participantCount = 22;
   int32 visibility = 23;               // 可见性：1=仅参与者可见(默认) 2=公开(团队可见) 3=私密(仅组织者)
+  repeated string participantNicknames = 24;  // 参会者昵称预览列表（前5个）
+  repeated string participantFaceURLs = 25;   // 参会者头像预览列表（前5个）
+  string scheduleID = 26;              // 关联的日程ID（从日程创建会议时记录）
 }
 
 // MeetingParticipant 参会者信息

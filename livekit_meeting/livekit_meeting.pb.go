@@ -40,16 +40,16 @@ const (
 // MeetingSetting 会议设置
 type MeetingSetting struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
-	EnableCameraOnJoin     bool                   `protobuf:"varint,1,opt,name=enableCameraOnJoin,proto3" json:"enableCameraOnJoin,omitempty"`
-	EnableMicrophoneOnJoin bool                   `protobuf:"varint,2,opt,name=enableMicrophoneOnJoin,proto3" json:"enableMicrophoneOnJoin,omitempty"`
-	AllowScreenShare       bool                   `protobuf:"varint,3,opt,name=allowScreenShare,proto3" json:"allowScreenShare,omitempty"`
-	EnableRecording        bool                   `protobuf:"varint,4,opt,name=enableRecording,proto3" json:"enableRecording,omitempty"`
-	EnableWaitingRoom      bool                   `protobuf:"varint,5,opt,name=enableWaitingRoom,proto3" json:"enableWaitingRoom,omitempty"`
-	Password               string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
-	MaxParticipants        int32                  `protobuf:"varint,7,opt,name=maxParticipants,proto3" json:"maxParticipants,omitempty"`
-	ReminderMinutes        []int32                `protobuf:"varint,8,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes,omitempty"`     // 提前提醒分钟数列表，如 [5, 15, 30]
-	CanParticipantInvite   bool                   `protobuf:"varint,9,opt,name=canParticipantInvite,proto3" json:"canParticipantInvite,omitempty"`  // 参会者是否可以邀请他人
-	CanParticipantUnmute   bool                   `protobuf:"varint,10,opt,name=canParticipantUnmute,proto3" json:"canParticipantUnmute,omitempty"` // 参会者是否可以自行解除静音
+	EnableCameraOnJoin     bool                   `protobuf:"varint,1,opt,name=enableCameraOnJoin,proto3" json:"enableCameraOnJoin"`
+	EnableMicrophoneOnJoin bool                   `protobuf:"varint,2,opt,name=enableMicrophoneOnJoin,proto3" json:"enableMicrophoneOnJoin"`
+	AllowScreenShare       bool                   `protobuf:"varint,3,opt,name=allowScreenShare,proto3" json:"allowScreenShare"`
+	EnableRecording        bool                   `protobuf:"varint,4,opt,name=enableRecording,proto3" json:"enableRecording"`
+	EnableWaitingRoom      bool                   `protobuf:"varint,5,opt,name=enableWaitingRoom,proto3" json:"enableWaitingRoom"`
+	Password               string                 `protobuf:"bytes,6,opt,name=password,proto3" json:"password"`
+	MaxParticipants        int32                  `protobuf:"varint,7,opt,name=maxParticipants,proto3" json:"maxParticipants"`
+	ReminderMinutes        []int32                `protobuf:"varint,8,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes"`     // 提前提醒分钟数列表，如 [5, 15, 30]
+	CanParticipantInvite   bool                   `protobuf:"varint,9,opt,name=canParticipantInvite,proto3" json:"canParticipantInvite"`  // 参会者是否可以邀请他人
+	CanParticipantUnmute   bool                   `protobuf:"varint,10,opt,name=canParticipantUnmute,proto3" json:"canParticipantUnmute"` // 参会者是否可以自行解除静音
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
@@ -157,10 +157,10 @@ func (x *MeetingSetting) GetCanParticipantUnmute() bool {
 // RepeatRule 重复规则
 type RepeatRule struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Interval      int32                  `protobuf:"varint,2,opt,name=interval,proto3" json:"interval,omitempty"`
-	EndDate       int64                  `protobuf:"varint,3,opt,name=endDate,proto3" json:"endDate,omitempty"`
-	DaysOfWeek    []int32                `protobuf:"varint,4,rep,packed,name=daysOfWeek,proto3" json:"daysOfWeek,omitempty"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type"`
+	Interval      int32                  `protobuf:"varint,2,opt,name=interval,proto3" json:"interval"`
+	EndDate       int64                  `protobuf:"varint,3,opt,name=endDate,proto3" json:"endDate"`
+	DaysOfWeek    []int32                `protobuf:"varint,4,rep,packed,name=daysOfWeek,proto3" json:"daysOfWeek"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -225,32 +225,35 @@ func (x *RepeatRule) GetDaysOfWeek() []int32 {
 
 // MeetingInfo 会议信息
 type MeetingInfo struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID        string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	MeetingNumber    string                 `protobuf:"bytes,2,opt,name=meetingNumber,proto3" json:"meetingNumber,omitempty"`
-	Title            string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	CreatorUserID    string                 `protobuf:"bytes,4,opt,name=creatorUserID,proto3" json:"creatorUserID,omitempty"`
-	CreatorNickname  string                 `protobuf:"bytes,5,opt,name=creatorNickname,proto3" json:"creatorNickname,omitempty"`
-	CreatorFaceURL   string                 `protobuf:"bytes,6,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL,omitempty"`
-	MeetingType      int32                  `protobuf:"varint,7,opt,name=meetingType,proto3" json:"meetingType,omitempty"` // 1=快速会议 2=预约会议
-	Status           string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status,omitempty"`            // scheduled/in-progress/ended/cancelled
-	ScheduledTime    int64                  `protobuf:"varint,9,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`
-	ScheduledEndTime int64                  `protobuf:"varint,10,opt,name=scheduledEndTime,proto3" json:"scheduledEndTime,omitempty"`
-	ActualStartTime  int64                  `protobuf:"varint,11,opt,name=actualStartTime,proto3" json:"actualStartTime,omitempty"`
-	ActualEndTime    int64                  `protobuf:"varint,12,opt,name=actualEndTime,proto3" json:"actualEndTime,omitempty"`
-	Duration         int32                  `protobuf:"varint,13,opt,name=duration,proto3" json:"duration,omitempty"`
-	Password         string                 `protobuf:"bytes,14,opt,name=password,proto3" json:"password,omitempty"`
-	ShowInCalendar   bool                   `protobuf:"varint,15,opt,name=showInCalendar,proto3" json:"showInCalendar,omitempty"`
-	RepeatRule       *RepeatRule            `protobuf:"bytes,16,opt,name=repeatRule,proto3" json:"repeatRule,omitempty"`
-	LivekitRoomID    string                 `protobuf:"bytes,17,opt,name=livekitRoomID,proto3" json:"livekitRoomID,omitempty"`
-	Setting          *MeetingSetting        `protobuf:"bytes,18,opt,name=setting,proto3" json:"setting,omitempty"`
-	CreateTime       int64                  `protobuf:"varint,19,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime       int64                  `protobuf:"varint,20,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
-	Ex               string                 `protobuf:"bytes,21,opt,name=ex,proto3" json:"ex,omitempty"`
-	ParticipantCount int32                  `protobuf:"varint,22,opt,name=participantCount,proto3" json:"participantCount,omitempty"`
-	Visibility       int32                  `protobuf:"varint,23,opt,name=visibility,proto3" json:"visibility,omitempty"` // 可见性：1=仅参与者可见(默认) 2=公开(团队可见) 3=私密(仅组织者)
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID            string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	MeetingNumber        string                 `protobuf:"bytes,2,opt,name=meetingNumber,proto3" json:"meetingNumber"`
+	Title                string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title"`
+	CreatorUserID        string                 `protobuf:"bytes,4,opt,name=creatorUserID,proto3" json:"creatorUserID"`
+	CreatorNickname      string                 `protobuf:"bytes,5,opt,name=creatorNickname,proto3" json:"creatorNickname"`
+	CreatorFaceURL       string                 `protobuf:"bytes,6,opt,name=creatorFaceURL,proto3" json:"creatorFaceURL"`
+	MeetingType          int32                  `protobuf:"varint,7,opt,name=meetingType,proto3" json:"meetingType"` // 1=快速会议 2=预约会议
+	Status               string                 `protobuf:"bytes,8,opt,name=status,proto3" json:"status"`            // scheduled/in-progress/ended/cancelled
+	ScheduledTime        int64                  `protobuf:"varint,9,opt,name=scheduledTime,proto3" json:"scheduledTime"`
+	ScheduledEndTime     int64                  `protobuf:"varint,10,opt,name=scheduledEndTime,proto3" json:"scheduledEndTime"`
+	ActualStartTime      int64                  `protobuf:"varint,11,opt,name=actualStartTime,proto3" json:"actualStartTime"`
+	ActualEndTime        int64                  `protobuf:"varint,12,opt,name=actualEndTime,proto3" json:"actualEndTime"`
+	Duration             int32                  `protobuf:"varint,13,opt,name=duration,proto3" json:"duration"`
+	Password             string                 `protobuf:"bytes,14,opt,name=password,proto3" json:"password"`
+	ShowInCalendar       bool                   `protobuf:"varint,15,opt,name=showInCalendar,proto3" json:"showInCalendar"`
+	RepeatRule           *RepeatRule            `protobuf:"bytes,16,opt,name=repeatRule,proto3" json:"repeatRule"`
+	LivekitRoomID        string                 `protobuf:"bytes,17,opt,name=livekitRoomID,proto3" json:"livekitRoomID"`
+	Setting              *MeetingSetting        `protobuf:"bytes,18,opt,name=setting,proto3" json:"setting"`
+	CreateTime           int64                  `protobuf:"varint,19,opt,name=createTime,proto3" json:"createTime"`
+	UpdateTime           int64                  `protobuf:"varint,20,opt,name=updateTime,proto3" json:"updateTime"`
+	Ex                   string                 `protobuf:"bytes,21,opt,name=ex,proto3" json:"ex"`
+	ParticipantCount     int32                  `protobuf:"varint,22,opt,name=participantCount,proto3" json:"participantCount"`
+	Visibility           int32                  `protobuf:"varint,23,opt,name=visibility,proto3" json:"visibility"`                    // 可见性：1=仅参与者可见(默认) 2=公开(团队可见) 3=私密(仅组织者)
+	ParticipantNicknames []string               `protobuf:"bytes,24,rep,name=participantNicknames,proto3" json:"participantNicknames"` // 参会者昵称预览列表（前5个）
+	ParticipantFaceURLs  []string               `protobuf:"bytes,25,rep,name=participantFaceURLs,proto3" json:"participantFaceURLs"`   // 参会者头像预览列表（前5个）
+	ScheduleID           string                 `protobuf:"bytes,26,opt,name=scheduleID,proto3" json:"scheduleID"`                     // 关联的日程ID
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *MeetingInfo) Reset() {
@@ -444,21 +447,42 @@ func (x *MeetingInfo) GetVisibility() int32 {
 	return 0
 }
 
+func (x *MeetingInfo) GetParticipantNicknames() []string {
+	if x != nil {
+		return x.ParticipantNicknames
+	}
+	return nil
+}
+
+func (x *MeetingInfo) GetParticipantFaceURLs() []string {
+	if x != nil {
+		return x.ParticipantFaceURLs
+	}
+	return nil
+}
+
+func (x *MeetingInfo) GetScheduleID() string {
+	if x != nil {
+		return x.ScheduleID
+	}
+	return ""
+}
+
 // MeetingParticipant 参会者信息
 type MeetingParticipant struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	FaceURL       string                 `protobuf:"bytes,4,opt,name=faceURL,proto3" json:"faceURL,omitempty"`
-	Role          int32                  `protobuf:"varint,5,opt,name=role,proto3" json:"role,omitempty"`     // 1=主持人 2=联合主持人 3=参会者
-	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"` // 参会状态：1=已加入 2=已离开 3=被踢出
-	JoinTime      int64                  `protobuf:"varint,7,opt,name=joinTime,proto3" json:"joinTime,omitempty"`
-	LeaveTime     int64                  `protobuf:"varint,8,opt,name=leaveTime,proto3" json:"leaveTime,omitempty"`
-	InviteStatus  int32                  `protobuf:"varint,9,opt,name=inviteStatus,proto3" json:"inviteStatus,omitempty"`   // 邀请响应：0=待回复 1=已接受 2=已拒绝 3=待定
-	InviterUserID string                 `protobuf:"bytes,10,opt,name=inviterUserID,proto3" json:"inviterUserID,omitempty"` // 邀请人ID
-	InviteTime    int64                  `protobuf:"varint,11,opt,name=inviteTime,proto3" json:"inviteTime,omitempty"`      // 邀请时间
-	RespondTime   int64                  `protobuf:"varint,12,opt,name=respondTime,proto3" json:"respondTime,omitempty"`    // 响应时间
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname"`
+	FaceURL       string                 `protobuf:"bytes,4,opt,name=faceURL,proto3" json:"faceURL"`
+	Role          int32                  `protobuf:"varint,5,opt,name=role,proto3" json:"role"`     // 1=主持人 2=联合主持人 3=参会者
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status"` // 参会状态：1=已加入 2=已离开 3=被踢出
+	JoinTime      int64                  `protobuf:"varint,7,opt,name=joinTime,proto3" json:"joinTime"`
+	LeaveTime     int64                  `protobuf:"varint,8,opt,name=leaveTime,proto3" json:"leaveTime"`
+	InviteStatus  int32                  `protobuf:"varint,9,opt,name=inviteStatus,proto3" json:"inviteStatus"`   // 邀请响应：0=待回复 1=已接受 2=已拒绝 3=待定
+	InviterUserID string                 `protobuf:"bytes,10,opt,name=inviterUserID,proto3" json:"inviterUserID"` // 邀请人ID
+	InviteTime    int64                  `protobuf:"varint,11,opt,name=inviteTime,proto3" json:"inviteTime"`      // 邀请时间
+	RespondTime   int64                  `protobuf:"varint,12,opt,name=respondTime,proto3" json:"respondTime"`    // 响应时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -580,10 +604,10 @@ func (x *MeetingParticipant) GetRespondTime() int64 {
 // LiveKitInfo LiveKit连接信息
 type LiveKitInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
-	RoomID        string                 `protobuf:"bytes,3,opt,name=roomID,proto3" json:"roomID,omitempty"`
-	RoomName      string                 `protobuf:"bytes,4,opt,name=roomName,proto3" json:"roomName,omitempty"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url"`
+	RoomID        string                 `protobuf:"bytes,3,opt,name=roomID,proto3" json:"roomID"`
+	RoomName      string                 `protobuf:"bytes,4,opt,name=roomName,proto3" json:"roomName"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -649,15 +673,15 @@ func (x *LiveKitInfo) GetRoomName() string {
 // MeetingInviteRecord 邀请历史记录
 type MeetingInviteRecord struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID       string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	InviterUserID   string                 `protobuf:"bytes,2,opt,name=inviterUserID,proto3" json:"inviterUserID,omitempty"`
-	InviterNickname string                 `protobuf:"bytes,3,opt,name=inviterNickname,proto3" json:"inviterNickname,omitempty"`
-	InviteeUserID   string                 `protobuf:"bytes,4,opt,name=inviteeUserID,proto3" json:"inviteeUserID,omitempty"`
-	InviteeNickname string                 `protobuf:"bytes,5,opt,name=inviteeNickname,proto3" json:"inviteeNickname,omitempty"`
-	InviteTime      int64                  `protobuf:"varint,6,opt,name=inviteTime,proto3" json:"inviteTime,omitempty"`
-	InviteStatus    int32                  `protobuf:"varint,7,opt,name=inviteStatus,proto3" json:"inviteStatus,omitempty"` // 0=待回复 1=已接受 2=已拒绝 3=待定 4=已取消
-	RespondTime     int64                  `protobuf:"varint,8,opt,name=respondTime,proto3" json:"respondTime,omitempty"`
-	CancelReason    string                 `protobuf:"bytes,9,opt,name=cancelReason,proto3" json:"cancelReason,omitempty"`
+	MeetingID       string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	InviterUserID   string                 `protobuf:"bytes,2,opt,name=inviterUserID,proto3" json:"inviterUserID"`
+	InviterNickname string                 `protobuf:"bytes,3,opt,name=inviterNickname,proto3" json:"inviterNickname"`
+	InviteeUserID   string                 `protobuf:"bytes,4,opt,name=inviteeUserID,proto3" json:"inviteeUserID"`
+	InviteeNickname string                 `protobuf:"bytes,5,opt,name=inviteeNickname,proto3" json:"inviteeNickname"`
+	InviteTime      int64                  `protobuf:"varint,6,opt,name=inviteTime,proto3" json:"inviteTime"`
+	InviteStatus    int32                  `protobuf:"varint,7,opt,name=inviteStatus,proto3" json:"inviteStatus"` // 0=待回复 1=已接受 2=已拒绝 3=待定 4=已取消
+	RespondTime     int64                  `protobuf:"varint,8,opt,name=respondTime,proto3" json:"respondTime"`
+	CancelReason    string                 `protobuf:"bytes,9,opt,name=cancelReason,proto3" json:"cancelReason"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -758,12 +782,12 @@ func (x *MeetingInviteRecord) GetCancelReason() string {
 // NotificationPreference 通知偏好
 type NotificationPreference struct {
 	state                   protoimpl.MessageState `protogen:"open.v1"`
-	UserID                  string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
-	EnableMeetingInvite     bool                   `protobuf:"varint,2,opt,name=enableMeetingInvite,proto3" json:"enableMeetingInvite,omitempty"`         // 会议邀请通知
-	EnableMeetingChange     bool                   `protobuf:"varint,3,opt,name=enableMeetingChange,proto3" json:"enableMeetingChange,omitempty"`         // 会议变更通知
-	EnableMeetingCancel     bool                   `protobuf:"varint,4,opt,name=enableMeetingCancel,proto3" json:"enableMeetingCancel,omitempty"`         // 会议取消通知
-	EnableMeetingReminder   bool                   `protobuf:"varint,5,opt,name=enableMeetingReminder,proto3" json:"enableMeetingReminder,omitempty"`     // 会议提醒通知
-	EnableParticipantChange bool                   `protobuf:"varint,6,opt,name=enableParticipantChange,proto3" json:"enableParticipantChange,omitempty"` // 参会者变更通知
+	UserID                  string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	EnableMeetingInvite     bool                   `protobuf:"varint,2,opt,name=enableMeetingInvite,proto3" json:"enableMeetingInvite"`         // 会议邀请通知
+	EnableMeetingChange     bool                   `protobuf:"varint,3,opt,name=enableMeetingChange,proto3" json:"enableMeetingChange"`         // 会议变更通知
+	EnableMeetingCancel     bool                   `protobuf:"varint,4,opt,name=enableMeetingCancel,proto3" json:"enableMeetingCancel"`         // 会议取消通知
+	EnableMeetingReminder   bool                   `protobuf:"varint,5,opt,name=enableMeetingReminder,proto3" json:"enableMeetingReminder"`     // 会议提醒通知
+	EnableParticipantChange bool                   `protobuf:"varint,6,opt,name=enableParticipantChange,proto3" json:"enableParticipantChange"` // 参会者变更通知
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -842,10 +866,10 @@ func (x *NotificationPreference) GetEnableParticipantChange() bool {
 
 type CreateQuickMeetingReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Title          string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Setting        *MeetingSetting        `protobuf:"bytes,2,opt,name=setting,proto3" json:"setting,omitempty"`
-	ShowInCalendar bool                   `protobuf:"varint,3,opt,name=showInCalendar,proto3" json:"showInCalendar,omitempty"`
-	Visibility     int32                  `protobuf:"varint,4,opt,name=visibility,proto3" json:"visibility,omitempty"` // 可见性
+	Title          string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title"`
+	Setting        *MeetingSetting        `protobuf:"bytes,2,opt,name=setting,proto3" json:"setting"`
+	ShowInCalendar bool                   `protobuf:"varint,3,opt,name=showInCalendar,proto3" json:"showInCalendar"`
+	Visibility     int32                  `protobuf:"varint,4,opt,name=visibility,proto3" json:"visibility"` // 可见性
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -910,8 +934,8 @@ func (x *CreateQuickMeetingReq) GetVisibility() int32 {
 
 type CreateQuickMeetingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	LiveKit       *LiveKitInfo           `protobuf:"bytes,2,opt,name=liveKit,proto3" json:"liveKit,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	LiveKit       *LiveKitInfo           `protobuf:"bytes,2,opt,name=liveKit,proto3" json:"liveKit"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -962,14 +986,14 @@ func (x *CreateQuickMeetingResp) GetLiveKit() *LiveKitInfo {
 
 type ScheduleMeetingReq struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	Title              string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	ScheduledTime      int64                  `protobuf:"varint,2,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`
-	Duration           int32                  `protobuf:"varint,3,opt,name=duration,proto3" json:"duration,omitempty"`
-	ParticipantUserIDs []string               `protobuf:"bytes,4,rep,name=participantUserIDs,proto3" json:"participantUserIDs,omitempty"`
-	Setting            *MeetingSetting        `protobuf:"bytes,5,opt,name=setting,proto3" json:"setting,omitempty"`
-	ShowInCalendar     bool                   `protobuf:"varint,6,opt,name=showInCalendar,proto3" json:"showInCalendar,omitempty"`
-	RepeatRule         *RepeatRule            `protobuf:"bytes,7,opt,name=repeatRule,proto3" json:"repeatRule,omitempty"`
-	Visibility         int32                  `protobuf:"varint,8,opt,name=visibility,proto3" json:"visibility,omitempty"` // 可见性
+	Title              string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title"`
+	ScheduledTime      int64                  `protobuf:"varint,2,opt,name=scheduledTime,proto3" json:"scheduledTime"`
+	Duration           int32                  `protobuf:"varint,3,opt,name=duration,proto3" json:"duration"`
+	ParticipantUserIDs []string               `protobuf:"bytes,4,rep,name=participantUserIDs,proto3" json:"participantUserIDs"`
+	Setting            *MeetingSetting        `protobuf:"bytes,5,opt,name=setting,proto3" json:"setting"`
+	ShowInCalendar     bool                   `protobuf:"varint,6,opt,name=showInCalendar,proto3" json:"showInCalendar"`
+	RepeatRule         *RepeatRule            `protobuf:"bytes,7,opt,name=repeatRule,proto3" json:"repeatRule"`
+	Visibility         int32                  `protobuf:"varint,8,opt,name=visibility,proto3" json:"visibility"` // 可见性
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1062,7 +1086,7 @@ func (x *ScheduleMeetingReq) GetVisibility() int32 {
 
 type ScheduleMeetingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1106,8 +1130,8 @@ func (x *ScheduleMeetingResp) GetMeeting() *MeetingInfo {
 
 type JoinMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingNumber string                 `protobuf:"bytes,1,opt,name=meetingNumber,proto3" json:"meetingNumber,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	MeetingNumber string                 `protobuf:"bytes,1,opt,name=meetingNumber,proto3" json:"meetingNumber"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1158,8 +1182,8 @@ func (x *JoinMeetingReq) GetPassword() string {
 
 type JoinMeetingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	LiveKit       *LiveKitInfo           `protobuf:"bytes,2,opt,name=liveKit,proto3" json:"liveKit,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	LiveKit       *LiveKitInfo           `protobuf:"bytes,2,opt,name=liveKit,proto3" json:"liveKit"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1210,12 +1234,12 @@ func (x *JoinMeetingResp) GetLiveKit() *LiveKitInfo {
 
 type GetMeetingListReq struct {
 	state          protoimpl.MessageState   `protogen:"open.v1"`
-	Status         []string                 `protobuf:"bytes,1,rep,name=status,proto3" json:"status,omitempty"`
-	StartTime      int64                    `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime,omitempty"`
-	EndTime        int64                    `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime,omitempty"`
-	MeetingType    int32                    `protobuf:"varint,4,opt,name=meetingType,proto3" json:"meetingType,omitempty"`
-	ShowInCalendar *wrapperspb.BoolValue    `protobuf:"bytes,5,opt,name=showInCalendar,proto3" json:"showInCalendar,omitempty"`
-	Pagination     *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Status         []string                 `protobuf:"bytes,1,rep,name=status,proto3" json:"status"`
+	StartTime      int64                    `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"`
+	EndTime        int64                    `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`
+	MeetingType    int32                    `protobuf:"varint,4,opt,name=meetingType,proto3" json:"meetingType"`
+	ShowInCalendar *wrapperspb.BoolValue    `protobuf:"bytes,5,opt,name=showInCalendar,proto3" json:"showInCalendar"`
+	Pagination     *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1294,8 +1318,8 @@ func (x *GetMeetingListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetMeetingListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Meetings      []*MeetingInfo         `protobuf:"bytes,2,rep,name=meetings,proto3" json:"meetings,omitempty"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	Meetings      []*MeetingInfo         `protobuf:"bytes,2,rep,name=meetings,proto3" json:"meetings"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1346,7 +1370,7 @@ func (x *GetMeetingListResp) GetMeetings() []*MeetingInfo {
 
 type GetMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1390,8 +1414,8 @@ func (x *GetMeetingReq) GetMeetingID() string {
 
 type GetMeetingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	Participants  []*MeetingParticipant  `protobuf:"bytes,2,rep,name=participants,proto3" json:"participants,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	Participants  []*MeetingParticipant  `protobuf:"bytes,2,rep,name=participants,proto3" json:"participants"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1442,14 +1466,14 @@ func (x *GetMeetingResp) GetParticipants() []*MeetingParticipant {
 
 type UpdateMeetingReq struct {
 	state          protoimpl.MessageState  `protogen:"open.v1"`
-	MeetingID      string                  `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Title          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	ScheduledTime  *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=scheduledTime,proto3" json:"scheduledTime,omitempty"`
-	Duration       *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=duration,proto3" json:"duration,omitempty"`
-	Setting        *MeetingSetting         `protobuf:"bytes,5,opt,name=setting,proto3" json:"setting,omitempty"`
-	ShowInCalendar *wrapperspb.BoolValue   `protobuf:"bytes,6,opt,name=showInCalendar,proto3" json:"showInCalendar,omitempty"`
-	RepeatRule     *RepeatRule             `protobuf:"bytes,7,opt,name=repeatRule,proto3" json:"repeatRule,omitempty"`
-	Visibility     *wrapperspb.Int32Value  `protobuf:"bytes,8,opt,name=visibility,proto3" json:"visibility,omitempty"` // 可见性
+	MeetingID      string                  `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Title          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=title,proto3" json:"title"`
+	ScheduledTime  *wrapperspb.Int64Value  `protobuf:"bytes,3,opt,name=scheduledTime,proto3" json:"scheduledTime"`
+	Duration       *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=duration,proto3" json:"duration"`
+	Setting        *MeetingSetting         `protobuf:"bytes,5,opt,name=setting,proto3" json:"setting"`
+	ShowInCalendar *wrapperspb.BoolValue   `protobuf:"bytes,6,opt,name=showInCalendar,proto3" json:"showInCalendar"`
+	RepeatRule     *RepeatRule             `protobuf:"bytes,7,opt,name=repeatRule,proto3" json:"repeatRule"`
+	Visibility     *wrapperspb.Int32Value  `protobuf:"bytes,8,opt,name=visibility,proto3" json:"visibility"` // 可见性
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1542,7 +1566,7 @@ func (x *UpdateMeetingReq) GetVisibility() *wrapperspb.Int32Value {
 
 type UpdateMeetingResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1586,8 +1610,8 @@ func (x *UpdateMeetingResp) GetMeeting() *MeetingInfo {
 
 type CancelMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1674,7 +1698,7 @@ func (*CancelMeetingResp) Descriptor() ([]byte, []int) {
 
 type EndMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1754,8 +1778,8 @@ func (*EndMeetingResp) Descriptor() ([]byte, []int) {
 
 type InviteToMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1806,8 +1830,8 @@ func (x *InviteToMeetingReq) GetUserIDs() []string {
 
 type InviteToMeetingResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs,omitempty"`
-	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs,omitempty"`
+	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs"`
+	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1858,9 +1882,9 @@ func (x *InviteToMeetingResp) GetFailedUserIDs() []string {
 
 type RespondMeetingInvitationReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Response      int32                  `protobuf:"varint,2,opt,name=response,proto3" json:"response,omitempty"` // 1=接受 2=拒绝 3=待定
-	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`      // 拒绝原因（可选）
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Response      int32                  `protobuf:"varint,2,opt,name=response,proto3" json:"response"` // 1=接受 2=拒绝 3=待定
+	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason"`      // 拒绝原因（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1954,9 +1978,9 @@ func (*RespondMeetingInvitationResp) Descriptor() ([]byte, []int) {
 
 type CancelMeetingInvitationReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs,omitempty"`
-	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs"`
+	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2014,8 +2038,8 @@ func (x *CancelMeetingInvitationReq) GetReason() string {
 
 type CancelMeetingInvitationResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs,omitempty"`
-	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs,omitempty"`
+	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs"`
+	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2066,8 +2090,8 @@ func (x *CancelMeetingInvitationResp) GetFailedUserIDs() []string {
 
 type GetInviteRecordListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	MeetingID     string                   `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	MeetingID     string                   `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2118,8 +2142,8 @@ func (x *GetInviteRecordListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetInviteRecordListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Records       []*MeetingInviteRecord `protobuf:"bytes,2,rep,name=records,proto3" json:"records,omitempty"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
+	Records       []*MeetingInviteRecord `protobuf:"bytes,2,rep,name=records,proto3" json:"records"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2170,9 +2194,9 @@ func (x *GetInviteRecordListResp) GetRecords() []*MeetingInviteRecord {
 
 type KickParticipantReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs,omitempty"`
-	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs"`
+	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2230,8 +2254,8 @@ func (x *KickParticipantReq) GetReason() string {
 
 type KickParticipantResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs,omitempty"`
-	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs,omitempty"`
+	SuccessUserIDs []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs"`
+	FailedUserIDs  []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2282,9 +2306,9 @@ func (x *KickParticipantResp) GetFailedUserIDs() []string {
 
 type SetParticipantRoleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	Role          int32                  `protobuf:"varint,3,opt,name=role,proto3" json:"role,omitempty"` // 1=主持人 2=联合主持人 3=参会者
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	Role          int32                  `protobuf:"varint,3,opt,name=role,proto3" json:"role"` // 1=主持人 2=联合主持人 3=参会者
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2378,7 +2402,7 @@ func (*SetParticipantRoleResp) Descriptor() ([]byte, []int) {
 
 type GetMeetingTokenReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2422,7 +2446,7 @@ func (x *GetMeetingTokenReq) GetMeetingID() string {
 
 type GetMeetingTokenResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LiveKit       *LiveKitInfo           `protobuf:"bytes,1,opt,name=liveKit,proto3" json:"liveKit,omitempty"`
+	LiveKit       *LiveKitInfo           `protobuf:"bytes,1,opt,name=liveKit,proto3" json:"liveKit"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2466,7 +2490,7 @@ func (x *GetMeetingTokenResp) GetLiveKit() *LiveKitInfo {
 
 type SyncMeetingReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LastSyncTime  int64                  `protobuf:"varint,1,opt,name=lastSyncTime,proto3" json:"lastSyncTime,omitempty"`
+	LastSyncTime  int64                  `protobuf:"varint,1,opt,name=lastSyncTime,proto3" json:"lastSyncTime"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2510,9 +2534,9 @@ func (x *SyncMeetingReq) GetLastSyncTime() int64 {
 
 type SyncMeetingResp struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	Meetings          []*MeetingInfo         `protobuf:"bytes,1,rep,name=meetings,proto3" json:"meetings,omitempty"`
-	DeletedMeetingIDs []string               `protobuf:"bytes,2,rep,name=deletedMeetingIDs,proto3" json:"deletedMeetingIDs,omitempty"`
-	SyncTime          int64                  `protobuf:"varint,3,opt,name=syncTime,proto3" json:"syncTime,omitempty"`
+	Meetings          []*MeetingInfo         `protobuf:"bytes,1,rep,name=meetings,proto3" json:"meetings"`
+	DeletedMeetingIDs []string               `protobuf:"bytes,2,rep,name=deletedMeetingIDs,proto3" json:"deletedMeetingIDs"`
+	SyncTime          int64                  `protobuf:"varint,3,opt,name=syncTime,proto3" json:"syncTime"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -2570,8 +2594,8 @@ func (x *SyncMeetingResp) GetSyncTime() int64 {
 
 type SetMeetingReminderReq struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID       string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	ReminderMinutes []int32                `protobuf:"varint,2,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes,omitempty"` // 提前提醒分钟数列表
+	MeetingID       string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	ReminderMinutes []int32                `protobuf:"varint,2,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes"` // 提前提醒分钟数列表
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -2658,7 +2682,7 @@ func (*SetMeetingReminderResp) Descriptor() ([]byte, []int) {
 
 type GetMeetingRemindersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2702,7 +2726,7 @@ func (x *GetMeetingRemindersReq) GetMeetingID() string {
 
 type GetMeetingRemindersResp struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	ReminderMinutes []int32                `protobuf:"varint,1,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes,omitempty"`
+	ReminderMinutes []int32                `protobuf:"varint,1,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -2746,7 +2770,7 @@ func (x *GetMeetingRemindersResp) GetReminderMinutes() []int32 {
 
 type SetNotificationPreferenceReq struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Preference    *NotificationPreference `protobuf:"bytes,1,opt,name=preference,proto3" json:"preference,omitempty"`
+	Preference    *NotificationPreference `protobuf:"bytes,1,opt,name=preference,proto3" json:"preference"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2862,7 +2886,7 @@ func (*GetNotificationPreferenceReq) Descriptor() ([]byte, []int) {
 
 type GetNotificationPreferenceResp struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Preference    *NotificationPreference `protobuf:"bytes,1,opt,name=preference,proto3" json:"preference,omitempty"`
+	Preference    *NotificationPreference `protobuf:"bytes,1,opt,name=preference,proto3" json:"preference"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2907,8 +2931,8 @@ func (x *GetNotificationPreferenceResp) GetPreference() *NotificationPreference 
 // MeetingCreatedTips 会议创建通知
 type MeetingCreatedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2960,8 +2984,8 @@ func (x *MeetingCreatedTips) GetOpUser() *sdkws.UserInfo {
 // MeetingUpdatedTips 会议更新通知
 type MeetingUpdatedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3013,9 +3037,9 @@ func (x *MeetingUpdatedTips) GetOpUser() *sdkws.UserInfo {
 // MeetingDeletedTips 会议删除/取消通知
 type MeetingDeletedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,3,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason"`
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,3,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3074,8 +3098,8 @@ func (x *MeetingDeletedTips) GetOpUser() *sdkws.UserInfo {
 // MeetingInvitationTips 会议邀请通知
 type MeetingInvitationTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	Inviter       *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=inviter,proto3" json:"inviter,omitempty"`
+	Meeting       *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	Inviter       *sdkws.UserInfo        `protobuf:"bytes,2,opt,name=inviter,proto3" json:"inviter"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3127,12 +3151,12 @@ func (x *MeetingInvitationTips) GetInviter() *sdkws.UserInfo {
 // InvitationRespondedTips 邀请响应通知
 type InvitationRespondedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Response      int32                  `protobuf:"varint,4,opt,name=response,proto3" json:"response,omitempty"` // 1=接受 2=拒绝 3=待定
-	Reason        string                 `protobuf:"bytes,5,opt,name=reason,proto3" json:"reason,omitempty"`
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,6,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	Nickname      string                 `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname"`
+	Response      int32                  `protobuf:"varint,4,opt,name=response,proto3" json:"response"` // 1=接受 2=拒绝 3=待定
+	Reason        string                 `protobuf:"bytes,5,opt,name=reason,proto3" json:"reason"`
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,6,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3212,10 +3236,10 @@ func (x *InvitationRespondedTips) GetOpUser() *sdkws.UserInfo {
 // InvitationCancelledTips 邀请取消通知
 type InvitationCancelledTips struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID        string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	CancelledUserIDs []string               `protobuf:"bytes,2,rep,name=cancelledUserIDs,proto3" json:"cancelledUserIDs,omitempty"`
-	Reason           string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
-	OpUser           *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	MeetingID        string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	CancelledUserIDs []string               `protobuf:"bytes,2,rep,name=cancelledUserIDs,proto3" json:"cancelledUserIDs"`
+	Reason           string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason"`
+	OpUser           *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -3281,10 +3305,10 @@ func (x *InvitationCancelledTips) GetOpUser() *sdkws.UserInfo {
 // MeetingParticipantChangedTips 参会者变更通知
 type MeetingParticipantChangedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	Participant   *MeetingParticipant    `protobuf:"bytes,2,opt,name=participant,proto3" json:"participant,omitempty"`
-	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"` // joined/left/kicked/role_changed
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Participant   *MeetingParticipant    `protobuf:"bytes,2,opt,name=participant,proto3" json:"participant"`
+	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action"` // joined/left/kicked/role_changed
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3350,10 +3374,10 @@ func (x *MeetingParticipantChangedTips) GetOpUser() *sdkws.UserInfo {
 // MeetingStatusChangedTips 会议状态变更通知
 type MeetingStatusChangedTips struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID,omitempty"`
-	OldStatus     string                 `protobuf:"bytes,2,opt,name=oldStatus,proto3" json:"oldStatus,omitempty"`
-	NewStatus     string                 `protobuf:"bytes,3,opt,name=newStatus,proto3" json:"newStatus,omitempty"`
-	OpUser        *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser,omitempty"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	OldStatus     string                 `protobuf:"bytes,2,opt,name=oldStatus,proto3" json:"oldStatus"`
+	NewStatus     string                 `protobuf:"bytes,3,opt,name=newStatus,proto3" json:"newStatus"`
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,4,opt,name=opUser,proto3" json:"opUser"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3419,8 +3443,8 @@ func (x *MeetingStatusChangedTips) GetOpUser() *sdkws.UserInfo {
 // MeetingReminderTips 会议提醒通知
 type MeetingReminderTips struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Meeting         *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting,omitempty"`
-	ReminderMinutes int32                  `protobuf:"varint,2,opt,name=reminderMinutes,proto3" json:"reminderMinutes,omitempty"`
+	Meeting         *MeetingInfo           `protobuf:"bytes,1,opt,name=meeting,proto3" json:"meeting"`
+	ReminderMinutes int32                  `protobuf:"varint,2,opt,name=reminderMinutes,proto3" json:"reminderMinutes"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -3493,7 +3517,7 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\aendDate\x18\x03 \x01(\x03R\aendDate\x12\x1e\n" +
 	"\n" +
 	"daysOfWeek\x18\x04 \x03(\x05R\n" +
-	"daysOfWeek\"\xe3\x06\n" +
+	"daysOfWeek\"\xc9\a\n" +
 	"\vMeetingInfo\x12\x1c\n" +
 	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12$\n" +
 	"\rmeetingNumber\x18\x02 \x01(\tR\rmeetingNumber\x12\x14\n" +
@@ -3526,7 +3550,9 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\x10participantCount\x18\x16 \x01(\x05R\x10participantCount\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x17 \x01(\x05R\n" +
-	"visibility\"\xf2\x02\n" +
+	"visibility\x122\n" +
+	"\x14participantNicknames\x18\x18 \x03(\tR\x14participantNicknames\x120\n" +
+	"\x13participantFaceURLs\x18\x19 \x03(\tR\x13participantFaceURLs\"\xf2\x02\n" +
 	"\x12MeetingParticipant\x12\x1c\n" +
 	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x1a\n" +
