@@ -43,6 +43,7 @@ const (
 	Schedule_JoinSchedule_FullMethodName                   = "/openim.schedule.Schedule/JoinSchedule"
 	Schedule_SetReminder_FullMethodName                    = "/openim.schedule.Schedule/SetReminder"
 	Schedule_CheckConflict_FullMethodName                  = "/openim.schedule.Schedule/CheckConflict"
+	Schedule_CompareSchedules_FullMethodName               = "/openim.schedule.Schedule/CompareSchedules"
 	Schedule_GetScheduleDates_FullMethodName               = "/openim.schedule.Schedule/GetScheduleDates"
 	Schedule_GetScheduleMonthView_FullMethodName           = "/openim.schedule.Schedule/GetScheduleMonthView"
 	Schedule_CreateScheduleMessage_FullMethodName          = "/openim.schedule.Schedule/CreateScheduleMessage"
@@ -82,6 +83,8 @@ type ScheduleClient interface {
 	SetReminder(ctx context.Context, in *SetReminderReq, opts ...grpc.CallOption) (*SetReminderResp, error)
 	// 查询日程冲突
 	CheckConflict(ctx context.Context, in *CheckConflictReq, opts ...grpc.CallOption) (*CheckConflictResp, error)
+	// 对比日程（对比自己和指定用户的忙碌时间）
+	CompareSchedules(ctx context.Context, in *CompareSchedulesReq, opts ...grpc.CallOption) (*CompareSchedulesResp, error)
 	// 查询某个月有参与日程的日期列表（用于日历标记）
 	GetScheduleDates(ctx context.Context, in *GetScheduleDatesReq, opts ...grpc.CallOption) (*GetScheduleDatesResp, error)
 	// 查询某个月每天的所有日程（月历视图）
@@ -208,6 +211,16 @@ func (c *scheduleClient) CheckConflict(ctx context.Context, in *CheckConflictReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CheckConflictResp)
 	err := c.cc.Invoke(ctx, Schedule_CheckConflict_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleClient) CompareSchedules(ctx context.Context, in *CompareSchedulesReq, opts ...grpc.CallOption) (*CompareSchedulesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompareSchedulesResp)
+	err := c.cc.Invoke(ctx, Schedule_CompareSchedules_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -350,6 +363,8 @@ type ScheduleServer interface {
 	SetReminder(context.Context, *SetReminderReq) (*SetReminderResp, error)
 	// 查询日程冲突
 	CheckConflict(context.Context, *CheckConflictReq) (*CheckConflictResp, error)
+	// 对比日程（对比自己和指定用户的忙碌时间）
+	CompareSchedules(context.Context, *CompareSchedulesReq) (*CompareSchedulesResp, error)
 	// 查询某个月有参与日程的日期列表（用于日历标记）
 	GetScheduleDates(context.Context, *GetScheduleDatesReq) (*GetScheduleDatesResp, error)
 	// 查询某个月每天的所有日程（月历视图）
@@ -411,6 +426,9 @@ func (UnimplementedScheduleServer) SetReminder(context.Context, *SetReminderReq)
 }
 func (UnimplementedScheduleServer) CheckConflict(context.Context, *CheckConflictReq) (*CheckConflictResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CheckConflict not implemented")
+}
+func (UnimplementedScheduleServer) CompareSchedules(context.Context, *CompareSchedulesReq) (*CompareSchedulesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompareSchedules not implemented")
 }
 func (UnimplementedScheduleServer) GetScheduleDates(context.Context, *GetScheduleDatesReq) (*GetScheduleDatesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetScheduleDates not implemented")
@@ -642,6 +660,24 @@ func _Schedule_CheckConflict_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ScheduleServer).CheckConflict(ctx, req.(*CheckConflictReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Schedule_CompareSchedules_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompareSchedulesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).CompareSchedules(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_CompareSchedules_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).CompareSchedules(ctx, req.(*CompareSchedulesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -890,6 +926,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckConflict",
 			Handler:    _Schedule_CheckConflict_Handler,
+		},
+		{
+			MethodName: "CompareSchedules",
+			Handler:    _Schedule_CompareSchedules_Handler,
 		},
 		{
 			MethodName: "GetScheduleDates",

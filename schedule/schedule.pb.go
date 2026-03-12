@@ -296,6 +296,112 @@ func (WatermarkType) EnumDescriptor() ([]byte, []int) {
 	return file_schedule_schedule_proto_rawDescGZIP(), []int{4}
 }
 
+// UpdateScope 修改范围枚举（用于重复日程）
+type UpdateScope int32
+
+const (
+	UpdateScope_UPDATE_SCOPE_UNSPECIFIED        UpdateScope = 0 // 未指定（默认：仅修改此日程，如果无重复规则则修改全部）
+	UpdateScope_UPDATE_SCOPE_THIS_ONLY          UpdateScope = 1 // 仅修改此日程
+	UpdateScope_UPDATE_SCOPE_THIS_AND_FOLLOWING UpdateScope = 2 // 修改此日程及后续日程
+	UpdateScope_UPDATE_SCOPE_ALL                UpdateScope = 3 // 修改所有日程（包括已过去的）
+)
+
+// Enum value maps for UpdateScope.
+var (
+	UpdateScope_name = map[int32]string{
+		0: "UPDATE_SCOPE_UNSPECIFIED",
+		1: "UPDATE_SCOPE_THIS_ONLY",
+		2: "UPDATE_SCOPE_THIS_AND_FOLLOWING",
+		3: "UPDATE_SCOPE_ALL",
+	}
+	UpdateScope_value = map[string]int32{
+		"UPDATE_SCOPE_UNSPECIFIED":        0,
+		"UPDATE_SCOPE_THIS_ONLY":          1,
+		"UPDATE_SCOPE_THIS_AND_FOLLOWING": 2,
+		"UPDATE_SCOPE_ALL":                3,
+	}
+)
+
+func (x UpdateScope) Enum() *UpdateScope {
+	p := new(UpdateScope)
+	*p = x
+	return p
+}
+
+func (x UpdateScope) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UpdateScope) Descriptor() protoreflect.EnumDescriptor {
+	return file_schedule_schedule_proto_enumTypes[5].Descriptor()
+}
+
+func (UpdateScope) Type() protoreflect.EnumType {
+	return &file_schedule_schedule_proto_enumTypes[5]
+}
+
+func (x UpdateScope) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UpdateScope.Descriptor instead.
+func (UpdateScope) EnumDescriptor() ([]byte, []int) {
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{5}
+}
+
+// DeleteScope 删除范围枚举（用于重复日程）
+type DeleteScope int32
+
+const (
+	DeleteScope_DELETE_SCOPE_UNSPECIFIED        DeleteScope = 0 // 未指定（默认：删除所有日程）
+	DeleteScope_DELETE_SCOPE_THIS_ONLY          DeleteScope = 1 // 仅删除此日程
+	DeleteScope_DELETE_SCOPE_THIS_AND_FOLLOWING DeleteScope = 2 // 删除此日程及后续日程
+	DeleteScope_DELETE_SCOPE_ALL                DeleteScope = 3 // 删除所有日程（包括已过去的）
+)
+
+// Enum value maps for DeleteScope.
+var (
+	DeleteScope_name = map[int32]string{
+		0: "DELETE_SCOPE_UNSPECIFIED",
+		1: "DELETE_SCOPE_THIS_ONLY",
+		2: "DELETE_SCOPE_THIS_AND_FOLLOWING",
+		3: "DELETE_SCOPE_ALL",
+	}
+	DeleteScope_value = map[string]int32{
+		"DELETE_SCOPE_UNSPECIFIED":        0,
+		"DELETE_SCOPE_THIS_ONLY":          1,
+		"DELETE_SCOPE_THIS_AND_FOLLOWING": 2,
+		"DELETE_SCOPE_ALL":                3,
+	}
+)
+
+func (x DeleteScope) Enum() *DeleteScope {
+	p := new(DeleteScope)
+	*p = x
+	return p
+}
+
+func (x DeleteScope) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DeleteScope) Descriptor() protoreflect.EnumDescriptor {
+	return file_schedule_schedule_proto_enumTypes[6].Descriptor()
+}
+
+func (DeleteScope) Type() protoreflect.EnumType {
+	return &file_schedule_schedule_proto_enumTypes[6]
+}
+
+func (x DeleteScope) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DeleteScope.Descriptor instead.
+func (DeleteScope) EnumDescriptor() ([]byte, []int) {
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{6}
+}
+
 // ScheduleRepeatInfo 重复规则
 type ScheduleRepeatInfo struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
@@ -1366,26 +1472,27 @@ type UpdateScheduleReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleID       string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
 	OperatorUserID   string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID"`
-	Title            *string                `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title"`                        // 日程标题（可选）
-	StartTime        *int64                 `protobuf:"varint,4,opt,name=startTime,proto3,oneof" json:"startTime"`               // 开始时间（时间戳，可选）
-	EndTime          *int64                 `protobuf:"varint,5,opt,name=endTime,proto3,oneof" json:"endTime"`                   // 结束时间（时间戳，可选）
-	Location         *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location"`                  // 地点（可选）
-	RoomID           *string                `protobuf:"bytes,7,opt,name=roomID,proto3,oneof" json:"roomID"`                      // 会议室ID（可选）
-	Description      *string                `protobuf:"bytes,8,opt,name=description,proto3,oneof" json:"description"`            // 描述/备注（可选）
-	TimeZone         *string                `protobuf:"bytes,9,opt,name=timeZone,proto3,oneof" json:"timeZone"`                  // 时区（可选）
-	Visibility       *int32                 `protobuf:"varint,10,opt,name=visibility,proto3,oneof" json:"visibility"`            // 可见性：1=个人 2=团队 3=公开（可选）
-	AllDay           *bool                  `protobuf:"varint,11,opt,name=allDay,proto3,oneof" json:"allDay"`                    // 是否全天（可选）
-	AttachmentURLs   []string               `protobuf:"bytes,12,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`           // 附件URL列表（可选，传空数组表示清空）
-	ScheduleGroupID  *string                `protobuf:"bytes,13,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID"`   // 所属日程分组ID（可选）
-	AllowMemberJoin  *bool                  `protobuf:"varint,14,opt,name=allowMemberJoin,proto3,oneof" json:"allowMemberJoin"`  // 允许成员主动加入（可选）
-	NotifyByEmail    *bool                  `protobuf:"varint,15,opt,name=notifyByEmail,proto3,oneof" json:"notifyByEmail"`      // 同时通过邮件通知参与人（可选）
-	MeetingMinutesID *string                `protobuf:"bytes,19,opt,name=meetingMinutesID,proto3,oneof" json:"meetingMinutesID"` // 会议纪要文档ID（可选）
-	RepeatInfo       *ScheduleRepeatInfo    `protobuf:"bytes,16,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo"`             // 重复规则（可选）
-	AttendeeUserIDs  []string               `protobuf:"bytes,17,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs"`         // 更新参与者列表（可选，传空数组表示清空）
-	Reminders        []int32                `protobuf:"varint,18,rep,packed,name=reminders,proto3" json:"reminders"`             // 更新提醒类型列表（可选，传空数组表示清空，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
-	Type             *int32                 `protobuf:"varint,20,opt,name=type,proto3,oneof" json:"type"`                        // 日程类型：0=日程 1=会议（可选）
-	MeetingSettings  *MeetingSettings       `protobuf:"bytes,21,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings"`   // 会议设置（可选，仅当type为MEETING时有效）
-	IsTemporary      *bool                  `protobuf:"varint,22,opt,name=isTemporary,proto3,oneof" json:"isTemporary"`          // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
+	Title            *string                `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title"`                                                // 日程标题（可选）
+	StartTime        *int64                 `protobuf:"varint,4,opt,name=startTime,proto3,oneof" json:"startTime"`                                       // 开始时间（时间戳，可选）
+	EndTime          *int64                 `protobuf:"varint,5,opt,name=endTime,proto3,oneof" json:"endTime"`                                           // 结束时间（时间戳，可选）
+	Location         *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location"`                                          // 地点（可选）
+	RoomID           *string                `protobuf:"bytes,7,opt,name=roomID,proto3,oneof" json:"roomID"`                                              // 会议室ID（可选）
+	Description      *string                `protobuf:"bytes,8,opt,name=description,proto3,oneof" json:"description"`                                    // 描述/备注（可选）
+	TimeZone         *string                `protobuf:"bytes,9,opt,name=timeZone,proto3,oneof" json:"timeZone"`                                          // 时区（可选）
+	Visibility       *int32                 `protobuf:"varint,10,opt,name=visibility,proto3,oneof" json:"visibility"`                                    // 可见性：1=个人 2=团队 3=公开（可选）
+	AllDay           *bool                  `protobuf:"varint,11,opt,name=allDay,proto3,oneof" json:"allDay"`                                            // 是否全天（可选）
+	AttachmentURLs   []string               `protobuf:"bytes,12,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`                                   // 附件URL列表（可选，传空数组表示清空）
+	ScheduleGroupID  *string                `protobuf:"bytes,13,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID"`                           // 所属日程分组ID（可选）
+	AllowMemberJoin  *bool                  `protobuf:"varint,14,opt,name=allowMemberJoin,proto3,oneof" json:"allowMemberJoin"`                          // 允许成员主动加入（可选）
+	NotifyByEmail    *bool                  `protobuf:"varint,15,opt,name=notifyByEmail,proto3,oneof" json:"notifyByEmail"`                              // 同时通过邮件通知参与人（可选）
+	MeetingMinutesID *string                `protobuf:"bytes,19,opt,name=meetingMinutesID,proto3,oneof" json:"meetingMinutesID"`                         // 会议纪要文档ID（可选）
+	RepeatInfo       *ScheduleRepeatInfo    `protobuf:"bytes,16,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo"`                                     // 重复规则（可选）
+	AttendeeUserIDs  []string               `protobuf:"bytes,17,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs"`                                 // 更新参与者列表（可选，传空数组表示清空）
+	Reminders        []int32                `protobuf:"varint,18,rep,packed,name=reminders,proto3" json:"reminders"`                                     // 更新提醒类型列表（可选，传空数组表示清空，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	Type             *int32                 `protobuf:"varint,20,opt,name=type,proto3,oneof" json:"type"`                                                // 日程类型：0=日程 1=会议（可选）
+	MeetingSettings  *MeetingSettings       `protobuf:"bytes,21,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings"`                           // 会议设置（可选，仅当type为MEETING时有效）
+	IsTemporary      *bool                  `protobuf:"varint,22,opt,name=isTemporary,proto3,oneof" json:"isTemporary"`                                  // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
+	UpdateScope      *UpdateScope           `protobuf:"varint,23,opt,name=updateScope,proto3,enum=openim.schedule.UpdateScope,oneof" json:"updateScope"` // 修改范围（可选，仅当日程有重复规则时有效）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1574,6 +1681,13 @@ func (x *UpdateScheduleReq) GetIsTemporary() bool {
 	return false
 }
 
+func (x *UpdateScheduleReq) GetUpdateScope() UpdateScope {
+	if x != nil && x.UpdateScope != nil {
+		return *x.UpdateScope
+	}
+	return UpdateScope_UPDATE_SCOPE_UNSPECIFIED
+}
+
 // UpdateScheduleResp 更新日程响应
 type UpdateScheduleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1624,6 +1738,7 @@ type DeleteScheduleReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleID     string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
 	OperatorUserID string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID"`
+	DeleteScope    *DeleteScope           `protobuf:"varint,3,opt,name=deleteScope,proto3,enum=openim.schedule.DeleteScope,oneof" json:"deleteScope"` // 删除范围（可选，仅当日程有重复规则时有效）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1670,6 +1785,13 @@ func (x *DeleteScheduleReq) GetOperatorUserID() string {
 		return x.OperatorUserID
 	}
 	return ""
+}
+
+func (x *DeleteScheduleReq) GetDeleteScope() DeleteScope {
+	if x != nil && x.DeleteScope != nil {
+		return *x.DeleteScope
+	}
+	return DeleteScope_DELETE_SCOPE_UNSPECIFIED
 }
 
 // DeleteScheduleResp 删除日程响应
@@ -2559,6 +2681,144 @@ func (x *CheckConflictResp) GetBusyByUserId() map[string]*BusySlotList {
 	return nil
 }
 
+// CompareSchedulesReq 对比日程请求（对比自己和指定用户的忙碌时间）
+type CompareSchedulesReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OtherUserID   string                 `protobuf:"bytes,1,opt,name=otherUserID,proto3" json:"otherUserID"` // 要对比的用户ID（必填）
+	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"`    // 查询开始（时间戳，秒，必填）
+	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`        // 查询结束（时间戳，秒，必须 > startTime，必填）
+	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompareSchedulesReq) Reset() {
+	*x = CompareSchedulesReq{}
+	mi := &file_schedule_schedule_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompareSchedulesReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompareSchedulesReq) ProtoMessage() {}
+
+func (x *CompareSchedulesReq) ProtoReflect() protoreflect.Message {
+	mi := &file_schedule_schedule_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompareSchedulesReq.ProtoReflect.Descriptor instead.
+func (*CompareSchedulesReq) Descriptor() ([]byte, []int) {
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *CompareSchedulesReq) GetOtherUserID() string {
+	if x != nil {
+		return x.OtherUserID
+	}
+	return ""
+}
+
+func (x *CompareSchedulesReq) GetStartTime() int64 {
+	if x != nil {
+		return x.StartTime
+	}
+	return 0
+}
+
+func (x *CompareSchedulesReq) GetEndTime() int64 {
+	if x != nil {
+		return x.EndTime
+	}
+	return 0
+}
+
+func (x *CompareSchedulesReq) GetScheduleIDs() []string {
+	if x != nil {
+		return x.ScheduleIDs
+	}
+	return nil
+}
+
+// CompareSchedulesResp 对比日程响应
+type CompareSchedulesResp struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"myUserID"`                                                                                   // 自己的用户ID
+	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"otherUserID"`                                                                             // 对比的用户ID
+	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompareSchedulesResp) Reset() {
+	*x = CompareSchedulesResp{}
+	mi := &file_schedule_schedule_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompareSchedulesResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompareSchedulesResp) ProtoMessage() {}
+
+func (x *CompareSchedulesResp) ProtoReflect() protoreflect.Message {
+	mi := &file_schedule_schedule_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompareSchedulesResp.ProtoReflect.Descriptor instead.
+func (*CompareSchedulesResp) Descriptor() ([]byte, []int) {
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *CompareSchedulesResp) GetMyUserID() string {
+	if x != nil {
+		return x.MyUserID
+	}
+	return ""
+}
+
+func (x *CompareSchedulesResp) GetOtherUserID() string {
+	if x != nil {
+		return x.OtherUserID
+	}
+	return ""
+}
+
+func (x *CompareSchedulesResp) GetBusyUserIDs() []string {
+	if x != nil {
+		return x.BusyUserIDs
+	}
+	return nil
+}
+
+func (x *CompareSchedulesResp) GetBusyByUserId() map[string]*BusySlotList {
+	if x != nil {
+		return x.BusyByUserId
+	}
+	return nil
+}
+
 // GetScheduleDatesReq 查询某个月有参与日程的日期列表请求
 type GetScheduleDatesReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
@@ -2572,7 +2832,7 @@ type GetScheduleDatesReq struct {
 
 func (x *GetScheduleDatesReq) Reset() {
 	*x = GetScheduleDatesReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[29]
+	mi := &file_schedule_schedule_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2584,7 +2844,7 @@ func (x *GetScheduleDatesReq) String() string {
 func (*GetScheduleDatesReq) ProtoMessage() {}
 
 func (x *GetScheduleDatesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[29]
+	mi := &file_schedule_schedule_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2597,7 +2857,7 @@ func (x *GetScheduleDatesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleDatesReq.ProtoReflect.Descriptor instead.
 func (*GetScheduleDatesReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{29}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GetScheduleDatesReq) GetUserID() string {
@@ -2638,7 +2898,7 @@ type GetScheduleDatesResp struct {
 
 func (x *GetScheduleDatesResp) Reset() {
 	*x = GetScheduleDatesResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[30]
+	mi := &file_schedule_schedule_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2650,7 +2910,7 @@ func (x *GetScheduleDatesResp) String() string {
 func (*GetScheduleDatesResp) ProtoMessage() {}
 
 func (x *GetScheduleDatesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[30]
+	mi := &file_schedule_schedule_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2663,7 +2923,7 @@ func (x *GetScheduleDatesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleDatesResp.ProtoReflect.Descriptor instead.
 func (*GetScheduleDatesResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{30}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GetScheduleDatesResp) GetDates() []int32 {
@@ -2686,7 +2946,7 @@ type GetScheduleMonthViewReq struct {
 
 func (x *GetScheduleMonthViewReq) Reset() {
 	*x = GetScheduleMonthViewReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[31]
+	mi := &file_schedule_schedule_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2698,7 +2958,7 @@ func (x *GetScheduleMonthViewReq) String() string {
 func (*GetScheduleMonthViewReq) ProtoMessage() {}
 
 func (x *GetScheduleMonthViewReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[31]
+	mi := &file_schedule_schedule_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2711,7 +2971,7 @@ func (x *GetScheduleMonthViewReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleMonthViewReq.ProtoReflect.Descriptor instead.
 func (*GetScheduleMonthViewReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{31}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetScheduleMonthViewReq) GetUserID() string {
@@ -2753,7 +3013,7 @@ type ScheduleDayInfo struct {
 
 func (x *ScheduleDayInfo) Reset() {
 	*x = ScheduleDayInfo{}
-	mi := &file_schedule_schedule_proto_msgTypes[32]
+	mi := &file_schedule_schedule_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2765,7 +3025,7 @@ func (x *ScheduleDayInfo) String() string {
 func (*ScheduleDayInfo) ProtoMessage() {}
 
 func (x *ScheduleDayInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[32]
+	mi := &file_schedule_schedule_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2778,7 +3038,7 @@ func (x *ScheduleDayInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleDayInfo.ProtoReflect.Descriptor instead.
 func (*ScheduleDayInfo) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{32}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ScheduleDayInfo) GetDay() int32 {
@@ -2805,7 +3065,7 @@ type GetScheduleMonthViewResp struct {
 
 func (x *GetScheduleMonthViewResp) Reset() {
 	*x = GetScheduleMonthViewResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[33]
+	mi := &file_schedule_schedule_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2817,7 +3077,7 @@ func (x *GetScheduleMonthViewResp) String() string {
 func (*GetScheduleMonthViewResp) ProtoMessage() {}
 
 func (x *GetScheduleMonthViewResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[33]
+	mi := &file_schedule_schedule_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2830,7 +3090,7 @@ func (x *GetScheduleMonthViewResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleMonthViewResp.ProtoReflect.Descriptor instead.
 func (*GetScheduleMonthViewResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{33}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetScheduleMonthViewResp) GetDays() []*ScheduleDayInfo {
@@ -2860,7 +3120,7 @@ type ScheduleGroup struct {
 
 func (x *ScheduleGroup) Reset() {
 	*x = ScheduleGroup{}
-	mi := &file_schedule_schedule_proto_msgTypes[34]
+	mi := &file_schedule_schedule_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2872,7 +3132,7 @@ func (x *ScheduleGroup) String() string {
 func (*ScheduleGroup) ProtoMessage() {}
 
 func (x *ScheduleGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[34]
+	mi := &file_schedule_schedule_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2885,7 +3145,7 @@ func (x *ScheduleGroup) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleGroup.ProtoReflect.Descriptor instead.
 func (*ScheduleGroup) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{34}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ScheduleGroup) GetGroupID() string {
@@ -2978,7 +3238,7 @@ type GroupShareInfo struct {
 
 func (x *GroupShareInfo) Reset() {
 	*x = GroupShareInfo{}
-	mi := &file_schedule_schedule_proto_msgTypes[35]
+	mi := &file_schedule_schedule_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2990,7 +3250,7 @@ func (x *GroupShareInfo) String() string {
 func (*GroupShareInfo) ProtoMessage() {}
 
 func (x *GroupShareInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[35]
+	mi := &file_schedule_schedule_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3003,7 +3263,7 @@ func (x *GroupShareInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupShareInfo.ProtoReflect.Descriptor instead.
 func (*GroupShareInfo) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{35}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GroupShareInfo) GetUserID() string {
@@ -3044,7 +3304,7 @@ type InitScheduleGroupsReq struct {
 
 func (x *InitScheduleGroupsReq) Reset() {
 	*x = InitScheduleGroupsReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[36]
+	mi := &file_schedule_schedule_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3056,7 +3316,7 @@ func (x *InitScheduleGroupsReq) String() string {
 func (*InitScheduleGroupsReq) ProtoMessage() {}
 
 func (x *InitScheduleGroupsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[36]
+	mi := &file_schedule_schedule_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3069,7 +3329,7 @@ func (x *InitScheduleGroupsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InitScheduleGroupsReq.ProtoReflect.Descriptor instead.
 func (*InitScheduleGroupsReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{36}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *InitScheduleGroupsReq) GetOwnerUserID() string {
@@ -3088,7 +3348,7 @@ type InitScheduleGroupsResp struct {
 
 func (x *InitScheduleGroupsResp) Reset() {
 	*x = InitScheduleGroupsResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[37]
+	mi := &file_schedule_schedule_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3100,7 +3360,7 @@ func (x *InitScheduleGroupsResp) String() string {
 func (*InitScheduleGroupsResp) ProtoMessage() {}
 
 func (x *InitScheduleGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[37]
+	mi := &file_schedule_schedule_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3113,7 +3373,7 @@ func (x *InitScheduleGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InitScheduleGroupsResp.ProtoReflect.Descriptor instead.
 func (*InitScheduleGroupsResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{37}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{39}
 }
 
 // GetAllScheduleGroupsReq 获取所有日程分组请求
@@ -3126,7 +3386,7 @@ type GetAllScheduleGroupsReq struct {
 
 func (x *GetAllScheduleGroupsReq) Reset() {
 	*x = GetAllScheduleGroupsReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[38]
+	mi := &file_schedule_schedule_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3138,7 +3398,7 @@ func (x *GetAllScheduleGroupsReq) String() string {
 func (*GetAllScheduleGroupsReq) ProtoMessage() {}
 
 func (x *GetAllScheduleGroupsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[38]
+	mi := &file_schedule_schedule_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3151,7 +3411,7 @@ func (x *GetAllScheduleGroupsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllScheduleGroupsReq.ProtoReflect.Descriptor instead.
 func (*GetAllScheduleGroupsReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{38}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetAllScheduleGroupsReq) GetOwnerUserID() string {
@@ -3172,7 +3432,7 @@ type GetAllScheduleGroupsResp struct {
 
 func (x *GetAllScheduleGroupsResp) Reset() {
 	*x = GetAllScheduleGroupsResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[39]
+	mi := &file_schedule_schedule_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3184,7 +3444,7 @@ func (x *GetAllScheduleGroupsResp) String() string {
 func (*GetAllScheduleGroupsResp) ProtoMessage() {}
 
 func (x *GetAllScheduleGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[39]
+	mi := &file_schedule_schedule_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3197,7 +3457,7 @@ func (x *GetAllScheduleGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllScheduleGroupsResp.ProtoReflect.Descriptor instead.
 func (*GetAllScheduleGroupsResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{39}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetAllScheduleGroupsResp) GetMyGroups() []*ScheduleGroup {
@@ -3230,7 +3490,7 @@ type CreateScheduleGroupReq struct {
 
 func (x *CreateScheduleGroupReq) Reset() {
 	*x = CreateScheduleGroupReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[40]
+	mi := &file_schedule_schedule_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3242,7 +3502,7 @@ func (x *CreateScheduleGroupReq) String() string {
 func (*CreateScheduleGroupReq) ProtoMessage() {}
 
 func (x *CreateScheduleGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[40]
+	mi := &file_schedule_schedule_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3255,7 +3515,7 @@ func (x *CreateScheduleGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateScheduleGroupReq.ProtoReflect.Descriptor instead.
 func (*CreateScheduleGroupReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{40}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *CreateScheduleGroupReq) GetOwnerUserID() string {
@@ -3317,7 +3577,7 @@ type CreateScheduleGroupResp struct {
 
 func (x *CreateScheduleGroupResp) Reset() {
 	*x = CreateScheduleGroupResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[41]
+	mi := &file_schedule_schedule_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3329,7 +3589,7 @@ func (x *CreateScheduleGroupResp) String() string {
 func (*CreateScheduleGroupResp) ProtoMessage() {}
 
 func (x *CreateScheduleGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[41]
+	mi := &file_schedule_schedule_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3342,7 +3602,7 @@ func (x *CreateScheduleGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateScheduleGroupResp.ProtoReflect.Descriptor instead.
 func (*CreateScheduleGroupResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{41}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *CreateScheduleGroupResp) GetGroup() *ScheduleGroup {
@@ -3367,7 +3627,7 @@ type UpdateScheduleGroupReq struct {
 
 func (x *UpdateScheduleGroupReq) Reset() {
 	*x = UpdateScheduleGroupReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[42]
+	mi := &file_schedule_schedule_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3379,7 +3639,7 @@ func (x *UpdateScheduleGroupReq) String() string {
 func (*UpdateScheduleGroupReq) ProtoMessage() {}
 
 func (x *UpdateScheduleGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[42]
+	mi := &file_schedule_schedule_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3392,7 +3652,7 @@ func (x *UpdateScheduleGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateScheduleGroupReq.ProtoReflect.Descriptor instead.
 func (*UpdateScheduleGroupReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{42}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *UpdateScheduleGroupReq) GetGroupID() string {
@@ -3446,7 +3706,7 @@ type UpdateScheduleGroupResp struct {
 
 func (x *UpdateScheduleGroupResp) Reset() {
 	*x = UpdateScheduleGroupResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[43]
+	mi := &file_schedule_schedule_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3458,7 +3718,7 @@ func (x *UpdateScheduleGroupResp) String() string {
 func (*UpdateScheduleGroupResp) ProtoMessage() {}
 
 func (x *UpdateScheduleGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[43]
+	mi := &file_schedule_schedule_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3471,7 +3731,7 @@ func (x *UpdateScheduleGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateScheduleGroupResp.ProtoReflect.Descriptor instead.
 func (*UpdateScheduleGroupResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{43}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{45}
 }
 
 // DeleteScheduleGroupReq 删除日程分组请求
@@ -3484,7 +3744,7 @@ type DeleteScheduleGroupReq struct {
 
 func (x *DeleteScheduleGroupReq) Reset() {
 	*x = DeleteScheduleGroupReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[44]
+	mi := &file_schedule_schedule_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3496,7 +3756,7 @@ func (x *DeleteScheduleGroupReq) String() string {
 func (*DeleteScheduleGroupReq) ProtoMessage() {}
 
 func (x *DeleteScheduleGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[44]
+	mi := &file_schedule_schedule_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3509,7 +3769,7 @@ func (x *DeleteScheduleGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteScheduleGroupReq.ProtoReflect.Descriptor instead.
 func (*DeleteScheduleGroupReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{44}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *DeleteScheduleGroupReq) GetGroupID() string {
@@ -3528,7 +3788,7 @@ type DeleteScheduleGroupResp struct {
 
 func (x *DeleteScheduleGroupResp) Reset() {
 	*x = DeleteScheduleGroupResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[45]
+	mi := &file_schedule_schedule_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3540,7 +3800,7 @@ func (x *DeleteScheduleGroupResp) String() string {
 func (*DeleteScheduleGroupResp) ProtoMessage() {}
 
 func (x *DeleteScheduleGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[45]
+	mi := &file_schedule_schedule_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3553,7 +3813,7 @@ func (x *DeleteScheduleGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteScheduleGroupResp.ProtoReflect.Descriptor instead.
 func (*DeleteScheduleGroupResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{45}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{47}
 }
 
 // QuitScheduleGroupReq 退出日程分组请求（被共享的用户主动退出）
@@ -3566,7 +3826,7 @@ type QuitScheduleGroupReq struct {
 
 func (x *QuitScheduleGroupReq) Reset() {
 	*x = QuitScheduleGroupReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[46]
+	mi := &file_schedule_schedule_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3578,7 +3838,7 @@ func (x *QuitScheduleGroupReq) String() string {
 func (*QuitScheduleGroupReq) ProtoMessage() {}
 
 func (x *QuitScheduleGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[46]
+	mi := &file_schedule_schedule_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3591,7 +3851,7 @@ func (x *QuitScheduleGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QuitScheduleGroupReq.ProtoReflect.Descriptor instead.
 func (*QuitScheduleGroupReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{46}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *QuitScheduleGroupReq) GetGroupID() string {
@@ -3610,7 +3870,7 @@ type QuitScheduleGroupResp struct {
 
 func (x *QuitScheduleGroupResp) Reset() {
 	*x = QuitScheduleGroupResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[47]
+	mi := &file_schedule_schedule_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3622,7 +3882,7 @@ func (x *QuitScheduleGroupResp) String() string {
 func (*QuitScheduleGroupResp) ProtoMessage() {}
 
 func (x *QuitScheduleGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[47]
+	mi := &file_schedule_schedule_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3635,7 +3895,7 @@ func (x *QuitScheduleGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QuitScheduleGroupResp.ProtoReflect.Descriptor instead.
 func (*QuitScheduleGroupResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{47}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{49}
 }
 
 // GetScheduleGroupDetailReq 获取日程分组详情请求
@@ -3648,7 +3908,7 @@ type GetScheduleGroupDetailReq struct {
 
 func (x *GetScheduleGroupDetailReq) Reset() {
 	*x = GetScheduleGroupDetailReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[48]
+	mi := &file_schedule_schedule_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3660,7 +3920,7 @@ func (x *GetScheduleGroupDetailReq) String() string {
 func (*GetScheduleGroupDetailReq) ProtoMessage() {}
 
 func (x *GetScheduleGroupDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[48]
+	mi := &file_schedule_schedule_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3673,7 +3933,7 @@ func (x *GetScheduleGroupDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleGroupDetailReq.ProtoReflect.Descriptor instead.
 func (*GetScheduleGroupDetailReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{48}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *GetScheduleGroupDetailReq) GetScheduleGroupID() string {
@@ -3693,7 +3953,7 @@ type GetScheduleGroupDetailResp struct {
 
 func (x *GetScheduleGroupDetailResp) Reset() {
 	*x = GetScheduleGroupDetailResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[49]
+	mi := &file_schedule_schedule_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3705,7 +3965,7 @@ func (x *GetScheduleGroupDetailResp) String() string {
 func (*GetScheduleGroupDetailResp) ProtoMessage() {}
 
 func (x *GetScheduleGroupDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[49]
+	mi := &file_schedule_schedule_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3718,7 +3978,7 @@ func (x *GetScheduleGroupDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetScheduleGroupDetailResp.ProtoReflect.Descriptor instead.
 func (*GetScheduleGroupDetailResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{49}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GetScheduleGroupDetailResp) GetGroup() *ScheduleGroup {
@@ -3738,7 +3998,7 @@ type SendScheduleNotificationsByIDsReq struct {
 
 func (x *SendScheduleNotificationsByIDsReq) Reset() {
 	*x = SendScheduleNotificationsByIDsReq{}
-	mi := &file_schedule_schedule_proto_msgTypes[50]
+	mi := &file_schedule_schedule_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3750,7 +4010,7 @@ func (x *SendScheduleNotificationsByIDsReq) String() string {
 func (*SendScheduleNotificationsByIDsReq) ProtoMessage() {}
 
 func (x *SendScheduleNotificationsByIDsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[50]
+	mi := &file_schedule_schedule_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3763,7 +4023,7 @@ func (x *SendScheduleNotificationsByIDsReq) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use SendScheduleNotificationsByIDsReq.ProtoReflect.Descriptor instead.
 func (*SendScheduleNotificationsByIDsReq) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{50}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *SendScheduleNotificationsByIDsReq) GetScheduleIDs() []string {
@@ -3785,7 +4045,7 @@ type SendScheduleNotificationsByIDsResp struct {
 
 func (x *SendScheduleNotificationsByIDsResp) Reset() {
 	*x = SendScheduleNotificationsByIDsResp{}
-	mi := &file_schedule_schedule_proto_msgTypes[51]
+	mi := &file_schedule_schedule_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3797,7 +4057,7 @@ func (x *SendScheduleNotificationsByIDsResp) String() string {
 func (*SendScheduleNotificationsByIDsResp) ProtoMessage() {}
 
 func (x *SendScheduleNotificationsByIDsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_schedule_schedule_proto_msgTypes[51]
+	mi := &file_schedule_schedule_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3810,7 +4070,7 @@ func (x *SendScheduleNotificationsByIDsResp) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use SendScheduleNotificationsByIDsResp.ProtoReflect.Descriptor instead.
 func (*SendScheduleNotificationsByIDsResp) Descriptor() ([]byte, []int) {
-	return file_schedule_schedule_proto_rawDescGZIP(), []int{51}
+	return file_schedule_schedule_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *SendScheduleNotificationsByIDsResp) GetSuccessCount() int32 {
@@ -3961,7 +4221,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\vserverMsgID\x18\x04 \x01(\tR\vserverMsgID\x12\x1a\n" +
 	"\btargetID\x18\x05 \x01(\tR\btargetID\"c\n" +
 	"\x19CreateScheduleMessageResp\x12F\n" +
-	"\aresults\x18\x01 \x03(\v2,.openim.schedule.CreateScheduleMessageResultR\aresults\"\x83\t\n" +
+	"\aresults\x18\x01 \x03(\v2,.openim.schedule.CreateScheduleMessageResultR\aresults\"\xd8\t\n" +
 	"\x11UpdateScheduleReq\x12\x1e\n" +
 	"\n" +
 	"scheduleID\x18\x01 \x01(\tR\n" +
@@ -3992,7 +4252,8 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\treminders\x18\x12 \x03(\x05R\treminders\x12\x17\n" +
 	"\x04type\x18\x14 \x01(\x05H\x0eR\x04type\x88\x01\x01\x12O\n" +
 	"\x0fmeetingSettings\x18\x15 \x01(\v2 .openim.schedule.MeetingSettingsH\x0fR\x0fmeetingSettings\x88\x01\x01\x12%\n" +
-	"\visTemporary\x18\x16 \x01(\bH\x10R\visTemporary\x88\x01\x01B\b\n" +
+	"\visTemporary\x18\x16 \x01(\bH\x10R\visTemporary\x88\x01\x01\x12C\n" +
+	"\vupdateScope\x18\x17 \x01(\x0e2\x1c.openim.schedule.UpdateScopeH\x11R\vupdateScope\x88\x01\x01B\b\n" +
 	"\x06_titleB\f\n" +
 	"\n" +
 	"_startTimeB\n" +
@@ -4011,14 +4272,17 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\v_repeatInfoB\a\n" +
 	"\x05_typeB\x12\n" +
 	"\x10_meetingSettingsB\x0e\n" +
-	"\f_isTemporary\"W\n" +
+	"\f_isTemporaryB\x0e\n" +
+	"\f_updateScope\"W\n" +
 	"\x12UpdateScheduleResp\x12A\n" +
-	"\fscheduleInfo\x18\x01 \x01(\v2\x1d.openim.schedule.ScheduleInfoR\fscheduleInfo\"[\n" +
+	"\fscheduleInfo\x18\x01 \x01(\v2\x1d.openim.schedule.ScheduleInfoR\fscheduleInfo\"\xb0\x01\n" +
 	"\x11DeleteScheduleReq\x12\x1e\n" +
 	"\n" +
 	"scheduleID\x18\x01 \x01(\tR\n" +
 	"scheduleID\x12&\n" +
-	"\x0eoperatorUserID\x18\x02 \x01(\tR\x0eoperatorUserID\"\x14\n" +
+	"\x0eoperatorUserID\x18\x02 \x01(\tR\x0eoperatorUserID\x12C\n" +
+	"\vdeleteScope\x18\x03 \x01(\x0e2\x1c.openim.schedule.DeleteScopeH\x00R\vdeleteScope\x88\x01\x01B\x0e\n" +
+	"\f_deleteScope\"\x14\n" +
 	"\x12DeleteScheduleResp\"H\n" +
 	"\x0eGetScheduleReq\x12\x1e\n" +
 	"\n" +
@@ -4080,6 +4344,19 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x11CheckConflictResp\x12 \n" +
 	"\vbusyUserIDs\x18\x01 \x03(\tR\vbusyUserIDs\x12X\n" +
 	"\fbusyByUserId\x18\x02 \x03(\v24.openim.schedule.CheckConflictResp.BusyByUserIdEntryR\fbusyByUserId\x1a^\n" +
+	"\x11BusyByUserIdEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x123\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.openim.schedule.BusySlotListR\x05value:\x028\x01\"\x91\x01\n" +
+	"\x13CompareSchedulesReq\x12 \n" +
+	"\votherUserID\x18\x01 \x01(\tR\votherUserID\x12\x1c\n" +
+	"\tstartTime\x18\x02 \x01(\x03R\tstartTime\x12\x18\n" +
+	"\aendTime\x18\x03 \x01(\x03R\aendTime\x12 \n" +
+	"\vscheduleIDs\x18\x04 \x03(\tR\vscheduleIDs\"\xb3\x02\n" +
+	"\x14CompareSchedulesResp\x12\x1a\n" +
+	"\bmyUserID\x18\x01 \x01(\tR\bmyUserID\x12 \n" +
+	"\votherUserID\x18\x02 \x01(\tR\votherUserID\x12 \n" +
+	"\vbusyUserIDs\x18\x03 \x03(\tR\vbusyUserIDs\x12[\n" +
+	"\fbusyByUserId\x18\x04 \x03(\v27.openim.schedule.CompareSchedulesResp.BusyByUserIdEntryR\fbusyByUserId\x1a^\n" +
 	"\x11BusyByUserIdEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x123\n" +
 	"\x05value\x18\x02 \x01(\v2\x1d.openim.schedule.BusySlotListR\x05value:\x028\x01\"\x83\x01\n" +
@@ -4197,7 +4474,17 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x19MUTE_ON_JOIN_AUTO_AFTER_6\x10\x02*B\n" +
 	"\rWatermarkType\x12\x18\n" +
 	"\x14WATERMARK_SINGLE_ROW\x10\x00\x12\x17\n" +
-	"\x13WATERMARK_MULTI_ROW\x10\x012\xaa\x10\n" +
+	"\x13WATERMARK_MULTI_ROW\x10\x01*\x82\x01\n" +
+	"\vUpdateScope\x12\x1c\n" +
+	"\x18UPDATE_SCOPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16UPDATE_SCOPE_THIS_ONLY\x10\x01\x12#\n" +
+	"\x1fUPDATE_SCOPE_THIS_AND_FOLLOWING\x10\x02\x12\x14\n" +
+	"\x10UPDATE_SCOPE_ALL\x10\x03*\x82\x01\n" +
+	"\vDeleteScope\x12\x1c\n" +
+	"\x18DELETE_SCOPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16DELETE_SCOPE_THIS_ONLY\x10\x01\x12#\n" +
+	"\x1fDELETE_SCOPE_THIS_AND_FOLLOWING\x10\x02\x12\x14\n" +
+	"\x10DELETE_SCOPE_ALL\x10\x032\x8b\x11\n" +
 	"\bSchedule\x12Y\n" +
 	"\x0eCreateSchedule\x12\".openim.schedule.CreateScheduleReq\x1a#.openim.schedule.CreateScheduleResp\x12Y\n" +
 	"\x0eUpdateSchedule\x12\".openim.schedule.UpdateScheduleReq\x1a#.openim.schedule.UpdateScheduleResp\x12Y\n" +
@@ -4209,6 +4496,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\fJoinSchedule\x12 .openim.schedule.JoinScheduleReq\x1a!.openim.schedule.JoinScheduleResp\x12P\n" +
 	"\vSetReminder\x12\x1f.openim.schedule.SetReminderReq\x1a .openim.schedule.SetReminderResp\x12V\n" +
 	"\rCheckConflict\x12!.openim.schedule.CheckConflictReq\x1a\".openim.schedule.CheckConflictResp\x12_\n" +
+	"\x10CompareSchedules\x12$.openim.schedule.CompareSchedulesReq\x1a%.openim.schedule.CompareSchedulesResp\x12_\n" +
 	"\x10GetScheduleDates\x12$.openim.schedule.GetScheduleDatesReq\x1a%.openim.schedule.GetScheduleDatesResp\x12k\n" +
 	"\x14GetScheduleMonthView\x12(.openim.schedule.GetScheduleMonthViewReq\x1a).openim.schedule.GetScheduleMonthViewResp\x12n\n" +
 	"\x15CreateScheduleMessage\x12).openim.schedule.CreateScheduleMessageReq\x1a*.openim.schedule.CreateScheduleMessageResp\x12e\n" +
@@ -4233,68 +4521,73 @@ func file_schedule_schedule_proto_rawDescGZIP() []byte {
 	return file_schedule_schedule_proto_rawDescData
 }
 
-var file_schedule_schedule_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_schedule_schedule_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
+var file_schedule_schedule_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
+var file_schedule_schedule_proto_msgTypes = make([]protoimpl.MessageInfo, 56)
 var file_schedule_schedule_proto_goTypes = []any{
 	(DayOfWeek)(0),                             // 0: openim.schedule.DayOfWeek
 	(ScheduleType)(0),                          // 1: openim.schedule.ScheduleType
 	(CallReminderType)(0),                      // 2: openim.schedule.CallReminderType
 	(MuteOnJoinType)(0),                        // 3: openim.schedule.MuteOnJoinType
 	(WatermarkType)(0),                         // 4: openim.schedule.WatermarkType
-	(*ScheduleRepeatInfo)(nil),                 // 5: openim.schedule.ScheduleRepeatInfo
-	(*ScheduleAttendeeInfo)(nil),               // 6: openim.schedule.ScheduleAttendeeInfo
-	(*MeetingSettings)(nil),                    // 7: openim.schedule.MeetingSettings
-	(*ScheduleInfo)(nil),                       // 8: openim.schedule.ScheduleInfo
-	(*CreateScheduleReq)(nil),                  // 9: openim.schedule.CreateScheduleReq
-	(*CreateScheduleResp)(nil),                 // 10: openim.schedule.CreateScheduleResp
-	(*CreateScheduleMessageReq)(nil),           // 11: openim.schedule.CreateScheduleMessageReq
-	(*CreateScheduleMessageResult)(nil),        // 12: openim.schedule.CreateScheduleMessageResult
-	(*CreateScheduleMessageResp)(nil),          // 13: openim.schedule.CreateScheduleMessageResp
-	(*UpdateScheduleReq)(nil),                  // 14: openim.schedule.UpdateScheduleReq
-	(*UpdateScheduleResp)(nil),                 // 15: openim.schedule.UpdateScheduleResp
-	(*DeleteScheduleReq)(nil),                  // 16: openim.schedule.DeleteScheduleReq
-	(*DeleteScheduleResp)(nil),                 // 17: openim.schedule.DeleteScheduleResp
-	(*GetScheduleReq)(nil),                     // 18: openim.schedule.GetScheduleReq
-	(*GetScheduleResp)(nil),                    // 19: openim.schedule.GetScheduleResp
-	(*GetSchedulesReq)(nil),                    // 20: openim.schedule.GetSchedulesReq
-	(*GetSchedulesResp)(nil),                   // 21: openim.schedule.GetSchedulesResp
-	(*AcceptScheduleReq)(nil),                  // 22: openim.schedule.AcceptScheduleReq
-	(*AcceptScheduleResp)(nil),                 // 23: openim.schedule.AcceptScheduleResp
-	(*RejectScheduleReq)(nil),                  // 24: openim.schedule.RejectScheduleReq
-	(*RejectScheduleResp)(nil),                 // 25: openim.schedule.RejectScheduleResp
-	(*JoinScheduleReq)(nil),                    // 26: openim.schedule.JoinScheduleReq
-	(*JoinScheduleResp)(nil),                   // 27: openim.schedule.JoinScheduleResp
-	(*SetReminderReq)(nil),                     // 28: openim.schedule.SetReminderReq
-	(*SetReminderResp)(nil),                    // 29: openim.schedule.SetReminderResp
-	(*BusySlot)(nil),                           // 30: openim.schedule.BusySlot
-	(*BusySlotList)(nil),                       // 31: openim.schedule.BusySlotList
-	(*CheckConflictReq)(nil),                   // 32: openim.schedule.CheckConflictReq
-	(*CheckConflictResp)(nil),                  // 33: openim.schedule.CheckConflictResp
-	(*GetScheduleDatesReq)(nil),                // 34: openim.schedule.GetScheduleDatesReq
-	(*GetScheduleDatesResp)(nil),               // 35: openim.schedule.GetScheduleDatesResp
-	(*GetScheduleMonthViewReq)(nil),            // 36: openim.schedule.GetScheduleMonthViewReq
-	(*ScheduleDayInfo)(nil),                    // 37: openim.schedule.ScheduleDayInfo
-	(*GetScheduleMonthViewResp)(nil),           // 38: openim.schedule.GetScheduleMonthViewResp
-	(*ScheduleGroup)(nil),                      // 39: openim.schedule.ScheduleGroup
-	(*GroupShareInfo)(nil),                     // 40: openim.schedule.GroupShareInfo
-	(*InitScheduleGroupsReq)(nil),              // 41: openim.schedule.InitScheduleGroupsReq
-	(*InitScheduleGroupsResp)(nil),             // 42: openim.schedule.InitScheduleGroupsResp
-	(*GetAllScheduleGroupsReq)(nil),            // 43: openim.schedule.GetAllScheduleGroupsReq
-	(*GetAllScheduleGroupsResp)(nil),           // 44: openim.schedule.GetAllScheduleGroupsResp
-	(*CreateScheduleGroupReq)(nil),             // 45: openim.schedule.CreateScheduleGroupReq
-	(*CreateScheduleGroupResp)(nil),            // 46: openim.schedule.CreateScheduleGroupResp
-	(*UpdateScheduleGroupReq)(nil),             // 47: openim.schedule.UpdateScheduleGroupReq
-	(*UpdateScheduleGroupResp)(nil),            // 48: openim.schedule.UpdateScheduleGroupResp
-	(*DeleteScheduleGroupReq)(nil),             // 49: openim.schedule.DeleteScheduleGroupReq
-	(*DeleteScheduleGroupResp)(nil),            // 50: openim.schedule.DeleteScheduleGroupResp
-	(*QuitScheduleGroupReq)(nil),               // 51: openim.schedule.QuitScheduleGroupReq
-	(*QuitScheduleGroupResp)(nil),              // 52: openim.schedule.QuitScheduleGroupResp
-	(*GetScheduleGroupDetailReq)(nil),          // 53: openim.schedule.GetScheduleGroupDetailReq
-	(*GetScheduleGroupDetailResp)(nil),         // 54: openim.schedule.GetScheduleGroupDetailResp
-	(*SendScheduleNotificationsByIDsReq)(nil),  // 55: openim.schedule.SendScheduleNotificationsByIDsReq
-	(*SendScheduleNotificationsByIDsResp)(nil), // 56: openim.schedule.SendScheduleNotificationsByIDsResp
-	nil,                             // 57: openim.schedule.CheckConflictResp.BusyByUserIdEntry
-	(*sdkws.RequestPagination)(nil), // 58: openim.sdkws.RequestPagination
+	(UpdateScope)(0),                           // 5: openim.schedule.UpdateScope
+	(DeleteScope)(0),                           // 6: openim.schedule.DeleteScope
+	(*ScheduleRepeatInfo)(nil),                 // 7: openim.schedule.ScheduleRepeatInfo
+	(*ScheduleAttendeeInfo)(nil),               // 8: openim.schedule.ScheduleAttendeeInfo
+	(*MeetingSettings)(nil),                    // 9: openim.schedule.MeetingSettings
+	(*ScheduleInfo)(nil),                       // 10: openim.schedule.ScheduleInfo
+	(*CreateScheduleReq)(nil),                  // 11: openim.schedule.CreateScheduleReq
+	(*CreateScheduleResp)(nil),                 // 12: openim.schedule.CreateScheduleResp
+	(*CreateScheduleMessageReq)(nil),           // 13: openim.schedule.CreateScheduleMessageReq
+	(*CreateScheduleMessageResult)(nil),        // 14: openim.schedule.CreateScheduleMessageResult
+	(*CreateScheduleMessageResp)(nil),          // 15: openim.schedule.CreateScheduleMessageResp
+	(*UpdateScheduleReq)(nil),                  // 16: openim.schedule.UpdateScheduleReq
+	(*UpdateScheduleResp)(nil),                 // 17: openim.schedule.UpdateScheduleResp
+	(*DeleteScheduleReq)(nil),                  // 18: openim.schedule.DeleteScheduleReq
+	(*DeleteScheduleResp)(nil),                 // 19: openim.schedule.DeleteScheduleResp
+	(*GetScheduleReq)(nil),                     // 20: openim.schedule.GetScheduleReq
+	(*GetScheduleResp)(nil),                    // 21: openim.schedule.GetScheduleResp
+	(*GetSchedulesReq)(nil),                    // 22: openim.schedule.GetSchedulesReq
+	(*GetSchedulesResp)(nil),                   // 23: openim.schedule.GetSchedulesResp
+	(*AcceptScheduleReq)(nil),                  // 24: openim.schedule.AcceptScheduleReq
+	(*AcceptScheduleResp)(nil),                 // 25: openim.schedule.AcceptScheduleResp
+	(*RejectScheduleReq)(nil),                  // 26: openim.schedule.RejectScheduleReq
+	(*RejectScheduleResp)(nil),                 // 27: openim.schedule.RejectScheduleResp
+	(*JoinScheduleReq)(nil),                    // 28: openim.schedule.JoinScheduleReq
+	(*JoinScheduleResp)(nil),                   // 29: openim.schedule.JoinScheduleResp
+	(*SetReminderReq)(nil),                     // 30: openim.schedule.SetReminderReq
+	(*SetReminderResp)(nil),                    // 31: openim.schedule.SetReminderResp
+	(*BusySlot)(nil),                           // 32: openim.schedule.BusySlot
+	(*BusySlotList)(nil),                       // 33: openim.schedule.BusySlotList
+	(*CheckConflictReq)(nil),                   // 34: openim.schedule.CheckConflictReq
+	(*CheckConflictResp)(nil),                  // 35: openim.schedule.CheckConflictResp
+	(*CompareSchedulesReq)(nil),                // 36: openim.schedule.CompareSchedulesReq
+	(*CompareSchedulesResp)(nil),               // 37: openim.schedule.CompareSchedulesResp
+	(*GetScheduleDatesReq)(nil),                // 38: openim.schedule.GetScheduleDatesReq
+	(*GetScheduleDatesResp)(nil),               // 39: openim.schedule.GetScheduleDatesResp
+	(*GetScheduleMonthViewReq)(nil),            // 40: openim.schedule.GetScheduleMonthViewReq
+	(*ScheduleDayInfo)(nil),                    // 41: openim.schedule.ScheduleDayInfo
+	(*GetScheduleMonthViewResp)(nil),           // 42: openim.schedule.GetScheduleMonthViewResp
+	(*ScheduleGroup)(nil),                      // 43: openim.schedule.ScheduleGroup
+	(*GroupShareInfo)(nil),                     // 44: openim.schedule.GroupShareInfo
+	(*InitScheduleGroupsReq)(nil),              // 45: openim.schedule.InitScheduleGroupsReq
+	(*InitScheduleGroupsResp)(nil),             // 46: openim.schedule.InitScheduleGroupsResp
+	(*GetAllScheduleGroupsReq)(nil),            // 47: openim.schedule.GetAllScheduleGroupsReq
+	(*GetAllScheduleGroupsResp)(nil),           // 48: openim.schedule.GetAllScheduleGroupsResp
+	(*CreateScheduleGroupReq)(nil),             // 49: openim.schedule.CreateScheduleGroupReq
+	(*CreateScheduleGroupResp)(nil),            // 50: openim.schedule.CreateScheduleGroupResp
+	(*UpdateScheduleGroupReq)(nil),             // 51: openim.schedule.UpdateScheduleGroupReq
+	(*UpdateScheduleGroupResp)(nil),            // 52: openim.schedule.UpdateScheduleGroupResp
+	(*DeleteScheduleGroupReq)(nil),             // 53: openim.schedule.DeleteScheduleGroupReq
+	(*DeleteScheduleGroupResp)(nil),            // 54: openim.schedule.DeleteScheduleGroupResp
+	(*QuitScheduleGroupReq)(nil),               // 55: openim.schedule.QuitScheduleGroupReq
+	(*QuitScheduleGroupResp)(nil),              // 56: openim.schedule.QuitScheduleGroupResp
+	(*GetScheduleGroupDetailReq)(nil),          // 57: openim.schedule.GetScheduleGroupDetailReq
+	(*GetScheduleGroupDetailResp)(nil),         // 58: openim.schedule.GetScheduleGroupDetailResp
+	(*SendScheduleNotificationsByIDsReq)(nil),  // 59: openim.schedule.SendScheduleNotificationsByIDsReq
+	(*SendScheduleNotificationsByIDsResp)(nil), // 60: openim.schedule.SendScheduleNotificationsByIDsResp
+	nil,                             // 61: openim.schedule.CheckConflictResp.BusyByUserIdEntry
+	nil,                             // 62: openim.schedule.CompareSchedulesResp.BusyByUserIdEntry
+	(*sdkws.RequestPagination)(nil), // 63: openim.sdkws.RequestPagination
 }
 var file_schedule_schedule_proto_depIdxs = []int32{
 	0,  // 0: openim.schedule.ScheduleRepeatInfo.repeatDaysOfWeek:type_name -> openim.schedule.DayOfWeek
@@ -4302,79 +4595,85 @@ var file_schedule_schedule_proto_depIdxs = []int32{
 	2,  // 2: openim.schedule.MeetingSettings.callReminder:type_name -> openim.schedule.CallReminderType
 	3,  // 3: openim.schedule.MeetingSettings.muteOnJoin:type_name -> openim.schedule.MuteOnJoinType
 	1,  // 4: openim.schedule.ScheduleInfo.type:type_name -> openim.schedule.ScheduleType
-	7,  // 5: openim.schedule.ScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
-	5,  // 6: openim.schedule.ScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
-	6,  // 7: openim.schedule.ScheduleInfo.attendees:type_name -> openim.schedule.ScheduleAttendeeInfo
+	9,  // 5: openim.schedule.ScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
+	7,  // 6: openim.schedule.ScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
+	8,  // 7: openim.schedule.ScheduleInfo.attendees:type_name -> openim.schedule.ScheduleAttendeeInfo
 	1,  // 8: openim.schedule.CreateScheduleReq.type:type_name -> openim.schedule.ScheduleType
-	7,  // 9: openim.schedule.CreateScheduleReq.meetingSettings:type_name -> openim.schedule.MeetingSettings
-	5,  // 10: openim.schedule.CreateScheduleReq.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
-	8,  // 11: openim.schedule.CreateScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
-	12, // 12: openim.schedule.CreateScheduleMessageResp.results:type_name -> openim.schedule.CreateScheduleMessageResult
-	5,  // 13: openim.schedule.UpdateScheduleReq.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
-	7,  // 14: openim.schedule.UpdateScheduleReq.meetingSettings:type_name -> openim.schedule.MeetingSettings
-	8,  // 15: openim.schedule.UpdateScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
-	8,  // 16: openim.schedule.GetScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
-	58, // 17: openim.schedule.GetSchedulesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	8,  // 18: openim.schedule.GetSchedulesResp.schedules:type_name -> openim.schedule.ScheduleInfo
-	30, // 19: openim.schedule.BusySlotList.slots:type_name -> openim.schedule.BusySlot
-	57, // 20: openim.schedule.CheckConflictResp.busyByUserId:type_name -> openim.schedule.CheckConflictResp.BusyByUserIdEntry
-	8,  // 21: openim.schedule.ScheduleDayInfo.schedules:type_name -> openim.schedule.ScheduleInfo
-	37, // 22: openim.schedule.GetScheduleMonthViewResp.days:type_name -> openim.schedule.ScheduleDayInfo
-	40, // 23: openim.schedule.ScheduleGroup.shares:type_name -> openim.schedule.GroupShareInfo
-	39, // 24: openim.schedule.GetAllScheduleGroupsResp.myGroups:type_name -> openim.schedule.ScheduleGroup
-	39, // 25: openim.schedule.GetAllScheduleGroupsResp.sharedGroups:type_name -> openim.schedule.ScheduleGroup
-	40, // 26: openim.schedule.CreateScheduleGroupReq.shares:type_name -> openim.schedule.GroupShareInfo
-	39, // 27: openim.schedule.CreateScheduleGroupResp.group:type_name -> openim.schedule.ScheduleGroup
-	40, // 28: openim.schedule.UpdateScheduleGroupReq.shares:type_name -> openim.schedule.GroupShareInfo
-	39, // 29: openim.schedule.GetScheduleGroupDetailResp.group:type_name -> openim.schedule.ScheduleGroup
-	31, // 30: openim.schedule.CheckConflictResp.BusyByUserIdEntry.value:type_name -> openim.schedule.BusySlotList
-	9,  // 31: openim.schedule.Schedule.CreateSchedule:input_type -> openim.schedule.CreateScheduleReq
-	14, // 32: openim.schedule.Schedule.UpdateSchedule:input_type -> openim.schedule.UpdateScheduleReq
-	16, // 33: openim.schedule.Schedule.DeleteSchedule:input_type -> openim.schedule.DeleteScheduleReq
-	18, // 34: openim.schedule.Schedule.GetSchedule:input_type -> openim.schedule.GetScheduleReq
-	20, // 35: openim.schedule.Schedule.GetSchedules:input_type -> openim.schedule.GetSchedulesReq
-	22, // 36: openim.schedule.Schedule.AcceptSchedule:input_type -> openim.schedule.AcceptScheduleReq
-	24, // 37: openim.schedule.Schedule.RejectSchedule:input_type -> openim.schedule.RejectScheduleReq
-	26, // 38: openim.schedule.Schedule.JoinSchedule:input_type -> openim.schedule.JoinScheduleReq
-	28, // 39: openim.schedule.Schedule.SetReminder:input_type -> openim.schedule.SetReminderReq
-	32, // 40: openim.schedule.Schedule.CheckConflict:input_type -> openim.schedule.CheckConflictReq
-	34, // 41: openim.schedule.Schedule.GetScheduleDates:input_type -> openim.schedule.GetScheduleDatesReq
-	36, // 42: openim.schedule.Schedule.GetScheduleMonthView:input_type -> openim.schedule.GetScheduleMonthViewReq
-	11, // 43: openim.schedule.Schedule.CreateScheduleMessage:input_type -> openim.schedule.CreateScheduleMessageReq
-	41, // 44: openim.schedule.Schedule.InitScheduleGroups:input_type -> openim.schedule.InitScheduleGroupsReq
-	43, // 45: openim.schedule.Schedule.GetAllScheduleGroups:input_type -> openim.schedule.GetAllScheduleGroupsReq
-	45, // 46: openim.schedule.Schedule.CreateScheduleGroup:input_type -> openim.schedule.CreateScheduleGroupReq
-	47, // 47: openim.schedule.Schedule.UpdateScheduleGroup:input_type -> openim.schedule.UpdateScheduleGroupReq
-	49, // 48: openim.schedule.Schedule.DeleteScheduleGroup:input_type -> openim.schedule.DeleteScheduleGroupReq
-	51, // 49: openim.schedule.Schedule.QuitScheduleGroup:input_type -> openim.schedule.QuitScheduleGroupReq
-	53, // 50: openim.schedule.Schedule.GetScheduleGroupDetail:input_type -> openim.schedule.GetScheduleGroupDetailReq
-	55, // 51: openim.schedule.Schedule.SendScheduleNotificationsByIDs:input_type -> openim.schedule.SendScheduleNotificationsByIDsReq
-	10, // 52: openim.schedule.Schedule.CreateSchedule:output_type -> openim.schedule.CreateScheduleResp
-	15, // 53: openim.schedule.Schedule.UpdateSchedule:output_type -> openim.schedule.UpdateScheduleResp
-	17, // 54: openim.schedule.Schedule.DeleteSchedule:output_type -> openim.schedule.DeleteScheduleResp
-	19, // 55: openim.schedule.Schedule.GetSchedule:output_type -> openim.schedule.GetScheduleResp
-	21, // 56: openim.schedule.Schedule.GetSchedules:output_type -> openim.schedule.GetSchedulesResp
-	23, // 57: openim.schedule.Schedule.AcceptSchedule:output_type -> openim.schedule.AcceptScheduleResp
-	25, // 58: openim.schedule.Schedule.RejectSchedule:output_type -> openim.schedule.RejectScheduleResp
-	27, // 59: openim.schedule.Schedule.JoinSchedule:output_type -> openim.schedule.JoinScheduleResp
-	29, // 60: openim.schedule.Schedule.SetReminder:output_type -> openim.schedule.SetReminderResp
-	33, // 61: openim.schedule.Schedule.CheckConflict:output_type -> openim.schedule.CheckConflictResp
-	35, // 62: openim.schedule.Schedule.GetScheduleDates:output_type -> openim.schedule.GetScheduleDatesResp
-	38, // 63: openim.schedule.Schedule.GetScheduleMonthView:output_type -> openim.schedule.GetScheduleMonthViewResp
-	13, // 64: openim.schedule.Schedule.CreateScheduleMessage:output_type -> openim.schedule.CreateScheduleMessageResp
-	42, // 65: openim.schedule.Schedule.InitScheduleGroups:output_type -> openim.schedule.InitScheduleGroupsResp
-	44, // 66: openim.schedule.Schedule.GetAllScheduleGroups:output_type -> openim.schedule.GetAllScheduleGroupsResp
-	46, // 67: openim.schedule.Schedule.CreateScheduleGroup:output_type -> openim.schedule.CreateScheduleGroupResp
-	48, // 68: openim.schedule.Schedule.UpdateScheduleGroup:output_type -> openim.schedule.UpdateScheduleGroupResp
-	50, // 69: openim.schedule.Schedule.DeleteScheduleGroup:output_type -> openim.schedule.DeleteScheduleGroupResp
-	52, // 70: openim.schedule.Schedule.QuitScheduleGroup:output_type -> openim.schedule.QuitScheduleGroupResp
-	54, // 71: openim.schedule.Schedule.GetScheduleGroupDetail:output_type -> openim.schedule.GetScheduleGroupDetailResp
-	56, // 72: openim.schedule.Schedule.SendScheduleNotificationsByIDs:output_type -> openim.schedule.SendScheduleNotificationsByIDsResp
-	52, // [52:73] is the sub-list for method output_type
-	31, // [31:52] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	9,  // 9: openim.schedule.CreateScheduleReq.meetingSettings:type_name -> openim.schedule.MeetingSettings
+	7,  // 10: openim.schedule.CreateScheduleReq.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
+	10, // 11: openim.schedule.CreateScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
+	14, // 12: openim.schedule.CreateScheduleMessageResp.results:type_name -> openim.schedule.CreateScheduleMessageResult
+	7,  // 13: openim.schedule.UpdateScheduleReq.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
+	9,  // 14: openim.schedule.UpdateScheduleReq.meetingSettings:type_name -> openim.schedule.MeetingSettings
+	5,  // 15: openim.schedule.UpdateScheduleReq.updateScope:type_name -> openim.schedule.UpdateScope
+	10, // 16: openim.schedule.UpdateScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
+	6,  // 17: openim.schedule.DeleteScheduleReq.deleteScope:type_name -> openim.schedule.DeleteScope
+	10, // 18: openim.schedule.GetScheduleResp.scheduleInfo:type_name -> openim.schedule.ScheduleInfo
+	63, // 19: openim.schedule.GetSchedulesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	10, // 20: openim.schedule.GetSchedulesResp.schedules:type_name -> openim.schedule.ScheduleInfo
+	32, // 21: openim.schedule.BusySlotList.slots:type_name -> openim.schedule.BusySlot
+	61, // 22: openim.schedule.CheckConflictResp.busyByUserId:type_name -> openim.schedule.CheckConflictResp.BusyByUserIdEntry
+	62, // 23: openim.schedule.CompareSchedulesResp.busyByUserId:type_name -> openim.schedule.CompareSchedulesResp.BusyByUserIdEntry
+	10, // 24: openim.schedule.ScheduleDayInfo.schedules:type_name -> openim.schedule.ScheduleInfo
+	41, // 25: openim.schedule.GetScheduleMonthViewResp.days:type_name -> openim.schedule.ScheduleDayInfo
+	44, // 26: openim.schedule.ScheduleGroup.shares:type_name -> openim.schedule.GroupShareInfo
+	43, // 27: openim.schedule.GetAllScheduleGroupsResp.myGroups:type_name -> openim.schedule.ScheduleGroup
+	43, // 28: openim.schedule.GetAllScheduleGroupsResp.sharedGroups:type_name -> openim.schedule.ScheduleGroup
+	44, // 29: openim.schedule.CreateScheduleGroupReq.shares:type_name -> openim.schedule.GroupShareInfo
+	43, // 30: openim.schedule.CreateScheduleGroupResp.group:type_name -> openim.schedule.ScheduleGroup
+	44, // 31: openim.schedule.UpdateScheduleGroupReq.shares:type_name -> openim.schedule.GroupShareInfo
+	43, // 32: openim.schedule.GetScheduleGroupDetailResp.group:type_name -> openim.schedule.ScheduleGroup
+	33, // 33: openim.schedule.CheckConflictResp.BusyByUserIdEntry.value:type_name -> openim.schedule.BusySlotList
+	33, // 34: openim.schedule.CompareSchedulesResp.BusyByUserIdEntry.value:type_name -> openim.schedule.BusySlotList
+	11, // 35: openim.schedule.Schedule.CreateSchedule:input_type -> openim.schedule.CreateScheduleReq
+	16, // 36: openim.schedule.Schedule.UpdateSchedule:input_type -> openim.schedule.UpdateScheduleReq
+	18, // 37: openim.schedule.Schedule.DeleteSchedule:input_type -> openim.schedule.DeleteScheduleReq
+	20, // 38: openim.schedule.Schedule.GetSchedule:input_type -> openim.schedule.GetScheduleReq
+	22, // 39: openim.schedule.Schedule.GetSchedules:input_type -> openim.schedule.GetSchedulesReq
+	24, // 40: openim.schedule.Schedule.AcceptSchedule:input_type -> openim.schedule.AcceptScheduleReq
+	26, // 41: openim.schedule.Schedule.RejectSchedule:input_type -> openim.schedule.RejectScheduleReq
+	28, // 42: openim.schedule.Schedule.JoinSchedule:input_type -> openim.schedule.JoinScheduleReq
+	30, // 43: openim.schedule.Schedule.SetReminder:input_type -> openim.schedule.SetReminderReq
+	34, // 44: openim.schedule.Schedule.CheckConflict:input_type -> openim.schedule.CheckConflictReq
+	36, // 45: openim.schedule.Schedule.CompareSchedules:input_type -> openim.schedule.CompareSchedulesReq
+	38, // 46: openim.schedule.Schedule.GetScheduleDates:input_type -> openim.schedule.GetScheduleDatesReq
+	40, // 47: openim.schedule.Schedule.GetScheduleMonthView:input_type -> openim.schedule.GetScheduleMonthViewReq
+	13, // 48: openim.schedule.Schedule.CreateScheduleMessage:input_type -> openim.schedule.CreateScheduleMessageReq
+	45, // 49: openim.schedule.Schedule.InitScheduleGroups:input_type -> openim.schedule.InitScheduleGroupsReq
+	47, // 50: openim.schedule.Schedule.GetAllScheduleGroups:input_type -> openim.schedule.GetAllScheduleGroupsReq
+	49, // 51: openim.schedule.Schedule.CreateScheduleGroup:input_type -> openim.schedule.CreateScheduleGroupReq
+	51, // 52: openim.schedule.Schedule.UpdateScheduleGroup:input_type -> openim.schedule.UpdateScheduleGroupReq
+	53, // 53: openim.schedule.Schedule.DeleteScheduleGroup:input_type -> openim.schedule.DeleteScheduleGroupReq
+	55, // 54: openim.schedule.Schedule.QuitScheduleGroup:input_type -> openim.schedule.QuitScheduleGroupReq
+	57, // 55: openim.schedule.Schedule.GetScheduleGroupDetail:input_type -> openim.schedule.GetScheduleGroupDetailReq
+	59, // 56: openim.schedule.Schedule.SendScheduleNotificationsByIDs:input_type -> openim.schedule.SendScheduleNotificationsByIDsReq
+	12, // 57: openim.schedule.Schedule.CreateSchedule:output_type -> openim.schedule.CreateScheduleResp
+	17, // 58: openim.schedule.Schedule.UpdateSchedule:output_type -> openim.schedule.UpdateScheduleResp
+	19, // 59: openim.schedule.Schedule.DeleteSchedule:output_type -> openim.schedule.DeleteScheduleResp
+	21, // 60: openim.schedule.Schedule.GetSchedule:output_type -> openim.schedule.GetScheduleResp
+	23, // 61: openim.schedule.Schedule.GetSchedules:output_type -> openim.schedule.GetSchedulesResp
+	25, // 62: openim.schedule.Schedule.AcceptSchedule:output_type -> openim.schedule.AcceptScheduleResp
+	27, // 63: openim.schedule.Schedule.RejectSchedule:output_type -> openim.schedule.RejectScheduleResp
+	29, // 64: openim.schedule.Schedule.JoinSchedule:output_type -> openim.schedule.JoinScheduleResp
+	31, // 65: openim.schedule.Schedule.SetReminder:output_type -> openim.schedule.SetReminderResp
+	35, // 66: openim.schedule.Schedule.CheckConflict:output_type -> openim.schedule.CheckConflictResp
+	37, // 67: openim.schedule.Schedule.CompareSchedules:output_type -> openim.schedule.CompareSchedulesResp
+	39, // 68: openim.schedule.Schedule.GetScheduleDates:output_type -> openim.schedule.GetScheduleDatesResp
+	42, // 69: openim.schedule.Schedule.GetScheduleMonthView:output_type -> openim.schedule.GetScheduleMonthViewResp
+	15, // 70: openim.schedule.Schedule.CreateScheduleMessage:output_type -> openim.schedule.CreateScheduleMessageResp
+	46, // 71: openim.schedule.Schedule.InitScheduleGroups:output_type -> openim.schedule.InitScheduleGroupsResp
+	48, // 72: openim.schedule.Schedule.GetAllScheduleGroups:output_type -> openim.schedule.GetAllScheduleGroupsResp
+	50, // 73: openim.schedule.Schedule.CreateScheduleGroup:output_type -> openim.schedule.CreateScheduleGroupResp
+	52, // 74: openim.schedule.Schedule.UpdateScheduleGroup:output_type -> openim.schedule.UpdateScheduleGroupResp
+	54, // 75: openim.schedule.Schedule.DeleteScheduleGroup:output_type -> openim.schedule.DeleteScheduleGroupResp
+	56, // 76: openim.schedule.Schedule.QuitScheduleGroup:output_type -> openim.schedule.QuitScheduleGroupResp
+	58, // 77: openim.schedule.Schedule.GetScheduleGroupDetail:output_type -> openim.schedule.GetScheduleGroupDetailResp
+	60, // 78: openim.schedule.Schedule.SendScheduleNotificationsByIDs:output_type -> openim.schedule.SendScheduleNotificationsByIDsResp
+	57, // [57:79] is the sub-list for method output_type
+	35, // [35:57] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_schedule_schedule_proto_init() }
@@ -4383,14 +4682,15 @@ func file_schedule_schedule_proto_init() {
 		return
 	}
 	file_schedule_schedule_proto_msgTypes[9].OneofWrappers = []any{}
-	file_schedule_schedule_proto_msgTypes[42].OneofWrappers = []any{}
+	file_schedule_schedule_proto_msgTypes[11].OneofWrappers = []any{}
+	file_schedule_schedule_proto_msgTypes[44].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_schedule_schedule_proto_rawDesc), len(file_schedule_schedule_proto_rawDesc)),
-			NumEnums:      5,
-			NumMessages:   53,
+			NumEnums:      7,
+			NumMessages:   56,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
