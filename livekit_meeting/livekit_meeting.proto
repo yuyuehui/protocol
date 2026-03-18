@@ -17,6 +17,7 @@ package openim.livekit_meeting;
 
 import "sdkws/sdkws.proto";
 import "wrapperspb/wrapperspb.proto";
+import "schedule/schedule.proto";
 
 option go_package = "github.com/openimsdk/protocol/livekit_meeting";
 
@@ -42,6 +43,34 @@ message RepeatRule {
   int32 interval = 2;
   int64 endDate = 3;
   repeated int32 daysOfWeek = 4;
+}
+
+// MeetingScheduleInfo 会议关联的日程完整信息（仅日程会议有值）
+message MeetingScheduleInfo {
+  string scheduleID = 1;
+  string title = 2;
+  int64 startTime = 3;
+  int64 endTime = 4;
+  string location = 5;
+  string description = 6;
+  string creatorUserID = 7;
+  string creatorNickname = 8;
+  int32 type = 9;                       // 日程类型：0=日程 1=会议
+  int32 visibility = 10;
+  string scheduleGroupID = 11;
+  string status = 12;
+  string roomID = 13;                   // 会议室ID
+  string timeZone = 14;                 // 时区
+  bool allDay = 15;                     // 是否全天
+  repeated string attachmentURLs = 16;  // 附件URL列表
+  bool allowMemberJoin = 17;            // 允许成员主动加入
+  bool notifyByEmail = 18;              // 同时通过邮件通知参与人
+  string meetingMinutesID = 19;         // 会议纪要文档ID
+  bool isTemporary = 20;                // 是否临时会议
+  openim.schedule.MeetingSettings meetingSettings = 21;     // 会议设置（仅type=1会议时有效）
+  openim.schedule.ScheduleRepeatInfo repeatInfo = 22;       // 重复规则
+  int64 createTime = 23;                // 创建时间（时间戳）
+  int64 updateTime = 24;                // 更新时间（时间戳）
 }
 
 // MeetingInfo 会议信息
@@ -72,6 +101,7 @@ message MeetingInfo {
   repeated string participantNicknames = 24;  // 参会者昵称预览列表（前5个）
   repeated string participantFaceURLs = 25;   // 参会者头像预览列表（前5个）
   string scheduleID = 26;              // 关联的日程ID（从日程创建会议时记录）
+  MeetingScheduleInfo scheduleInfo = 27; // 关联的日程详情（当scheduleID非空时填充）
 }
 
 // MeetingParticipant 参会者信息
@@ -173,6 +203,7 @@ message GetMeetingListReq {
   int32 meetingType = 4;
   openim.protobuf.BoolValue showInCalendar = 5;
   sdkws.RequestPagination pagination = 6;
+  string keyword = 7;                  // 搜索关键词，模糊匹配会议名称、发起人昵称、参会人昵称（OR关系）
 }
 
 message GetMeetingListResp {

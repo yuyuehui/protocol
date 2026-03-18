@@ -15,6 +15,7 @@ PROTO_NAMES=(
     "statistics"
     "wrapperspb"
     "oa"
+    "livekit_meeting"
 )
 
 for name in "${PROTO_NAMES[@]}"; do
