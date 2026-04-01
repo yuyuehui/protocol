@@ -3992,6 +3992,7 @@ func (x *GetScheduleGroupDetailResp) GetGroup() *ScheduleGroup {
 type SendScheduleNotificationsByIDsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleIDs   []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 日程ID列表（必填）
+	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@所有人通知）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4033,12 +4034,20 @@ func (x *SendScheduleNotificationsByIDsReq) GetScheduleIDs() []string {
 	return nil
 }
 
-// SendScheduleNotificationsByIDsResp 根据日程IDs发送通知响应
+func (x *SendScheduleNotificationsByIDsReq) GetSendMode() int32 {
+	if x != nil {
+		return x.SendMode
+	}
+	return 0
+}
+
+// SendScheduleNotificationsByIDsResp 根据日程IDs发送日程调整通知响应
 type SendScheduleNotificationsByIDsResp struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	SuccessCount      int32                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`          // 成功发送通知的数量
 	FailCount         int32                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount"`                // 失败的数量
 	FailedScheduleIDs []string               `protobuf:"bytes,3,rep,name=failedScheduleIDs,proto3" json:"failedScheduleIDs"` // 失败的日程ID列表
+	GroupID           string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupId"`                     // 建群模式时返回创建的群组ID
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -4092,6 +4101,13 @@ func (x *SendScheduleNotificationsByIDsResp) GetFailedScheduleIDs() []string {
 		return x.FailedScheduleIDs
 	}
 	return nil
+}
+
+func (x *SendScheduleNotificationsByIDsResp) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
 }
 
 var File_schedule_schedule_proto protoreflect.FileDescriptor
