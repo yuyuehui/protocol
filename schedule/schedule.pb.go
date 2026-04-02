@@ -3991,7 +3991,7 @@ func (x *GetScheduleGroupDetailResp) GetGroup() *ScheduleGroup {
 type SendScheduleNotificationsByIDsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleIDs   []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 日程ID列表（必填）
-	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@所有人通知）
+	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@全体成员通知）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
