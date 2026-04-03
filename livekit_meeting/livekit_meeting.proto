@@ -453,6 +453,17 @@ message MeetingReminderTips {
   int32 reminderMinutes = 2;
 }
 
+// ==================== LiveKit Webhook ====================
+
+message ProcessLiveKitWebhookReq {
+  string event = 1;           // 事件类型: participant_left, room_finished
+  string roomName = 2;        // LiveKit 房间名（= meetingID）
+  string identity = 3;        // 参与者 identity（= userID），participant_left 时必填
+}
+
+message ProcessLiveKitWebhookResp {
+}
+
 // ==================== RPC 服务定义 ====================
 
 service LiveKitMeeting {
@@ -478,4 +489,5 @@ service LiveKitMeeting {
   rpc GetMeetingReminders(GetMeetingRemindersReq) returns (GetMeetingRemindersResp);
   rpc SetNotificationPreference(SetNotificationPreferenceReq) returns (SetNotificationPreferenceResp);
   rpc GetNotificationPreference(GetNotificationPreferenceReq) returns (GetNotificationPreferenceResp);
+  rpc ProcessLiveKitWebhook(ProcessLiveKitWebhookReq) returns (ProcessLiveKitWebhookResp);
 }
