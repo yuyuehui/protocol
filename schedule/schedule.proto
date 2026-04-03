@@ -566,15 +566,17 @@ message GetScheduleGroupDetailResp {
   ScheduleGroup group = 1;     // 分组详情
 }
 
-// SendScheduleNotificationsByIDsReq 根据日程IDs发送通知请求
+// SendScheduleNotificationsByIDsReq 根据日程IDs发送日程调整通知请求
 message SendScheduleNotificationsByIDsReq {
   repeated string scheduleIDs = 1;  // 日程ID列表（必填）
+  int32 sendMode = 2;               // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@全体成员通知）
 }
 
-// SendScheduleNotificationsByIDsResp 根据日程IDs发送通知响应
+// SendScheduleNotificationsByIDsResp 根据日程IDs发送日程调整通知响应
 message SendScheduleNotificationsByIDsResp {
   int32 successCount = 1;  // 成功发送通知的数量
   int32 failCount = 2;     // 失败的数量
   repeated string failedScheduleIDs = 3;  // 失败的日程ID列表
+  string groupID = 4;      // 建群模式时返回创建的群组ID
 }
 

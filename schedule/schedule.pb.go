@@ -21,13 +21,12 @@
 package schedule
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	sdkws "github.com/openimsdk/protocol/sdkws"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -3988,10 +3987,11 @@ func (x *GetScheduleGroupDetailResp) GetGroup() *ScheduleGroup {
 	return nil
 }
 
-// SendScheduleNotificationsByIDsReq 根据日程IDs发送通知请求
+// SendScheduleNotificationsByIDsReq 根据日程IDs发送日程调整通知请求
 type SendScheduleNotificationsByIDsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ScheduleIDs   []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 日程ID列表（必填）
+	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@全体成员通知）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4033,12 +4033,20 @@ func (x *SendScheduleNotificationsByIDsReq) GetScheduleIDs() []string {
 	return nil
 }
 
-// SendScheduleNotificationsByIDsResp 根据日程IDs发送通知响应
+func (x *SendScheduleNotificationsByIDsReq) GetSendMode() int32 {
+	if x != nil {
+		return x.SendMode
+	}
+	return 0
+}
+
+// SendScheduleNotificationsByIDsResp 根据日程IDs发送日程调整通知响应
 type SendScheduleNotificationsByIDsResp struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	SuccessCount      int32                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`          // 成功发送通知的数量
 	FailCount         int32                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount"`                // 失败的数量
 	FailedScheduleIDs []string               `protobuf:"bytes,3,rep,name=failedScheduleIDs,proto3" json:"failedScheduleIDs"` // 失败的日程ID列表
+	GroupID           string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupID"`                     // 建群模式时返回创建的群组ID
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -4092,6 +4100,13 @@ func (x *SendScheduleNotificationsByIDsResp) GetFailedScheduleIDs() []string {
 		return x.FailedScheduleIDs
 	}
 	return nil
+}
+
+func (x *SendScheduleNotificationsByIDsResp) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
 }
 
 var File_schedule_schedule_proto protoreflect.FileDescriptor
@@ -4442,13 +4457,15 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x19GetScheduleGroupDetailReq\x12(\n" +
 	"\x0fscheduleGroupID\x18\x01 \x01(\tR\x0fscheduleGroupID\"R\n" +
 	"\x1aGetScheduleGroupDetailResp\x124\n" +
-	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"E\n" +
+	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"a\n" +
 	"!SendScheduleNotificationsByIDsReq\x12 \n" +
-	"\vscheduleIDs\x18\x01 \x03(\tR\vscheduleIDs\"\x94\x01\n" +
+	"\vscheduleIDs\x18\x01 \x03(\tR\vscheduleIDs\x12\x1a\n" +
+	"\bsendMode\x18\x02 \x01(\x05R\bsendMode\"\xae\x01\n" +
 	"\"SendScheduleNotificationsByIDsResp\x12\"\n" +
 	"\fsuccessCount\x18\x01 \x01(\x05R\fsuccessCount\x12\x1c\n" +
 	"\tfailCount\x18\x02 \x01(\x05R\tfailCount\x12,\n" +
-	"\x11failedScheduleIDs\x18\x03 \x03(\tR\x11failedScheduleIDs*g\n" +
+	"\x11failedScheduleIDs\x18\x03 \x03(\tR\x11failedScheduleIDs\x12\x18\n" +
+	"\agroupID\x18\x04 \x01(\tR\agroupID*g\n" +
 	"\tDayOfWeek\x12\n" +
 	"\n" +
 	"\x06SUNDAY\x10\x00\x12\n" +
