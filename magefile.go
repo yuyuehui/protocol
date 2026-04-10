@@ -56,6 +56,7 @@ var protoModules = []string{
 	"errinfo",
 	"group",
 	"jssdk",
+	"meeting_room",
 	"msg",
 	"msggateway",
 	"oa",

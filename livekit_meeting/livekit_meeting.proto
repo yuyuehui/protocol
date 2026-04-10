@@ -490,4 +490,23 @@ service LiveKitMeeting {
   rpc SetNotificationPreference(SetNotificationPreferenceReq) returns (SetNotificationPreferenceResp);
   rpc GetNotificationPreference(GetNotificationPreferenceReq) returns (GetNotificationPreferenceResp);
   rpc ProcessLiveKitWebhook(ProcessLiveKitWebhookReq) returns (ProcessLiveKitWebhookResp);
+
+  // 日程模块调用：通知会议创建（由日程创建会议记录后触发）
+  rpc NotifyMeetingCreated(NotifyMeetingCreatedReq) returns (NotifyMeetingCreatedResp);
+  // 日程模块调用：通知会议更新（由日程更新会议字段后触发）
+  rpc NotifyMeetingUpdated(NotifyMeetingUpdatedReq) returns (NotifyMeetingUpdatedResp);
 }
+
+// NotifyMeetingCreatedReq 日程模块通知 meeting 服务发送 MeetingCreated 通知
+message NotifyMeetingCreatedReq {
+  string scheduleID = 1;   // 关联的日程ID，meeting 服务通过此 ID 查找会议记录
+}
+
+message NotifyMeetingCreatedResp {}
+
+// NotifyMeetingUpdatedReq 日程模块通知 meeting 服务发送 MeetingUpdated 通知
+message NotifyMeetingUpdatedReq {
+  string scheduleID = 1;   // 关联的日程ID
+}
+
+message NotifyMeetingUpdatedResp {}

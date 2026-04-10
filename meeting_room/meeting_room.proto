@@ -1,0 +1,230 @@
+// Copyright © 2023 OpenIM. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openim.meeting_room;
+
+import "sdkws/sdkws.proto";
+import "wrapperspb/wrapperspb.proto";
+
+option go_package = "github.com/openimsdk/protocol/meeting_room";
+
+// ==================== 数据结构 ====================
+
+// MeetingRoomLocationInfo 会议室地点信息
+message MeetingRoomLocationInfo {
+  string locationID = 1;
+  string name = 2;
+  string parentID = 3;
+  int32 level = 4;       // 1=城市 2=大厦 3=楼层
+  int32 sortOrder = 5;
+  int32 status = 6;      // 1=启用 2=禁用
+  int64 createTime = 7;
+  int64 updateTime = 8;
+}
+
+// MeetingRoomLocationTreeNode 地点树节点
+message MeetingRoomLocationTreeNode {
+  string locationID = 1;
+  string name = 2;
+  int32 level = 3;
+  int32 status = 4;
+  repeated MeetingRoomLocationTreeNode children = 5;
+}
+
+// MeetingRoomInfo 会议室信息
+message MeetingRoomInfo {
+  string roomID = 1;
+  string name = 2;
+  string fullName = 3;
+  string locationID = 4;
+  string locationPath = 5;   // 地点全路径（如"深圳市-康利城6栋-7楼"）
+  int32 capacity = 6;
+  repeated string equipment = 7;  // tv/phone/projector/whiteboard/video
+  string description = 8;
+  int32 status = 9;          // 1=可用 2=停用
+  int32 sortOrder = 10;
+  int64 createTime = 11;
+  int64 updateTime = 12;
+}
+
+// RoomBookingSlot 已预定时段
+message RoomBookingSlot {
+  string scheduleID = 1;
+  string title = 2;
+  string creatorUserID = 3;
+  string creatorNickname = 4;
+  int64 startTime = 5;
+  int64 endTime = 6;
+}
+
+// MeetingRoomWithSlots 会议室及预定信息
+message MeetingRoomWithSlots {
+  MeetingRoomInfo roomInfo = 1;
+  repeated RoomBookingSlot bookingSlots = 2;
+}
+
+// RoomAvailabilityEntry 单个房间的可用性信息
+message RoomAvailabilityEntry {
+  string roomID = 1;
+  repeated RoomBookingSlot bookingSlots = 2;
+}
+
+// ==================== 前台接口（im-server） ====================
+
+// 获取地点树
+message GetMeetingRoomLocationTreeReq {
+  int32 status = 1;  // 0=全部 1=仅启用（默认1）
+}
+
+message GetMeetingRoomLocationTreeResp {
+  repeated MeetingRoomLocationTreeNode tree = 1;
+}
+
+// 获取会议室列表（筛选）
+message GetMeetingRoomListReq {
+  string locationID = 1;           // 地点ID（任意层级）
+  int64 date = 2;                  // 查询日期（时间戳）
+  int64 startTime = 3;            // 可用时段开始时间
+  int32 duration = 4;             // 时长（分钟）
+  int32 capacityRange = 5;        // 1=12人以下 2=13-20人 3=20人以上
+  repeated string equipment = 6;  // 设备要求（AND关系）
+  string keyword = 7;             // 搜索关键词
+  sdkws.RequestPagination pagination = 8;
+}
+
+message GetMeetingRoomListResp {
+  int32 total = 1;
+  repeated MeetingRoomWithSlots rooms = 2;
+}
+
+// 获取会议室详情
+message GetMeetingRoomDetailReq {
+  string roomID = 1;
+}
+
+message GetMeetingRoomDetailResp {
+  MeetingRoomInfo roomInfo = 1;
+}
+
+// 获取会议室可用时段
+message GetMeetingRoomAvailabilityReq {
+  repeated string roomIDs = 1;
+  int64 date = 2;
+}
+
+message GetMeetingRoomAvailabilityResp {
+  repeated RoomAvailabilityEntry roomAvailability = 1;
+}
+
+// ==================== 后台接口（im-chat admin） ====================
+
+// 创建地点
+message CreateMeetingRoomLocationReq {
+  string name = 1;
+  string parentID = 2;
+  int32 sortOrder = 3;
+  int32 status = 4;
+}
+
+message CreateMeetingRoomLocationResp {
+  MeetingRoomLocationInfo location = 1;
+}
+
+// 更新地点
+message UpdateMeetingRoomLocationReq {
+  string locationID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.Int32Value sortOrder = 3;
+  openim.protobuf.Int32Value status = 4;
+}
+
+message UpdateMeetingRoomLocationResp {}
+
+// 删除地点
+message DeleteMeetingRoomLocationReq {
+  repeated string locationIDs = 1;
+}
+
+message DeleteMeetingRoomLocationResp {}
+
+// 获取地点树（管理端，支持全部状态筛选）
+message GetAdminMeetingRoomLocationTreeReq {
+  int32 status = 1;  // 0=全部 1=仅启用 2=仅禁用
+}
+
+message GetAdminMeetingRoomLocationTreeResp {
+  repeated MeetingRoomLocationTreeNode tree = 1;
+}
+
+// 创建会议室
+message CreateMeetingRoomReq {
+  string name = 1;
+  string fullName = 2;
+  string locationID = 3;
+  int32 capacity = 4;
+  repeated string equipment = 5;
+  string description = 6;
+  int32 sortOrder = 7;
+  int32 status = 8;
+}
+
+message CreateMeetingRoomResp {
+  MeetingRoomInfo room = 1;
+}
+
+// 更新会议室
+message UpdateMeetingRoomReq {
+  string roomID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.StringValue fullName = 3;
+  openim.protobuf.StringValue locationID = 4;
+  openim.protobuf.Int32Value capacity = 5;
+  repeated string equipment = 6;
+  bool clearEquipment = 7;   // 当 equipment 为空时，true 表示清空设备，false 表示不修改
+  openim.protobuf.StringValue description = 8;
+  openim.protobuf.Int32Value sortOrder = 9;
+  openim.protobuf.Int32Value status = 10;
+}
+
+message UpdateMeetingRoomResp {}
+
+// 删除会议室
+message DeleteMeetingRoomReq {
+  repeated string roomIDs = 1;
+}
+
+message DeleteMeetingRoomResp {}
+
+// 搜索会议室（管理端）
+message SearchMeetingRoomReq {
+  string keyword = 1;
+  string locationID = 2;
+  int32 status = 3;
+  sdkws.RequestPagination pagination = 4;
+}
+
+message SearchMeetingRoomResp {
+  int32 total = 1;
+  repeated MeetingRoomInfo rooms = 2;
+}
+
+// ==================== gRPC Service（im-server 前台） ====================
+
+service MeetingRoomService {
+  rpc GetLocationTree(GetMeetingRoomLocationTreeReq) returns (GetMeetingRoomLocationTreeResp);
+  rpc GetRoomList(GetMeetingRoomListReq) returns (GetMeetingRoomListResp);
+  rpc GetRoomDetail(GetMeetingRoomDetailReq) returns (GetMeetingRoomDetailResp);
+  rpc GetRoomAvailability(GetMeetingRoomAvailabilityReq) returns (GetMeetingRoomAvailabilityResp);
+}

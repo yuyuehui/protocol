@@ -54,6 +54,8 @@ const (
 	LiveKitMeeting_SetNotificationPreference_FullMethodName = "/openim.livekit_meeting.LiveKitMeeting/SetNotificationPreference"
 	LiveKitMeeting_GetNotificationPreference_FullMethodName = "/openim.livekit_meeting.LiveKitMeeting/GetNotificationPreference"
 	LiveKitMeeting_ProcessLiveKitWebhook_FullMethodName     = "/openim.livekit_meeting.LiveKitMeeting/ProcessLiveKitWebhook"
+	LiveKitMeeting_NotifyMeetingCreated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingCreated"
+	LiveKitMeeting_NotifyMeetingUpdated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingUpdated"
 )
 
 // LiveKitMeetingClient is the client API for LiveKitMeeting service.
@@ -82,6 +84,10 @@ type LiveKitMeetingClient interface {
 	SetNotificationPreference(ctx context.Context, in *SetNotificationPreferenceReq, opts ...grpc.CallOption) (*SetNotificationPreferenceResp, error)
 	GetNotificationPreference(ctx context.Context, in *GetNotificationPreferenceReq, opts ...grpc.CallOption) (*GetNotificationPreferenceResp, error)
 	ProcessLiveKitWebhook(ctx context.Context, in *ProcessLiveKitWebhookReq, opts ...grpc.CallOption) (*ProcessLiveKitWebhookResp, error)
+	// 日程模块调用：通知会议创建（由日程创建会议记录后触发）
+	NotifyMeetingCreated(ctx context.Context, in *NotifyMeetingCreatedReq, opts ...grpc.CallOption) (*NotifyMeetingCreatedResp, error)
+	// 日程模块调用：通知会议更新（由日程更新会议字段后触发）
+	NotifyMeetingUpdated(ctx context.Context, in *NotifyMeetingUpdatedReq, opts ...grpc.CallOption) (*NotifyMeetingUpdatedResp, error)
 }
 
 type liveKitMeetingClient struct {
@@ -302,6 +308,26 @@ func (c *liveKitMeetingClient) ProcessLiveKitWebhook(ctx context.Context, in *Pr
 	return out, nil
 }
 
+func (c *liveKitMeetingClient) NotifyMeetingCreated(ctx context.Context, in *NotifyMeetingCreatedReq, opts ...grpc.CallOption) (*NotifyMeetingCreatedResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(NotifyMeetingCreatedResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_NotifyMeetingCreated_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) NotifyMeetingUpdated(ctx context.Context, in *NotifyMeetingUpdatedReq, opts ...grpc.CallOption) (*NotifyMeetingUpdatedResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(NotifyMeetingUpdatedResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_NotifyMeetingUpdated_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LiveKitMeetingServer is the server API for LiveKitMeeting service.
 // All implementations must embed UnimplementedLiveKitMeetingServer
 // for forward compatibility.
@@ -328,6 +354,10 @@ type LiveKitMeetingServer interface {
 	SetNotificationPreference(context.Context, *SetNotificationPreferenceReq) (*SetNotificationPreferenceResp, error)
 	GetNotificationPreference(context.Context, *GetNotificationPreferenceReq) (*GetNotificationPreferenceResp, error)
 	ProcessLiveKitWebhook(context.Context, *ProcessLiveKitWebhookReq) (*ProcessLiveKitWebhookResp, error)
+	// 日程模块调用：通知会议创建（由日程创建会议记录后触发）
+	NotifyMeetingCreated(context.Context, *NotifyMeetingCreatedReq) (*NotifyMeetingCreatedResp, error)
+	// 日程模块调用：通知会议更新（由日程更新会议字段后触发）
+	NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error)
 	mustEmbedUnimplementedLiveKitMeetingServer()
 }
 
@@ -400,6 +430,12 @@ func (UnimplementedLiveKitMeetingServer) GetNotificationPreference(context.Conte
 }
 func (UnimplementedLiveKitMeetingServer) ProcessLiveKitWebhook(context.Context, *ProcessLiveKitWebhookReq) (*ProcessLiveKitWebhookResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ProcessLiveKitWebhook not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) NotifyMeetingCreated(context.Context, *NotifyMeetingCreatedReq) (*NotifyMeetingCreatedResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method NotifyMeetingCreated not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method NotifyMeetingUpdated not implemented")
 }
 func (UnimplementedLiveKitMeetingServer) mustEmbedUnimplementedLiveKitMeetingServer() {}
 func (UnimplementedLiveKitMeetingServer) testEmbeddedByValue()                        {}
@@ -800,6 +836,42 @@ func _LiveKitMeeting_ProcessLiveKitWebhook_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LiveKitMeeting_NotifyMeetingCreated_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyMeetingCreatedReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).NotifyMeetingCreated(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_NotifyMeetingCreated_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).NotifyMeetingCreated(ctx, req.(*NotifyMeetingCreatedReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_NotifyMeetingUpdated_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyMeetingUpdatedReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).NotifyMeetingUpdated(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_NotifyMeetingUpdated_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).NotifyMeetingUpdated(ctx, req.(*NotifyMeetingUpdatedReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LiveKitMeeting_ServiceDesc is the grpc.ServiceDesc for LiveKitMeeting service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -890,6 +962,14 @@ var LiveKitMeeting_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ProcessLiveKitWebhook",
 			Handler:    _LiveKitMeeting_ProcessLiveKitWebhook_Handler,
+		},
+		{
+			MethodName: "NotifyMeetingCreated",
+			Handler:    _LiveKitMeeting_NotifyMeetingCreated_Handler,
+		},
+		{
+			MethodName: "NotifyMeetingUpdated",
+			Handler:    _LiveKitMeeting_NotifyMeetingUpdated_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
