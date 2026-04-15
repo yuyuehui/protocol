@@ -56,6 +56,7 @@ const (
 	LiveKitMeeting_ProcessLiveKitWebhook_FullMethodName     = "/openim.livekit_meeting.LiveKitMeeting/ProcessLiveKitWebhook"
 	LiveKitMeeting_NotifyMeetingCreated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingCreated"
 	LiveKitMeeting_NotifyMeetingUpdated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingUpdated"
+	LiveKitMeeting_DeleteMeeting_FullMethodName             = "/openim.livekit_meeting.LiveKitMeeting/DeleteMeeting"
 )
 
 // LiveKitMeetingClient is the client API for LiveKitMeeting service.
@@ -88,6 +89,8 @@ type LiveKitMeetingClient interface {
 	NotifyMeetingCreated(ctx context.Context, in *NotifyMeetingCreatedReq, opts ...grpc.CallOption) (*NotifyMeetingCreatedResp, error)
 	// 日程模块调用：通知会议更新（由日程更新会议字段后触发）
 	NotifyMeetingUpdated(ctx context.Context, in *NotifyMeetingUpdatedReq, opts ...grpc.CallOption) (*NotifyMeetingUpdatedResp, error)
+	// 删除会议（软删除，仅 cancelled/ended 状态可删）
+	DeleteMeeting(ctx context.Context, in *DeleteMeetingReq, opts ...grpc.CallOption) (*DeleteMeetingResp, error)
 }
 
 type liveKitMeetingClient struct {
@@ -328,6 +331,16 @@ func (c *liveKitMeetingClient) NotifyMeetingUpdated(ctx context.Context, in *Not
 	return out, nil
 }
 
+func (c *liveKitMeetingClient) DeleteMeeting(ctx context.Context, in *DeleteMeetingReq, opts ...grpc.CallOption) (*DeleteMeetingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteMeetingResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_DeleteMeeting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LiveKitMeetingServer is the server API for LiveKitMeeting service.
 // All implementations must embed UnimplementedLiveKitMeetingServer
 // for forward compatibility.
@@ -358,6 +371,8 @@ type LiveKitMeetingServer interface {
 	NotifyMeetingCreated(context.Context, *NotifyMeetingCreatedReq) (*NotifyMeetingCreatedResp, error)
 	// 日程模块调用：通知会议更新（由日程更新会议字段后触发）
 	NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error)
+	// 删除会议（软删除，仅 cancelled/ended 状态可删）
+	DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error)
 	mustEmbedUnimplementedLiveKitMeetingServer()
 }
 
@@ -436,6 +451,9 @@ func (UnimplementedLiveKitMeetingServer) NotifyMeetingCreated(context.Context, *
 }
 func (UnimplementedLiveKitMeetingServer) NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method NotifyMeetingUpdated not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteMeeting not implemented")
 }
 func (UnimplementedLiveKitMeetingServer) mustEmbedUnimplementedLiveKitMeetingServer() {}
 func (UnimplementedLiveKitMeetingServer) testEmbeddedByValue()                        {}
@@ -872,6 +890,24 @@ func _LiveKitMeeting_NotifyMeetingUpdated_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LiveKitMeeting_DeleteMeeting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMeetingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).DeleteMeeting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_DeleteMeeting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).DeleteMeeting(ctx, req.(*DeleteMeetingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LiveKitMeeting_ServiceDesc is the grpc.ServiceDesc for LiveKitMeeting service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -970,6 +1006,10 @@ var LiveKitMeeting_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NotifyMeetingUpdated",
 			Handler:    _LiveKitMeeting_NotifyMeetingUpdated_Handler,
+		},
+		{
+			MethodName: "DeleteMeeting",
+			Handler:    _LiveKitMeeting_DeleteMeeting_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

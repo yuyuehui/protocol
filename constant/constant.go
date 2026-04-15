@@ -182,6 +182,7 @@ const (
 	InvitationRespondedNotification      = 1811 // 邀请响应通知
 	InvitationCancelledNotification      = 1812 // 邀请取消通知
 	ParticipantRoleChangedNotification   = 1813 // 参会者角色变更通知
+	MeetingCancelledNotification         = 1814 // 会议取消通知（区别于删除，取消后仍显示）
 	MeetingNotificationEnd               = 1899 // 会议通知类型结束
 
 	NotificationEnd = 5000 // 通知类型结束标记

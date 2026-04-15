@@ -495,6 +495,27 @@ service LiveKitMeeting {
   rpc NotifyMeetingCreated(NotifyMeetingCreatedReq) returns (NotifyMeetingCreatedResp);
   // 日程模块调用：通知会议更新（由日程更新会议字段后触发）
   rpc NotifyMeetingUpdated(NotifyMeetingUpdatedReq) returns (NotifyMeetingUpdatedResp);
+  // 删除会议（软删除，仅 cancelled/ended 状态可删）
+  rpc DeleteMeeting(DeleteMeetingReq) returns (DeleteMeetingResp);
+}
+
+// ==================== 删除会议（软删除） ====================
+
+// DeleteMeetingReq 删除会议请求（软删除，仅 cancelled/ended 状态可删）
+message DeleteMeetingReq {
+  string meetingID = 1;
+}
+
+message DeleteMeetingResp {}
+
+// ==================== 会议取消通知 ====================
+
+// MeetingCancelledTips 会议取消通知（区别于删除，取消后仍显示）
+message MeetingCancelledTips {
+  string meetingID = 1;
+  string reason = 2;
+  string newStatus = 3;         // "cancelled"
+  sdkws.UserInfo opUser = 4;
 }
 
 // NotifyMeetingCreatedReq 日程模块通知 meeting 服务发送 MeetingCreated 通知
