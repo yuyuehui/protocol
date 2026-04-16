@@ -57,6 +57,8 @@ const (
 	LiveKitMeeting_NotifyMeetingCreated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingCreated"
 	LiveKitMeeting_NotifyMeetingUpdated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingUpdated"
 	LiveKitMeeting_DeleteMeeting_FullMethodName             = "/openim.livekit_meeting.LiveKitMeeting/DeleteMeeting"
+	LiveKitMeeting_CreateCall_FullMethodName                = "/openim.livekit_meeting.LiveKitMeeting/CreateCall"
+	LiveKitMeeting_EndCall_FullMethodName                   = "/openim.livekit_meeting.LiveKitMeeting/EndCall"
 )
 
 // LiveKitMeetingClient is the client API for LiveKitMeeting service.
@@ -91,6 +93,9 @@ type LiveKitMeetingClient interface {
 	NotifyMeetingUpdated(ctx context.Context, in *NotifyMeetingUpdatedReq, opts ...grpc.CallOption) (*NotifyMeetingUpdatedResp, error)
 	// 删除会议（软删除，仅 cancelled/ended 状态可删）
 	DeleteMeeting(ctx context.Context, in *DeleteMeetingReq, opts ...grpc.CallOption) (*DeleteMeetingResp, error)
+	// 语音/视频通话（不创建会议记录，仅操作 LiveKit 房间）
+	CreateCall(ctx context.Context, in *CreateCallReq, opts ...grpc.CallOption) (*CreateCallResp, error)
+	EndCall(ctx context.Context, in *EndCallReq, opts ...grpc.CallOption) (*EndCallResp, error)
 }
 
 type liveKitMeetingClient struct {
@@ -341,6 +346,26 @@ func (c *liveKitMeetingClient) DeleteMeeting(ctx context.Context, in *DeleteMeet
 	return out, nil
 }
 
+func (c *liveKitMeetingClient) CreateCall(ctx context.Context, in *CreateCallReq, opts ...grpc.CallOption) (*CreateCallResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateCallResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_CreateCall_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) EndCall(ctx context.Context, in *EndCallReq, opts ...grpc.CallOption) (*EndCallResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EndCallResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_EndCall_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LiveKitMeetingServer is the server API for LiveKitMeeting service.
 // All implementations must embed UnimplementedLiveKitMeetingServer
 // for forward compatibility.
@@ -373,6 +398,9 @@ type LiveKitMeetingServer interface {
 	NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error)
 	// 删除会议（软删除，仅 cancelled/ended 状态可删）
 	DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error)
+	// 语音/视频通话（不创建会议记录，仅操作 LiveKit 房间）
+	CreateCall(context.Context, *CreateCallReq) (*CreateCallResp, error)
+	EndCall(context.Context, *EndCallReq) (*EndCallResp, error)
 	mustEmbedUnimplementedLiveKitMeetingServer()
 }
 
@@ -454,6 +482,12 @@ func (UnimplementedLiveKitMeetingServer) NotifyMeetingUpdated(context.Context, *
 }
 func (UnimplementedLiveKitMeetingServer) DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteMeeting not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) CreateCall(context.Context, *CreateCallReq) (*CreateCallResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateCall not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) EndCall(context.Context, *EndCallReq) (*EndCallResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method EndCall not implemented")
 }
 func (UnimplementedLiveKitMeetingServer) mustEmbedUnimplementedLiveKitMeetingServer() {}
 func (UnimplementedLiveKitMeetingServer) testEmbeddedByValue()                        {}
@@ -908,6 +942,42 @@ func _LiveKitMeeting_DeleteMeeting_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LiveKitMeeting_CreateCall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCallReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).CreateCall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_CreateCall_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).CreateCall(ctx, req.(*CreateCallReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_EndCall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EndCallReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).EndCall(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_EndCall_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).EndCall(ctx, req.(*EndCallReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LiveKitMeeting_ServiceDesc is the grpc.ServiceDesc for LiveKitMeeting service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1010,6 +1080,14 @@ var LiveKitMeeting_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMeeting",
 			Handler:    _LiveKitMeeting_DeleteMeeting_Handler,
+		},
+		{
+			MethodName: "CreateCall",
+			Handler:    _LiveKitMeeting_CreateCall_Handler,
+		},
+		{
+			MethodName: "EndCall",
+			Handler:    _LiveKitMeeting_EndCall_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

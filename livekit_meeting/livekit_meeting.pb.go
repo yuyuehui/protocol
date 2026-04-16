@@ -2648,7 +2648,8 @@ func (*SetParticipantRoleResp) Descriptor() ([]byte, []int) {
 
 type GetMeetingTokenReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"` // 会议ID（会议场景传此字段）
+	RoomID        string                 `protobuf:"bytes,2,opt,name=roomID,proto3" json:"roomID"`       // 房间ID（通话场景传此字段，二选一）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2686,6 +2687,13 @@ func (*GetMeetingTokenReq) Descriptor() ([]byte, []int) {
 func (x *GetMeetingTokenReq) GetMeetingID() string {
 	if x != nil {
 		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *GetMeetingTokenReq) GetRoomID() string {
+	if x != nil {
+		return x.RoomID
 	}
 	return ""
 }
@@ -4147,6 +4155,194 @@ func (*NotifyMeetingUpdatedResp) Descriptor() ([]byte, []int) {
 	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{65}
 }
 
+// CreateCallReq 发起1对1通话请求
+type CreateCallReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	InviteeUserID string                 `protobuf:"bytes,1,opt,name=inviteeUserID,proto3" json:"inviteeUserID"` // 被叫方用户ID
+	CallType      string                 `protobuf:"bytes,2,opt,name=callType,proto3" json:"callType"`           // "voice" 或 "video"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateCallReq) Reset() {
+	*x = CreateCallReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateCallReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateCallReq) ProtoMessage() {}
+
+func (x *CreateCallReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateCallReq.ProtoReflect.Descriptor instead.
+func (*CreateCallReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{66}
+}
+
+func (x *CreateCallReq) GetInviteeUserID() string {
+	if x != nil {
+		return x.InviteeUserID
+	}
+	return ""
+}
+
+func (x *CreateCallReq) GetCallType() string {
+	if x != nil {
+		return x.CallType
+	}
+	return ""
+}
+
+// CreateCallResp 发起通话响应
+type CreateCallResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LiveKit       *LiveKitInfo           `protobuf:"bytes,1,opt,name=liveKit,proto3" json:"liveKit"` // 主叫方的 LiveKit 连接信息
+	RoomID        string                 `protobuf:"bytes,2,opt,name=roomID,proto3" json:"roomID"`   // 房间ID，被叫方用此ID加入
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateCallResp) Reset() {
+	*x = CreateCallResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateCallResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateCallResp) ProtoMessage() {}
+
+func (x *CreateCallResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateCallResp.ProtoReflect.Descriptor instead.
+func (*CreateCallResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{67}
+}
+
+func (x *CreateCallResp) GetLiveKit() *LiveKitInfo {
+	if x != nil {
+		return x.LiveKit
+	}
+	return nil
+}
+
+func (x *CreateCallResp) GetRoomID() string {
+	if x != nil {
+		return x.RoomID
+	}
+	return ""
+}
+
+// EndCallReq 结束通话
+type EndCallReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoomID        string                 `protobuf:"bytes,1,opt,name=roomID,proto3" json:"roomID"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndCallReq) Reset() {
+	*x = EndCallReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndCallReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndCallReq) ProtoMessage() {}
+
+func (x *EndCallReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndCallReq.ProtoReflect.Descriptor instead.
+func (*EndCallReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{68}
+}
+
+func (x *EndCallReq) GetRoomID() string {
+	if x != nil {
+		return x.RoomID
+	}
+	return ""
+}
+
+// EndCallResp 结束通话响应
+type EndCallResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndCallResp) Reset() {
+	*x = EndCallResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndCallResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndCallResp) ProtoMessage() {}
+
+func (x *EndCallResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndCallResp.ProtoReflect.Descriptor instead.
+func (*EndCallResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{69}
+}
+
 var File_livekit_meeting_livekit_meeting_proto protoreflect.FileDescriptor
 
 const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
@@ -4395,9 +4591,10 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x12\n" +
 	"\x04role\x18\x03 \x01(\x05R\x04role\"\x18\n" +
-	"\x16SetParticipantRoleResp\"2\n" +
+	"\x16SetParticipantRoleResp\"J\n" +
 	"\x12GetMeetingTokenReq\x12\x1c\n" +
-	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\"T\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
+	"\x06roomID\x18\x02 \x01(\tR\x06roomID\"T\n" +
 	"\x13GetMeetingTokenResp\x12=\n" +
 	"\aliveKit\x18\x01 \x01(\v2#.openim.livekit_meeting.LiveKitInfoR\aliveKit\"4\n" +
 	"\x0eSyncMeetingReq\x12\"\n" +
@@ -4484,7 +4681,17 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\n" +
 	"scheduleID\x18\x01 \x01(\tR\n" +
 	"scheduleID\"\x1a\n" +
-	"\x18NotifyMeetingUpdatedResp2\xbb\x15\n" +
+	"\x18NotifyMeetingUpdatedResp\"Q\n" +
+	"\rCreateCallReq\x12$\n" +
+	"\rinviteeUserID\x18\x01 \x01(\tR\rinviteeUserID\x12\x1a\n" +
+	"\bcallType\x18\x02 \x01(\tR\bcallType\"g\n" +
+	"\x0eCreateCallResp\x12=\n" +
+	"\aliveKit\x18\x01 \x01(\v2#.openim.livekit_meeting.LiveKitInfoR\aliveKit\x12\x16\n" +
+	"\x06roomID\x18\x02 \x01(\tR\x06roomID\"$\n" +
+	"\n" +
+	"EndCallReq\x12\x16\n" +
+	"\x06roomID\x18\x01 \x01(\tR\x06roomID\"\r\n" +
+	"\vEndCallResp2\xec\x16\n" +
 	"\x0eLiveKitMeeting\x12s\n" +
 	"\x12CreateQuickMeeting\x12-.openim.livekit_meeting.CreateQuickMeetingReq\x1a..openim.livekit_meeting.CreateQuickMeetingResp\x12j\n" +
 	"\x0fScheduleMeeting\x12*.openim.livekit_meeting.ScheduleMeetingReq\x1a+.openim.livekit_meeting.ScheduleMeetingResp\x12^\n" +
@@ -4511,7 +4718,10 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\x15ProcessLiveKitWebhook\x120.openim.livekit_meeting.ProcessLiveKitWebhookReq\x1a1.openim.livekit_meeting.ProcessLiveKitWebhookResp\x12y\n" +
 	"\x14NotifyMeetingCreated\x12/.openim.livekit_meeting.NotifyMeetingCreatedReq\x1a0.openim.livekit_meeting.NotifyMeetingCreatedResp\x12y\n" +
 	"\x14NotifyMeetingUpdated\x12/.openim.livekit_meeting.NotifyMeetingUpdatedReq\x1a0.openim.livekit_meeting.NotifyMeetingUpdatedResp\x12d\n" +
-	"\rDeleteMeeting\x12(.openim.livekit_meeting.DeleteMeetingReq\x1a).openim.livekit_meeting.DeleteMeetingRespB/Z-github.com/openimsdk/protocol/livekit_meetingb\x06proto3"
+	"\rDeleteMeeting\x12(.openim.livekit_meeting.DeleteMeetingReq\x1a).openim.livekit_meeting.DeleteMeetingResp\x12[\n" +
+	"\n" +
+	"CreateCall\x12%.openim.livekit_meeting.CreateCallReq\x1a&.openim.livekit_meeting.CreateCallResp\x12R\n" +
+	"\aEndCall\x12\".openim.livekit_meeting.EndCallReq\x1a#.openim.livekit_meeting.EndCallRespB/Z-github.com/openimsdk/protocol/livekit_meetingb\x06proto3"
 
 var (
 	file_livekit_meeting_livekit_meeting_proto_rawDescOnce sync.Once
@@ -4525,7 +4735,7 @@ func file_livekit_meeting_livekit_meeting_proto_rawDescGZIP() []byte {
 	return file_livekit_meeting_livekit_meeting_proto_rawDescData
 }
 
-var file_livekit_meeting_livekit_meeting_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
+var file_livekit_meeting_livekit_meeting_proto_msgTypes = make([]protoimpl.MessageInfo, 70)
 var file_livekit_meeting_livekit_meeting_proto_goTypes = []any{
 	(*MeetingSetting)(nil),                // 0: openim.livekit_meeting.MeetingSetting
 	(*RepeatRule)(nil),                    // 1: openim.livekit_meeting.RepeatRule
@@ -4593,18 +4803,22 @@ var file_livekit_meeting_livekit_meeting_proto_goTypes = []any{
 	(*NotifyMeetingCreatedResp)(nil),      // 63: openim.livekit_meeting.NotifyMeetingCreatedResp
 	(*NotifyMeetingUpdatedReq)(nil),       // 64: openim.livekit_meeting.NotifyMeetingUpdatedReq
 	(*NotifyMeetingUpdatedResp)(nil),      // 65: openim.livekit_meeting.NotifyMeetingUpdatedResp
-	(*schedule.MeetingSettings)(nil),      // 66: openim.schedule.MeetingSettings
-	(*schedule.ScheduleRepeatInfo)(nil),   // 67: openim.schedule.ScheduleRepeatInfo
-	(*wrapperspb.BoolValue)(nil),          // 68: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil),       // 69: openim.sdkws.RequestPagination
-	(*wrapperspb.StringValue)(nil),        // 70: openim.protobuf.StringValue
-	(*wrapperspb.Int64Value)(nil),         // 71: openim.protobuf.Int64Value
-	(*wrapperspb.Int32Value)(nil),         // 72: openim.protobuf.Int32Value
-	(*sdkws.UserInfo)(nil),                // 73: openim.sdkws.UserInfo
+	(*CreateCallReq)(nil),                 // 66: openim.livekit_meeting.CreateCallReq
+	(*CreateCallResp)(nil),                // 67: openim.livekit_meeting.CreateCallResp
+	(*EndCallReq)(nil),                    // 68: openim.livekit_meeting.EndCallReq
+	(*EndCallResp)(nil),                   // 69: openim.livekit_meeting.EndCallResp
+	(*schedule.MeetingSettings)(nil),      // 70: openim.schedule.MeetingSettings
+	(*schedule.ScheduleRepeatInfo)(nil),   // 71: openim.schedule.ScheduleRepeatInfo
+	(*wrapperspb.BoolValue)(nil),          // 72: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil),       // 73: openim.sdkws.RequestPagination
+	(*wrapperspb.StringValue)(nil),        // 74: openim.protobuf.StringValue
+	(*wrapperspb.Int64Value)(nil),         // 75: openim.protobuf.Int64Value
+	(*wrapperspb.Int32Value)(nil),         // 76: openim.protobuf.Int32Value
+	(*sdkws.UserInfo)(nil),                // 77: openim.sdkws.UserInfo
 }
 var file_livekit_meeting_livekit_meeting_proto_depIdxs = []int32{
-	66, // 0: openim.livekit_meeting.MeetingScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
-	67, // 1: openim.livekit_meeting.MeetingScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
+	70, // 0: openim.livekit_meeting.MeetingScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
+	71, // 1: openim.livekit_meeting.MeetingScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
 	1,  // 2: openim.livekit_meeting.MeetingInfo.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
 	0,  // 3: openim.livekit_meeting.MeetingInfo.setting:type_name -> openim.livekit_meeting.MeetingSetting
 	2,  // 4: openim.livekit_meeting.MeetingInfo.scheduleInfo:type_name -> openim.livekit_meeting.MeetingScheduleInfo
@@ -4616,92 +4830,97 @@ var file_livekit_meeting_livekit_meeting_proto_depIdxs = []int32{
 	3,  // 10: openim.livekit_meeting.ScheduleMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
 	3,  // 11: openim.livekit_meeting.JoinMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
 	5,  // 12: openim.livekit_meeting.JoinMeetingResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
-	68, // 13: openim.livekit_meeting.GetMeetingListReq.showInCalendar:type_name -> openim.protobuf.BoolValue
-	69, // 14: openim.livekit_meeting.GetMeetingListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	72, // 13: openim.livekit_meeting.GetMeetingListReq.showInCalendar:type_name -> openim.protobuf.BoolValue
+	73, // 14: openim.livekit_meeting.GetMeetingListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	3,  // 15: openim.livekit_meeting.GetMeetingListResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
 	3,  // 16: openim.livekit_meeting.GetMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
 	4,  // 17: openim.livekit_meeting.GetMeetingResp.participants:type_name -> openim.livekit_meeting.MeetingParticipant
-	70, // 18: openim.livekit_meeting.UpdateMeetingReq.title:type_name -> openim.protobuf.StringValue
-	71, // 19: openim.livekit_meeting.UpdateMeetingReq.scheduledTime:type_name -> openim.protobuf.Int64Value
-	72, // 20: openim.livekit_meeting.UpdateMeetingReq.duration:type_name -> openim.protobuf.Int32Value
+	74, // 18: openim.livekit_meeting.UpdateMeetingReq.title:type_name -> openim.protobuf.StringValue
+	75, // 19: openim.livekit_meeting.UpdateMeetingReq.scheduledTime:type_name -> openim.protobuf.Int64Value
+	76, // 20: openim.livekit_meeting.UpdateMeetingReq.duration:type_name -> openim.protobuf.Int32Value
 	0,  // 21: openim.livekit_meeting.UpdateMeetingReq.setting:type_name -> openim.livekit_meeting.MeetingSetting
-	68, // 22: openim.livekit_meeting.UpdateMeetingReq.showInCalendar:type_name -> openim.protobuf.BoolValue
+	72, // 22: openim.livekit_meeting.UpdateMeetingReq.showInCalendar:type_name -> openim.protobuf.BoolValue
 	1,  // 23: openim.livekit_meeting.UpdateMeetingReq.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
-	72, // 24: openim.livekit_meeting.UpdateMeetingReq.visibility:type_name -> openim.protobuf.Int32Value
+	76, // 24: openim.livekit_meeting.UpdateMeetingReq.visibility:type_name -> openim.protobuf.Int32Value
 	3,  // 25: openim.livekit_meeting.UpdateMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	69, // 26: openim.livekit_meeting.GetInviteRecordListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	73, // 26: openim.livekit_meeting.GetInviteRecordListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	6,  // 27: openim.livekit_meeting.GetInviteRecordListResp.records:type_name -> openim.livekit_meeting.MeetingInviteRecord
 	5,  // 28: openim.livekit_meeting.GetMeetingTokenResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
 	3,  // 29: openim.livekit_meeting.SyncMeetingResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
 	7,  // 30: openim.livekit_meeting.SetNotificationPreferenceReq.preference:type_name -> openim.livekit_meeting.NotificationPreference
 	7,  // 31: openim.livekit_meeting.GetNotificationPreferenceResp.preference:type_name -> openim.livekit_meeting.NotificationPreference
 	3,  // 32: openim.livekit_meeting.MeetingCreatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	73, // 33: openim.livekit_meeting.MeetingCreatedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 33: openim.livekit_meeting.MeetingCreatedTips.opUser:type_name -> openim.sdkws.UserInfo
 	3,  // 34: openim.livekit_meeting.MeetingUpdatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	73, // 35: openim.livekit_meeting.MeetingUpdatedTips.opUser:type_name -> openim.sdkws.UserInfo
-	73, // 36: openim.livekit_meeting.MeetingDeletedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 35: openim.livekit_meeting.MeetingUpdatedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 36: openim.livekit_meeting.MeetingDeletedTips.opUser:type_name -> openim.sdkws.UserInfo
 	3,  // 37: openim.livekit_meeting.MeetingInvitationTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	73, // 38: openim.livekit_meeting.MeetingInvitationTips.inviter:type_name -> openim.sdkws.UserInfo
-	73, // 39: openim.livekit_meeting.InvitationRespondedTips.opUser:type_name -> openim.sdkws.UserInfo
-	73, // 40: openim.livekit_meeting.InvitationCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 38: openim.livekit_meeting.MeetingInvitationTips.inviter:type_name -> openim.sdkws.UserInfo
+	77, // 39: openim.livekit_meeting.InvitationRespondedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 40: openim.livekit_meeting.InvitationCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
 	4,  // 41: openim.livekit_meeting.MeetingParticipantChangedTips.participant:type_name -> openim.livekit_meeting.MeetingParticipant
-	73, // 42: openim.livekit_meeting.MeetingParticipantChangedTips.opUser:type_name -> openim.sdkws.UserInfo
-	73, // 43: openim.livekit_meeting.MeetingStatusChangedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 42: openim.livekit_meeting.MeetingParticipantChangedTips.opUser:type_name -> openim.sdkws.UserInfo
+	77, // 43: openim.livekit_meeting.MeetingStatusChangedTips.opUser:type_name -> openim.sdkws.UserInfo
 	3,  // 44: openim.livekit_meeting.MeetingReminderTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	73, // 45: openim.livekit_meeting.MeetingCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
-	8,  // 46: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:input_type -> openim.livekit_meeting.CreateQuickMeetingReq
-	10, // 47: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:input_type -> openim.livekit_meeting.ScheduleMeetingReq
-	12, // 48: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:input_type -> openim.livekit_meeting.JoinMeetingReq
-	14, // 49: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:input_type -> openim.livekit_meeting.GetMeetingListReq
-	16, // 50: openim.livekit_meeting.LiveKitMeeting.GetMeeting:input_type -> openim.livekit_meeting.GetMeetingReq
-	18, // 51: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:input_type -> openim.livekit_meeting.UpdateMeetingReq
-	20, // 52: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:input_type -> openim.livekit_meeting.CancelMeetingReq
-	22, // 53: openim.livekit_meeting.LiveKitMeeting.EndMeeting:input_type -> openim.livekit_meeting.EndMeetingReq
-	24, // 54: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:input_type -> openim.livekit_meeting.InviteToMeetingReq
-	32, // 55: openim.livekit_meeting.LiveKitMeeting.KickParticipant:input_type -> openim.livekit_meeting.KickParticipantReq
-	36, // 56: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:input_type -> openim.livekit_meeting.GetMeetingTokenReq
-	38, // 57: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:input_type -> openim.livekit_meeting.SyncMeetingReq
-	26, // 58: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:input_type -> openim.livekit_meeting.RespondMeetingInvitationReq
-	28, // 59: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:input_type -> openim.livekit_meeting.CancelMeetingInvitationReq
-	30, // 60: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:input_type -> openim.livekit_meeting.GetInviteRecordListReq
-	34, // 61: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:input_type -> openim.livekit_meeting.SetParticipantRoleReq
-	40, // 62: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:input_type -> openim.livekit_meeting.SetMeetingReminderReq
-	42, // 63: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:input_type -> openim.livekit_meeting.GetMeetingRemindersReq
-	44, // 64: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:input_type -> openim.livekit_meeting.SetNotificationPreferenceReq
-	46, // 65: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:input_type -> openim.livekit_meeting.GetNotificationPreferenceReq
-	57, // 66: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:input_type -> openim.livekit_meeting.ProcessLiveKitWebhookReq
-	62, // 67: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:input_type -> openim.livekit_meeting.NotifyMeetingCreatedReq
-	64, // 68: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:input_type -> openim.livekit_meeting.NotifyMeetingUpdatedReq
-	59, // 69: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:input_type -> openim.livekit_meeting.DeleteMeetingReq
-	9,  // 70: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:output_type -> openim.livekit_meeting.CreateQuickMeetingResp
-	11, // 71: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:output_type -> openim.livekit_meeting.ScheduleMeetingResp
-	13, // 72: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:output_type -> openim.livekit_meeting.JoinMeetingResp
-	15, // 73: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:output_type -> openim.livekit_meeting.GetMeetingListResp
-	17, // 74: openim.livekit_meeting.LiveKitMeeting.GetMeeting:output_type -> openim.livekit_meeting.GetMeetingResp
-	19, // 75: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:output_type -> openim.livekit_meeting.UpdateMeetingResp
-	21, // 76: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:output_type -> openim.livekit_meeting.CancelMeetingResp
-	23, // 77: openim.livekit_meeting.LiveKitMeeting.EndMeeting:output_type -> openim.livekit_meeting.EndMeetingResp
-	25, // 78: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:output_type -> openim.livekit_meeting.InviteToMeetingResp
-	33, // 79: openim.livekit_meeting.LiveKitMeeting.KickParticipant:output_type -> openim.livekit_meeting.KickParticipantResp
-	37, // 80: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:output_type -> openim.livekit_meeting.GetMeetingTokenResp
-	39, // 81: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:output_type -> openim.livekit_meeting.SyncMeetingResp
-	27, // 82: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:output_type -> openim.livekit_meeting.RespondMeetingInvitationResp
-	29, // 83: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:output_type -> openim.livekit_meeting.CancelMeetingInvitationResp
-	31, // 84: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:output_type -> openim.livekit_meeting.GetInviteRecordListResp
-	35, // 85: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:output_type -> openim.livekit_meeting.SetParticipantRoleResp
-	41, // 86: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:output_type -> openim.livekit_meeting.SetMeetingReminderResp
-	43, // 87: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:output_type -> openim.livekit_meeting.GetMeetingRemindersResp
-	45, // 88: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:output_type -> openim.livekit_meeting.SetNotificationPreferenceResp
-	47, // 89: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:output_type -> openim.livekit_meeting.GetNotificationPreferenceResp
-	58, // 90: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:output_type -> openim.livekit_meeting.ProcessLiveKitWebhookResp
-	63, // 91: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:output_type -> openim.livekit_meeting.NotifyMeetingCreatedResp
-	65, // 92: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:output_type -> openim.livekit_meeting.NotifyMeetingUpdatedResp
-	60, // 93: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:output_type -> openim.livekit_meeting.DeleteMeetingResp
-	70, // [70:94] is the sub-list for method output_type
-	46, // [46:70] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	77, // 45: openim.livekit_meeting.MeetingCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
+	5,  // 46: openim.livekit_meeting.CreateCallResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	8,  // 47: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:input_type -> openim.livekit_meeting.CreateQuickMeetingReq
+	10, // 48: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:input_type -> openim.livekit_meeting.ScheduleMeetingReq
+	12, // 49: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:input_type -> openim.livekit_meeting.JoinMeetingReq
+	14, // 50: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:input_type -> openim.livekit_meeting.GetMeetingListReq
+	16, // 51: openim.livekit_meeting.LiveKitMeeting.GetMeeting:input_type -> openim.livekit_meeting.GetMeetingReq
+	18, // 52: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:input_type -> openim.livekit_meeting.UpdateMeetingReq
+	20, // 53: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:input_type -> openim.livekit_meeting.CancelMeetingReq
+	22, // 54: openim.livekit_meeting.LiveKitMeeting.EndMeeting:input_type -> openim.livekit_meeting.EndMeetingReq
+	24, // 55: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:input_type -> openim.livekit_meeting.InviteToMeetingReq
+	32, // 56: openim.livekit_meeting.LiveKitMeeting.KickParticipant:input_type -> openim.livekit_meeting.KickParticipantReq
+	36, // 57: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:input_type -> openim.livekit_meeting.GetMeetingTokenReq
+	38, // 58: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:input_type -> openim.livekit_meeting.SyncMeetingReq
+	26, // 59: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:input_type -> openim.livekit_meeting.RespondMeetingInvitationReq
+	28, // 60: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:input_type -> openim.livekit_meeting.CancelMeetingInvitationReq
+	30, // 61: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:input_type -> openim.livekit_meeting.GetInviteRecordListReq
+	34, // 62: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:input_type -> openim.livekit_meeting.SetParticipantRoleReq
+	40, // 63: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:input_type -> openim.livekit_meeting.SetMeetingReminderReq
+	42, // 64: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:input_type -> openim.livekit_meeting.GetMeetingRemindersReq
+	44, // 65: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:input_type -> openim.livekit_meeting.SetNotificationPreferenceReq
+	46, // 66: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:input_type -> openim.livekit_meeting.GetNotificationPreferenceReq
+	57, // 67: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:input_type -> openim.livekit_meeting.ProcessLiveKitWebhookReq
+	62, // 68: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:input_type -> openim.livekit_meeting.NotifyMeetingCreatedReq
+	64, // 69: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:input_type -> openim.livekit_meeting.NotifyMeetingUpdatedReq
+	59, // 70: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:input_type -> openim.livekit_meeting.DeleteMeetingReq
+	66, // 71: openim.livekit_meeting.LiveKitMeeting.CreateCall:input_type -> openim.livekit_meeting.CreateCallReq
+	68, // 72: openim.livekit_meeting.LiveKitMeeting.EndCall:input_type -> openim.livekit_meeting.EndCallReq
+	9,  // 73: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:output_type -> openim.livekit_meeting.CreateQuickMeetingResp
+	11, // 74: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:output_type -> openim.livekit_meeting.ScheduleMeetingResp
+	13, // 75: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:output_type -> openim.livekit_meeting.JoinMeetingResp
+	15, // 76: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:output_type -> openim.livekit_meeting.GetMeetingListResp
+	17, // 77: openim.livekit_meeting.LiveKitMeeting.GetMeeting:output_type -> openim.livekit_meeting.GetMeetingResp
+	19, // 78: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:output_type -> openim.livekit_meeting.UpdateMeetingResp
+	21, // 79: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:output_type -> openim.livekit_meeting.CancelMeetingResp
+	23, // 80: openim.livekit_meeting.LiveKitMeeting.EndMeeting:output_type -> openim.livekit_meeting.EndMeetingResp
+	25, // 81: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:output_type -> openim.livekit_meeting.InviteToMeetingResp
+	33, // 82: openim.livekit_meeting.LiveKitMeeting.KickParticipant:output_type -> openim.livekit_meeting.KickParticipantResp
+	37, // 83: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:output_type -> openim.livekit_meeting.GetMeetingTokenResp
+	39, // 84: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:output_type -> openim.livekit_meeting.SyncMeetingResp
+	27, // 85: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:output_type -> openim.livekit_meeting.RespondMeetingInvitationResp
+	29, // 86: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:output_type -> openim.livekit_meeting.CancelMeetingInvitationResp
+	31, // 87: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:output_type -> openim.livekit_meeting.GetInviteRecordListResp
+	35, // 88: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:output_type -> openim.livekit_meeting.SetParticipantRoleResp
+	41, // 89: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:output_type -> openim.livekit_meeting.SetMeetingReminderResp
+	43, // 90: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:output_type -> openim.livekit_meeting.GetMeetingRemindersResp
+	45, // 91: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:output_type -> openim.livekit_meeting.SetNotificationPreferenceResp
+	47, // 92: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:output_type -> openim.livekit_meeting.GetNotificationPreferenceResp
+	58, // 93: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:output_type -> openim.livekit_meeting.ProcessLiveKitWebhookResp
+	63, // 94: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:output_type -> openim.livekit_meeting.NotifyMeetingCreatedResp
+	65, // 95: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:output_type -> openim.livekit_meeting.NotifyMeetingUpdatedResp
+	60, // 96: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:output_type -> openim.livekit_meeting.DeleteMeetingResp
+	67, // 97: openim.livekit_meeting.LiveKitMeeting.CreateCall:output_type -> openim.livekit_meeting.CreateCallResp
+	69, // 98: openim.livekit_meeting.LiveKitMeeting.EndCall:output_type -> openim.livekit_meeting.EndCallResp
+	73, // [73:99] is the sub-list for method output_type
+	47, // [47:73] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_livekit_meeting_livekit_meeting_proto_init() }
@@ -4715,7 +4934,7 @@ func file_livekit_meeting_livekit_meeting_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_livekit_meeting_livekit_meeting_proto_rawDesc), len(file_livekit_meeting_livekit_meeting_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   66,
+			NumMessages:   70,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

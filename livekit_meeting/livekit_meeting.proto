@@ -333,7 +333,8 @@ message SetParticipantRoleResp {
 // ==================== 获取/刷新会议Token ====================
 
 message GetMeetingTokenReq {
-  string meetingID = 1;
+  string meetingID = 1;           // 会议ID（会议场景传此字段）
+  string roomID = 2;              // 房间ID（通话场景传此字段，二选一）
 }
 
 message GetMeetingTokenResp {
@@ -497,6 +498,10 @@ service LiveKitMeeting {
   rpc NotifyMeetingUpdated(NotifyMeetingUpdatedReq) returns (NotifyMeetingUpdatedResp);
   // 删除会议（软删除，仅 cancelled/ended 状态可删）
   rpc DeleteMeeting(DeleteMeetingReq) returns (DeleteMeetingResp);
+
+  // 语音/视频通话（不创建会议记录，仅操作 LiveKit 房间）
+  rpc CreateCall(CreateCallReq) returns (CreateCallResp);
+  rpc EndCall(EndCallReq) returns (EndCallResp);
 }
 
 // ==================== 删除会议（软删除） ====================
@@ -531,3 +536,25 @@ message NotifyMeetingUpdatedReq {
 }
 
 message NotifyMeetingUpdatedResp {}
+
+// ==================== 语音/视频通话（不创建会议记录） ====================
+
+// CreateCallReq 发起1对1通话请求
+message CreateCallReq {
+  string inviteeUserID = 1;     // 被叫方用户ID
+  string callType = 2;          // "voice" 或 "video"
+}
+
+// CreateCallResp 发起通话响应
+message CreateCallResp {
+  LiveKitInfo liveKit = 1;      // 主叫方的 LiveKit 连接信息
+  string roomID = 2;            // 房间ID，被叫方用此ID加入
+}
+
+// EndCallReq 结束通话
+message EndCallReq {
+  string roomID = 1;
+}
+
+// EndCallResp 结束通话响应
+message EndCallResp {}
