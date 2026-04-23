@@ -37,6 +37,7 @@ const (
 	MeetingRoomService_GetRoomList_FullMethodName         = "/openim.meeting_room.MeetingRoomService/GetRoomList"
 	MeetingRoomService_GetRoomDetail_FullMethodName       = "/openim.meeting_room.MeetingRoomService/GetRoomDetail"
 	MeetingRoomService_GetRoomAvailability_FullMethodName = "/openim.meeting_room.MeetingRoomService/GetRoomAvailability"
+	MeetingRoomService_BatchGetRoomDetail_FullMethodName  = "/openim.meeting_room.MeetingRoomService/BatchGetRoomDetail"
 )
 
 // MeetingRoomServiceClient is the client API for MeetingRoomService service.
@@ -47,6 +48,7 @@ type MeetingRoomServiceClient interface {
 	GetRoomList(ctx context.Context, in *GetMeetingRoomListReq, opts ...grpc.CallOption) (*GetMeetingRoomListResp, error)
 	GetRoomDetail(ctx context.Context, in *GetMeetingRoomDetailReq, opts ...grpc.CallOption) (*GetMeetingRoomDetailResp, error)
 	GetRoomAvailability(ctx context.Context, in *GetMeetingRoomAvailabilityReq, opts ...grpc.CallOption) (*GetMeetingRoomAvailabilityResp, error)
+	BatchGetRoomDetail(ctx context.Context, in *BatchGetRoomDetailReq, opts ...grpc.CallOption) (*BatchGetRoomDetailResp, error)
 }
 
 type meetingRoomServiceClient struct {
@@ -97,6 +99,16 @@ func (c *meetingRoomServiceClient) GetRoomAvailability(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *meetingRoomServiceClient) BatchGetRoomDetail(ctx context.Context, in *BatchGetRoomDetailReq, opts ...grpc.CallOption) (*BatchGetRoomDetailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetRoomDetailResp)
+	err := c.cc.Invoke(ctx, MeetingRoomService_BatchGetRoomDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MeetingRoomServiceServer is the server API for MeetingRoomService service.
 // All implementations must embed UnimplementedMeetingRoomServiceServer
 // for forward compatibility.
@@ -105,6 +117,7 @@ type MeetingRoomServiceServer interface {
 	GetRoomList(context.Context, *GetMeetingRoomListReq) (*GetMeetingRoomListResp, error)
 	GetRoomDetail(context.Context, *GetMeetingRoomDetailReq) (*GetMeetingRoomDetailResp, error)
 	GetRoomAvailability(context.Context, *GetMeetingRoomAvailabilityReq) (*GetMeetingRoomAvailabilityResp, error)
+	BatchGetRoomDetail(context.Context, *BatchGetRoomDetailReq) (*BatchGetRoomDetailResp, error)
 	mustEmbedUnimplementedMeetingRoomServiceServer()
 }
 
@@ -126,6 +139,9 @@ func (UnimplementedMeetingRoomServiceServer) GetRoomDetail(context.Context, *Get
 }
 func (UnimplementedMeetingRoomServiceServer) GetRoomAvailability(context.Context, *GetMeetingRoomAvailabilityReq) (*GetMeetingRoomAvailabilityResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRoomAvailability not implemented")
+}
+func (UnimplementedMeetingRoomServiceServer) BatchGetRoomDetail(context.Context, *BatchGetRoomDetailReq) (*BatchGetRoomDetailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchGetRoomDetail not implemented")
 }
 func (UnimplementedMeetingRoomServiceServer) mustEmbedUnimplementedMeetingRoomServiceServer() {}
 func (UnimplementedMeetingRoomServiceServer) testEmbeddedByValue()                            {}
@@ -220,6 +236,24 @@ func _MeetingRoomService_GetRoomAvailability_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MeetingRoomService_BatchGetRoomDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetRoomDetailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeetingRoomServiceServer).BatchGetRoomDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeetingRoomService_BatchGetRoomDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeetingRoomServiceServer).BatchGetRoomDetail(ctx, req.(*BatchGetRoomDetailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MeetingRoomService_ServiceDesc is the grpc.ServiceDesc for MeetingRoomService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -242,6 +276,10 @@ var MeetingRoomService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRoomAvailability",
 			Handler:    _MeetingRoomService_GetRoomAvailability_Handler,
+		},
+		{
+			MethodName: "BatchGetRoomDetail",
+			Handler:    _MeetingRoomService_BatchGetRoomDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -220,6 +220,15 @@ message SearchMeetingRoomResp {
   repeated MeetingRoomInfo rooms = 2;
 }
 
+// 批量获取会议室详情（内部 RPC，供 schedule/meeting 服务填充会议室信息）
+message BatchGetRoomDetailReq {
+  repeated string roomIDs = 1;
+}
+
+message BatchGetRoomDetailResp {
+  repeated MeetingRoomInfo rooms = 1;  // 按 roomID 匹配的会议室列表（不存在的 roomID 不返回）
+}
+
 // ==================== gRPC Service（im-server 前台） ====================
 
 service MeetingRoomService {
@@ -227,4 +236,5 @@ service MeetingRoomService {
   rpc GetRoomList(GetMeetingRoomListReq) returns (GetMeetingRoomListResp);
   rpc GetRoomDetail(GetMeetingRoomDetailReq) returns (GetMeetingRoomDetailResp);
   rpc GetRoomAvailability(GetMeetingRoomAvailabilityReq) returns (GetMeetingRoomAvailabilityResp);
+  rpc BatchGetRoomDetail(BatchGetRoomDetailReq) returns (BatchGetRoomDetailResp);
 }

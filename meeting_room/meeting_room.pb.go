@@ -1855,6 +1855,95 @@ func (x *SearchMeetingRoomResp) GetRooms() []*MeetingRoomInfo {
 	return nil
 }
 
+// 批量获取会议室详情（内部 RPC，供 schedule/meeting 服务填充会议室信息）
+type BatchGetRoomDetailReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoomIDs       []string               `protobuf:"bytes,1,rep,name=roomIDs,proto3" json:"roomIDs"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetRoomDetailReq) Reset() {
+	*x = BatchGetRoomDetailReq{}
+	mi := &file_meeting_room_meeting_room_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetRoomDetailReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetRoomDetailReq) ProtoMessage() {}
+
+func (x *BatchGetRoomDetailReq) ProtoReflect() protoreflect.Message {
+	mi := &file_meeting_room_meeting_room_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetRoomDetailReq.ProtoReflect.Descriptor instead.
+func (*BatchGetRoomDetailReq) Descriptor() ([]byte, []int) {
+	return file_meeting_room_meeting_room_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *BatchGetRoomDetailReq) GetRoomIDs() []string {
+	if x != nil {
+		return x.RoomIDs
+	}
+	return nil
+}
+
+type BatchGetRoomDetailResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rooms         []*MeetingRoomInfo     `protobuf:"bytes,1,rep,name=rooms,proto3" json:"rooms"` // 按 roomID 匹配的会议室列表（不存在的 roomID 不返回）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetRoomDetailResp) Reset() {
+	*x = BatchGetRoomDetailResp{}
+	mi := &file_meeting_room_meeting_room_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetRoomDetailResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetRoomDetailResp) ProtoMessage() {}
+
+func (x *BatchGetRoomDetailResp) ProtoReflect() protoreflect.Message {
+	mi := &file_meeting_room_meeting_room_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetRoomDetailResp.ProtoReflect.Descriptor instead.
+func (*BatchGetRoomDetailResp) Descriptor() ([]byte, []int) {
+	return file_meeting_room_meeting_room_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *BatchGetRoomDetailResp) GetRooms() []*MeetingRoomInfo {
+	if x != nil {
+		return x.Rooms
+	}
+	return nil
+}
+
 var File_meeting_room_meeting_room_proto protoreflect.FileDescriptor
 
 const file_meeting_room_meeting_room_proto_rawDesc = "" +
@@ -2011,12 +2100,17 @@ const file_meeting_room_meeting_room_proto_rawDesc = "" +
 	"pagination\"i\n" +
 	"\x15SearchMeetingRoomResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12:\n" +
-	"\x05rooms\x18\x02 \x03(\v2$.openim.meeting_room.MeetingRoomInfoR\x05rooms2\xe6\x03\n" +
+	"\x05rooms\x18\x02 \x03(\v2$.openim.meeting_room.MeetingRoomInfoR\x05rooms\"1\n" +
+	"\x15BatchGetRoomDetailReq\x12\x18\n" +
+	"\aroomIDs\x18\x01 \x03(\tR\aroomIDs\"T\n" +
+	"\x16BatchGetRoomDetailResp\x12:\n" +
+	"\x05rooms\x18\x01 \x03(\v2$.openim.meeting_room.MeetingRoomInfoR\x05rooms2\xd5\x04\n" +
 	"\x12MeetingRoomService\x12z\n" +
 	"\x0fGetLocationTree\x122.openim.meeting_room.GetMeetingRoomLocationTreeReq\x1a3.openim.meeting_room.GetMeetingRoomLocationTreeResp\x12f\n" +
 	"\vGetRoomList\x12*.openim.meeting_room.GetMeetingRoomListReq\x1a+.openim.meeting_room.GetMeetingRoomListResp\x12l\n" +
 	"\rGetRoomDetail\x12,.openim.meeting_room.GetMeetingRoomDetailReq\x1a-.openim.meeting_room.GetMeetingRoomDetailResp\x12~\n" +
-	"\x13GetRoomAvailability\x122.openim.meeting_room.GetMeetingRoomAvailabilityReq\x1a3.openim.meeting_room.GetMeetingRoomAvailabilityRespB,Z*github.com/openimsdk/protocol/meeting_roomb\x06proto3"
+	"\x13GetRoomAvailability\x122.openim.meeting_room.GetMeetingRoomAvailabilityReq\x1a3.openim.meeting_room.GetMeetingRoomAvailabilityResp\x12m\n" +
+	"\x12BatchGetRoomDetail\x12*.openim.meeting_room.BatchGetRoomDetailReq\x1a+.openim.meeting_room.BatchGetRoomDetailRespB,Z*github.com/openimsdk/protocol/meeting_roomb\x06proto3"
 
 var (
 	file_meeting_room_meeting_room_proto_rawDescOnce sync.Once
@@ -2030,7 +2124,7 @@ func file_meeting_room_meeting_room_proto_rawDescGZIP() []byte {
 	return file_meeting_room_meeting_room_proto_rawDescData
 }
 
-var file_meeting_room_meeting_room_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
+var file_meeting_room_meeting_room_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_meeting_room_meeting_room_proto_goTypes = []any{
 	(*MeetingRoomLocationInfo)(nil),             // 0: openim.meeting_room.MeetingRoomLocationInfo
 	(*MeetingRoomLocationTreeNode)(nil),         // 1: openim.meeting_room.MeetingRoomLocationTreeNode
@@ -2062,9 +2156,11 @@ var file_meeting_room_meeting_room_proto_goTypes = []any{
 	(*DeleteMeetingRoomResp)(nil),               // 27: openim.meeting_room.DeleteMeetingRoomResp
 	(*SearchMeetingRoomReq)(nil),                // 28: openim.meeting_room.SearchMeetingRoomReq
 	(*SearchMeetingRoomResp)(nil),               // 29: openim.meeting_room.SearchMeetingRoomResp
-	(*sdkws.RequestPagination)(nil),             // 30: openim.sdkws.RequestPagination
-	(*wrapperspb.StringValue)(nil),              // 31: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),               // 32: openim.protobuf.Int32Value
+	(*BatchGetRoomDetailReq)(nil),               // 30: openim.meeting_room.BatchGetRoomDetailReq
+	(*BatchGetRoomDetailResp)(nil),              // 31: openim.meeting_room.BatchGetRoomDetailResp
+	(*sdkws.RequestPagination)(nil),             // 32: openim.sdkws.RequestPagination
+	(*wrapperspb.StringValue)(nil),              // 33: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),               // 34: openim.protobuf.Int32Value
 }
 var file_meeting_room_meeting_room_proto_depIdxs = []int32{
 	1,  // 0: openim.meeting_room.MeetingRoomLocationTreeNode.children:type_name -> openim.meeting_room.MeetingRoomLocationTreeNode
@@ -2072,38 +2168,41 @@ var file_meeting_room_meeting_room_proto_depIdxs = []int32{
 	3,  // 2: openim.meeting_room.MeetingRoomWithSlots.bookingSlots:type_name -> openim.meeting_room.RoomBookingSlot
 	3,  // 3: openim.meeting_room.RoomAvailabilityEntry.bookingSlots:type_name -> openim.meeting_room.RoomBookingSlot
 	1,  // 4: openim.meeting_room.GetMeetingRoomLocationTreeResp.tree:type_name -> openim.meeting_room.MeetingRoomLocationTreeNode
-	30, // 5: openim.meeting_room.GetMeetingRoomListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	32, // 5: openim.meeting_room.GetMeetingRoomListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	4,  // 6: openim.meeting_room.GetMeetingRoomListResp.rooms:type_name -> openim.meeting_room.MeetingRoomWithSlots
 	2,  // 7: openim.meeting_room.GetMeetingRoomDetailResp.roomInfo:type_name -> openim.meeting_room.MeetingRoomInfo
 	5,  // 8: openim.meeting_room.GetMeetingRoomAvailabilityResp.roomAvailability:type_name -> openim.meeting_room.RoomAvailabilityEntry
 	0,  // 9: openim.meeting_room.CreateMeetingRoomLocationResp.location:type_name -> openim.meeting_room.MeetingRoomLocationInfo
-	31, // 10: openim.meeting_room.UpdateMeetingRoomLocationReq.name:type_name -> openim.protobuf.StringValue
-	32, // 11: openim.meeting_room.UpdateMeetingRoomLocationReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	32, // 12: openim.meeting_room.UpdateMeetingRoomLocationReq.status:type_name -> openim.protobuf.Int32Value
+	33, // 10: openim.meeting_room.UpdateMeetingRoomLocationReq.name:type_name -> openim.protobuf.StringValue
+	34, // 11: openim.meeting_room.UpdateMeetingRoomLocationReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	34, // 12: openim.meeting_room.UpdateMeetingRoomLocationReq.status:type_name -> openim.protobuf.Int32Value
 	1,  // 13: openim.meeting_room.GetAdminMeetingRoomLocationTreeResp.tree:type_name -> openim.meeting_room.MeetingRoomLocationTreeNode
 	2,  // 14: openim.meeting_room.CreateMeetingRoomResp.room:type_name -> openim.meeting_room.MeetingRoomInfo
-	31, // 15: openim.meeting_room.UpdateMeetingRoomReq.name:type_name -> openim.protobuf.StringValue
-	31, // 16: openim.meeting_room.UpdateMeetingRoomReq.fullName:type_name -> openim.protobuf.StringValue
-	31, // 17: openim.meeting_room.UpdateMeetingRoomReq.locationID:type_name -> openim.protobuf.StringValue
-	32, // 18: openim.meeting_room.UpdateMeetingRoomReq.capacity:type_name -> openim.protobuf.Int32Value
-	31, // 19: openim.meeting_room.UpdateMeetingRoomReq.description:type_name -> openim.protobuf.StringValue
-	32, // 20: openim.meeting_room.UpdateMeetingRoomReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	32, // 21: openim.meeting_room.UpdateMeetingRoomReq.status:type_name -> openim.protobuf.Int32Value
-	30, // 22: openim.meeting_room.SearchMeetingRoomReq.pagination:type_name -> openim.sdkws.RequestPagination
+	33, // 15: openim.meeting_room.UpdateMeetingRoomReq.name:type_name -> openim.protobuf.StringValue
+	33, // 16: openim.meeting_room.UpdateMeetingRoomReq.fullName:type_name -> openim.protobuf.StringValue
+	33, // 17: openim.meeting_room.UpdateMeetingRoomReq.locationID:type_name -> openim.protobuf.StringValue
+	34, // 18: openim.meeting_room.UpdateMeetingRoomReq.capacity:type_name -> openim.protobuf.Int32Value
+	33, // 19: openim.meeting_room.UpdateMeetingRoomReq.description:type_name -> openim.protobuf.StringValue
+	34, // 20: openim.meeting_room.UpdateMeetingRoomReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	34, // 21: openim.meeting_room.UpdateMeetingRoomReq.status:type_name -> openim.protobuf.Int32Value
+	32, // 22: openim.meeting_room.SearchMeetingRoomReq.pagination:type_name -> openim.sdkws.RequestPagination
 	2,  // 23: openim.meeting_room.SearchMeetingRoomResp.rooms:type_name -> openim.meeting_room.MeetingRoomInfo
-	6,  // 24: openim.meeting_room.MeetingRoomService.GetLocationTree:input_type -> openim.meeting_room.GetMeetingRoomLocationTreeReq
-	8,  // 25: openim.meeting_room.MeetingRoomService.GetRoomList:input_type -> openim.meeting_room.GetMeetingRoomListReq
-	10, // 26: openim.meeting_room.MeetingRoomService.GetRoomDetail:input_type -> openim.meeting_room.GetMeetingRoomDetailReq
-	12, // 27: openim.meeting_room.MeetingRoomService.GetRoomAvailability:input_type -> openim.meeting_room.GetMeetingRoomAvailabilityReq
-	7,  // 28: openim.meeting_room.MeetingRoomService.GetLocationTree:output_type -> openim.meeting_room.GetMeetingRoomLocationTreeResp
-	9,  // 29: openim.meeting_room.MeetingRoomService.GetRoomList:output_type -> openim.meeting_room.GetMeetingRoomListResp
-	11, // 30: openim.meeting_room.MeetingRoomService.GetRoomDetail:output_type -> openim.meeting_room.GetMeetingRoomDetailResp
-	13, // 31: openim.meeting_room.MeetingRoomService.GetRoomAvailability:output_type -> openim.meeting_room.GetMeetingRoomAvailabilityResp
-	28, // [28:32] is the sub-list for method output_type
-	24, // [24:28] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	2,  // 24: openim.meeting_room.BatchGetRoomDetailResp.rooms:type_name -> openim.meeting_room.MeetingRoomInfo
+	6,  // 25: openim.meeting_room.MeetingRoomService.GetLocationTree:input_type -> openim.meeting_room.GetMeetingRoomLocationTreeReq
+	8,  // 26: openim.meeting_room.MeetingRoomService.GetRoomList:input_type -> openim.meeting_room.GetMeetingRoomListReq
+	10, // 27: openim.meeting_room.MeetingRoomService.GetRoomDetail:input_type -> openim.meeting_room.GetMeetingRoomDetailReq
+	12, // 28: openim.meeting_room.MeetingRoomService.GetRoomAvailability:input_type -> openim.meeting_room.GetMeetingRoomAvailabilityReq
+	30, // 29: openim.meeting_room.MeetingRoomService.BatchGetRoomDetail:input_type -> openim.meeting_room.BatchGetRoomDetailReq
+	7,  // 30: openim.meeting_room.MeetingRoomService.GetLocationTree:output_type -> openim.meeting_room.GetMeetingRoomLocationTreeResp
+	9,  // 31: openim.meeting_room.MeetingRoomService.GetRoomList:output_type -> openim.meeting_room.GetMeetingRoomListResp
+	11, // 32: openim.meeting_room.MeetingRoomService.GetRoomDetail:output_type -> openim.meeting_room.GetMeetingRoomDetailResp
+	13, // 33: openim.meeting_room.MeetingRoomService.GetRoomAvailability:output_type -> openim.meeting_room.GetMeetingRoomAvailabilityResp
+	31, // 34: openim.meeting_room.MeetingRoomService.BatchGetRoomDetail:output_type -> openim.meeting_room.BatchGetRoomDetailResp
+	30, // [30:35] is the sub-list for method output_type
+	25, // [25:30] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_meeting_room_meeting_room_proto_init() }
@@ -2117,7 +2216,7 @@ func file_meeting_room_meeting_room_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_meeting_room_meeting_room_proto_rawDesc), len(file_meeting_room_meeting_room_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   30,
+			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

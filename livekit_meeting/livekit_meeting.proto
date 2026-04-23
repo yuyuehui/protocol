@@ -18,6 +18,7 @@ package openim.livekit_meeting;
 import "sdkws/sdkws.proto";
 import "wrapperspb/wrapperspb.proto";
 import "schedule/schedule.proto";
+import "meeting_room/meeting_room.proto";
 
 option go_package = "github.com/openimsdk/protocol/livekit_meeting";
 
@@ -71,6 +72,7 @@ message MeetingScheduleInfo {
   openim.schedule.ScheduleRepeatInfo repeatInfo = 22;       // 重复规则
   int64 createTime = 23;                // 创建时间（时间戳）
   int64 updateTime = 24;                // 更新时间（时间戳）
+  openim.meeting_room.MeetingRoomInfo roomInfo = 25; // 会议室详细信息（roomID 非空时填充）
 }
 
 // MeetingInfo 会议信息

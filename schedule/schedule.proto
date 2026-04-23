@@ -16,6 +16,7 @@ syntax = "proto3";
 package openim.schedule;
 
 import "sdkws/sdkws.proto";
+import "meeting_room/meeting_room.proto";
 
 option go_package = "github.com/openimsdk/protocol/schedule";
 
@@ -133,6 +134,9 @@ message ScheduleInfo {
   bool isJoined = 26;    // 是否参与了这个日程（当前用户是否在参与者列表中）
   bool canEdit = 27;      // 是否有编辑权限：创建者可编辑/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程
   bool canDelete = 28;    // 是否能删除/退出：创建者可删除/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程/加入的日程
+
+  // 关联信息（计算字段，不存储在数据库中）
+  openim.meeting_room.MeetingRoomInfo roomInfo = 29; // 会议室详细信息（roomID 非空时填充）
 }
 
 // CreateScheduleReq 创建日程请求
