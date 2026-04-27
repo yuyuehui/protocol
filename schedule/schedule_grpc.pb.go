@@ -38,6 +38,7 @@ const (
 	Schedule_DeleteSchedule_FullMethodName                 = "/openim.schedule.Schedule/DeleteSchedule"
 	Schedule_GetSchedule_FullMethodName                    = "/openim.schedule.Schedule/GetSchedule"
 	Schedule_GetSchedules_FullMethodName                   = "/openim.schedule.Schedule/GetSchedules"
+	Schedule_GetMyRoomBookings_FullMethodName              = "/openim.schedule.Schedule/GetMyRoomBookings"
 	Schedule_AcceptSchedule_FullMethodName                 = "/openim.schedule.Schedule/AcceptSchedule"
 	Schedule_RejectSchedule_FullMethodName                 = "/openim.schedule.Schedule/RejectSchedule"
 	Schedule_JoinSchedule_FullMethodName                   = "/openim.schedule.Schedule/JoinSchedule"
@@ -73,6 +74,8 @@ type ScheduleClient interface {
 	GetSchedule(ctx context.Context, in *GetScheduleReq, opts ...grpc.CallOption) (*GetScheduleResp, error)
 	// 查询日程列表
 	GetSchedules(ctx context.Context, in *GetSchedulesReq, opts ...grpc.CallOption) (*GetSchedulesResp, error)
+	// 查询我的会议室预定列表（仅返回 roomID 非空的日程，即有预定会议室的日程）
+	GetMyRoomBookings(ctx context.Context, in *GetMyRoomBookingsReq, opts ...grpc.CallOption) (*GetMyRoomBookingsResp, error)
 	// 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
 	AcceptSchedule(ctx context.Context, in *AcceptScheduleReq, opts ...grpc.CallOption) (*AcceptScheduleResp, error)
 	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
@@ -161,6 +164,16 @@ func (c *scheduleClient) GetSchedules(ctx context.Context, in *GetSchedulesReq, 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSchedulesResp)
 	err := c.cc.Invoke(ctx, Schedule_GetSchedules_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleClient) GetMyRoomBookings(ctx context.Context, in *GetMyRoomBookingsReq, opts ...grpc.CallOption) (*GetMyRoomBookingsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyRoomBookingsResp)
+	err := c.cc.Invoke(ctx, Schedule_GetMyRoomBookings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -353,6 +366,8 @@ type ScheduleServer interface {
 	GetSchedule(context.Context, *GetScheduleReq) (*GetScheduleResp, error)
 	// 查询日程列表
 	GetSchedules(context.Context, *GetSchedulesReq) (*GetSchedulesResp, error)
+	// 查询我的会议室预定列表（仅返回 roomID 非空的日程，即有预定会议室的日程）
+	GetMyRoomBookings(context.Context, *GetMyRoomBookingsReq) (*GetMyRoomBookingsResp, error)
 	// 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
 	AcceptSchedule(context.Context, *AcceptScheduleReq) (*AcceptScheduleResp, error)
 	// 拒绝日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程）
@@ -411,6 +426,9 @@ func (UnimplementedScheduleServer) GetSchedule(context.Context, *GetScheduleReq)
 }
 func (UnimplementedScheduleServer) GetSchedules(context.Context, *GetSchedulesReq) (*GetSchedulesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSchedules not implemented")
+}
+func (UnimplementedScheduleServer) GetMyRoomBookings(context.Context, *GetMyRoomBookingsReq) (*GetMyRoomBookingsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMyRoomBookings not implemented")
 }
 func (UnimplementedScheduleServer) AcceptSchedule(context.Context, *AcceptScheduleReq) (*AcceptScheduleResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AcceptSchedule not implemented")
@@ -570,6 +588,24 @@ func _Schedule_GetSchedules_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ScheduleServer).GetSchedules(ctx, req.(*GetSchedulesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Schedule_GetMyRoomBookings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyRoomBookingsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).GetMyRoomBookings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_GetMyRoomBookings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).GetMyRoomBookings(ctx, req.(*GetMyRoomBookingsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -906,6 +942,10 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSchedules",
 			Handler:    _Schedule_GetSchedules_Handler,
+		},
+		{
+			MethodName: "GetMyRoomBookings",
+			Handler:    _Schedule_GetMyRoomBookings_Handler,
 		},
 		{
 			MethodName: "AcceptSchedule",

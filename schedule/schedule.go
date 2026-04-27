@@ -300,6 +300,19 @@ func (x *GetSchedulesReq) Check() error {
 	return nil
 }
 
+// GetMyRoomBookingsReq Check 查询我的会议室预定列表请求参数校验
+func (x *GetMyRoomBookingsReq) Check() error {
+	if x.Pagination != nil {
+		if x.Pagination.PageNumber < 1 {
+			return errs.ErrArgs.WrapMsg("pageNumber is invalid")
+		}
+		if x.Pagination.ShowNumber < 1 {
+			return errs.ErrArgs.WrapMsg("showNumber is invalid")
+		}
+	}
+	return nil
+}
+
 // AcceptScheduleReq Check 接受日程邀请请求参数校验
 func (x *AcceptScheduleReq) Check() error {
 	if x.ScheduleID == "" {

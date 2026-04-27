@@ -282,6 +282,19 @@ message GetSchedulesResp {
   int32 total = 2;
 }
 
+// GetMyRoomBookingsReq 查询我的会议室预定列表请求
+message GetMyRoomBookingsReq {
+  string userID = 1;                      // 用户ID
+  int64 date = 2;                         // 查询日期（时间戳，定位到某天）
+  sdkws.RequestPagination pagination = 3;
+}
+
+// GetMyRoomBookingsResp 查询我的会议室预定列表响应
+message GetMyRoomBookingsResp {
+  repeated ScheduleInfo schedules = 1;
+  int32 total = 2;
+}
+
 // AcceptScheduleReq 接受日程邀请请求
 // 支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程
 message AcceptScheduleReq {
@@ -416,6 +429,9 @@ service Schedule {
   
   // 查询日程列表
   rpc GetSchedules(GetSchedulesReq) returns (GetSchedulesResp);
+
+  // 查询我的会议室预定列表（仅返回 roomID 非空的日程，即有预定会议室的日程）
+  rpc GetMyRoomBookings(GetMyRoomBookingsReq) returns (GetMyRoomBookingsResp);
   
   // 接受日程邀请（支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程）
   rpc AcceptSchedule(AcceptScheduleReq) returns (AcceptScheduleResp);
