@@ -19,6 +19,7 @@ import "sdkws/sdkws.proto";
 import "wrapperspb/wrapperspb.proto";
 import "schedule/schedule.proto";
 import "meeting_room/meeting_room.proto";
+import "egress/egress.proto";
 
 option go_package = "github.com/openimsdk/protocol/livekit_meeting";
 
@@ -104,6 +105,26 @@ message MeetingInfo {
   repeated string participantFaceURLs = 25;   // 参会者头像预览列表（前5个）
   string scheduleID = 26;              // 关联的日程ID（从日程创建会议时记录）
   MeetingScheduleInfo scheduleInfo = 27; // 关联的日程详情（当scheduleID非空时填充）
+  // 会议录制摘要列表（服务端从 meeting_recordings 集合加载，用于历史会议等场景）
+  repeated MeetingRecordingSummary recordings = 28;
+}
+
+// MeetingRecordingSummary 单次录制的固化摘要（MongoDB meeting_recordings）
+message MeetingRecordingSummary {
+  string recordingID = 1;   // 服务端生成的录制记录ID
+  string egressID = 2;      // LiveKit Egress 任务ID
+  string status = 3;        // EGRESS_COMPLETE / EGRESS_FAILED 等
+  string fileLocation = 4;  // 对象存储地址/下载路径（与 Egress FileResult.location 一致）
+  string filename = 5;
+  int64 startedAt = 6;      // 纳秒时间戳（与 LiveKit 一致）
+  int64 endedAt = 7;
+  int64 durationNs = 8;
+  int64 sizeBytes = 9;
+  int64 createTime = 10;    // 记录创建时间 Unix 秒
+  string error = 11;        // 失败原因（status=FAILED 时有值）
+  string permScope = 12;    // 权限范围: host / participants / all
+  string permCondition = 13; // 访问条件: direct / password / approval
+  bool needPassword = 14;    // 前端提示：是否需要输入密码（true 时前端弹密码框）
 }
 
 // MeetingParticipant 参会者信息
@@ -462,6 +483,8 @@ message ProcessLiveKitWebhookReq {
   string event = 1;           // 事件类型: participant_left, room_finished
   string roomName = 2;        // LiveKit 房间名（= meetingID）
   string identity = 3;        // 参与者 identity（= userID），participant_left 时必填
+  // egress_started / egress_updated / egress_ended 时由 API 层从 Webhook 解析填充
+  openim.egress.RecordingInfo egressRecording = 4;
 }
 
 message ProcessLiveKitWebhookResp {

@@ -18,6 +18,7 @@ PROTO_NAMES=(
     "livekit_meeting"
     "meeting_room"
     "schedule"
+    "egress"
 )
 
 for name in "${PROTO_NAMES[@]}"; do
