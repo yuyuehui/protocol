@@ -1,0 +1,171 @@
+syntax = "proto3";
+package openim.egress;
+
+option go_package = "github.com/openimsdk/protocol/egress";
+
+// ==================== 录制输出配置 ====================
+
+// S3Upload S3 兼容存储上传配置
+message S3Upload {
+  string accessKey = 1;
+  string secret = 2;
+  string region = 3;
+  string bucket = 4;
+  string endpoint = 5;
+}
+
+// AliOSSUpload 阿里 OSS 上传配置
+message AliOSSUpload {
+  string accessKey = 1;
+  string secret = 2;
+  string region = 3;
+  string bucket = 4;
+  string endpoint = 5;
+}
+
+// FileOutput 文件输出配置
+message FileOutput {
+  string fileType = 1;       // mp4, ogg, webm
+  string filepath = 2;       // 输出文件路径模板，支持 {room_name}/{time} 等变量
+  oneof output {
+    S3Upload s3 = 3;
+    AliOSSUpload aliOss = 4;
+  }
+}
+
+// SegmentOutput HLS 分段输出配置
+message SegmentOutput {
+  string filenamePrefix = 1;
+  string playlistName = 2;
+  int32 segmentDuration = 3;  // 分段时长(秒)，默认 6
+  oneof output {
+    S3Upload s3 = 4;
+    AliOSSUpload aliOss = 5;
+  }
+}
+
+// StreamOutput 推流输出配置
+message StreamOutput {
+  string protocol = 1;       // rtmp, srt
+  repeated string urls = 2;
+}
+
+// ==================== 录制信息 ====================
+
+// RecordingInfo 录制任务信息
+message RecordingInfo {
+  string egressID = 1;
+  string roomName = 2;
+  string meetingID = 3;
+  string status = 4;         // EGRESS_STARTING, EGRESS_ACTIVE, EGRESS_ENDING, EGRESS_COMPLETE, EGRESS_FAILED
+  int64 startedAt = 5;
+  int64 endedAt = 6;
+  int64 updatedAt = 7;
+  string error = 8;
+  string roomID = 9;
+  FileResult fileResult = 10;
+}
+
+// FileResult 录制文件结果
+message FileResult {
+  string filename = 1;
+  int64 startedAt = 2;
+  int64 endedAt = 3;
+  int64 duration = 4;     // 时长(纳秒)
+  int64 size = 5;         // 文件大小(字节)
+  string location = 6;    // 存储位置/下载地址
+}
+
+// ==================== 请求/响应 ====================
+
+// StartRoomRecordingReq 开始房间合成录制（整个房间画面）
+message StartRoomRecordingReq {
+  string roomName = 1;
+  string meetingID = 2;       // 关联的会议ID（可选）
+  string layout = 3;          // 布局: speaker, grid, single-speaker（默认 speaker）
+  FileOutput fileOutput = 4;  // 文件输出（与 segmentOutput/streamOutput 互斥）
+  SegmentOutput segmentOutput = 5;  // HLS 分段输出
+  StreamOutput streamOutput = 6;    // 推流输出
+  bool audioOnly = 7;         // 仅录制音频
+}
+
+message StartRoomRecordingResp {
+  RecordingInfo info = 1;
+}
+
+// StartTrackRecordingReq 开始轨道合成录制（音视频通话录制）
+message StartTrackRecordingReq {
+  string roomName = 1;
+  string meetingID = 2;
+  string audioTrackID = 3;
+  string videoTrackID = 4;
+  FileOutput fileOutput = 5;
+  SegmentOutput segmentOutput = 6;
+}
+
+message StartTrackRecordingResp {
+  RecordingInfo info = 1;
+}
+
+// StopRecordingReq 停止录制
+message StopRecordingReq {
+  string egressID = 1;
+}
+
+message StopRecordingResp {
+  RecordingInfo info = 1;
+}
+
+// ListRecordingsReq 查询录制列表
+message ListRecordingsReq {
+  string roomName = 1;     // 按房间名过滤（可选）
+  string meetingID = 2;    // 按会议ID过滤（可选）
+  bool activeOnly = 3;     // 仅返回进行中的录制
+}
+
+message ListRecordingsResp {
+  repeated RecordingInfo items = 1;
+}
+
+// UpdateLayoutReq 更新录制布局
+message UpdateLayoutReq {
+  string egressID = 1;
+  string layout = 2;
+}
+
+message UpdateLayoutResp {
+  RecordingInfo info = 1;
+}
+
+// UpdateStreamReq 更新推流地址
+message UpdateStreamReq {
+  string egressID = 1;
+  repeated string addOutputUrls = 2;
+  repeated string removeOutputUrls = 3;
+}
+
+message UpdateStreamResp {
+  RecordingInfo info = 1;
+}
+
+// ==================== gRPC 服务定义 ====================
+
+service EgressService {
+  // 房间合成录制（整个房间画面）
+  rpc StartRoomRecording(StartRoomRecordingReq) returns (StartRoomRecordingResp);
+
+  // 轨道合成录制（单参与者音视频）
+  rpc StartTrackRecording(StartTrackRecordingReq) returns (StartTrackRecordingResp);
+
+  // 停止录制/推流
+  rpc StopRecording(StopRecordingReq) returns (StopRecordingResp);
+
+  // 查询录制列表
+  rpc ListRecordings(ListRecordingsReq) returns (ListRecordingsResp);
+
+  // 更新录制布局
+  rpc UpdateLayout(UpdateLayoutReq) returns (UpdateLayoutResp);
+
+  // 更新推流地址
+  rpc UpdateStream(UpdateStreamReq) returns (UpdateStreamResp);
+}
