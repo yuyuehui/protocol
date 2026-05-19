@@ -1000,6 +1000,15 @@ message ScheduleChangeElem {
   repeated ScheduleNotificationAttendeeInfo attendees = 26; // 参与者列表
 }
 
+// 日程提醒已读回执通知（跨设备同步：某端弹窗后通知其他端不再弹窗）
+message ScheduleReminderAckTips {
+  string userID = 1;           // 用户ID
+  string scheduleID = 2;       // 日程ID
+  int32 reminderType = 3;      // 提醒类型枚举（0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前）
+  int32 platformID = 4;        // 确认的平台ID
+  int64 ackTime = 5;           // 确认时间（时间戳）
+}
+
 // 折叠组统一通知（包含创建、更新、删除、会话移入/移出操作）
 message ConversationFoldNotificationTips {
   string userID = 1;                    // 用户ID

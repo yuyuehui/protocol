@@ -338,6 +338,34 @@ message SetReminderReq {
 message SetReminderResp {
 }
 
+// AckScheduleReminderReq 提醒已读回执请求（客户端弹窗后上报）
+message AckScheduleReminderReq {
+  string scheduleID = 1;
+  string userID = 2;
+  int32 reminderType = 3;  // 提醒类型枚举
+  int32 platformID = 4;    // 上报的平台ID
+}
+
+// AckScheduleReminderResp 提醒已读回执响应
+message AckScheduleReminderResp {
+}
+
+// GetAckedRemindersReq 查询用户哪些提醒已读（供SDK新设备同步时过滤）
+message GetAckedRemindersReq {
+  string userID = 1;
+  repeated string scheduleIDs = 2;
+}
+
+// AckedReminderInfo 单个日程的已读提醒信息
+message AckedReminderInfo {
+  repeated int32 ackedReminderTypes = 1;
+}
+
+// GetAckedRemindersResp 查询已读提醒响应
+message GetAckedRemindersResp {
+  map<string, AckedReminderInfo> ackedMap = 1; // key: scheduleID
+}
+
 // BusySlot 忙碌时间段
 message BusySlot {
   string slotId = 1;    // 用户id和startTime/endTime时间和busy生成的MD5唯一值
@@ -485,6 +513,12 @@ service Schedule {
   
   // 根据日程IDs向所有参与者发送日程通知消息（除了自己）
   rpc SendScheduleNotificationsByIDs(SendScheduleNotificationsByIDsReq) returns (SendScheduleNotificationsByIDsResp);
+
+  // 上报提醒已读回执（客户端弹窗后调用，用于跨设备去重）
+  rpc AckScheduleReminder(AckScheduleReminderReq) returns (AckScheduleReminderResp);
+
+  // 查询用户哪些提醒已读（供新设备同步时过滤）
+  rpc GetAckedReminders(GetAckedRemindersReq) returns (GetAckedRemindersResp);
 }
 
 // ==================== 日程分组相关消息定义 ====================

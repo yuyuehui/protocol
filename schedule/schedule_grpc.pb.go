@@ -56,6 +56,8 @@ const (
 	Schedule_QuitScheduleGroup_FullMethodName              = "/openim.schedule.Schedule/QuitScheduleGroup"
 	Schedule_GetScheduleGroupDetail_FullMethodName         = "/openim.schedule.Schedule/GetScheduleGroupDetail"
 	Schedule_SendScheduleNotificationsByIDs_FullMethodName = "/openim.schedule.Schedule/SendScheduleNotificationsByIDs"
+	Schedule_AckScheduleReminder_FullMethodName            = "/openim.schedule.Schedule/AckScheduleReminder"
+	Schedule_GetAckedReminders_FullMethodName              = "/openim.schedule.Schedule/GetAckedReminders"
 )
 
 // ScheduleClient is the client API for Schedule service.
@@ -110,6 +112,10 @@ type ScheduleClient interface {
 	GetScheduleGroupDetail(ctx context.Context, in *GetScheduleGroupDetailReq, opts ...grpc.CallOption) (*GetScheduleGroupDetailResp, error)
 	// 根据日程IDs向所有参与者发送日程通知消息（除了自己）
 	SendScheduleNotificationsByIDs(ctx context.Context, in *SendScheduleNotificationsByIDsReq, opts ...grpc.CallOption) (*SendScheduleNotificationsByIDsResp, error)
+	// 上报提醒已读回执（客户端弹窗后调用，用于跨设备去重）
+	AckScheduleReminder(ctx context.Context, in *AckScheduleReminderReq, opts ...grpc.CallOption) (*AckScheduleReminderResp, error)
+	// 查询用户哪些提醒已读（供新设备同步时过滤）
+	GetAckedReminders(ctx context.Context, in *GetAckedRemindersReq, opts ...grpc.CallOption) (*GetAckedRemindersResp, error)
 }
 
 type scheduleClient struct {
@@ -350,6 +356,26 @@ func (c *scheduleClient) SendScheduleNotificationsByIDs(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *scheduleClient) AckScheduleReminder(ctx context.Context, in *AckScheduleReminderReq, opts ...grpc.CallOption) (*AckScheduleReminderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AckScheduleReminderResp)
+	err := c.cc.Invoke(ctx, Schedule_AckScheduleReminder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scheduleClient) GetAckedReminders(ctx context.Context, in *GetAckedRemindersReq, opts ...grpc.CallOption) (*GetAckedRemindersResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAckedRemindersResp)
+	err := c.cc.Invoke(ctx, Schedule_GetAckedReminders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScheduleServer is the server API for Schedule service.
 // All implementations must embed UnimplementedScheduleServer
 // for forward compatibility.
@@ -402,6 +428,10 @@ type ScheduleServer interface {
 	GetScheduleGroupDetail(context.Context, *GetScheduleGroupDetailReq) (*GetScheduleGroupDetailResp, error)
 	// 根据日程IDs向所有参与者发送日程通知消息（除了自己）
 	SendScheduleNotificationsByIDs(context.Context, *SendScheduleNotificationsByIDsReq) (*SendScheduleNotificationsByIDsResp, error)
+	// 上报提醒已读回执（客户端弹窗后调用，用于跨设备去重）
+	AckScheduleReminder(context.Context, *AckScheduleReminderReq) (*AckScheduleReminderResp, error)
+	// 查询用户哪些提醒已读（供新设备同步时过滤）
+	GetAckedReminders(context.Context, *GetAckedRemindersReq) (*GetAckedRemindersResp, error)
 	mustEmbedUnimplementedScheduleServer()
 }
 
@@ -480,6 +510,12 @@ func (UnimplementedScheduleServer) GetScheduleGroupDetail(context.Context, *GetS
 }
 func (UnimplementedScheduleServer) SendScheduleNotificationsByIDs(context.Context, *SendScheduleNotificationsByIDsReq) (*SendScheduleNotificationsByIDsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SendScheduleNotificationsByIDs not implemented")
+}
+func (UnimplementedScheduleServer) AckScheduleReminder(context.Context, *AckScheduleReminderReq) (*AckScheduleReminderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AckScheduleReminder not implemented")
+}
+func (UnimplementedScheduleServer) GetAckedReminders(context.Context, *GetAckedRemindersReq) (*GetAckedRemindersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAckedReminders not implemented")
 }
 func (UnimplementedScheduleServer) mustEmbedUnimplementedScheduleServer() {}
 func (UnimplementedScheduleServer) testEmbeddedByValue()                  {}
@@ -916,6 +952,42 @@ func _Schedule_SendScheduleNotificationsByIDs_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Schedule_AckScheduleReminder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AckScheduleReminderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).AckScheduleReminder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_AckScheduleReminder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).AckScheduleReminder(ctx, req.(*AckScheduleReminderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Schedule_GetAckedReminders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAckedRemindersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScheduleServer).GetAckedReminders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Schedule_GetAckedReminders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScheduleServer).GetAckedReminders(ctx, req.(*GetAckedRemindersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Schedule_ServiceDesc is the grpc.ServiceDesc for Schedule service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1014,6 +1086,14 @@ var Schedule_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendScheduleNotificationsByIDs",
 			Handler:    _Schedule_SendScheduleNotificationsByIDs_Handler,
+		},
+		{
+			MethodName: "AckScheduleReminder",
+			Handler:    _Schedule_AckScheduleReminder_Handler,
+		},
+		{
+			MethodName: "GetAckedReminders",
+			Handler:    _Schedule_GetAckedReminders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
