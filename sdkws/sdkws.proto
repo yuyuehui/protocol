@@ -252,6 +252,9 @@ message MsgData {
 message LikeInfo {
   int64 like_count = 1;
   repeated LikeUser like_users = 2;
+  // 版本号：每次该消息的 LikeInfo 在服务端被修改（点赞 / 取消点赞 / 换 emoji）就自增 1。
+  // 客户端用它判断"通知是否漏单"——本地 version 与到达的 version 不连续时再触发兜底拉取。
+  int64 version = 3;
 }
 
 // 点赞用户信息
@@ -276,6 +279,13 @@ message LikeMsgTips {
   string LikerNickname = 9;
   string RecvID = 10;
   string LikerFaceURL = 11;
+  // 完整的最新点赞信息（含 version 与所有 LikeUser）。
+  // 新版客户端收到通知后直接覆盖本地 LikeInfo，不再依赖事后主动同步。
+  // 旧版客户端无此字段，按 unknown field 自动忽略，行为退化为只更新 likeCount。
+  LikeInfo fullLikeInfo = 12;
+  // 该消息 LikeInfo 在本次通知发出时的版本号（= fullLikeInfo.version）。
+  // 提到顶层方便客户端在不解析 fullLikeInfo 的情况下也能比对，省一次反序列化。
+  int64 likeInfoVersion = 13;
 }
 
 // 标记信息结构（存储在消息的 MsgData 中）
