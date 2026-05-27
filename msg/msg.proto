@@ -419,7 +419,12 @@ message LikeMsgReq {
 }
 
 message LikeMsgResp {
-  
+  // 服务端写入成功后回吐的权威点赞快照，客户端用它覆盖刚才的乐观更新，
+  // 解决并发竞态下本地 LikeUsers/LikeCount 与服务端最终态不一致的问题。
+  sdkws.LikeInfo fullLikeInfo = 1;
+  // 本次操作完成后服务端的 LikeInfo.Version 单调递增值，
+  // 客户端写入本地 like_info_version，避免本设备版本号永远落后。
+  int64 likeInfoVersion = 2;
 }
 
 // 收藏消息相关定义

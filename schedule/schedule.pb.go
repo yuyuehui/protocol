@@ -1,4 +1,4 @@
-// Copyright © 2023 OpenIM. All rights reserved.
+﻿// Copyright © 2023 OpenIM. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -2775,7 +2775,7 @@ func (x *AckedReminderInfo) GetAckedReminderTypes() []int32 {
 // GetAckedRemindersResp 查询已读提醒响应
 type GetAckedRemindersResp struct {
 	state         protoimpl.MessageState        `protogen:"open.v1"`
-	AckedMap      map[string]*AckedReminderInfo `protobuf:"bytes,1,rep,name=ackedMap,proto3" json:"ackedMap,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key: scheduleID
+	AckedMap      map[string]*AckedReminderInfo `protobuf:"bytes,1,rep,name=ackedMap,proto3" json:"ackedMap" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key: scheduleID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3004,7 +3004,7 @@ func (x *CheckConflictReq) GetScheduleIDs() []string {
 type CheckConflictResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
 	BusyUserIDs   []string                 `protobuf:"bytes,1,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
-	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,2,rep,name=busyByUserId,proto3" json:"busyByUserId,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,2,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3128,7 +3128,7 @@ type CompareSchedulesResp struct {
 	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"myUserID"`                                                                                   // 自己的用户ID
 	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"otherUserID"`                                                                             // 对比的用户ID
 	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
-	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
