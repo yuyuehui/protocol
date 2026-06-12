@@ -613,6 +613,7 @@ message QuitScheduleGroupResp {}
 // GetScheduleGroupDetailReq 获取日程分组详情请求
 message GetScheduleGroupDetailReq {
   string scheduleGroupID = 1;  // 分组ID（必填）
+  string ownerUserID = 2;      // 分组所有者用户ID（系统分组「我的日历」查询他人日程详情时必填）
 }
 
 // GetScheduleGroupDetailResp 获取日程分组详情响应
