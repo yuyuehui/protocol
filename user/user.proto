@@ -585,6 +585,29 @@ message GetSignatureListResp {
   int32 total = 2;                        // 总数（如果分页）
 }
 
+// updateAvatarReq 更新用户头像请求（文件需先上传至 OSS，再提交 faceURL）
+message updateAvatarReq {
+  string faceURL = 1; // 头像 URL（必填）
+}
+
+// updateAvatarResp 更新用户头像响应
+message updateAvatarResp {
+  string faceURL = 1;     // 更新后的头像 URL
+  int32 uploadCount = 2; // 当前用户已上传/修改次数
+  int32 uploadLimit = 3; // 系统允许的最大次数（0 表示不限制）
+  int32 remaining = 4;   // 剩余可上传次数（uploadLimit=0 时为 -1）
+}
+
+// getAvatarUploadQuotaReq 获取头像上传配额请求
+message getAvatarUploadQuotaReq {}
+
+// getAvatarUploadQuotaResp 获取头像上传配额响应
+message getAvatarUploadQuotaResp {
+  int32 uploadCount = 1; // 当前用户已上传/修改次数
+  int32 uploadLimit = 2; // 系统允许的最大次数（0 表示不限制）
+  int32 remaining = 3;   // 剩余可上传次数（uploadLimit=0 时为 -1）
+}
+
 service user {
   //Get the specified user information full field
   rpc getDesignateUsers(getDesignateUsersReq) returns (getDesignateUsersResp);
@@ -675,4 +698,9 @@ service user {
   rpc batchUpsertAIQuickReplies(batchUpsertAIQuickRepliesReq) returns (batchUpsertAIQuickRepliesResp);
   // 获取签名列表
   rpc getSignatureList(GetSignatureListReq) returns (GetSignatureListResp);
+
+  // 更新用户头像（含次数限制校验）
+  rpc updateAvatar(updateAvatarReq) returns (updateAvatarResp);
+  // 获取头像上传配额
+  rpc getAvatarUploadQuota(getAvatarUploadQuotaReq) returns (getAvatarUploadQuotaResp);
 }

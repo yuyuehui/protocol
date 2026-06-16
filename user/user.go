@@ -17,6 +17,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/openimsdk/protocol/util/datautil"
 )
@@ -302,4 +303,15 @@ func (x *GetDesignateUsersResp) Format() any {
 		return fmt.Sprintf("len is %v", len(x.UsersInfo))
 	}
 	return x
+}
+
+func (x *UpdateAvatarReq) Check() error {
+	if strings.TrimSpace(x.FaceURL) == "" {
+		return errors.New("faceURL is empty")
+	}
+	return nil
+}
+
+func (x *GetAvatarUploadQuotaReq) Check() error {
+	return nil
 }

@@ -77,6 +77,8 @@ const (
 	User_GetRefreshStatus_FullMethodName              = "/openim.user.user/getRefreshStatus"
 	User_BatchUpsertAIQuickReplies_FullMethodName     = "/openim.user.user/batchUpsertAIQuickReplies"
 	User_GetSignatureList_FullMethodName              = "/openim.user.user/getSignatureList"
+	User_UpdateAvatar_FullMethodName                  = "/openim.user.user/updateAvatar"
+	User_GetAvatarUploadQuota_FullMethodName          = "/openim.user.user/getAvatarUploadQuota"
 )
 
 // UserClient is the client API for User service.
@@ -161,6 +163,10 @@ type UserClient interface {
 	BatchUpsertAIQuickReplies(ctx context.Context, in *BatchUpsertAIQuickRepliesReq, opts ...grpc.CallOption) (*BatchUpsertAIQuickRepliesResp, error)
 	// 获取签名列表
 	GetSignatureList(ctx context.Context, in *GetSignatureListReq, opts ...grpc.CallOption) (*GetSignatureListResp, error)
+	// 更新用户头像（含次数限制校验）
+	UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error)
+	// 获取头像上传配额
+	GetAvatarUploadQuota(ctx context.Context, in *GetAvatarUploadQuotaReq, opts ...grpc.CallOption) (*GetAvatarUploadQuotaResp, error)
 }
 
 type userClient struct {
@@ -611,6 +617,26 @@ func (c *userClient) GetSignatureList(ctx context.Context, in *GetSignatureListR
 	return out, nil
 }
 
+func (c *userClient) UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateAvatarResp)
+	err := c.cc.Invoke(ctx, User_UpdateAvatar_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetAvatarUploadQuota(ctx context.Context, in *GetAvatarUploadQuotaReq, opts ...grpc.CallOption) (*GetAvatarUploadQuotaResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAvatarUploadQuotaResp)
+	err := c.cc.Invoke(ctx, User_GetAvatarUploadQuota_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -693,6 +719,10 @@ type UserServer interface {
 	BatchUpsertAIQuickReplies(context.Context, *BatchUpsertAIQuickRepliesReq) (*BatchUpsertAIQuickRepliesResp, error)
 	// 获取签名列表
 	GetSignatureList(context.Context, *GetSignatureListReq) (*GetSignatureListResp, error)
+	// 更新用户头像（含次数限制校验）
+	UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error)
+	// 获取头像上传配额
+	GetAvatarUploadQuota(context.Context, *GetAvatarUploadQuotaReq) (*GetAvatarUploadQuotaResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -834,6 +864,12 @@ func (UnimplementedUserServer) BatchUpsertAIQuickReplies(context.Context, *Batch
 }
 func (UnimplementedUserServer) GetSignatureList(context.Context, *GetSignatureListReq) (*GetSignatureListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSignatureList not implemented")
+}
+func (UnimplementedUserServer) UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateAvatar not implemented")
+}
+func (UnimplementedUserServer) GetAvatarUploadQuota(context.Context, *GetAvatarUploadQuotaReq) (*GetAvatarUploadQuotaResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAvatarUploadQuota not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -1648,6 +1684,42 @@ func _User_GetSignatureList_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_UpdateAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAvatarReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateAvatar_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateAvatar(ctx, req.(*UpdateAvatarReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetAvatarUploadQuota_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAvatarUploadQuotaReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetAvatarUploadQuota(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetAvatarUploadQuota_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetAvatarUploadQuota(ctx, req.(*GetAvatarUploadQuotaReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1830,6 +1902,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getSignatureList",
 			Handler:    _User_GetSignatureList_Handler,
+		},
+		{
+			MethodName: "updateAvatar",
+			Handler:    _User_UpdateAvatar_Handler,
+		},
+		{
+			MethodName: "getAvatarUploadQuota",
+			Handler:    _User_GetAvatarUploadQuota_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
