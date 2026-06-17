@@ -274,6 +274,7 @@ message GetSchedulesReq {
   string keyword = 5;                   // 关键词搜索
   repeated string scheduleGroupIDs = 7;  // 日程分组ID列表（可选，用于筛选指定分组的日程）
   sdkws.RequestPagination pagination = 6;
+  string scheduleGroupOwnerUserID = 8; // 分组所有者用户ID（系统分组「我的日历」查他人共享日历时必填）
 }
 
 // GetSchedulesResp 查询日程列表响应

@@ -1948,6 +1948,7 @@ type GetSchedulesReq struct {
 	Keyword          string                   `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword"`                   // 关键词搜索
 	ScheduleGroupIDs []string                 `protobuf:"bytes,7,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
 	Pagination       *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination"`
+	ScheduleGroupOwnerUserID string           `protobuf:"bytes,8,opt,name=scheduleGroupOwnerUserID,proto3" json:"scheduleGroupOwnerUserID"` // 分组所有者用户ID（系统分组查他人共享日历时必填）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -2029,6 +2030,13 @@ func (x *GetSchedulesReq) GetPagination() *sdkws.RequestPagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+func (x *GetSchedulesReq) GetScheduleGroupOwnerUserID() string {
+	if x != nil {
+		return x.ScheduleGroupOwnerUserID
+	}
+	return ""
 }
 
 // GetSchedulesResp 查询日程列表响应
