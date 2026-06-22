@@ -7980,6 +7980,7 @@ type ScheduleGroupNotificationShareInfo struct {
 	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`              // 用户ID
 	Permission    int32                  `protobuf:"varint,2,opt,name=permission,proto3" json:"permission"`     // 权限：1=可查看, 2=可编辑, 3=可管理
 	OnlyBusyFree  bool                   `protobuf:"varint,3,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"` // 是否仅查看闲忙状态
+	IsVisible     bool                   `protobuf:"varint,4,opt,name=isVisible,proto3" json:"isVisible"`       // 该用户的日历可见性（勾选状态）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -8031,6 +8032,13 @@ func (x *ScheduleGroupNotificationShareInfo) GetPermission() int32 {
 func (x *ScheduleGroupNotificationShareInfo) GetOnlyBusyFree() bool {
 	if x != nil {
 		return x.OnlyBusyFree
+	}
+	return false
+}
+
+func (x *ScheduleGroupNotificationShareInfo) GetIsVisible() bool {
+	if x != nil {
+		return x.IsVisible
 	}
 	return false
 }
@@ -9746,13 +9754,14 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0fconversationIDs\x18\x05 \x03(\tR\x0fconversationIDs\x12\x1e\n" +
 	"\n" +
 	"updateTime\x18\x06 \x01(\x03R\n" +
-	"updateTime\"\x80\x01\n" +
+	"updateTime\"\x9e\x01\n" +
 	"\"ScheduleGroupNotificationShareInfo\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1e\n" +
 	"\n" +
 	"permission\x18\x02 \x01(\x05R\n" +
 	"permission\x12\"\n" +
-	"\fonlyBusyFree\x18\x03 \x01(\bR\fonlyBusyFree\"\x8b\x05\n" +
+	"\fonlyBusyFree\x18\x03 \x01(\bR\fonlyBusyFree\x12\x1c\n" +
+	"\tisVisible\x18\x04 \x01(\bR\tisVisible\"\x8b\x05\n" +
 	"\x17ScheduleGroupChangeTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
 	"\agroupID\x18\x02 \x01(\tR\agroupID\x12\x16\n" +
