@@ -405,15 +405,15 @@ func (DeleteScope) EnumDescriptor() ([]byte, []int) {
 // ScheduleRepeatInfo 重复规则
 type ScheduleRepeatInfo struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	EndDate           int64                  `protobuf:"varint,1,opt,name=endDate,proto3" json:"endDate"`                                                         // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
-	RepeatTimes       int32                  `protobuf:"varint,2,opt,name=repeatTimes,proto3" json:"repeatTimes"`                                                 // 重复次数（与endDate二选一，都不设置表示永不结束）
-	RepeatType        string                 `protobuf:"bytes,3,opt,name=repeatType,proto3" json:"repeatType"`                                                    // 重复类型：daily/weekly/monthly/yearly
-	UnitType          string                 `protobuf:"bytes,4,opt,name=unitType,proto3" json:"unitType"`                                                        // 单位类型：day/weekday/week/month/year
-	Interval          int32                  `protobuf:"varint,5,opt,name=interval,proto3" json:"interval"`                                                       // 重复间隔（如每2周、每3个月）
-	RepeatDaysOfWeek  []DayOfWeek            `protobuf:"varint,6,rep,packed,name=repeatDaysOfWeek,proto3,enum=openim.schedule.DayOfWeek" json:"repeatDaysOfWeek"` // 每周重复的星期几（仅当repeatType=weekly时使用，可多选）
-	RepeatDaysOfMonth []int32                `protobuf:"varint,7,rep,packed,name=repeatDaysOfMonth,proto3" json:"repeatDaysOfMonth"`                              // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
-	RepeatMonth       int32                  `protobuf:"varint,8,opt,name=repeatMonth,proto3" json:"repeatMonth"`                                                 // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
-	RepeatDayOfMonth  int32                  `protobuf:"varint,9,opt,name=repeatDayOfMonth,proto3" json:"repeatDayOfMonth"`                                       // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
+	EndDate           int64                  `protobuf:"varint,1,opt,name=endDate,proto3" json:"endDate,omitempty"`                                                         // 重复结束日期（时间戳，与repeatTimes二选一，都不设置表示永不结束）
+	RepeatTimes       int32                  `protobuf:"varint,2,opt,name=repeatTimes,proto3" json:"repeatTimes,omitempty"`                                                 // 重复次数（与endDate二选一，都不设置表示永不结束）
+	RepeatType        string                 `protobuf:"bytes,3,opt,name=repeatType,proto3" json:"repeatType,omitempty"`                                                    // 重复类型：daily/weekly/monthly/yearly
+	UnitType          string                 `protobuf:"bytes,4,opt,name=unitType,proto3" json:"unitType,omitempty"`                                                        // 单位类型：day/weekday/week/month/year
+	Interval          int32                  `protobuf:"varint,5,opt,name=interval,proto3" json:"interval,omitempty"`                                                       // 重复间隔（如每2周、每3个月）
+	RepeatDaysOfWeek  []DayOfWeek            `protobuf:"varint,6,rep,packed,name=repeatDaysOfWeek,proto3,enum=openim.schedule.DayOfWeek" json:"repeatDaysOfWeek,omitempty"` // 每周重复的星期几（仅当repeatType=weekly时使用，可多选）
+	RepeatDaysOfMonth []int32                `protobuf:"varint,7,rep,packed,name=repeatDaysOfMonth,proto3" json:"repeatDaysOfMonth,omitempty"`                              // 每月重复的具体日期（1-31，仅当repeatType=monthly时使用，可多选）
+	RepeatMonth       int32                  `protobuf:"varint,8,opt,name=repeatMonth,proto3" json:"repeatMonth,omitempty"`                                                 // 按年重复时的月份（1-12，仅当repeatType=yearly时使用）
+	RepeatDayOfMonth  int32                  `protobuf:"varint,9,opt,name=repeatDayOfMonth,proto3" json:"repeatDayOfMonth,omitempty"`                                       // 按年重复时的日期（1-31，仅当repeatType=yearly时使用）
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -514,12 +514,12 @@ func (x *ScheduleRepeatInfo) GetRepeatDayOfMonth() int32 {
 // ScheduleAttendeeInfo 参与者信息
 type ScheduleAttendeeInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`          // 用户ID
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`      // 用户昵称
-	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`        // 头像URL
-	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status"`         // 状态：0=待确认 1=已接受 2=已拒绝
-	Permission    int32                  `protobuf:"varint,5,opt,name=permission,proto3" json:"permission"` // 权限：0=仅查看 1=可编辑
-	ReplyTime     int64                  `protobuf:"varint,6,opt,name=replyTime,proto3" json:"replyTime"`   // 回复时间（时间戳）
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`          // 用户ID
+	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`      // 用户昵称
+	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL,omitempty"`        // 头像URL
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`         // 状态：0=待确认 1=已接受 2=已拒绝
+	Permission    int32                  `protobuf:"varint,5,opt,name=permission,proto3" json:"permission,omitempty"` // 权限：0=仅查看 1=可编辑
+	ReplyTime     int64                  `protobuf:"varint,6,opt,name=replyTime,proto3" json:"replyTime,omitempty"`   // 回复时间（时间戳）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -599,18 +599,18 @@ func (x *ScheduleAttendeeInfo) GetReplyTime() int64 {
 // MeetingSettings 会议设置信息
 type MeetingSettings struct {
 	state                      protoimpl.MessageState `protogen:"open.v1"`
-	EnablePassword             bool                   `protobuf:"varint,1,opt,name=enablePassword,proto3" json:"enablePassword"`                                    // 是否启用入会密码
-	Password                   string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password"`                                                 // 入会密码（4-6位数字）
-	AutoTranscribe             bool                   `protobuf:"varint,3,opt,name=autoTranscribe,proto3" json:"autoTranscribe"`                                    // 自动开启文字转写
-	EnableWaitingRoom          bool                   `protobuf:"varint,4,opt,name=enableWaitingRoom,proto3" json:"enableWaitingRoom"`                              // 开启等候室
-	AllowMemberJoinBeforeHost  bool                   `protobuf:"varint,5,opt,name=allowMemberJoinBeforeHost,proto3" json:"allowMemberJoinBeforeHost"`              // 允许成员在主持人进会前加入
-	EnableScreenShareWatermark bool                   `protobuf:"varint,6,opt,name=enableScreenShareWatermark,proto3" json:"enableScreenShareWatermark"`            // 开启屏幕共享水印
-	WatermarkType              WatermarkType          `protobuf:"varint,7,opt,name=watermarkType,proto3,enum=openim.schedule.WatermarkType" json:"watermarkType"`   // 水印类型：0=单排水印 1=多排水印
-	AllowMemberViewMinutes     bool                   `protobuf:"varint,8,opt,name=allowMemberViewMinutes,proto3" json:"allowMemberViewMinutes"`                    // 允许成员查看会议纪要文档
-	AllowMultiDeviceJoin       bool                   `protobuf:"varint,9,opt,name=allowMultiDeviceJoin,proto3" json:"allowMultiDeviceJoin"`                        // 允许成员使用多个设备入会
-	CallReminder               CallReminderType       `protobuf:"varint,10,opt,name=callReminder,proto3,enum=openim.schedule.CallReminderType" json:"callReminder"` // 会议开始时来电提醒：0=不提醒 1=所有成员 2=指定成员 3=仅主持人
-	CallReminderUserIDs        []string               `protobuf:"bytes,11,rep,name=callReminderUserIDs,proto3" json:"callReminderUserIDs"`                          // 指定成员列表（callReminder为2时使用）
-	MuteOnJoin                 MuteOnJoinType         `protobuf:"varint,12,opt,name=muteOnJoin,proto3,enum=openim.schedule.MuteOnJoinType" json:"muteOnJoin"`       // 成员入会时静音：0=关闭 1=开启 2=超过6人后自动开启
+	EnablePassword             bool                   `protobuf:"varint,1,opt,name=enablePassword,proto3" json:"enablePassword,omitempty"`                                    // 是否启用入会密码
+	Password                   string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`                                                 // 入会密码（4-6位数字）
+	AutoTranscribe             bool                   `protobuf:"varint,3,opt,name=autoTranscribe,proto3" json:"autoTranscribe,omitempty"`                                    // 自动开启文字转写
+	EnableWaitingRoom          bool                   `protobuf:"varint,4,opt,name=enableWaitingRoom,proto3" json:"enableWaitingRoom,omitempty"`                              // 开启等候室
+	AllowMemberJoinBeforeHost  bool                   `protobuf:"varint,5,opt,name=allowMemberJoinBeforeHost,proto3" json:"allowMemberJoinBeforeHost,omitempty"`              // 允许成员在主持人进会前加入
+	EnableScreenShareWatermark bool                   `protobuf:"varint,6,opt,name=enableScreenShareWatermark,proto3" json:"enableScreenShareWatermark,omitempty"`            // 开启屏幕共享水印
+	WatermarkType              WatermarkType          `protobuf:"varint,7,opt,name=watermarkType,proto3,enum=openim.schedule.WatermarkType" json:"watermarkType,omitempty"`   // 水印类型：0=单排水印 1=多排水印
+	AllowMemberViewMinutes     bool                   `protobuf:"varint,8,opt,name=allowMemberViewMinutes,proto3" json:"allowMemberViewMinutes,omitempty"`                    // 允许成员查看会议纪要文档
+	AllowMultiDeviceJoin       bool                   `protobuf:"varint,9,opt,name=allowMultiDeviceJoin,proto3" json:"allowMultiDeviceJoin,omitempty"`                        // 允许成员使用多个设备入会
+	CallReminder               CallReminderType       `protobuf:"varint,10,opt,name=callReminder,proto3,enum=openim.schedule.CallReminderType" json:"callReminder,omitempty"` // 会议开始时来电提醒：0=不提醒 1=所有成员 2=指定成员 3=仅主持人
+	CallReminderUserIDs        []string               `protobuf:"bytes,11,rep,name=callReminderUserIDs,proto3" json:"callReminderUserIDs,omitempty"`                          // 指定成员列表（callReminder为2时使用）
+	MuteOnJoin                 MuteOnJoinType         `protobuf:"varint,12,opt,name=muteOnJoin,proto3,enum=openim.schedule.MuteOnJoinType" json:"muteOnJoin,omitempty"`       // 成员入会时静音：0=关闭 1=开启 2=超过6人后自动开启
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -733,39 +733,39 @@ func (x *MeetingSettings) GetMuteOnJoin() MuteOnJoinType {
 type ScheduleInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 系统生成的字段（只读）
-	ScheduleID      string `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`           // 日程ID（唯一标识）
-	CreatorUserID   string `protobuf:"bytes,2,opt,name=creatorUserID,proto3" json:"creatorUserID"`     // 创建者用户ID
-	CreatorNickname string `protobuf:"bytes,3,opt,name=creatorNickname,proto3" json:"creatorNickname"` // 创建者昵称
-	Status          string `protobuf:"bytes,4,opt,name=status,proto3" json:"status"`                   // 状态：pending/accepted/rejected/cancelled/completed
-	CreateTime      int64  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime"`          // 创建时间（时间戳）
+	ScheduleID      string `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`           // 日程ID（唯一标识）
+	CreatorUserID   string `protobuf:"bytes,2,opt,name=creatorUserID,proto3" json:"creatorUserID,omitempty"`     // 创建者用户ID
+	CreatorNickname string `protobuf:"bytes,3,opt,name=creatorNickname,proto3" json:"creatorNickname,omitempty"` // 创建者昵称
+	Status          string `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`                   // 状态：pending/accepted/rejected/cancelled/completed
+	CreateTime      int64  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime,omitempty"`          // 创建时间（时间戳）
 	// 用户定义的字段（可修改）
-	Title            string           `protobuf:"bytes,6,opt,name=title,proto3" json:"title"`                                   // 日程标题
-	StartTime        int64            `protobuf:"varint,7,opt,name=startTime,proto3" json:"startTime"`                          // 开始时间（时间戳）
-	EndTime          int64            `protobuf:"varint,8,opt,name=endTime,proto3" json:"endTime"`                              // 结束时间（时间戳）
-	Location         string           `protobuf:"bytes,9,opt,name=location,proto3" json:"location"`                             // 地点
-	RoomID           string           `protobuf:"bytes,10,opt,name=roomID,proto3" json:"roomID"`                                // 会议室ID
-	Description      string           `protobuf:"bytes,11,opt,name=description,proto3" json:"description"`                      // 描述/备注
-	TimeZone         string           `protobuf:"bytes,12,opt,name=timeZone,proto3" json:"timeZone"`                            // 时区
-	Visibility       int32            `protobuf:"varint,13,opt,name=visibility,proto3" json:"visibility"`                       // 可见性：1=个人 2=团队 3=公开
-	AllDay           bool             `protobuf:"varint,14,opt,name=allDay,proto3" json:"allDay"`                               // 是否全天
-	AttachmentURLs   []string         `protobuf:"bytes,15,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`                // 附件URL列表
-	ScheduleGroupID  string           `protobuf:"bytes,16,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID"`              // 所属日程分组ID
-	AllowMemberJoin  bool             `protobuf:"varint,17,opt,name=allowMemberJoin,proto3" json:"allowMemberJoin"`             // 允许成员主动加入
-	NotifyByEmail    bool             `protobuf:"varint,18,opt,name=notifyByEmail,proto3" json:"notifyByEmail"`                 // 同时通过邮件通知参与人
-	Type             ScheduleType     `protobuf:"varint,19,opt,name=type,proto3,enum=openim.schedule.ScheduleType" json:"type"` // 日程类型：0=日程 1=会议
-	MeetingSettings  *MeetingSettings `protobuf:"bytes,20,opt,name=meetingSettings,proto3" json:"meetingSettings"`              // 会议设置（仅当type为MEETING时有效）
-	IsTemporary      bool             `protobuf:"varint,21,opt,name=isTemporary,proto3" json:"isTemporary"`                     // 是否是临时会议（仅当type为MEETING时有效），临时会议不显示在日程中
-	MeetingMinutesID string           `protobuf:"bytes,22,opt,name=meetingMinutesID,proto3" json:"meetingMinutesID"`            // 会议纪要文档ID
+	Title            string           `protobuf:"bytes,6,opt,name=title,proto3" json:"title,omitempty"`                                   // 日程标题
+	StartTime        int64            `protobuf:"varint,7,opt,name=startTime,proto3" json:"startTime,omitempty"`                          // 开始时间（时间戳）
+	EndTime          int64            `protobuf:"varint,8,opt,name=endTime,proto3" json:"endTime,omitempty"`                              // 结束时间（时间戳）
+	Location         string           `protobuf:"bytes,9,opt,name=location,proto3" json:"location,omitempty"`                             // 地点
+	RoomID           string           `protobuf:"bytes,10,opt,name=roomID,proto3" json:"roomID,omitempty"`                                // 会议室ID
+	Description      string           `protobuf:"bytes,11,opt,name=description,proto3" json:"description,omitempty"`                      // 描述/备注
+	TimeZone         string           `protobuf:"bytes,12,opt,name=timeZone,proto3" json:"timeZone,omitempty"`                            // 时区
+	Visibility       int32            `protobuf:"varint,13,opt,name=visibility,proto3" json:"visibility,omitempty"`                       // 可见性：1=个人 2=团队 3=公开
+	AllDay           bool             `protobuf:"varint,14,opt,name=allDay,proto3" json:"allDay,omitempty"`                               // 是否全天
+	AttachmentURLs   []string         `protobuf:"bytes,15,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`                // 附件URL列表
+	ScheduleGroupID  string           `protobuf:"bytes,16,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID,omitempty"`              // 所属日程分组ID
+	AllowMemberJoin  bool             `protobuf:"varint,17,opt,name=allowMemberJoin,proto3" json:"allowMemberJoin,omitempty"`             // 允许成员主动加入
+	NotifyByEmail    bool             `protobuf:"varint,18,opt,name=notifyByEmail,proto3" json:"notifyByEmail,omitempty"`                 // 同时通过邮件通知参与人
+	Type             ScheduleType     `protobuf:"varint,19,opt,name=type,proto3,enum=openim.schedule.ScheduleType" json:"type,omitempty"` // 日程类型：0=日程 1=会议
+	MeetingSettings  *MeetingSettings `protobuf:"bytes,20,opt,name=meetingSettings,proto3" json:"meetingSettings,omitempty"`              // 会议设置（仅当type为MEETING时有效）
+	IsTemporary      bool             `protobuf:"varint,21,opt,name=isTemporary,proto3" json:"isTemporary,omitempty"`                     // 是否是临时会议（仅当type为MEETING时有效），临时会议不显示在日程中
+	MeetingMinutesID string           `protobuf:"bytes,22,opt,name=meetingMinutesID,proto3" json:"meetingMinutesID,omitempty"`            // 会议纪要文档ID
 	// 其他字段
-	RepeatInfo *ScheduleRepeatInfo     `protobuf:"bytes,23,opt,name=repeatInfo,proto3" json:"repeatInfo"`       // 重复规则
-	Attendees  []*ScheduleAttendeeInfo `protobuf:"bytes,24,rep,name=attendees,proto3" json:"attendees"`         // 参与者列表
-	Reminders  []int32                 `protobuf:"varint,25,rep,packed,name=reminders,proto3" json:"reminders"` // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	RepeatInfo *ScheduleRepeatInfo     `protobuf:"bytes,23,opt,name=repeatInfo,proto3" json:"repeatInfo,omitempty"`       // 重复规则
+	Attendees  []*ScheduleAttendeeInfo `protobuf:"bytes,24,rep,name=attendees,proto3" json:"attendees,omitempty"`         // 参与者列表
+	Reminders  []int32                 `protobuf:"varint,25,rep,packed,name=reminders,proto3" json:"reminders,omitempty"` // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
 	// 权限相关字段（计算字段，不存储在数据库中）
-	IsJoined  bool `protobuf:"varint,26,opt,name=isJoined,proto3" json:"isJoined"`   // 是否参与了这个日程（当前用户是否在参与者列表中）
-	CanEdit   bool `protobuf:"varint,27,opt,name=canEdit,proto3" json:"canEdit"`     // 是否有编辑权限：创建者可编辑/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程
-	CanDelete bool `protobuf:"varint,28,opt,name=canDelete,proto3" json:"canDelete"` // 是否能删除/退出：创建者可删除/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程/加入的日程
+	IsJoined  bool `protobuf:"varint,26,opt,name=isJoined,proto3" json:"isJoined,omitempty"`   // 是否参与了这个日程（当前用户是否在参与者列表中）
+	CanEdit   bool `protobuf:"varint,27,opt,name=canEdit,proto3" json:"canEdit,omitempty"`     // 是否有编辑权限：创建者可编辑/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程
+	CanDelete bool `protobuf:"varint,28,opt,name=canDelete,proto3" json:"canDelete,omitempty"` // 是否能删除/退出：创建者可删除/通过分享给我的日历分组中的权限为（可编辑和可管理）的日程/加入的日程
 	// 关联信息（计算字段，不存储在数据库中）
-	RoomInfo      *meeting_room.MeetingRoomInfo `protobuf:"bytes,29,opt,name=roomInfo,proto3" json:"roomInfo"` // 会议室详细信息（roomID 非空时填充）
+	RoomInfo      *meeting_room.MeetingRoomInfo `protobuf:"bytes,29,opt,name=roomInfo,proto3" json:"roomInfo,omitempty"` // 会议室详细信息（roomID 非空时填充）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1006,28 +1006,28 @@ func (x *ScheduleInfo) GetRoomInfo() *meeting_room.MeetingRoomInfo {
 // CreateScheduleReq 创建日程请求
 type CreateScheduleReq struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	CreatorUserID   string                 `protobuf:"bytes,1,opt,name=creatorUserID,proto3" json:"creatorUserID"`                   // 创建者用户ID（可选，不传则使用当前登录用户）
-	Title           string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title"`                                   // 日程标题（必填）
-	StartTime       int64                  `protobuf:"varint,3,opt,name=startTime,proto3" json:"startTime"`                          // 开始时间（时间戳，必填）
-	EndTime         int64                  `protobuf:"varint,4,opt,name=endTime,proto3" json:"endTime"`                              // 结束时间（时间戳，必填）
-	Location        string                 `protobuf:"bytes,5,opt,name=location,proto3" json:"location"`                             // 地点（可选）
-	RoomID          string                 `protobuf:"bytes,6,opt,name=roomID,proto3" json:"roomID"`                                 // 会议室ID（可选）
-	Description     string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description"`                       // 描述/备注（可选）
-	TimeZone        string                 `protobuf:"bytes,8,opt,name=timeZone,proto3" json:"timeZone"`                             // 时区（可选，默认Asia/Shanghai）
-	Visibility      int32                  `protobuf:"varint,9,opt,name=visibility,proto3" json:"visibility"`                        // 可见性：1=个人 2=团队 3=公开（可选，默认2）
-	AllDay          bool                   `protobuf:"varint,10,opt,name=allDay,proto3" json:"allDay"`                               // 是否全天（可选，默认false）
-	AttachmentURLs  []string               `protobuf:"bytes,11,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`                // 附件URL列表（可选）
-	ScheduleGroupID string                 `protobuf:"bytes,12,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID"`              // 所属日程分组ID（可选）
-	AllowMemberJoin bool                   `protobuf:"varint,13,opt,name=allowMemberJoin,proto3" json:"allowMemberJoin"`             // 允许成员主动加入（可选，默认true）
-	NotifyByEmail   bool                   `protobuf:"varint,14,opt,name=notifyByEmail,proto3" json:"notifyByEmail"`                 // 同时通过邮件通知参与人（可选，默认false）
-	Type            ScheduleType           `protobuf:"varint,15,opt,name=type,proto3,enum=openim.schedule.ScheduleType" json:"type"` // 日程类型：0=日程 1=会议（可选，默认0）
-	MeetingSettings *MeetingSettings       `protobuf:"bytes,16,opt,name=meetingSettings,proto3" json:"meetingSettings"`              // 会议设置（可选，仅当type为MEETING时有效）
-	IsTemporary     bool                   `protobuf:"varint,17,opt,name=isTemporary,proto3" json:"isTemporary"`                     // 是否是临时会议（可选，仅当type为MEETING时有效）
-	RepeatInfo      *ScheduleRepeatInfo    `protobuf:"bytes,18,opt,name=repeatInfo,proto3" json:"repeatInfo"`                        // 重复规则（可选）
-	AttendeeUserIDs []string               `protobuf:"bytes,19,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs"`              // 参与者用户ID列表（可选）
-	Reminders       []int32                `protobuf:"varint,20,rep,packed,name=reminders,proto3" json:"reminders"`                  // 提醒类型列表（可选，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
-	SendToChat      bool                   `protobuf:"varint,21,opt,name=sendToChat,proto3" json:"sendToChat"`                       // 是否发送消息到聊天（可选，默认false）
-	MessageContent  string                 `protobuf:"bytes,22,opt,name=messageContent,proto3" json:"messageContent"`                // 消息内容（可选，当sendToChat为true时使用，不传则使用默认内容）
+	CreatorUserID   string                 `protobuf:"bytes,1,opt,name=creatorUserID,proto3" json:"creatorUserID,omitempty"`                   // 创建者用户ID（可选，不传则使用当前登录用户）
+	Title           string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                   // 日程标题（必填）
+	StartTime       int64                  `protobuf:"varint,3,opt,name=startTime,proto3" json:"startTime,omitempty"`                          // 开始时间（时间戳，必填）
+	EndTime         int64                  `protobuf:"varint,4,opt,name=endTime,proto3" json:"endTime,omitempty"`                              // 结束时间（时间戳，必填）
+	Location        string                 `protobuf:"bytes,5,opt,name=location,proto3" json:"location,omitempty"`                             // 地点（可选）
+	RoomID          string                 `protobuf:"bytes,6,opt,name=roomID,proto3" json:"roomID,omitempty"`                                 // 会议室ID（可选）
+	Description     string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`                       // 描述/备注（可选）
+	TimeZone        string                 `protobuf:"bytes,8,opt,name=timeZone,proto3" json:"timeZone,omitempty"`                             // 时区（可选，默认Asia/Shanghai）
+	Visibility      int32                  `protobuf:"varint,9,opt,name=visibility,proto3" json:"visibility,omitempty"`                        // 可见性：1=个人 2=团队 3=公开（可选，默认2）
+	AllDay          bool                   `protobuf:"varint,10,opt,name=allDay,proto3" json:"allDay,omitempty"`                               // 是否全天（可选，默认false）
+	AttachmentURLs  []string               `protobuf:"bytes,11,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`                // 附件URL列表（可选）
+	ScheduleGroupID string                 `protobuf:"bytes,12,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID,omitempty"`              // 所属日程分组ID（可选）
+	AllowMemberJoin bool                   `protobuf:"varint,13,opt,name=allowMemberJoin,proto3" json:"allowMemberJoin,omitempty"`             // 允许成员主动加入（可选，默认true）
+	NotifyByEmail   bool                   `protobuf:"varint,14,opt,name=notifyByEmail,proto3" json:"notifyByEmail,omitempty"`                 // 同时通过邮件通知参与人（可选，默认false）
+	Type            ScheduleType           `protobuf:"varint,15,opt,name=type,proto3,enum=openim.schedule.ScheduleType" json:"type,omitempty"` // 日程类型：0=日程 1=会议（可选，默认0）
+	MeetingSettings *MeetingSettings       `protobuf:"bytes,16,opt,name=meetingSettings,proto3" json:"meetingSettings,omitempty"`              // 会议设置（可选，仅当type为MEETING时有效）
+	IsTemporary     bool                   `protobuf:"varint,17,opt,name=isTemporary,proto3" json:"isTemporary,omitempty"`                     // 是否是临时会议（可选，仅当type为MEETING时有效）
+	RepeatInfo      *ScheduleRepeatInfo    `protobuf:"bytes,18,opt,name=repeatInfo,proto3" json:"repeatInfo,omitempty"`                        // 重复规则（可选）
+	AttendeeUserIDs []string               `protobuf:"bytes,19,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs,omitempty"`              // 参与者用户ID列表（可选）
+	Reminders       []int32                `protobuf:"varint,20,rep,packed,name=reminders,proto3" json:"reminders,omitempty"`                  // 提醒类型列表（可选，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	SendToChat      bool                   `protobuf:"varint,21,opt,name=sendToChat,proto3" json:"sendToChat,omitempty"`                       // 是否发送消息到聊天（可选，默认false）
+	MessageContent  string                 `protobuf:"bytes,22,opt,name=messageContent,proto3" json:"messageContent,omitempty"`                // 消息内容（可选，当sendToChat为true时使用，不传则使用默认内容）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -1219,9 +1219,9 @@ func (x *CreateScheduleReq) GetMessageContent() string {
 // CreateScheduleResp 创建日程响应
 type CreateScheduleResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleInfo   *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo"`
-	ConversationID string                 `protobuf:"bytes,2,opt,name=conversationID,proto3" json:"conversationID"` // 会话ID（当发送消息到聊天时返回，单聊或群聊）
-	TargetID       string                 `protobuf:"bytes,3,opt,name=targetID,proto3" json:"targetID"`             // 目标ID（用户ID或群组ID，当发送消息到聊天时返回）
+	ScheduleInfo   *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo,omitempty"`
+	ConversationID string                 `protobuf:"bytes,2,opt,name=conversationID,proto3" json:"conversationID,omitempty"` // 会话ID（当发送消息到聊天时返回，单聊或群聊）
+	TargetID       string                 `protobuf:"bytes,3,opt,name=targetID,proto3" json:"targetID,omitempty"`             // 目标ID（用户ID或群组ID，当发送消息到聊天时返回）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1280,11 +1280,11 @@ func (x *CreateScheduleResp) GetTargetID() string {
 // CreateScheduleMessageReq 发送日程消息到聊天请求
 type CreateScheduleMessageReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleIDs    []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs"`       // 日程ID列表（必填，至少一个）
-	MessageContent string                 `protobuf:"bytes,2,opt,name=messageContent,proto3" json:"messageContent"` // 消息内容（可选，不传则使用默认内容）
-	UserIDs        []string               `protobuf:"bytes,3,rep,name=userIDs,proto3" json:"userIDs"`               // 目标用户ID列表（可选，根据sendMode决定用途）
-	GroupIDs       []string               `protobuf:"bytes,4,rep,name=groupIDs,proto3" json:"groupIDs"`             // 目标群组ID列表（可选，仅转发模式有效，与userIDs不能同时设置）
-	SendMode       int32                  `protobuf:"varint,5,opt,name=sendMode,proto3" json:"sendMode"`            // 发送模式：0=创建日程发送消息（默认，用userIDs创建群聊并发送消息），1=转发消息（userIDs每个人发消息，groupIDs分别发群消息，可以同时存在）。未设置时默认为0（创建日程发送消息）
+	ScheduleIDs    []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs,omitempty"`       // 日程ID列表（必填，至少一个）
+	MessageContent string                 `protobuf:"bytes,2,opt,name=messageContent,proto3" json:"messageContent,omitempty"` // 消息内容（可选，不传则使用默认内容）
+	UserIDs        []string               `protobuf:"bytes,3,rep,name=userIDs,proto3" json:"userIDs,omitempty"`               // 目标用户ID列表（可选，根据sendMode决定用途）
+	GroupIDs       []string               `protobuf:"bytes,4,rep,name=groupIDs,proto3" json:"groupIDs,omitempty"`             // 目标群组ID列表（可选，仅转发模式有效，与userIDs不能同时设置）
+	SendMode       int32                  `protobuf:"varint,5,opt,name=sendMode,proto3" json:"sendMode,omitempty"`            // 发送模式：0=创建日程发送消息（默认，用userIDs创建群聊并发送消息），1=转发消息（userIDs每个人发消息，groupIDs分别发群消息，可以同时存在）。未设置时默认为0（创建日程发送消息）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1357,11 +1357,11 @@ func (x *CreateScheduleMessageReq) GetSendMode() int32 {
 // CreateScheduleMessageResult 单个发送结果
 type CreateScheduleMessageResult struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	ConversationID   string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"`      // 会话ID（单聊或群聊）
-	ConversationType int32                  `protobuf:"varint,2,opt,name=conversationType,proto3" json:"conversationType"` // 会话类型：1=单聊，2=群聊
-	GroupID          string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID"`                    // 群组ID（仅当conversationType=2时有效）
-	ServerMsgID      string                 `protobuf:"bytes,4,opt,name=serverMsgID,proto3" json:"serverMsgID"`            // 服务器消息ID
-	TargetID         string                 `protobuf:"bytes,5,opt,name=targetID,proto3" json:"targetID"`                  // 目标ID（用户ID或群组ID）
+	ConversationID   string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID,omitempty"`      // 会话ID（单聊或群聊）
+	ConversationType int32                  `protobuf:"varint,2,opt,name=conversationType,proto3" json:"conversationType,omitempty"` // 会话类型：1=单聊，2=群聊
+	GroupID          string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID,omitempty"`                    // 群组ID（仅当conversationType=2时有效）
+	ServerMsgID      string                 `protobuf:"bytes,4,opt,name=serverMsgID,proto3" json:"serverMsgID,omitempty"`            // 服务器消息ID
+	TargetID         string                 `protobuf:"bytes,5,opt,name=targetID,proto3" json:"targetID,omitempty"`                  // 目标ID（用户ID或群组ID）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1434,7 +1434,7 @@ func (x *CreateScheduleMessageResult) GetTargetID() string {
 // CreateScheduleMessageResp 发送日程消息到聊天响应
 type CreateScheduleMessageResp struct {
 	state         protoimpl.MessageState         `protogen:"open.v1"`
-	Results       []*CreateScheduleMessageResult `protobuf:"bytes,1,rep,name=results,proto3" json:"results"` // 发送结果列表（批量发送时返回多个结果）
+	Results       []*CreateScheduleMessageResult `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"` // 发送结果列表（批量发送时返回多个结果）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1479,29 +1479,29 @@ func (x *CreateScheduleMessageResp) GetResults() []*CreateScheduleMessageResult 
 // UpdateScheduleReq 更新日程请求（扁平结构，使用 optional 支持部分更新）
 type UpdateScheduleReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID       string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	OperatorUserID   string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID"`
-	Title            *string                `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title"`                                                // 日程标题（可选）
-	StartTime        *int64                 `protobuf:"varint,4,opt,name=startTime,proto3,oneof" json:"startTime"`                                       // 开始时间（时间戳，可选）
-	EndTime          *int64                 `protobuf:"varint,5,opt,name=endTime,proto3,oneof" json:"endTime"`                                           // 结束时间（时间戳，可选）
-	Location         *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location"`                                          // 地点（可选）
-	RoomID           *string                `protobuf:"bytes,7,opt,name=roomID,proto3,oneof" json:"roomID"`                                              // 会议室ID（可选）
-	Description      *string                `protobuf:"bytes,8,opt,name=description,proto3,oneof" json:"description"`                                    // 描述/备注（可选）
-	TimeZone         *string                `protobuf:"bytes,9,opt,name=timeZone,proto3,oneof" json:"timeZone"`                                          // 时区（可选）
-	Visibility       *int32                 `protobuf:"varint,10,opt,name=visibility,proto3,oneof" json:"visibility"`                                    // 可见性：1=个人 2=团队 3=公开（可选）
-	AllDay           *bool                  `protobuf:"varint,11,opt,name=allDay,proto3,oneof" json:"allDay"`                                            // 是否全天（可选）
-	AttachmentURLs   []string               `protobuf:"bytes,12,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`                                   // 附件URL列表（可选，传空数组表示清空）
-	ScheduleGroupID  *string                `protobuf:"bytes,13,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID"`                           // 所属日程分组ID（可选）
-	AllowMemberJoin  *bool                  `protobuf:"varint,14,opt,name=allowMemberJoin,proto3,oneof" json:"allowMemberJoin"`                          // 允许成员主动加入（可选）
-	NotifyByEmail    *bool                  `protobuf:"varint,15,opt,name=notifyByEmail,proto3,oneof" json:"notifyByEmail"`                              // 同时通过邮件通知参与人（可选）
-	MeetingMinutesID *string                `protobuf:"bytes,19,opt,name=meetingMinutesID,proto3,oneof" json:"meetingMinutesID"`                         // 会议纪要文档ID（可选）
-	RepeatInfo       *ScheduleRepeatInfo    `protobuf:"bytes,16,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo"`                                     // 重复规则（可选）
-	AttendeeUserIDs  []string               `protobuf:"bytes,17,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs"`                                 // 更新参与者列表（可选，传空数组表示清空）
-	Reminders        []int32                `protobuf:"varint,18,rep,packed,name=reminders,proto3" json:"reminders"`                                     // 更新提醒类型列表（可选，传空数组表示清空，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
-	Type             *int32                 `protobuf:"varint,20,opt,name=type,proto3,oneof" json:"type"`                                                // 日程类型：0=日程 1=会议（可选）
-	MeetingSettings  *MeetingSettings       `protobuf:"bytes,21,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings"`                           // 会议设置（可选，仅当type为MEETING时有效）
-	IsTemporary      *bool                  `protobuf:"varint,22,opt,name=isTemporary,proto3,oneof" json:"isTemporary"`                                  // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
-	UpdateScope      *UpdateScope           `protobuf:"varint,23,opt,name=updateScope,proto3,enum=openim.schedule.UpdateScope,oneof" json:"updateScope"` // 修改范围（可选，仅当日程有重复规则时有效）
+	ScheduleID       string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	OperatorUserID   string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID,omitempty"`
+	Title            *string                `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`                                                // 日程标题（可选）
+	StartTime        *int64                 `protobuf:"varint,4,opt,name=startTime,proto3,oneof" json:"startTime,omitempty"`                                       // 开始时间（时间戳，可选）
+	EndTime          *int64                 `protobuf:"varint,5,opt,name=endTime,proto3,oneof" json:"endTime,omitempty"`                                           // 结束时间（时间戳，可选）
+	Location         *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location,omitempty"`                                          // 地点（可选）
+	RoomID           *string                `protobuf:"bytes,7,opt,name=roomID,proto3,oneof" json:"roomID,omitempty"`                                              // 会议室ID（可选）
+	Description      *string                `protobuf:"bytes,8,opt,name=description,proto3,oneof" json:"description,omitempty"`                                    // 描述/备注（可选）
+	TimeZone         *string                `protobuf:"bytes,9,opt,name=timeZone,proto3,oneof" json:"timeZone,omitempty"`                                          // 时区（可选）
+	Visibility       *int32                 `protobuf:"varint,10,opt,name=visibility,proto3,oneof" json:"visibility,omitempty"`                                    // 可见性：1=个人 2=团队 3=公开（可选）
+	AllDay           *bool                  `protobuf:"varint,11,opt,name=allDay,proto3,oneof" json:"allDay,omitempty"`                                            // 是否全天（可选）
+	AttachmentURLs   []string               `protobuf:"bytes,12,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`                                   // 附件URL列表（可选，传空数组表示清空）
+	ScheduleGroupID  *string                `protobuf:"bytes,13,opt,name=scheduleGroupID,proto3,oneof" json:"scheduleGroupID,omitempty"`                           // 所属日程分组ID（可选）
+	AllowMemberJoin  *bool                  `protobuf:"varint,14,opt,name=allowMemberJoin,proto3,oneof" json:"allowMemberJoin,omitempty"`                          // 允许成员主动加入（可选）
+	NotifyByEmail    *bool                  `protobuf:"varint,15,opt,name=notifyByEmail,proto3,oneof" json:"notifyByEmail,omitempty"`                              // 同时通过邮件通知参与人（可选）
+	MeetingMinutesID *string                `protobuf:"bytes,19,opt,name=meetingMinutesID,proto3,oneof" json:"meetingMinutesID,omitempty"`                         // 会议纪要文档ID（可选）
+	RepeatInfo       *ScheduleRepeatInfo    `protobuf:"bytes,16,opt,name=repeatInfo,proto3,oneof" json:"repeatInfo,omitempty"`                                     // 重复规则（可选）
+	AttendeeUserIDs  []string               `protobuf:"bytes,17,rep,name=attendeeUserIDs,proto3" json:"attendeeUserIDs,omitempty"`                                 // 更新参与者列表（可选，传空数组表示清空）
+	Reminders        []int32                `protobuf:"varint,18,rep,packed,name=reminders,proto3" json:"reminders,omitempty"`                                     // 更新提醒类型列表（可选，传空数组表示清空，可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	Type             *int32                 `protobuf:"varint,20,opt,name=type,proto3,oneof" json:"type,omitempty"`                                                // 日程类型：0=日程 1=会议（可选）
+	MeetingSettings  *MeetingSettings       `protobuf:"bytes,21,opt,name=meetingSettings,proto3,oneof" json:"meetingSettings,omitempty"`                           // 会议设置（可选，仅当type为MEETING时有效）
+	IsTemporary      *bool                  `protobuf:"varint,22,opt,name=isTemporary,proto3,oneof" json:"isTemporary,omitempty"`                                  // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
+	UpdateScope      *UpdateScope           `protobuf:"varint,23,opt,name=updateScope,proto3,enum=openim.schedule.UpdateScope,oneof" json:"updateScope,omitempty"` // 修改范围（可选，仅当日程有重复规则时有效）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -1700,7 +1700,7 @@ func (x *UpdateScheduleReq) GetUpdateScope() UpdateScope {
 // UpdateScheduleResp 更新日程响应
 type UpdateScheduleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleInfo  *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo"`
+	ScheduleInfo  *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1745,9 +1745,9 @@ func (x *UpdateScheduleResp) GetScheduleInfo() *ScheduleInfo {
 // DeleteScheduleReq 删除日程请求
 type DeleteScheduleReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID     string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	OperatorUserID string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID"`
-	DeleteScope    *DeleteScope           `protobuf:"varint,3,opt,name=deleteScope,proto3,enum=openim.schedule.DeleteScope,oneof" json:"deleteScope"` // 删除范围（可选，仅当日程有重复规则时有效）
+	ScheduleID     string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	OperatorUserID string                 `protobuf:"bytes,2,opt,name=operatorUserID,proto3" json:"operatorUserID,omitempty"`
+	DeleteScope    *DeleteScope           `protobuf:"varint,3,opt,name=deleteScope,proto3,enum=openim.schedule.DeleteScope,oneof" json:"deleteScope,omitempty"` // 删除范围（可选，仅当日程有重复规则时有效）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1843,8 +1843,8 @@ func (*DeleteScheduleResp) Descriptor() ([]byte, []int) {
 // GetScheduleReq 查询日程详情请求
 type GetScheduleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1896,7 +1896,7 @@ func (x *GetScheduleReq) GetUserID() string {
 // GetScheduleResp 查询日程详情响应
 type GetScheduleResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleInfo  *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo"`
+	ScheduleInfo  *ScheduleInfo          `protobuf:"bytes,1,opt,name=scheduleInfo,proto3" json:"scheduleInfo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1940,17 +1940,17 @@ func (x *GetScheduleResp) GetScheduleInfo() *ScheduleInfo {
 
 // GetSchedulesReq 查询日程列表请求
 type GetSchedulesReq struct {
-	state            protoimpl.MessageState   `protogen:"open.v1"`
-	UserID           string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	StartTime        int64                    `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"`              // 开始时间范围（时间戳）
-	EndTime          int64                    `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`                  // 结束时间范围（时间戳）
-	Status           int32                    `protobuf:"varint,4,opt,name=status,proto3" json:"status"`                    // 状态筛选：0=全部 1=待确认 2=已接受 3=已拒绝
-	Keyword          string                   `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword"`                   // 关键词搜索
-	ScheduleGroupIDs []string                 `protobuf:"bytes,7,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
-	Pagination       *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination"`
-	ScheduleGroupOwnerUserID string           `protobuf:"bytes,8,opt,name=scheduleGroupOwnerUserID,proto3" json:"scheduleGroupOwnerUserID"` // 分组所有者用户ID（系统分组查他人共享日历时必填）
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state                    protoimpl.MessageState   `protogen:"open.v1"`
+	UserID                   string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	StartTime                int64                    `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime,omitempty"`              // 开始时间范围（时间戳）
+	EndTime                  int64                    `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime,omitempty"`                  // 结束时间范围（时间戳）
+	Status                   int32                    `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`                    // 状态筛选：0=全部 1=待确认 2=已接受 3=已拒绝
+	Keyword                  string                   `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`                   // 关键词搜索
+	ScheduleGroupIDs         []string                 `protobuf:"bytes,7,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs,omitempty"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
+	Pagination               *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	ScheduleGroupOwnerUserID string                   `protobuf:"bytes,8,opt,name=scheduleGroupOwnerUserID,proto3" json:"scheduleGroupOwnerUserID,omitempty"` // 分组所有者用户ID（系统分组「我的日历」查他人共享日历时必填）
+	unknownFields            protoimpl.UnknownFields
+	sizeCache                protoimpl.SizeCache
 }
 
 func (x *GetSchedulesReq) Reset() {
@@ -2042,8 +2042,8 @@ func (x *GetSchedulesReq) GetScheduleGroupOwnerUserID() string {
 // GetSchedulesResp 查询日程列表响应
 type GetSchedulesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Schedules     []*ScheduleInfo        `protobuf:"bytes,1,rep,name=schedules,proto3" json:"schedules"`
-	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
+	Schedules     []*ScheduleInfo        `protobuf:"bytes,1,rep,name=schedules,proto3" json:"schedules,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2095,9 +2095,9 @@ func (x *GetSchedulesResp) GetTotal() int32 {
 // GetMyRoomBookingsReq 查询我的会议室预定列表请求
 type GetMyRoomBookingsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	UserID        string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"` // 用户ID
-	Date          int64                    `protobuf:"varint,2,opt,name=date,proto3" json:"date"`    // 查询日期（时间戳，定位到某天）
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`
+	UserID        string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"` // 用户ID
+	Date          int64                    `protobuf:"varint,2,opt,name=date,proto3" json:"date,omitempty"`    // 查询日期（时间戳，定位到某天）
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2156,8 +2156,8 @@ func (x *GetMyRoomBookingsReq) GetPagination() *sdkws.RequestPagination {
 // GetMyRoomBookingsResp 查询我的会议室预定列表响应
 type GetMyRoomBookingsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Schedules     []*ScheduleInfo        `protobuf:"bytes,1,rep,name=schedules,proto3" json:"schedules"`
-	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
+	Schedules     []*ScheduleInfo        `protobuf:"bytes,1,rep,name=schedules,proto3" json:"schedules,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2210,8 +2210,8 @@ func (x *GetMyRoomBookingsResp) GetTotal() int32 {
 // 支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口接受日程
 type AcceptScheduleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2301,8 +2301,8 @@ func (*AcceptScheduleResp) Descriptor() ([]byte, []int) {
 // 支持状态切换：无论当前状态是待确认、已接受还是已拒绝，都可以调用此接口拒绝日程
 type RejectScheduleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2391,8 +2391,8 @@ func (*RejectScheduleResp) Descriptor() ([]byte, []int) {
 // JoinScheduleReq 加入日程请求（主动加入，不是接受邀请）
 type JoinScheduleReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"` // 日程ID（必填）
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`         // 用户ID（可选，不传则使用当前登录用户）
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"` // 日程ID（必填）
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`         // 用户ID（可选，不传则使用当前登录用户）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2481,9 +2481,9 @@ func (*JoinScheduleResp) Descriptor() ([]byte, []int) {
 // SetReminderReq 设置提醒请求
 type SetReminderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	Reminders     []int32                `protobuf:"varint,3,rep,packed,name=reminders,proto3" json:"reminders"` // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	Reminders     []int32                `protobuf:"varint,3,rep,packed,name=reminders,proto3" json:"reminders,omitempty"` // 提醒类型列表（可多选）：0=开始时 1=5分钟前 2=15分钟前 3=1小时前 4=1天前
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2579,10 +2579,10 @@ func (*SetReminderResp) Descriptor() ([]byte, []int) {
 // AckScheduleReminderReq 提醒已读回执请求（客户端弹窗后上报）
 type AckScheduleReminderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	ReminderType  int32                  `protobuf:"varint,3,opt,name=reminderType,proto3" json:"reminderType"` // 提醒类型枚举
-	PlatformID    int32                  `protobuf:"varint,4,opt,name=platformID,proto3" json:"platformID"`     // 上报的平台ID
+	ScheduleID    string                 `protobuf:"bytes,1,opt,name=scheduleID,proto3" json:"scheduleID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	ReminderType  int32                  `protobuf:"varint,3,opt,name=reminderType,proto3" json:"reminderType,omitempty"` // 提醒类型枚举
+	PlatformID    int32                  `protobuf:"varint,4,opt,name=platformID,proto3" json:"platformID,omitempty"`     // 上报的平台ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2685,8 +2685,8 @@ func (*AckScheduleReminderResp) Descriptor() ([]byte, []int) {
 // GetAckedRemindersReq 查询用户哪些提醒已读（供SDK新设备同步时过滤）
 type GetAckedRemindersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	ScheduleIDs   []string               `protobuf:"bytes,2,rep,name=scheduleIDs,proto3" json:"scheduleIDs"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	ScheduleIDs   []string               `protobuf:"bytes,2,rep,name=scheduleIDs,proto3" json:"scheduleIDs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2738,7 +2738,7 @@ func (x *GetAckedRemindersReq) GetScheduleIDs() []string {
 // AckedReminderInfo 单个日程的已读提醒信息
 type AckedReminderInfo struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	AckedReminderTypes []int32                `protobuf:"varint,1,rep,packed,name=ackedReminderTypes,proto3" json:"ackedReminderTypes"`
+	AckedReminderTypes []int32                `protobuf:"varint,1,rep,packed,name=ackedReminderTypes,proto3" json:"ackedReminderTypes,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -2783,7 +2783,7 @@ func (x *AckedReminderInfo) GetAckedReminderTypes() []int32 {
 // GetAckedRemindersResp 查询已读提醒响应
 type GetAckedRemindersResp struct {
 	state         protoimpl.MessageState        `protogen:"open.v1"`
-	AckedMap      map[string]*AckedReminderInfo `protobuf:"bytes,1,rep,name=ackedMap,proto3" json:"ackedMap" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key: scheduleID
+	AckedMap      map[string]*AckedReminderInfo `protobuf:"bytes,1,rep,name=ackedMap,proto3" json:"ackedMap,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // key: scheduleID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2828,10 +2828,10 @@ func (x *GetAckedRemindersResp) GetAckedMap() map[string]*AckedReminderInfo {
 // BusySlot 忙碌时间段
 type BusySlot struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	SlotId        string                 `protobuf:"bytes,1,opt,name=slotId,proto3" json:"slotId"`        // 用户id和startTime/endTime时间和busy生成的MD5唯一值
-	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"` // 开始时间（时间戳，秒）
-	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`     // 结束时间（时间戳，秒）
-	Busy          bool                   `protobuf:"varint,4,opt,name=busy,proto3" json:"busy"`           // 是否忙碌
+	SlotId        string                 `protobuf:"bytes,1,opt,name=slotId,proto3" json:"slotId,omitempty"`        // 用户id和startTime/endTime时间和busy生成的MD5唯一值
+	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime,omitempty"` // 开始时间（时间戳，秒）
+	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime,omitempty"`     // 结束时间（时间戳，秒）
+	Busy          bool                   `protobuf:"varint,4,opt,name=busy,proto3" json:"busy,omitempty"`           // 是否忙碌
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2897,7 +2897,7 @@ func (x *BusySlot) GetBusy() bool {
 // BusySlotList 忙碌时间段列表
 type BusySlotList struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Slots         []*BusySlot            `protobuf:"bytes,1,rep,name=slots,proto3" json:"slots"`
+	Slots         []*BusySlot            `protobuf:"bytes,1,rep,name=slots,proto3" json:"slots,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2942,10 +2942,10 @@ func (x *BusySlotList) GetSlots() []*BusySlot {
 // CheckConflictReq 查询日程冲突请求
 type CheckConflictReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	StartTime     int64                  `protobuf:"varint,1,opt,name=startTime,proto3" json:"startTime"`    // 查询开始（时间戳，秒）
-	EndTime       int64                  `protobuf:"varint,2,opt,name=endTime,proto3" json:"endTime"`        // 查询结束（时间戳，秒），必须 > startTime
-	UserIDs       []string               `protobuf:"bytes,3,rep,name=userIDs,proto3" json:"userIDs"`         // 需要检查的成员 userID 列表
-	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
+	StartTime     int64                  `protobuf:"varint,1,opt,name=startTime,proto3" json:"startTime,omitempty"`    // 查询开始（时间戳，秒）
+	EndTime       int64                  `protobuf:"varint,2,opt,name=endTime,proto3" json:"endTime,omitempty"`        // 查询结束（时间戳，秒），必须 > startTime
+	UserIDs       []string               `protobuf:"bytes,3,rep,name=userIDs,proto3" json:"userIDs,omitempty"`         // 需要检查的成员 userID 列表
+	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs,omitempty"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3011,8 +3011,8 @@ func (x *CheckConflictReq) GetScheduleIDs() []string {
 // CheckConflictResp 查询日程冲突响应
 type CheckConflictResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	BusyUserIDs   []string                 `protobuf:"bytes,1,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
-	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,2,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
+	BusyUserIDs   []string                 `protobuf:"bytes,1,rep,name=busyUserIDs,proto3" json:"busyUserIDs,omitempty"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,2,rep,name=busyByUserId,proto3" json:"busyByUserId,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（非跨天时可用于右侧网格渲染忙块；跨天时前端可忽略）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3064,10 +3064,10 @@ func (x *CheckConflictResp) GetBusyByUserId() map[string]*BusySlotList {
 // CompareSchedulesReq 对比日程请求（对比自己和指定用户的忙碌时间）
 type CompareSchedulesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OtherUserID   string                 `protobuf:"bytes,1,opt,name=otherUserID,proto3" json:"otherUserID"` // 要对比的用户ID（必填）
-	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime"`    // 查询开始（时间戳，秒，必填）
-	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime"`        // 查询结束（时间戳，秒，必须 > startTime，必填）
-	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
+	OtherUserID   string                 `protobuf:"bytes,1,opt,name=otherUserID,proto3" json:"otherUserID,omitempty"` // 要对比的用户ID（必填）
+	StartTime     int64                  `protobuf:"varint,2,opt,name=startTime,proto3" json:"startTime,omitempty"`    // 查询开始（时间戳，秒，必填）
+	EndTime       int64                  `protobuf:"varint,3,opt,name=endTime,proto3" json:"endTime,omitempty"`        // 查询结束（时间戳，秒，必须 > startTime，必填）
+	ScheduleIDs   []string               `protobuf:"bytes,4,rep,name=scheduleIDs,proto3" json:"scheduleIDs,omitempty"` // 排除的日程ID列表（可选，编辑日程时排除当前日程避免与自己冲突）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3133,10 +3133,10 @@ func (x *CompareSchedulesReq) GetScheduleIDs() []string {
 // CompareSchedulesResp 对比日程响应
 type CompareSchedulesResp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"myUserID"`                                                                                   // 自己的用户ID
-	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"otherUserID"`                                                                             // 对比的用户ID
-	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busyUserIDs"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
-	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
+	MyUserID      string                   `protobuf:"bytes,1,opt,name=myUserID,proto3" json:"myUserID,omitempty"`                                                                                   // 自己的用户ID
+	OtherUserID   string                   `protobuf:"bytes,2,opt,name=otherUserID,proto3" json:"otherUserID,omitempty"`                                                                             // 对比的用户ID
+	BusyUserIDs   []string                 `protobuf:"bytes,3,rep,name=busyUserIDs,proto3" json:"busyUserIDs,omitempty"`                                                                             // 忙的成员 userID 列表（用于顶部头像"忙"icon）
+	BusyByUserId  map[string]*BusySlotList `protobuf:"bytes,4,rep,name=busyByUserId,proto3" json:"busyByUserId,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 忙碌段详情（key为用户ID，value为该用户的忙碌时间段列表）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3202,10 +3202,10 @@ func (x *CompareSchedulesResp) GetBusyByUserId() map[string]*BusySlotList {
 // GetScheduleDatesReq 查询某个月有参与日程的日期列表请求
 type GetScheduleDatesReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	UserID           string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                     // 用户ID（必填）
-	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year"`                        // 年份（必填，如 2026）
-	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month"`                      // 月份（必填，1-12）
-	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
+	UserID           string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`                     // 用户ID（必填）
+	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year,omitempty"`                        // 年份（必填，如 2026）
+	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month,omitempty"`                      // 月份（必填，1-12）
+	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs,omitempty"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -3271,7 +3271,7 @@ func (x *GetScheduleDatesReq) GetScheduleGroupIDs() []string {
 // GetScheduleDatesResp 查询某个月有参与日程的日期列表响应
 type GetScheduleDatesResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dates         []int32                `protobuf:"varint,1,rep,packed,name=dates,proto3" json:"dates"` // 有日程的日期列表（1-31，如 [2, 5, 9, 16, 23, 30]）
+	Dates         []int32                `protobuf:"varint,1,rep,packed,name=dates,proto3" json:"dates,omitempty"` // 有日程的日期列表（1-31，如 [2, 5, 9, 16, 23, 30]）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3316,10 +3316,10 @@ func (x *GetScheduleDatesResp) GetDates() []int32 {
 // GetScheduleMonthViewReq 查询某个月每天的所有日程请求（月历视图）
 type GetScheduleMonthViewReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	UserID           string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`                     // 用户ID（必填）
-	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year"`                        // 年份（必填，如 2026）
-	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month"`                      // 月份（必填，1-12）
-	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
+	UserID           string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`                     // 用户ID（必填）
+	Year             int32                  `protobuf:"varint,2,opt,name=year,proto3" json:"year,omitempty"`                        // 年份（必填，如 2026）
+	Month            int32                  `protobuf:"varint,3,opt,name=month,proto3" json:"month,omitempty"`                      // 月份（必填，1-12）
+	ScheduleGroupIDs []string               `protobuf:"bytes,4,rep,name=scheduleGroupIDs,proto3" json:"scheduleGroupIDs,omitempty"` // 日程分组ID列表（可选，用于筛选指定分组的日程）
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -3385,8 +3385,8 @@ func (x *GetScheduleMonthViewReq) GetScheduleGroupIDs() []string {
 // ScheduleDayInfo 某一天的日程信息
 type ScheduleDayInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day"`            // 日期（1-31）
-	Schedules     []*ScheduleInfo        `protobuf:"bytes,2,rep,name=schedules,proto3" json:"schedules"` // 该天的所有日程列表
+	Day           int32                  `protobuf:"varint,1,opt,name=day,proto3" json:"day,omitempty"`            // 日期（1-31）
+	Schedules     []*ScheduleInfo        `protobuf:"bytes,2,rep,name=schedules,proto3" json:"schedules,omitempty"` // 该天的所有日程列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3438,7 +3438,7 @@ func (x *ScheduleDayInfo) GetSchedules() []*ScheduleInfo {
 // GetScheduleMonthViewResp 查询某个月每天的所有日程响应（月历视图）
 type GetScheduleMonthViewResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Days          []*ScheduleDayInfo     `protobuf:"bytes,1,rep,name=days,proto3" json:"days"` // 每天及其对应的日程列表
+	Days          []*ScheduleDayInfo     `protobuf:"bytes,1,rep,name=days,proto3" json:"days,omitempty"` // 每天及其对应的日程列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3483,17 +3483,17 @@ func (x *GetScheduleMonthViewResp) GetDays() []*ScheduleDayInfo {
 // ScheduleGroup 日程分组信息
 type ScheduleGroup struct {
 	state                      protoimpl.MessageState `protogen:"open.v1"`
-	GroupID                    string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`                                        // 分组ID
-	OwnerUserID                string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID"`                                // 所有者用户ID
-	GroupName                  string                 `protobuf:"bytes,3,opt,name=groupName,proto3" json:"groupName"`                                    // 分组名称
-	GroupType                  int32                  `protobuf:"varint,4,opt,name=groupType,proto3" json:"groupType"`                                   // 分组类型：0=系统默认分组（只可能有一个），1=个人/团队，2=订阅公共日历
-	SortOrder                  int32                  `protobuf:"varint,5,opt,name=sortOrder,proto3" json:"sortOrder"`                                   // 排序顺序
-	IsVisible                  bool                   `protobuf:"varint,6,opt,name=isVisible,proto3" json:"isVisible"`                                   // 是否可见
-	CreateTime                 int64                  `protobuf:"varint,7,opt,name=createTime,proto3" json:"createTime"`                                 // 创建时间（时间戳）
-	UpdateTime                 int64                  `protobuf:"varint,8,opt,name=updateTime,proto3" json:"updateTime"`                                 // 更新时间（时间戳）
-	Ex                         string                 `protobuf:"bytes,9,opt,name=ex,proto3" json:"ex"`                                                  // 扩展字段
-	Shares                     []*GroupShareInfo      `protobuf:"bytes,10,rep,name=shares,proto3" json:"shares"`                                         // 共享信息列表（包含权限）
-	SubscribedPublicCalendarID string                 `protobuf:"bytes,11,opt,name=subscribedPublicCalendarID,proto3" json:"subscribedPublicCalendarID"` // 订阅的公共日历ID（仅当groupType=2时有效）
+	GroupID                    string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID,omitempty"`                                        // 分组ID
+	OwnerUserID                string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"`                                // 所有者用户ID
+	GroupName                  string                 `protobuf:"bytes,3,opt,name=groupName,proto3" json:"groupName,omitempty"`                                    // 分组名称
+	GroupType                  int32                  `protobuf:"varint,4,opt,name=groupType,proto3" json:"groupType,omitempty"`                                   // 分组类型：0=系统默认分组（只可能有一个），1=个人/团队，2=订阅公共日历
+	SortOrder                  int32                  `protobuf:"varint,5,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`                                   // 排序顺序
+	IsVisible                  bool                   `protobuf:"varint,6,opt,name=isVisible,proto3" json:"isVisible,omitempty"`                                   // 是否可见
+	CreateTime                 int64                  `protobuf:"varint,7,opt,name=createTime,proto3" json:"createTime,omitempty"`                                 // 创建时间（时间戳）
+	UpdateTime                 int64                  `protobuf:"varint,8,opt,name=updateTime,proto3" json:"updateTime,omitempty"`                                 // 更新时间（时间戳）
+	Ex                         string                 `protobuf:"bytes,9,opt,name=ex,proto3" json:"ex,omitempty"`                                                  // 扩展字段
+	Shares                     []*GroupShareInfo      `protobuf:"bytes,10,rep,name=shares,proto3" json:"shares,omitempty"`                                         // 共享信息列表（包含权限）
+	SubscribedPublicCalendarID string                 `protobuf:"bytes,11,opt,name=subscribedPublicCalendarID,proto3" json:"subscribedPublicCalendarID,omitempty"` // 订阅的公共日历ID（仅当groupType=2时有效）
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -3608,10 +3608,10 @@ func (x *ScheduleGroup) GetSubscribedPublicCalendarID() string {
 // GroupShareInfo 分组共享信息
 type GroupShareInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`              // 用户ID
-	Permission    int32                  `protobuf:"varint,2,opt,name=permission,proto3" json:"permission"`     // 权限：1=可查看, 2=可编辑, 3=可管理
-	OnlyBusyFree  bool                   `protobuf:"varint,3,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree"` // 是否仅查看闲忙状态
-	IsVisible     bool                   `protobuf:"varint,4,opt,name=isVisible,proto3" json:"isVisible"`       // 用户级别的选中状态（是否显示该分组，每个用户独立）
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`              // 用户ID
+	Permission    int32                  `protobuf:"varint,2,opt,name=permission,proto3" json:"permission,omitempty"`     // 权限：1=可查看, 2=可编辑, 3=可管理
+	OnlyBusyFree  bool                   `protobuf:"varint,3,opt,name=onlyBusyFree,proto3" json:"onlyBusyFree,omitempty"` // 是否仅查看闲忙状态
+	IsVisible     bool                   `protobuf:"varint,4,opt,name=isVisible,proto3" json:"isVisible,omitempty"`       // 用户级别的选中状态（是否显示该分组，每个用户独立）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3677,7 +3677,7 @@ func (x *GroupShareInfo) GetIsVisible() bool {
 // InitScheduleGroupsReq 初始化日程分组请求
 type InitScheduleGroupsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerUserID   string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID"` // 所有者用户ID
+	OwnerUserID   string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"` // 所有者用户ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3759,7 +3759,7 @@ func (*InitScheduleGroupsResp) Descriptor() ([]byte, []int) {
 // GetAllScheduleGroupsReq 获取所有日程分组请求
 type GetAllScheduleGroupsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerUserID   string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID"` // 所有者用户ID
+	OwnerUserID   string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"` // 所有者用户ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3804,8 +3804,8 @@ func (x *GetAllScheduleGroupsReq) GetOwnerUserID() string {
 // GetAllScheduleGroupsResp 获取所有日程分组响应
 type GetAllScheduleGroupsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MyGroups      []*ScheduleGroup       `protobuf:"bytes,1,rep,name=myGroups,proto3" json:"myGroups"`         // 我的日程分组列表（ownerUserID等于当前用户的分组）
-	SharedGroups  []*ScheduleGroup       `protobuf:"bytes,2,rep,name=sharedGroups,proto3" json:"sharedGroups"` // 共享的日程分组列表（通过shares共享给当前用户的分组）
+	MyGroups      []*ScheduleGroup       `protobuf:"bytes,1,rep,name=myGroups,proto3" json:"myGroups,omitempty"`         // 我的日程分组列表（ownerUserID等于当前用户的分组）
+	SharedGroups  []*ScheduleGroup       `protobuf:"bytes,2,rep,name=sharedGroups,proto3" json:"sharedGroups,omitempty"` // 共享的日程分组列表（通过shares共享给当前用户的分组）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3857,13 +3857,13 @@ func (x *GetAllScheduleGroupsResp) GetSharedGroups() []*ScheduleGroup {
 // CreateScheduleGroupReq 创建日程分组请求
 type CreateScheduleGroupReq struct {
 	state                      protoimpl.MessageState `protogen:"open.v1"`
-	OwnerUserID                string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID"`                               // 所有者用户ID
-	GroupName                  string                 `protobuf:"bytes,2,opt,name=groupName,proto3" json:"groupName"`                                   // 分组名称（必填）
-	GroupID                    string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID"`                                       // 分组ID（可选，不传则自动生成）
-	GroupType                  int32                  `protobuf:"varint,4,opt,name=groupType,proto3" json:"groupType"`                                  // 分组类型（可选，默认1=个人/团队）：1=个人/团队，2=订阅公共日历
-	Shares                     []*GroupShareInfo      `protobuf:"bytes,5,rep,name=shares,proto3" json:"shares"`                                         // 共享信息列表（可选）
-	SubscribedPublicCalendarID string                 `protobuf:"bytes,6,opt,name=subscribedPublicCalendarID,proto3" json:"subscribedPublicCalendarID"` // 订阅的公共日历ID（可选，仅当groupType=2时有效）
-	Ex                         string                 `protobuf:"bytes,7,opt,name=ex,proto3" json:"ex"`                                                 // 扩展字段（可选）
+	OwnerUserID                string                 `protobuf:"bytes,1,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"`                               // 所有者用户ID
+	GroupName                  string                 `protobuf:"bytes,2,opt,name=groupName,proto3" json:"groupName,omitempty"`                                   // 分组名称（必填）
+	GroupID                    string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID,omitempty"`                                       // 分组ID（可选，不传则自动生成）
+	GroupType                  int32                  `protobuf:"varint,4,opt,name=groupType,proto3" json:"groupType,omitempty"`                                  // 分组类型（可选，默认1=个人/团队）：1=个人/团队，2=订阅公共日历
+	Shares                     []*GroupShareInfo      `protobuf:"bytes,5,rep,name=shares,proto3" json:"shares,omitempty"`                                         // 共享信息列表（可选）
+	SubscribedPublicCalendarID string                 `protobuf:"bytes,6,opt,name=subscribedPublicCalendarID,proto3" json:"subscribedPublicCalendarID,omitempty"` // 订阅的公共日历ID（可选，仅当groupType=2时有效）
+	Ex                         string                 `protobuf:"bytes,7,opt,name=ex,proto3" json:"ex,omitempty"`                                                 // 扩展字段（可选）
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -3950,7 +3950,7 @@ func (x *CreateScheduleGroupReq) GetEx() string {
 // CreateScheduleGroupResp 创建日程分组响应
 type CreateScheduleGroupResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Group         *ScheduleGroup         `protobuf:"bytes,1,opt,name=group,proto3" json:"group"` // 创建的分组信息
+	Group         *ScheduleGroup         `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"` // 创建的分组信息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3995,12 +3995,13 @@ func (x *CreateScheduleGroupResp) GetGroup() *ScheduleGroup {
 // UpdateScheduleGroupReq 更新日程分组请求
 type UpdateScheduleGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`                  // 分组ID（必填）
-	GroupName     *string                `protobuf:"bytes,2,opt,name=groupName,proto3,oneof" json:"groupName"`        // 分组名称（可选）
-	IsVisible     *bool                  `protobuf:"varint,3,opt,name=isVisible,proto3,oneof" json:"isVisible"`       // 是否可见（可选）
-	Shares        []*GroupShareInfo      `protobuf:"bytes,4,rep,name=shares,proto3" json:"shares"`                    // 更新共享信息列表（可选，传空数组表示清空）
-	Ex            *string                `protobuf:"bytes,5,opt,name=ex,proto3,oneof" json:"ex"`                      // 扩展字段（可选）
-	UpdateShares  *bool                  `protobuf:"varint,6,opt,name=updateShares,proto3,oneof" json:"updateShares"` // 是否更新共享人列表（当需要更新shares时设为true，包括清空场景，解决protobuf空repeated字段传输丢失问题）
+	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID,omitempty"`                  // 分组ID（必填）
+	GroupName     *string                `protobuf:"bytes,2,opt,name=groupName,proto3,oneof" json:"groupName,omitempty"`        // 分组名称（可选）
+	IsVisible     *bool                  `protobuf:"varint,3,opt,name=isVisible,proto3,oneof" json:"isVisible,omitempty"`       // 是否可见（可选）
+	Shares        []*GroupShareInfo      `protobuf:"bytes,4,rep,name=shares,proto3" json:"shares,omitempty"`                    // 更新共享信息列表（可选，传空数组表示清空）
+	Ex            *string                `protobuf:"bytes,5,opt,name=ex,proto3,oneof" json:"ex,omitempty"`                      // 扩展字段（可选）
+	UpdateShares  *bool                  `protobuf:"varint,6,opt,name=updateShares,proto3,oneof" json:"updateShares,omitempty"` // 是否更新共享人列表（当需要更新shares时设为true，包括清空场景，解决protobuf空repeated字段传输丢失问题）
+	OwnerUserID   string                 `protobuf:"bytes,7,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"`          // 分组所有者用户ID（系统分组「我的日历」更新他人共享日历可见性时必填）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4077,6 +4078,13 @@ func (x *UpdateScheduleGroupReq) GetUpdateShares() bool {
 	return false
 }
 
+func (x *UpdateScheduleGroupReq) GetOwnerUserID() string {
+	if x != nil {
+		return x.OwnerUserID
+	}
+	return ""
+}
+
 // UpdateScheduleGroupResp 更新日程分组响应
 type UpdateScheduleGroupResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -4117,7 +4125,7 @@ func (*UpdateScheduleGroupResp) Descriptor() ([]byte, []int) {
 // DeleteScheduleGroupReq 删除日程分组请求
 type DeleteScheduleGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"` // 分组ID（必填）
+	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID,omitempty"` // 分组ID（必填）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4199,7 +4207,7 @@ func (*DeleteScheduleGroupResp) Descriptor() ([]byte, []int) {
 // QuitScheduleGroupReq 退出日程分组请求（被共享的用户主动退出）
 type QuitScheduleGroupReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"` // 要退出的分组ID（必填）
+	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID,omitempty"` // 要退出的分组ID（必填）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4281,8 +4289,8 @@ func (*QuitScheduleGroupResp) Descriptor() ([]byte, []int) {
 // GetScheduleGroupDetailReq 获取日程分组详情请求
 type GetScheduleGroupDetailReq struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleGroupID string                 `protobuf:"bytes,1,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID"` // 分组ID（必填）
-	OwnerUserID     string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID"`         // 分组所有者用户ID（系统分组查询他人日程详情时可选）
+	ScheduleGroupID string                 `protobuf:"bytes,1,opt,name=scheduleGroupID,proto3" json:"scheduleGroupID,omitempty"` // 分组ID（必填）
+	OwnerUserID     string                 `protobuf:"bytes,2,opt,name=ownerUserID,proto3" json:"ownerUserID,omitempty"`         // 分组所有者用户ID（系统分组「我的日历」查询他人日程详情时必填）
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -4334,7 +4342,7 @@ func (x *GetScheduleGroupDetailReq) GetOwnerUserID() string {
 // GetScheduleGroupDetailResp 获取日程分组详情响应
 type GetScheduleGroupDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Group         *ScheduleGroup         `protobuf:"bytes,1,opt,name=group,proto3" json:"group"` // 分组详情
+	Group         *ScheduleGroup         `protobuf:"bytes,1,opt,name=group,proto3" json:"group,omitempty"` // 分组详情
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4379,8 +4387,8 @@ func (x *GetScheduleGroupDetailResp) GetGroup() *ScheduleGroup {
 // SendScheduleNotificationsByIDsReq 根据日程IDs发送日程调整通知请求
 type SendScheduleNotificationsByIDsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScheduleIDs   []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs"` // 日程ID列表（必填）
-	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@全体成员通知）
+	ScheduleIDs   []string               `protobuf:"bytes,1,rep,name=scheduleIDs,proto3" json:"scheduleIDs,omitempty"` // 日程ID列表（必填）
+	SendMode      int32                  `protobuf:"varint,2,opt,name=sendMode,proto3" json:"sendMode,omitempty"`      // 发送模式：0=直接发送（仅向创建者通知），1=建群通知（创建群聊并@全体成员通知）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4432,10 +4440,10 @@ func (x *SendScheduleNotificationsByIDsReq) GetSendMode() int32 {
 // SendScheduleNotificationsByIDsResp 根据日程IDs发送日程调整通知响应
 type SendScheduleNotificationsByIDsResp struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	SuccessCount      int32                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`          // 成功发送通知的数量
-	FailCount         int32                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount"`                // 失败的数量
-	FailedScheduleIDs []string               `protobuf:"bytes,3,rep,name=failedScheduleIDs,proto3" json:"failedScheduleIDs"` // 失败的日程ID列表
-	GroupID           string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupID"`                     // 建群模式时返回创建的群组ID
+	SuccessCount      int32                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount,omitempty"`          // 成功发送通知的数量
+	FailCount         int32                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount,omitempty"`                // 失败的数量
+	FailedScheduleIDs []string               `protobuf:"bytes,3,rep,name=failedScheduleIDs,proto3" json:"failedScheduleIDs,omitempty"` // 失败的日程ID列表
+	GroupID           string                 `protobuf:"bytes,4,opt,name=groupID,proto3" json:"groupID,omitempty"`                     // 建群模式时返回创建的群组ID
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -4695,7 +4703,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"scheduleID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"T\n" +
 	"\x0fGetScheduleResp\x12A\n" +
-	"\fscheduleInfo\x18\x01 \x01(\v2\x1d.openim.schedule.ScheduleInfoR\fscheduleInfo\"\x80\x02\n" +
+	"\fscheduleInfo\x18\x01 \x01(\v2\x1d.openim.schedule.ScheduleInfoR\fscheduleInfo\"\xbc\x02\n" +
 	"\x0fGetSchedulesReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1c\n" +
 	"\tstartTime\x18\x02 \x01(\x03R\tstartTime\x12\x18\n" +
@@ -4705,7 +4713,8 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x10scheduleGroupIDs\x18\a \x03(\tR\x10scheduleGroupIDs\x12?\n" +
 	"\n" +
 	"pagination\x18\x06 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"e\n" +
+	"pagination\x12:\n" +
+	"\x18scheduleGroupOwnerUserID\x18\b \x01(\tR\x18scheduleGroupOwnerUserID\"e\n" +
 	"\x10GetSchedulesResp\x12;\n" +
 	"\tschedules\x18\x01 \x03(\v2\x1d.openim.schedule.ScheduleInfoR\tschedules\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x05R\x05total\"\x83\x01\n" +
@@ -4852,14 +4861,15 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x1asubscribedPublicCalendarID\x18\x06 \x01(\tR\x1asubscribedPublicCalendarID\x12\x0e\n" +
 	"\x02ex\x18\a \x01(\tR\x02ex\"O\n" +
 	"\x17CreateScheduleGroupResp\x124\n" +
-	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"\xa3\x02\n" +
+	"\x05group\x18\x01 \x01(\v2\x1e.openim.schedule.ScheduleGroupR\x05group\"\xc5\x02\n" +
 	"\x16UpdateScheduleGroupReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12!\n" +
 	"\tgroupName\x18\x02 \x01(\tH\x00R\tgroupName\x88\x01\x01\x12!\n" +
 	"\tisVisible\x18\x03 \x01(\bH\x01R\tisVisible\x88\x01\x01\x127\n" +
 	"\x06shares\x18\x04 \x03(\v2\x1f.openim.schedule.GroupShareInfoR\x06shares\x12\x13\n" +
 	"\x02ex\x18\x05 \x01(\tH\x02R\x02ex\x88\x01\x01\x12'\n" +
-	"\fupdateShares\x18\x06 \x01(\bH\x03R\fupdateShares\x88\x01\x01B\f\n" +
+	"\fupdateShares\x18\x06 \x01(\bH\x03R\fupdateShares\x88\x01\x01\x12 \n" +
+	"\vownerUserID\x18\a \x01(\tR\vownerUserIDB\f\n" +
 	"\n" +
 	"_groupNameB\f\n" +
 	"\n" +
