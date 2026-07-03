@@ -181,6 +181,7 @@ message CreateQuickMeetingReq {
   MeetingSetting setting = 2;
   bool showInCalendar = 3;
   int32 visibility = 4;               // 可见性
+  string groupID = 5;                  // 群ID，非空时向群内推送会议卡片消息
 }
 
 message CreateQuickMeetingResp {
