@@ -55,6 +55,7 @@ message CreateCallResp {
 message RespondCallInvitationReq {
   string callID = 1;
   bool accept = 2;              // true=接听 false=拒绝
+  string rejectReason = 3;      // 拒绝原因（如 "busy"），仅 accept=false 时有效
 }
 
 // RespondCallInvitationResp 响应通话邀请结果
@@ -118,6 +119,8 @@ message CallRespondedTips {
   string callType = 4;
   bool accepted = 5;
   openim.sdkws.UserInfo calleeInfo = 6;
+  string rejectReason = 7;      // 拒绝原因（如 "busy"），仅 accepted=false 时有值
+  openim.livekit_meeting.LiveKitInfo liveKit = 8;  // 主叫方 LiveKit Token，仅 accepted=true 时由服务端填充
 }
 
 // CallCancelledTips 通话取消通知（主叫取消）

@@ -272,7 +272,8 @@ func (x *CreateCallResp) GetRoomID() string {
 type RespondCallInvitationReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CallID        string                 `protobuf:"bytes,1,opt,name=callID,proto3" json:"callID"`
-	Accept        bool                   `protobuf:"varint,2,opt,name=accept,proto3" json:"accept"` // true=接听 false=拒绝
+	Accept        bool                   `protobuf:"varint,2,opt,name=accept,proto3" json:"accept"`            // true=接听 false=拒绝
+	RejectReason  string                 `protobuf:"bytes,3,opt,name=rejectReason,proto3" json:"rejectReason"` // 拒绝原因（如 "busy"），仅 accept=false 时有效
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -319,6 +320,13 @@ func (x *RespondCallInvitationReq) GetAccept() bool {
 		return x.Accept
 	}
 	return false
+}
+
+func (x *RespondCallInvitationReq) GetRejectReason() string {
+	if x != nil {
+		return x.RejectReason
+	}
+	return ""
 }
 
 // RespondCallInvitationResp 响应通话邀请结果
@@ -805,13 +813,15 @@ func (x *CallInvitationTips) GetCallerInfo() *sdkws.UserInfo {
 
 // CallRespondedTips 通话响应通知（接听/拒绝）
 type CallRespondedTips struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CallID        string                 `protobuf:"bytes,1,opt,name=callID,proto3" json:"callID"`
-	CallerUserID  string                 `protobuf:"bytes,2,opt,name=callerUserID,proto3" json:"callerUserID"`
-	CalleeUserID  string                 `protobuf:"bytes,3,opt,name=calleeUserID,proto3" json:"calleeUserID"`
-	CallType      string                 `protobuf:"bytes,4,opt,name=callType,proto3" json:"callType"`
-	Accepted      bool                   `protobuf:"varint,5,opt,name=accepted,proto3" json:"accepted"`
-	CalleeInfo    *sdkws.UserInfo        `protobuf:"bytes,6,opt,name=calleeInfo,proto3" json:"calleeInfo"`
+	state         protoimpl.MessageState       `protogen:"open.v1"`
+	CallID        string                       `protobuf:"bytes,1,opt,name=callID,proto3" json:"callID"`
+	CallerUserID  string                       `protobuf:"bytes,2,opt,name=callerUserID,proto3" json:"callerUserID"`
+	CalleeUserID  string                       `protobuf:"bytes,3,opt,name=calleeUserID,proto3" json:"calleeUserID"`
+	CallType      string                       `protobuf:"bytes,4,opt,name=callType,proto3" json:"callType"`
+	Accepted      bool                         `protobuf:"varint,5,opt,name=accepted,proto3" json:"accepted"`
+	CalleeInfo    *sdkws.UserInfo              `protobuf:"bytes,6,opt,name=calleeInfo,proto3" json:"calleeInfo"`
+	RejectReason  string                       `protobuf:"bytes,7,opt,name=rejectReason,proto3" json:"rejectReason"` // 拒绝原因（如 "busy"），仅 accepted=false 时有值
+	LiveKit       *livekit_meeting.LiveKitInfo `protobuf:"bytes,8,opt,name=liveKit,proto3" json:"liveKit"`           // 主叫方 LiveKit Token，仅 accepted=true 时由服务端填充
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -884,6 +894,20 @@ func (x *CallRespondedTips) GetAccepted() bool {
 func (x *CallRespondedTips) GetCalleeInfo() *sdkws.UserInfo {
 	if x != nil {
 		return x.CalleeInfo
+	}
+	return nil
+}
+
+func (x *CallRespondedTips) GetRejectReason() string {
+	if x != nil {
+		return x.RejectReason
+	}
+	return ""
+}
+
+func (x *CallRespondedTips) GetLiveKit() *livekit_meeting.LiveKitInfo {
+	if x != nil {
+		return x.LiveKit
 	}
 	return nil
 }
@@ -1145,10 +1169,11 @@ const file_call_call_proto_rawDesc = "" +
 	"\x0eCreateCallResp\x12\x16\n" +
 	"\x06callID\x18\x01 \x01(\tR\x06callID\x12=\n" +
 	"\aliveKit\x18\x02 \x01(\v2#.openim.livekit_meeting.LiveKitInfoR\aliveKit\x12\x16\n" +
-	"\x06roomID\x18\x03 \x01(\tR\x06roomID\"J\n" +
+	"\x06roomID\x18\x03 \x01(\tR\x06roomID\"n\n" +
 	"\x18RespondCallInvitationReq\x12\x16\n" +
 	"\x06callID\x18\x01 \x01(\tR\x06callID\x12\x16\n" +
-	"\x06accept\x18\x02 \x01(\bR\x06accept\"Z\n" +
+	"\x06accept\x18\x02 \x01(\bR\x06accept\x12\"\n" +
+	"\frejectReason\x18\x03 \x01(\tR\frejectReason\"Z\n" +
 	"\x19RespondCallInvitationResp\x12=\n" +
 	"\aliveKit\x18\x01 \x01(\v2#.openim.livekit_meeting.LiveKitInfoR\aliveKit\"1\n" +
 	"\x17CancelCallInvitationReq\x12\x16\n" +
@@ -1177,7 +1202,7 @@ const file_call_call_proto_rawDesc = "" +
 	"createTime\x126\n" +
 	"\n" +
 	"callerInfo\x18\a \x01(\v2\x16.openim.sdkws.UserInfoR\n" +
-	"callerInfo\"\xe3\x01\n" +
+	"callerInfo\"\xc6\x02\n" +
 	"\x11CallRespondedTips\x12\x16\n" +
 	"\x06callID\x18\x01 \x01(\tR\x06callID\x12\"\n" +
 	"\fcallerUserID\x18\x02 \x01(\tR\fcallerUserID\x12\"\n" +
@@ -1186,7 +1211,9 @@ const file_call_call_proto_rawDesc = "" +
 	"\baccepted\x18\x05 \x01(\bR\baccepted\x126\n" +
 	"\n" +
 	"calleeInfo\x18\x06 \x01(\v2\x16.openim.sdkws.UserInfoR\n" +
-	"calleeInfo\"\xc7\x01\n" +
+	"calleeInfo\x12\"\n" +
+	"\frejectReason\x18\a \x01(\tR\frejectReason\x12=\n" +
+	"\aliveKit\x18\b \x01(\v2#.openim.livekit_meeting.LiveKitInfoR\aliveKit\"\xc7\x01\n" +
 	"\x11CallCancelledTips\x12\x16\n" +
 	"\x06callID\x18\x01 \x01(\tR\x06callID\x12\"\n" +
 	"\fcallerUserID\x18\x02 \x01(\tR\fcallerUserID\x12\"\n" +
@@ -1260,25 +1287,26 @@ var file_call_call_proto_depIdxs = []int32{
 	13, // 3: openim.call.GetMyPendingCallInvitationsResp.calls:type_name -> openim.call.CallInvitationTips
 	19, // 4: openim.call.CallInvitationTips.callerInfo:type_name -> openim.sdkws.UserInfo
 	19, // 5: openim.call.CallRespondedTips.calleeInfo:type_name -> openim.sdkws.UserInfo
-	19, // 6: openim.call.CallCancelledTips.callerInfo:type_name -> openim.sdkws.UserInfo
-	19, // 7: openim.call.CallTimeoutTips.callerInfo:type_name -> openim.sdkws.UserInfo
-	1,  // 8: openim.call.CallService.CreateCall:input_type -> openim.call.CreateCallReq
-	3,  // 9: openim.call.CallService.RespondCallInvitation:input_type -> openim.call.RespondCallInvitationReq
-	5,  // 10: openim.call.CallService.CancelCallInvitation:input_type -> openim.call.CancelCallInvitationReq
-	7,  // 11: openim.call.CallService.EndCall:input_type -> openim.call.EndCallReq
-	9,  // 12: openim.call.CallService.GetCallToken:input_type -> openim.call.GetCallTokenReq
-	11, // 13: openim.call.CallService.GetMyPendingCallInvitations:input_type -> openim.call.GetMyPendingCallInvitationsReq
-	2,  // 14: openim.call.CallService.CreateCall:output_type -> openim.call.CreateCallResp
-	4,  // 15: openim.call.CallService.RespondCallInvitation:output_type -> openim.call.RespondCallInvitationResp
-	6,  // 16: openim.call.CallService.CancelCallInvitation:output_type -> openim.call.CancelCallInvitationResp
-	8,  // 17: openim.call.CallService.EndCall:output_type -> openim.call.EndCallResp
-	10, // 18: openim.call.CallService.GetCallToken:output_type -> openim.call.GetCallTokenResp
-	12, // 19: openim.call.CallService.GetMyPendingCallInvitations:output_type -> openim.call.GetMyPendingCallInvitationsResp
-	14, // [14:20] is the sub-list for method output_type
-	8,  // [8:14] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	18, // 6: openim.call.CallRespondedTips.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	19, // 7: openim.call.CallCancelledTips.callerInfo:type_name -> openim.sdkws.UserInfo
+	19, // 8: openim.call.CallTimeoutTips.callerInfo:type_name -> openim.sdkws.UserInfo
+	1,  // 9: openim.call.CallService.CreateCall:input_type -> openim.call.CreateCallReq
+	3,  // 10: openim.call.CallService.RespondCallInvitation:input_type -> openim.call.RespondCallInvitationReq
+	5,  // 11: openim.call.CallService.CancelCallInvitation:input_type -> openim.call.CancelCallInvitationReq
+	7,  // 12: openim.call.CallService.EndCall:input_type -> openim.call.EndCallReq
+	9,  // 13: openim.call.CallService.GetCallToken:input_type -> openim.call.GetCallTokenReq
+	11, // 14: openim.call.CallService.GetMyPendingCallInvitations:input_type -> openim.call.GetMyPendingCallInvitationsReq
+	2,  // 15: openim.call.CallService.CreateCall:output_type -> openim.call.CreateCallResp
+	4,  // 16: openim.call.CallService.RespondCallInvitation:output_type -> openim.call.RespondCallInvitationResp
+	6,  // 17: openim.call.CallService.CancelCallInvitation:output_type -> openim.call.CancelCallInvitationResp
+	8,  // 18: openim.call.CallService.EndCall:output_type -> openim.call.EndCallResp
+	10, // 19: openim.call.CallService.GetCallToken:output_type -> openim.call.GetCallTokenResp
+	12, // 20: openim.call.CallService.GetMyPendingCallInvitations:output_type -> openim.call.GetMyPendingCallInvitationsResp
+	15, // [15:21] is the sub-list for method output_type
+	9,  // [9:15] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_call_call_proto_init() }
