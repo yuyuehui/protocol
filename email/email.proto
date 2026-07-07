@@ -1,0 +1,405 @@
+// Copyright © 2023 OpenIM. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openim.email;
+
+import "sdkws/sdkws.proto";
+
+option go_package = "github.com/openimsdk/protocol/email";
+
+// ===================== 枚举 =====================
+
+// EmailFolderType 邮箱文件夹类型
+enum EmailFolderType {
+  FOLDER_INBOX   = 0;  // 收件箱
+  FOLDER_DRAFTS  = 1;  // 草稿箱
+  FOLDER_SENT    = 2;  // 已发送
+  FOLDER_TRASH   = 3;  // 已删除
+  FOLDER_SPAM    = 4;  // 垃圾邮件
+  FOLDER_CUSTOM  = 5;  // 自定义文件夹
+}
+
+// EmailPriority 邮件优先级
+enum EmailPriority {
+  PRIORITY_NORMAL = 0;  // 普通
+  PRIORITY_HIGH   = 1;  // 高
+  PRIORITY_LOW    = 2;  // 低
+}
+
+// EmailStatus 邮件状态
+enum EmailStatus {
+  STATUS_UNREAD  = 0;  // 未读
+  STATUS_READ    = 1;  // 已读
+  STATUS_FLAGGED = 2;  // 已标记/星标
+}
+
+// ===================== 消息结构 =====================
+
+// EmailAccountConfig 邮箱账户配置
+message EmailAccountConfig {
+  string accountID    = 1;   // 账户ID
+  string userID       = 2;   // 所属用户ID
+  string emailAddress = 3;   // 邮箱地址
+  string displayName  = 4;   // 显示名称
+  // IMAP 收信配置
+  string imapHost     = 5;
+  int32  imapPort     = 6;
+  bool   imapSSL      = 7;
+  // SMTP 发信配置
+  string smtpHost     = 8;
+  int32  smtpPort     = 9;
+  bool   smtpSSL      = 10;
+  // 凭据（仅写入，不在查询中返回明文密码）
+  string authUser     = 11;
+  string authPassword = 12;  // 授权码或密码，写入后不再返回
+  bool   isDefault    = 13;  // 是否默认发信账户
+  int64  createTime   = 14;
+  int64  updateTime   = 15;
+  int32  status       = 16;  // 0=正常 1=认证失败 2=已禁用
+}
+
+// EmailFolder 邮箱文件夹
+message EmailFolder {
+  string          folderID   = 1;
+  string          accountID  = 2;
+  string          folderName = 3;
+  EmailFolderType folderType = 4;
+  int32           totalCount = 5;   // 邮件总数
+  int32           unreadCount = 6;  // 未读数
+  int32           sortOrder  = 7;
+  int64           createTime = 8;
+}
+
+// EmailAddress 邮件地址（姓名+邮箱）
+message EmailAddress {
+  string name    = 1;
+  string address = 2;
+}
+
+// EmailAttachment 邮件附件
+message EmailAttachment {
+  string attachmentID = 1;
+  string fileName     = 2;
+  int64  fileSize     = 3;
+  string contentType  = 4;
+  string url          = 5;   // 下载地址
+}
+
+// EmailMessage 邮件消息
+message EmailMessage {
+  string           emailID     = 1;   // 邮件ID
+  string           accountID   = 2;   // 所属账户
+  string           folderID    = 3;   // 所属文件夹
+  string           messageID   = 4;   // RFC 2822 Message-ID
+  string           subject     = 5;   // 主题
+  EmailAddress     from        = 6;   // 发件人
+  repeated EmailAddress to     = 7;   // 收件人
+  repeated EmailAddress cc     = 8;   // 抄送
+  repeated EmailAddress bcc    = 9;   // 密送
+  string           textBody    = 10;  // 纯文本正文
+  string           htmlBody    = 11;  // HTML 正文
+  repeated EmailAttachment attachments = 12; // 附件
+  EmailPriority    priority    = 13;  // 优先级
+  bool             isRead      = 14;  // 是否已读
+  bool             isFlagged   = 15;  // 是否星标
+  bool             isDraft     = 16;  // 是否草稿
+  bool             hasAttachment = 17; // 是否有附件
+  string           inReplyTo   = 18;  // 回复的 Message-ID
+  repeated string  references  = 19;  // 引用链
+  int64            date        = 20;  // 邮件日期（时间戳）
+  int64            receiveTime = 21;  // 接收/同步时间
+  int64            createTime  = 22;
+}
+
+// ===================== 账户管理 =====================
+
+// AddEmailAccountReq 添加邮箱账户
+message AddEmailAccountReq {
+  string userID       = 1;
+  string emailAddress = 2;
+  string displayName  = 3;
+  string imapHost     = 4;
+  int32  imapPort     = 5;
+  bool   imapSSL      = 6;
+  string smtpHost     = 7;
+  int32  smtpPort     = 8;
+  bool   smtpSSL      = 9;
+  string authUser     = 10;
+  string authPassword = 11;
+  bool   isDefault    = 12;
+}
+
+message AddEmailAccountResp {
+  EmailAccountConfig account = 1;
+}
+
+// UpdateEmailAccountReq 更新邮箱账户
+message UpdateEmailAccountReq {
+  string accountID       = 1;
+  string userID          = 2;
+  optional string displayName  = 3;
+  optional string imapHost     = 4;
+  optional int32  imapPort     = 5;
+  optional bool   imapSSL      = 6;
+  optional string smtpHost     = 7;
+  optional int32  smtpPort     = 8;
+  optional bool   smtpSSL      = 9;
+  optional string authUser     = 10;
+  optional string authPassword = 11;
+  optional bool   isDefault    = 12;
+}
+
+message UpdateEmailAccountResp {
+}
+
+// DeleteEmailAccountReq 删除邮箱账户
+message DeleteEmailAccountReq {
+  string accountID = 1;
+  string userID    = 2;
+}
+
+message DeleteEmailAccountResp {
+}
+
+// GetEmailAccountsReq 获取用户所有邮箱账户
+message GetEmailAccountsReq {
+  string userID = 1;
+}
+
+message GetEmailAccountsResp {
+  repeated EmailAccountConfig accounts = 1;
+}
+
+// GetEmailConfigReq 获取邮箱服务配置（前端能力开关）
+message GetEmailConfigReq {
+  string userID = 1;
+}
+
+message GetEmailConfigResp {
+  bool enable             = 1;  // 邮箱功能总开关
+  bool enableMultiAccount = 2;  // 是否允许用户添加多个邮箱账户
+}
+
+// TestEmailAccountReq 测试邮箱连接
+message TestEmailAccountReq {
+  string userID       = 1;
+  string emailAddress = 2;
+  string imapHost     = 3;
+  int32  imapPort     = 4;
+  bool   imapSSL      = 5;
+  string smtpHost     = 6;
+  int32  smtpPort     = 7;
+  bool   smtpSSL      = 8;
+  string authUser     = 9;
+  string authPassword = 10;
+}
+
+message TestEmailAccountResp {
+  bool   imapOk   = 1;
+  bool   smtpOk   = 2;
+  string imapError = 3;
+  string smtpError = 4;
+}
+
+// ===================== 文件夹管理 =====================
+
+// GetEmailFoldersReq 获取文件夹列表
+message GetEmailFoldersReq {
+  string accountID = 1;
+  string userID    = 2;
+}
+
+message GetEmailFoldersResp {
+  repeated EmailFolder folders = 1;
+}
+
+// CreateEmailFolderReq 创建自定义文件夹
+message CreateEmailFolderReq {
+  string accountID  = 1;
+  string userID     = 2;
+  string folderName = 3;
+}
+
+message CreateEmailFolderResp {
+  EmailFolder folder = 1;
+}
+
+// DeleteEmailFolderReq 删除自定义文件夹
+message DeleteEmailFolderReq {
+  string folderID  = 1;
+  string accountID = 2;
+  string userID    = 3;
+}
+
+message DeleteEmailFolderResp {
+}
+
+// ===================== 邮件操作 =====================
+
+// SendEmailReq 发送邮件
+message SendEmailReq {
+  string accountID            = 1;  // 发信账户
+  string userID               = 2;
+  repeated EmailAddress to    = 3;
+  repeated EmailAddress cc    = 4;
+  repeated EmailAddress bcc   = 5;
+  string subject              = 6;
+  string textBody             = 7;
+  string htmlBody             = 8;
+  repeated string attachmentURLs = 9;  // 附件URL列表（先通过third上传再传URL）
+  EmailPriority priority      = 10;
+  string inReplyTo            = 11; // 回复时传原邮件 Message-ID
+  repeated string references  = 12; // 引用链
+  string draftID              = 13; // 草稿ID（从草稿发送时传）
+}
+
+message SendEmailResp {
+  EmailMessage email = 1;
+}
+
+// SaveDraftReq 保存草稿
+message SaveDraftReq {
+  string accountID            = 1;
+  string userID               = 2;
+  string draftID              = 3;  // 已有草稿ID（更新草稿）
+  repeated EmailAddress to    = 4;
+  repeated EmailAddress cc    = 5;
+  repeated EmailAddress bcc   = 6;
+  string subject              = 7;
+  string textBody             = 8;
+  string htmlBody             = 9;
+  repeated string attachmentURLs = 10;
+  EmailPriority priority      = 11;
+  string inReplyTo            = 12;
+  repeated string references  = 13;
+}
+
+message SaveDraftResp {
+  EmailMessage email = 1;
+}
+
+// GetEmailsReq 获取邮件列表
+message GetEmailsReq {
+  string accountID = 1;
+  string userID    = 2;
+  string folderID  = 3;
+  string keyword   = 4;             // 搜索关键词
+  optional bool isRead    = 5;      // 筛选已读/未读
+  optional bool isFlagged = 6;      // 筛选星标
+  optional bool hasAttachment = 7;  // 筛选有附件
+  sdkws.RequestPagination pagination = 8;
+  int64 startTime = 9;              // 时间范围起（毫秒，0 表示不限制）
+  int64 endTime   = 10;             // 时间范围止（毫秒，0 表示不限制）
+  string sender   = 11;             // 发件人筛选（匹配名称或地址）
+}
+
+message GetEmailsResp {
+  repeated EmailMessage emails = 1;
+  int32 total = 2;
+}
+
+// GetEmailDetailReq 获取邮件详情
+message GetEmailDetailReq {
+  string emailID   = 1;
+  string accountID = 2;
+  string userID    = 3;
+}
+
+message GetEmailDetailResp {
+  EmailMessage email = 1;
+}
+
+// DeleteEmailsReq 删除邮件（移到已删除 / 永久删除）
+message DeleteEmailsReq {
+  repeated string emailIDs = 1;
+  string accountID         = 2;
+  string userID            = 3;
+  bool   permanent         = 4;  // 是否永久删除（已在已删除中再删为永久删除）
+}
+
+message DeleteEmailsResp {
+}
+
+// MoveEmailsReq 移动邮件到指定文件夹
+message MoveEmailsReq {
+  repeated string emailIDs = 1;
+  string accountID         = 2;
+  string userID            = 3;
+  string targetFolderID    = 4;
+}
+
+message MoveEmailsResp {
+}
+
+// MarkEmailsReq 标记邮件（已读/未读/星标/取消星标）
+message MarkEmailsReq {
+  repeated string emailIDs = 1;
+  string accountID         = 2;
+  string userID            = 3;
+  optional bool isRead     = 4;
+  optional bool isFlagged  = 5;
+}
+
+message MarkEmailsResp {
+}
+
+// SyncEmailsReq 同步收取邮件
+message SyncEmailsReq {
+  string accountID = 1;
+  string userID    = 2;
+}
+
+message SyncEmailsResp {
+  int32 newCount = 1;  // 新收取的邮件数量
+}
+
+// GetUnreadCountReq 获取未读数
+message GetUnreadCountReq {
+  string accountID = 1;
+  string userID    = 2;
+}
+
+message GetUnreadCountResp {
+  int32 totalUnread = 1;
+  map<string, int32> folderUnread = 2;  // key: folderID
+}
+
+// ===================== Service 定义 =====================
+
+service Email {
+  // 账户管理
+  rpc AddEmailAccount(AddEmailAccountReq) returns (AddEmailAccountResp);
+  rpc UpdateEmailAccount(UpdateEmailAccountReq) returns (UpdateEmailAccountResp);
+  rpc DeleteEmailAccount(DeleteEmailAccountReq) returns (DeleteEmailAccountResp);
+  rpc GetEmailAccounts(GetEmailAccountsReq) returns (GetEmailAccountsResp);
+  rpc TestEmailAccount(TestEmailAccountReq) returns (TestEmailAccountResp);
+  rpc GetEmailConfig(GetEmailConfigReq) returns (GetEmailConfigResp);
+
+  // 文件夹管理
+  rpc GetEmailFolders(GetEmailFoldersReq) returns (GetEmailFoldersResp);
+  rpc CreateEmailFolder(CreateEmailFolderReq) returns (CreateEmailFolderResp);
+  rpc DeleteEmailFolder(DeleteEmailFolderReq) returns (DeleteEmailFolderResp);
+
+  // 邮件操作
+  rpc SendEmail(SendEmailReq) returns (SendEmailResp);
+  rpc SaveDraft(SaveDraftReq) returns (SaveDraftResp);
+  rpc GetEmails(GetEmailsReq) returns (GetEmailsResp);
+  rpc GetEmailDetail(GetEmailDetailReq) returns (GetEmailDetailResp);
+  rpc DeleteEmails(DeleteEmailsReq) returns (DeleteEmailsResp);
+  rpc MoveEmails(MoveEmailsReq) returns (MoveEmailsResp);
+  rpc MarkEmails(MarkEmailsReq) returns (MarkEmailsResp);
+  rpc SyncEmails(SyncEmailsReq) returns (SyncEmailsResp);
+  rpc GetUnreadCount(GetUnreadCountReq) returns (GetUnreadCountResp);
+}
