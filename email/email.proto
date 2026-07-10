@@ -145,6 +145,32 @@ message AddEmailAccountResp {
   EmailAccountConfig account = 1;
 }
 
+// ImportEmailAccountItem 批量导入邮箱账户单条数据（通过企业邮箱反查用户）
+message ImportEmailAccountItem {
+  string emailAddress = 1; // 企业邮箱，既用于反查 userID 也作为收发地址
+  string authPassword = 2; // 授权码/配对码
+  string displayName  = 3; // 可选展示名
+}
+
+// ImportEmailAccountsReq 批量导入邮箱账户请求
+message ImportEmailAccountsReq {
+  repeated ImportEmailAccountItem accounts = 1;
+}
+
+// ImportEmailAccountError 单条导入失败详情
+message ImportEmailAccountError {
+  int32  index        = 1; // 在请求列表中的下标
+  string emailAddress = 2;
+  string reason       = 3;
+}
+
+// ImportEmailAccountsResp 批量导入结果
+message ImportEmailAccountsResp {
+  int32 successCount = 1;
+  int32 failCount    = 2;
+  repeated ImportEmailAccountError errors = 3;
+}
+
 // UpdateEmailAccountReq 更新邮箱账户
 message UpdateEmailAccountReq {
   string accountID       = 1;
@@ -381,6 +407,7 @@ message GetUnreadCountResp {
 service Email {
   // 账户管理
   rpc AddEmailAccount(AddEmailAccountReq) returns (AddEmailAccountResp);
+  rpc ImportEmailAccounts(ImportEmailAccountsReq) returns (ImportEmailAccountsResp);
   rpc UpdateEmailAccount(UpdateEmailAccountReq) returns (UpdateEmailAccountResp);
   rpc DeleteEmailAccount(DeleteEmailAccountReq) returns (DeleteEmailAccountResp);
   rpc GetEmailAccounts(GetEmailAccountsReq) returns (GetEmailAccountsResp);
