@@ -1,0 +1,165 @@
+// Copyright © 2023 OpenIM. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openim.call;
+
+import "sdkws/sdkws.proto";
+import "livekit_meeting/livekit_meeting.proto";
+
+option go_package = "github.com/openimsdk/protocol/call";
+
+// ==================== 数据结构 ====================
+
+// CallInfo 通话记录信息
+message CallInfo {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;          // "voice" 或 "video"
+  string status = 5;            // ringing/ongoing/ended/rejected/cancelled/timeout/busy
+  string roomID = 6;
+  int64 createTime = 7;
+  int64 answerTime = 8;
+  int64 endTime = 9;
+}
+
+// ==================== 请求/响应 ====================
+
+// CreateCallReq 发起1v1通话请求
+message CreateCallReq {
+  string calleeUserID = 1;      // 被叫方用户ID
+  string callType = 2;          // "voice" 或 "video"
+  string idempotentKey = 3;     // 幂等键，防止重复创建
+}
+
+// CreateCallResp 发起通话响应
+message CreateCallResp {
+  string callID = 1;
+  openim.livekit_meeting.LiveKitInfo liveKit = 2;   // 主叫方的 LiveKit 连接信息
+  string roomID = 3;
+}
+
+// RespondCallInvitationReq 响应通话邀请
+message RespondCallInvitationReq {
+  string callID = 1;
+  bool accept = 2;              // true=接听 false=拒绝
+}
+
+// RespondCallInvitationResp 响应通话邀请结果
+message RespondCallInvitationResp {
+  openim.livekit_meeting.LiveKitInfo liveKit = 1;   // 接听时返回 LiveKit 连接信息
+}
+
+// CancelCallInvitationReq 取消通话邀请（主叫方取消）
+message CancelCallInvitationReq {
+  string callID = 1;
+}
+
+// CancelCallInvitationResp 取消通话邀请结果
+message CancelCallInvitationResp {}
+
+// EndCallReq 结束通话
+message EndCallReq {
+  string callID = 1;
+}
+
+// EndCallResp 结束通话结果
+message EndCallResp {}
+
+// GetCallTokenReq 获取通话 Token（断线重连用）
+message GetCallTokenReq {
+  string callID = 1;
+}
+
+// GetCallTokenResp 获取通话 Token 结果
+message GetCallTokenResp {
+  openim.livekit_meeting.LiveKitInfo liveKit = 1;
+  string roomID = 2;
+}
+
+// GetMyPendingCallInvitationsReq 获取我的待处理来电
+message GetMyPendingCallInvitationsReq {}
+
+// GetMyPendingCallInvitationsResp 待处理来电列表
+message GetMyPendingCallInvitationsResp {
+  repeated CallInvitationTips calls = 1;
+}
+
+// ==================== 通知 Tips ====================
+
+// CallInvitationTips 来电邀请通知
+message CallInvitationTips {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;          // "voice" 或 "video"
+  string roomID = 5;
+  int64 createTime = 6;
+  openim.sdkws.UserInfo callerInfo = 7;  // 主叫方用户信息（昵称、头像）
+}
+
+// CallRespondedTips 通话响应通知（接听/拒绝）
+message CallRespondedTips {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;
+  bool accepted = 5;
+  openim.sdkws.UserInfo calleeInfo = 6;
+}
+
+// CallCancelledTips 通话取消通知（主叫取消）
+message CallCancelledTips {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;
+  openim.sdkws.UserInfo callerInfo = 5;
+}
+
+// CallEndedTips 通话结束通知
+message CallEndedTips {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;
+  int64 duration = 5;           // 通话时长（秒）
+}
+
+// CallTimeoutTips 通话超时通知（无人接听）
+message CallTimeoutTips {
+  string callID = 1;
+  string callerUserID = 2;
+  string calleeUserID = 3;
+  string callType = 4;
+  openim.sdkws.UserInfo callerInfo = 5;
+}
+
+// ==================== RPC 服务定义 ====================
+
+service CallService {
+  // 发起1v1通话
+  rpc CreateCall(CreateCallReq) returns (CreateCallResp);
+  // 响应通话邀请（接听/拒绝）
+  rpc RespondCallInvitation(RespondCallInvitationReq) returns (RespondCallInvitationResp);
+  // 取消通话邀请（主叫方取消）
+  rpc CancelCallInvitation(CancelCallInvitationReq) returns (CancelCallInvitationResp);
+  // 结束通话
+  rpc EndCall(EndCallReq) returns (EndCallResp);
+  // 获取通话 Token（断线重连）
+  rpc GetCallToken(GetCallTokenReq) returns (GetCallTokenResp);
+  // 获取我的待处理来电列表
+  rpc GetMyPendingCallInvitations(GetMyPendingCallInvitationsReq) returns (GetMyPendingCallInvitationsResp);
+}

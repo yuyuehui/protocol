@@ -20,6 +20,7 @@ PROTO_NAMES=(
     "schedule"
     "egress"
     "email"
+    "call"
 )
 
 for name in "${PROTO_NAMES[@]}"; do
