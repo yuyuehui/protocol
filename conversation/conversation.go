@@ -17,7 +17,6 @@ package conversation
 import (
 	"errors"
 	"fmt"
-	"unicode/utf8"
 
 	"github.com/openimsdk/protocol/constant"
 )
@@ -288,16 +287,10 @@ func (x *RemoveFoldReq) Check() error {
 }
 
 // validateFoldName 验证折叠分组名称格式
-// 规则：不能为空，字符长度为 2-20位，允许任意字符
+// 规则：不能为空，长度与字符不限
 func validateFoldName(foldName string) error {
 	if foldName == "" {
 		return errors.New("foldName is empty")
-	}
-
-	// 检查字符长度（使用 UTF-8 字符数，支持中文）
-	nameLen := utf8.RuneCountInString(foldName)
-	if nameLen < 2 || nameLen > 20 {
-		return errors.New("foldName length must be between 2 and 20 characters")
 	}
 
 	return nil
