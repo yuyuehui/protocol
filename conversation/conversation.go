@@ -17,7 +17,6 @@ package conversation
 import (
 	"errors"
 	"fmt"
-	"regexp"
 	"unicode/utf8"
 
 	"github.com/openimsdk/protocol/constant"
@@ -289,7 +288,7 @@ func (x *RemoveFoldReq) Check() error {
 }
 
 // validateFoldName 验证折叠分组名称格式
-// 规则：支持中英文、数字、下划线，字符长度为 2-20位，不能包含特殊符号（如 @、#、$ 等）
+// 规则：不能为空，字符长度为 2-20位，允许任意字符
 func validateFoldName(foldName string) error {
 	if foldName == "" {
 		return errors.New("foldName is empty")
@@ -299,20 +298,6 @@ func validateFoldName(foldName string) error {
 	nameLen := utf8.RuneCountInString(foldName)
 	if nameLen < 2 || nameLen > 20 {
 		return errors.New("foldName length must be between 2 and 20 characters")
-	}
-
-	// 验证字符格式：支持中英文、数字、下划线
-	// 正则表达式：^[\p{L}\p{N}_]+$
-	// \p{L} 匹配所有 Unicode 字母（包括中文）
-	// \p{N} 匹配所有 Unicode 数字
-	// _ 匹配下划线
-	pattern := `^[\p{L}\p{N}_]+$`
-	matched, err := regexp.MatchString(pattern, foldName)
-	if err != nil {
-		return fmt.Errorf("failed to validate foldName: %w", err)
-	}
-	if !matched {
-		return errors.New("foldName can only contain Chinese, English letters, numbers, and underscores")
 	}
 
 	return nil
