@@ -680,6 +680,17 @@ message SummaryRecordPublishTips {
   string summaryID = 2;          // 总结记录ID
 }
 
+// 邮箱变更通知（统一通知，通过 action 字段区分操作；客户端按账户刷新最新数据）。
+// 不包含邮件正文、附件或账户凭据，避免通过通知链路泄露敏感信息。
+message EmailChangeTips {
+  string operatorUserID = 1;     // 执行操作的用户 ID
+  string accountID = 2;          // 受影响的邮箱账户 ID
+  string action = 3;             // account_created/account_updated/account_deleted/folder_created/folder_deleted/email_sent/draft_saved/emails_deleted/emails_moved/emails_marked/email_read/emails_synced
+  string folderID = 4;           // 主要受影响的文件夹 ID（可选）
+  repeated string emailIDs = 5;  // 受影响的邮件 ID（可选）
+  int64 timestamp = 6;           // 操作时间（Unix 毫秒）
+}
+
 //////////////////////schedule/////////////////////
 // 日程通知（统一通知，通过action字段区分操作类型，多端同步）
 // action: "created"=创建, "updated"=更新, "deleted"=删除, "shared"=分享, "unshared"=取消分享, "accepted"=接受, "rejected"=拒绝

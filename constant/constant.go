@@ -48,18 +48,18 @@ const (
 	FavoriteTypeFile         = 3 // 文件
 	FavoriteTypeNote         = 4 // 笔记
 
-	SignalMsg              = 202 // 信令消息
-	CustomNotification     = 203 // 自定义通知
-	MixedTextPicture       = 204 // 混合文本图片消息
-	Code                   = 205 // 代码消息
-	SignalingRecord        = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
-	ScreenshotNotification          = 207 // 截屏通知消息（XXX进行了截屏）
-	ScheduleMessage                 = 208 // 日程消息（普通日程消息，自己创建的日程）
-	ScheduleChangeMessage           = 209 // 日程变更消息（创建/修改日程时发送给参与者的消息，标题根据变更类型显示：xxx创建了日程/xxx修改了日程时间等）
-	ScheduleGroupShareMessage       = 210 // 日程分组共享消息（显示为卡片：XXX将日历共享给你）
-	ScheduleGroupPermissionMessage  = 211 // 日程分组权限修改消息（显示为：XXX将你对"日历名"的权限修改为了「可管理」）
-	WorkbenchNotifyMessage          = 212 // 工作台通知消息
-	MeetingInviteCardMessage        = 213 // 群会议邀请卡片消息
+	SignalMsg                      = 202 // 信令消息
+	CustomNotification             = 203 // 自定义通知
+	MixedTextPicture               = 204 // 混合文本图片消息
+	Code                           = 205 // 代码消息
+	SignalingRecord                = 206 // 音视频通话/会议记录消息（语音通话、视频通话、语音会议、视频会议）
+	ScreenshotNotification         = 207 // 截屏通知消息（XXX进行了截屏）
+	ScheduleMessage                = 208 // 日程消息（普通日程消息，自己创建的日程）
+	ScheduleChangeMessage          = 209 // 日程变更消息（创建/修改日程时发送给参与者的消息，标题根据变更类型显示：xxx创建了日程/xxx修改了日程时间等）
+	ScheduleGroupShareMessage      = 210 // 日程分组共享消息（显示为卡片：XXX将日历共享给你）
+	ScheduleGroupPermissionMessage = 211 // 日程分组权限修改消息（显示为：XXX将你对"日历名"的权限修改为了「可管理」）
+	WorkbenchNotifyMessage         = 212 // 工作台通知消息
+	MeetingInviteCardMessage       = 213 // 群会议邀请卡片消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -164,11 +164,12 @@ const (
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
 
 	// 日程相关通知（统一通知，通过action字段区分操作类型）
-	ScheduleNotification           = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
-	ScheduleGroupNotification      = 2111 // 日程分组变更通知（多端同步，包含创建、更新、删除、排序、添加日程、移除日程、共享、权限更新等操作）
-	ScheduleReminderNotification   = 2112 // 日程/会议统一提醒通知（替代 MeetingReminderNotification，通过 ScheduleNotificationTips action="reminder" 触发）
-	FavoriteChangedNotification    = 2114 // 消息收藏变更通知（新增、删除、更新）
-	HasReadReceipt                 = 2200 // 已读回执
+	ScheduleNotification         = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
+	ScheduleGroupNotification    = 2111 // 日程分组变更通知（多端同步，包含创建、更新、删除、排序、添加日程、移除日程、共享、权限更新等操作）
+	ScheduleReminderNotification = 2112 // 日程/会议统一提醒通知（替代 MeetingReminderNotification，通过 ScheduleNotificationTips action="reminder" 触发）
+	FavoriteChangedNotification  = 2114 // 消息收藏变更通知（新增、删除、更新）
+	EmailChangedNotification     = 2115 // 邮箱变更通知（账户、文件夹、邮件及同步状态多端同步）
+	HasReadReceipt               = 2200 // 已读回执
 
 	// LiveKit会议相关通知 (1800-1899)
 	MeetingNotificationBegin             = 1800 // 会议通知类型开始
@@ -189,13 +190,13 @@ const (
 	MeetingNotificationEnd               = 1899 // 会议通知类型结束
 
 	// 1v1通话通知类型
-	CallNotificationBegin           = 1900 // 通话通知类型开始
-	CallInvitationNotification      = 1901 // 来电邀请通知
-	CallRespondedNotification       = 1902 // 通话应答通知（接受/拒绝）
-	CallCancelledNotification       = 1903 // 通话取消通知
-	CallEndedNotification           = 1904 // 通话结束通知
-	CallTimeoutNotification         = 1905 // 通话超时通知
-	CallNotificationEnd             = 1910 // 通话通知类型结束
+	CallNotificationBegin      = 1900 // 通话通知类型开始
+	CallInvitationNotification = 1901 // 来电邀请通知
+	CallRespondedNotification  = 1902 // 通话应答通知（接受/拒绝）
+	CallCancelledNotification  = 1903 // 通话取消通知
+	CallEndedNotification      = 1904 // 通话结束通知
+	CallTimeoutNotification    = 1905 // 通话超时通知
+	CallNotificationEnd        = 1910 // 通话通知类型结束
 
 	NotificationEnd = 5000 // 通知类型结束标记
 

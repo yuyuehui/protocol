@@ -198,25 +198,25 @@ func (EmailStatus) EnumDescriptor() ([]byte, []int) {
 // EmailAccountConfig 邮箱账户配置
 type EmailAccountConfig struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
-	AccountID    string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`       // 账户ID
-	UserID       string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`             // 所属用户ID
-	EmailAddress string                 `protobuf:"bytes,3,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"` // 邮箱地址
-	DisplayName  string                 `protobuf:"bytes,4,opt,name=displayName,proto3" json:"displayName,omitempty"`   // 显示名称
+	AccountID    string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`       // 账户ID
+	UserID       string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`             // 所属用户ID
+	EmailAddress string                 `protobuf:"bytes,3,opt,name=emailAddress,proto3" json:"emailAddress"` // 邮箱地址
+	DisplayName  string                 `protobuf:"bytes,4,opt,name=displayName,proto3" json:"displayName"`   // 显示名称
 	// IMAP 收信配置
-	ImapHost string `protobuf:"bytes,5,opt,name=imapHost,proto3" json:"imapHost,omitempty"`
-	ImapPort int32  `protobuf:"varint,6,opt,name=imapPort,proto3" json:"imapPort,omitempty"`
-	ImapSSL  bool   `protobuf:"varint,7,opt,name=imapSSL,proto3" json:"imapSSL,omitempty"`
+	ImapHost string `protobuf:"bytes,5,opt,name=imapHost,proto3" json:"imapHost"`
+	ImapPort int32  `protobuf:"varint,6,opt,name=imapPort,proto3" json:"imapPort"`
+	ImapSSL  bool   `protobuf:"varint,7,opt,name=imapSSL,proto3" json:"imapSSL"`
 	// SMTP 发信配置
-	SmtpHost string `protobuf:"bytes,8,opt,name=smtpHost,proto3" json:"smtpHost,omitempty"`
-	SmtpPort int32  `protobuf:"varint,9,opt,name=smtpPort,proto3" json:"smtpPort,omitempty"`
-	SmtpSSL  bool   `protobuf:"varint,10,opt,name=smtpSSL,proto3" json:"smtpSSL,omitempty"`
+	SmtpHost string `protobuf:"bytes,8,opt,name=smtpHost,proto3" json:"smtpHost"`
+	SmtpPort int32  `protobuf:"varint,9,opt,name=smtpPort,proto3" json:"smtpPort"`
+	SmtpSSL  bool   `protobuf:"varint,10,opt,name=smtpSSL,proto3" json:"smtpSSL"`
 	// 凭据（仅写入，不在查询中返回明文密码）
-	AuthUser      string `protobuf:"bytes,11,opt,name=authUser,proto3" json:"authUser,omitempty"`
-	AuthPassword  string `protobuf:"bytes,12,opt,name=authPassword,proto3" json:"authPassword,omitempty"` // 授权码或密码，写入后不再返回
-	IsDefault     bool   `protobuf:"varint,13,opt,name=isDefault,proto3" json:"isDefault,omitempty"`      // 是否默认发信账户
-	CreateTime    int64  `protobuf:"varint,14,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime    int64  `protobuf:"varint,15,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
-	Status        int32  `protobuf:"varint,16,opt,name=status,proto3" json:"status,omitempty"` // 0=正常 1=认证失败 2=已禁用
+	AuthUser      string `protobuf:"bytes,11,opt,name=authUser,proto3" json:"authUser"`
+	AuthPassword  string `protobuf:"bytes,12,opt,name=authPassword,proto3" json:"authPassword"` // 授权码或密码，写入后不再返回
+	IsDefault     bool   `protobuf:"varint,13,opt,name=isDefault,proto3" json:"isDefault"`      // 是否默认发信账户
+	CreateTime    int64  `protobuf:"varint,14,opt,name=createTime,proto3" json:"createTime"`
+	UpdateTime    int64  `protobuf:"varint,15,opt,name=updateTime,proto3" json:"updateTime"`
+	Status        int32  `protobuf:"varint,16,opt,name=status,proto3" json:"status"` // 0=正常 1=认证失败 2=已禁用
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -366,14 +366,14 @@ func (x *EmailAccountConfig) GetStatus() int32 {
 // EmailFolder 邮箱文件夹
 type EmailFolder struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FolderID      string                 `protobuf:"bytes,1,opt,name=folderID,proto3" json:"folderID,omitempty"`
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	FolderName    string                 `protobuf:"bytes,3,opt,name=folderName,proto3" json:"folderName,omitempty"`
-	FolderType    EmailFolderType        `protobuf:"varint,4,opt,name=folderType,proto3,enum=openim.email.EmailFolderType" json:"folderType,omitempty"`
-	TotalCount    int32                  `protobuf:"varint,5,opt,name=totalCount,proto3" json:"totalCount,omitempty"`   // 邮件总数
-	UnreadCount   int32                  `protobuf:"varint,6,opt,name=unreadCount,proto3" json:"unreadCount,omitempty"` // 未读数
-	SortOrder     int32                  `protobuf:"varint,7,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
-	CreateTime    int64                  `protobuf:"varint,8,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	FolderID      string                 `protobuf:"bytes,1,opt,name=folderID,proto3" json:"folderID"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	FolderName    string                 `protobuf:"bytes,3,opt,name=folderName,proto3" json:"folderName"`
+	FolderType    EmailFolderType        `protobuf:"varint,4,opt,name=folderType,proto3,enum=openim.email.EmailFolderType" json:"folderType"`
+	TotalCount    int32                  `protobuf:"varint,5,opt,name=totalCount,proto3" json:"totalCount"`   // 邮件总数
+	UnreadCount   int32                  `protobuf:"varint,6,opt,name=unreadCount,proto3" json:"unreadCount"` // 未读数
+	SortOrder     int32                  `protobuf:"varint,7,opt,name=sortOrder,proto3" json:"sortOrder"`
+	CreateTime    int64                  `protobuf:"varint,8,opt,name=createTime,proto3" json:"createTime"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -467,8 +467,8 @@ func (x *EmailFolder) GetCreateTime() int64 {
 // EmailAddress 邮件地址（姓名+邮箱）
 type EmailAddress struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
+	Address       string                 `protobuf:"bytes,2,opt,name=address,proto3" json:"address"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -520,11 +520,11 @@ func (x *EmailAddress) GetAddress() string {
 // EmailAttachment 邮件附件
 type EmailAttachment struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AttachmentID  string                 `protobuf:"bytes,1,opt,name=attachmentID,proto3" json:"attachmentID,omitempty"`
-	FileName      string                 `protobuf:"bytes,2,opt,name=fileName,proto3" json:"fileName,omitempty"`
-	FileSize      int64                  `protobuf:"varint,3,opt,name=fileSize,proto3" json:"fileSize,omitempty"`
-	ContentType   string                 `protobuf:"bytes,4,opt,name=contentType,proto3" json:"contentType,omitempty"`
-	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"` // 下载地址
+	AttachmentID  string                 `protobuf:"bytes,1,opt,name=attachmentID,proto3" json:"attachmentID"`
+	FileName      string                 `protobuf:"bytes,2,opt,name=fileName,proto3" json:"fileName"`
+	FileSize      int64                  `protobuf:"varint,3,opt,name=fileSize,proto3" json:"fileSize"`
+	ContentType   string                 `protobuf:"bytes,4,opt,name=contentType,proto3" json:"contentType"`
+	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"` // 下载地址
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -597,28 +597,28 @@ func (x *EmailAttachment) GetUrl() string {
 // EmailMessage 邮件消息
 type EmailMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	EmailID       string                 `protobuf:"bytes,1,opt,name=emailID,proto3" json:"emailID,omitempty"`                                     // 邮件ID
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`                                 // 所属账户
-	FolderID      string                 `protobuf:"bytes,3,opt,name=folderID,proto3" json:"folderID,omitempty"`                                   // 所属文件夹
-	MessageID     string                 `protobuf:"bytes,4,opt,name=messageID,proto3" json:"messageID,omitempty"`                                 // RFC 2822 Message-ID
-	Subject       string                 `protobuf:"bytes,5,opt,name=subject,proto3" json:"subject,omitempty"`                                     // 主题
-	From          *EmailAddress          `protobuf:"bytes,6,opt,name=from,proto3" json:"from,omitempty"`                                           // 发件人
-	To            []*EmailAddress        `protobuf:"bytes,7,rep,name=to,proto3" json:"to,omitempty"`                                               // 收件人
-	Cc            []*EmailAddress        `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc,omitempty"`                                               // 抄送
-	Bcc           []*EmailAddress        `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc,omitempty"`                                             // 密送
-	TextBody      string                 `protobuf:"bytes,10,opt,name=textBody,proto3" json:"textBody,omitempty"`                                  // 纯文本正文
-	HtmlBody      string                 `protobuf:"bytes,11,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`                                  // HTML 正文
-	Attachments   []*EmailAttachment     `protobuf:"bytes,12,rep,name=attachments,proto3" json:"attachments,omitempty"`                            // 附件
-	Priority      EmailPriority          `protobuf:"varint,13,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"` // 优先级
-	IsRead        bool                   `protobuf:"varint,14,opt,name=isRead,proto3" json:"isRead,omitempty"`                                     // 是否已读
-	IsFlagged     bool                   `protobuf:"varint,15,opt,name=isFlagged,proto3" json:"isFlagged,omitempty"`                               // 是否星标
-	IsDraft       bool                   `protobuf:"varint,16,opt,name=isDraft,proto3" json:"isDraft,omitempty"`                                   // 是否草稿
-	HasAttachment bool                   `protobuf:"varint,17,opt,name=hasAttachment,proto3" json:"hasAttachment,omitempty"`                       // 是否有附件
-	InReplyTo     string                 `protobuf:"bytes,18,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`                                // 回复的 Message-ID
-	References    []string               `protobuf:"bytes,19,rep,name=references,proto3" json:"references,omitempty"`                              // 引用链
-	Date          int64                  `protobuf:"varint,20,opt,name=date,proto3" json:"date,omitempty"`                                         // 邮件日期（时间戳）
-	ReceiveTime   int64                  `protobuf:"varint,21,opt,name=receiveTime,proto3" json:"receiveTime,omitempty"`                           // 接收/同步时间
-	CreateTime    int64                  `protobuf:"varint,22,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	EmailID       string                 `protobuf:"bytes,1,opt,name=emailID,proto3" json:"emailID"`                                     // 邮件ID
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`                                 // 所属账户
+	FolderID      string                 `protobuf:"bytes,3,opt,name=folderID,proto3" json:"folderID"`                                   // 所属文件夹
+	MessageID     string                 `protobuf:"bytes,4,opt,name=messageID,proto3" json:"messageID"`                                 // RFC 2822 Message-ID
+	Subject       string                 `protobuf:"bytes,5,opt,name=subject,proto3" json:"subject"`                                     // 主题
+	From          *EmailAddress          `protobuf:"bytes,6,opt,name=from,proto3" json:"from"`                                           // 发件人
+	To            []*EmailAddress        `protobuf:"bytes,7,rep,name=to,proto3" json:"to"`                                               // 收件人
+	Cc            []*EmailAddress        `protobuf:"bytes,8,rep,name=cc,proto3" json:"cc"`                                               // 抄送
+	Bcc           []*EmailAddress        `protobuf:"bytes,9,rep,name=bcc,proto3" json:"bcc"`                                             // 密送
+	TextBody      string                 `protobuf:"bytes,10,opt,name=textBody,proto3" json:"textBody"`                                  // 纯文本正文
+	HtmlBody      string                 `protobuf:"bytes,11,opt,name=htmlBody,proto3" json:"htmlBody"`                                  // HTML 正文
+	Attachments   []*EmailAttachment     `protobuf:"bytes,12,rep,name=attachments,proto3" json:"attachments"`                            // 附件
+	Priority      EmailPriority          `protobuf:"varint,13,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority"` // 优先级
+	IsRead        bool                   `protobuf:"varint,14,opt,name=isRead,proto3" json:"isRead"`                                     // 是否已读
+	IsFlagged     bool                   `protobuf:"varint,15,opt,name=isFlagged,proto3" json:"isFlagged"`                               // 是否星标
+	IsDraft       bool                   `protobuf:"varint,16,opt,name=isDraft,proto3" json:"isDraft"`                                   // 是否草稿
+	HasAttachment bool                   `protobuf:"varint,17,opt,name=hasAttachment,proto3" json:"hasAttachment"`                       // 是否有附件
+	InReplyTo     string                 `protobuf:"bytes,18,opt,name=inReplyTo,proto3" json:"inReplyTo"`                                // 回复的 Message-ID
+	References    []string               `protobuf:"bytes,19,rep,name=references,proto3" json:"references"`                              // 引用链
+	Date          int64                  `protobuf:"varint,20,opt,name=date,proto3" json:"date"`                                         // 邮件日期（时间戳）
+	ReceiveTime   int64                  `protobuf:"varint,21,opt,name=receiveTime,proto3" json:"receiveTime"`                           // 接收/同步时间
+	CreateTime    int64                  `protobuf:"varint,22,opt,name=createTime,proto3" json:"createTime"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -810,18 +810,18 @@ func (x *EmailMessage) GetCreateTime() int64 {
 // AddEmailAccountReq 添加邮箱账户
 type AddEmailAccountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
-	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
-	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	ImapHost      string                 `protobuf:"bytes,4,opt,name=imapHost,proto3" json:"imapHost,omitempty"`
-	ImapPort      int32                  `protobuf:"varint,5,opt,name=imapPort,proto3" json:"imapPort,omitempty"`
-	ImapSSL       bool                   `protobuf:"varint,6,opt,name=imapSSL,proto3" json:"imapSSL,omitempty"`
-	SmtpHost      string                 `protobuf:"bytes,7,opt,name=smtpHost,proto3" json:"smtpHost,omitempty"`
-	SmtpPort      int32                  `protobuf:"varint,8,opt,name=smtpPort,proto3" json:"smtpPort,omitempty"`
-	SmtpSSL       bool                   `protobuf:"varint,9,opt,name=smtpSSL,proto3" json:"smtpSSL,omitempty"`
-	AuthUser      string                 `protobuf:"bytes,10,opt,name=authUser,proto3" json:"authUser,omitempty"`
-	AuthPassword  string                 `protobuf:"bytes,11,opt,name=authPassword,proto3" json:"authPassword,omitempty"`
-	IsDefault     bool                   `protobuf:"varint,12,opt,name=isDefault,proto3" json:"isDefault,omitempty"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName"`
+	ImapHost      string                 `protobuf:"bytes,4,opt,name=imapHost,proto3" json:"imapHost"`
+	ImapPort      int32                  `protobuf:"varint,5,opt,name=imapPort,proto3" json:"imapPort"`
+	ImapSSL       bool                   `protobuf:"varint,6,opt,name=imapSSL,proto3" json:"imapSSL"`
+	SmtpHost      string                 `protobuf:"bytes,7,opt,name=smtpHost,proto3" json:"smtpHost"`
+	SmtpPort      int32                  `protobuf:"varint,8,opt,name=smtpPort,proto3" json:"smtpPort"`
+	SmtpSSL       bool                   `protobuf:"varint,9,opt,name=smtpSSL,proto3" json:"smtpSSL"`
+	AuthUser      string                 `protobuf:"bytes,10,opt,name=authUser,proto3" json:"authUser"`
+	AuthPassword  string                 `protobuf:"bytes,11,opt,name=authPassword,proto3" json:"authPassword"`
+	IsDefault     bool                   `protobuf:"varint,12,opt,name=isDefault,proto3" json:"isDefault"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -942,7 +942,7 @@ func (x *AddEmailAccountReq) GetIsDefault() bool {
 
 type AddEmailAccountResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Account       *EmailAccountConfig    `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	Account       *EmailAccountConfig    `protobuf:"bytes,1,opt,name=account,proto3" json:"account"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -987,9 +987,9 @@ func (x *AddEmailAccountResp) GetAccount() *EmailAccountConfig {
 // ImportEmailAccountItem 批量导入邮箱账户单条数据（通过企业邮箱反查用户）
 type ImportEmailAccountItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	EmailAddress  string                 `protobuf:"bytes,1,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"` // 企业邮箱，既用于反查 userID 也作为收发地址
-	AuthPassword  string                 `protobuf:"bytes,2,opt,name=authPassword,proto3" json:"authPassword,omitempty"` // 授权码/配对码
-	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`   // 可选展示名
+	EmailAddress  string                 `protobuf:"bytes,1,opt,name=emailAddress,proto3" json:"emailAddress"` // 企业邮箱，既用于反查 userID 也作为收发地址
+	AuthPassword  string                 `protobuf:"bytes,2,opt,name=authPassword,proto3" json:"authPassword"` // 授权码/配对码
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName"`   // 可选展示名
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1048,7 +1048,7 @@ func (x *ImportEmailAccountItem) GetDisplayName() string {
 // ImportEmailAccountsReq 批量导入邮箱账户请求
 type ImportEmailAccountsReq struct {
 	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Accounts      []*ImportEmailAccountItem `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts,omitempty"`
+	Accounts      []*ImportEmailAccountItem `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1093,9 +1093,9 @@ func (x *ImportEmailAccountsReq) GetAccounts() []*ImportEmailAccountItem {
 // ImportEmailAccountError 单条导入失败详情
 type ImportEmailAccountError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Index         int32                  `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty"` // 在请求列表中的下标
-	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
-	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+	Index         int32                  `protobuf:"varint,1,opt,name=index,proto3" json:"index"` // 在请求列表中的下标
+	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress"`
+	Reason        string                 `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1154,9 +1154,9 @@ func (x *ImportEmailAccountError) GetReason() string {
 // ImportEmailAccountsResp 批量导入结果
 type ImportEmailAccountsResp struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	SuccessCount  int32                      `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount,omitempty"`
-	FailCount     int32                      `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount,omitempty"`
-	Errors        []*ImportEmailAccountError `protobuf:"bytes,3,rep,name=errors,proto3" json:"errors,omitempty"`
+	SuccessCount  int32                      `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`
+	FailCount     int32                      `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount"`
+	Errors        []*ImportEmailAccountError `protobuf:"bytes,3,rep,name=errors,proto3" json:"errors"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1215,18 +1215,18 @@ func (x *ImportEmailAccountsResp) GetErrors() []*ImportEmailAccountError {
 // UpdateEmailAccountReq 更新邮箱账户
 type UpdateEmailAccountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	DisplayName   *string                `protobuf:"bytes,3,opt,name=displayName,proto3,oneof" json:"displayName,omitempty"`
-	ImapHost      *string                `protobuf:"bytes,4,opt,name=imapHost,proto3,oneof" json:"imapHost,omitempty"`
-	ImapPort      *int32                 `protobuf:"varint,5,opt,name=imapPort,proto3,oneof" json:"imapPort,omitempty"`
-	ImapSSL       *bool                  `protobuf:"varint,6,opt,name=imapSSL,proto3,oneof" json:"imapSSL,omitempty"`
-	SmtpHost      *string                `protobuf:"bytes,7,opt,name=smtpHost,proto3,oneof" json:"smtpHost,omitempty"`
-	SmtpPort      *int32                 `protobuf:"varint,8,opt,name=smtpPort,proto3,oneof" json:"smtpPort,omitempty"`
-	SmtpSSL       *bool                  `protobuf:"varint,9,opt,name=smtpSSL,proto3,oneof" json:"smtpSSL,omitempty"`
-	AuthUser      *string                `protobuf:"bytes,10,opt,name=authUser,proto3,oneof" json:"authUser,omitempty"`
-	AuthPassword  *string                `protobuf:"bytes,11,opt,name=authPassword,proto3,oneof" json:"authPassword,omitempty"`
-	IsDefault     *bool                  `protobuf:"varint,12,opt,name=isDefault,proto3,oneof" json:"isDefault,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	DisplayName   *string                `protobuf:"bytes,3,opt,name=displayName,proto3,oneof" json:"displayName"`
+	ImapHost      *string                `protobuf:"bytes,4,opt,name=imapHost,proto3,oneof" json:"imapHost"`
+	ImapPort      *int32                 `protobuf:"varint,5,opt,name=imapPort,proto3,oneof" json:"imapPort"`
+	ImapSSL       *bool                  `protobuf:"varint,6,opt,name=imapSSL,proto3,oneof" json:"imapSSL"`
+	SmtpHost      *string                `protobuf:"bytes,7,opt,name=smtpHost,proto3,oneof" json:"smtpHost"`
+	SmtpPort      *int32                 `protobuf:"varint,8,opt,name=smtpPort,proto3,oneof" json:"smtpPort"`
+	SmtpSSL       *bool                  `protobuf:"varint,9,opt,name=smtpSSL,proto3,oneof" json:"smtpSSL"`
+	AuthUser      *string                `protobuf:"bytes,10,opt,name=authUser,proto3,oneof" json:"authUser"`
+	AuthPassword  *string                `protobuf:"bytes,11,opt,name=authPassword,proto3,oneof" json:"authPassword"`
+	IsDefault     *bool                  `protobuf:"varint,12,opt,name=isDefault,proto3,oneof" json:"isDefault"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1384,8 +1384,8 @@ func (*UpdateEmailAccountResp) Descriptor() ([]byte, []int) {
 // DeleteEmailAccountReq 删除邮箱账户
 type DeleteEmailAccountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1473,7 +1473,7 @@ func (*DeleteEmailAccountResp) Descriptor() ([]byte, []int) {
 // GetEmailAccountsReq 获取用户所有邮箱账户
 type GetEmailAccountsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1517,7 +1517,7 @@ func (x *GetEmailAccountsReq) GetUserID() string {
 
 type GetEmailAccountsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Accounts      []*EmailAccountConfig  `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts,omitempty"`
+	Accounts      []*EmailAccountConfig  `protobuf:"bytes,1,rep,name=accounts,proto3" json:"accounts"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1562,7 +1562,7 @@ func (x *GetEmailAccountsResp) GetAccounts() []*EmailAccountConfig {
 // GetEmailConfigReq 获取邮箱服务配置（前端能力开关）
 type GetEmailConfigReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1606,8 +1606,8 @@ func (x *GetEmailConfigReq) GetUserID() string {
 
 type GetEmailConfigResp struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	Enable             bool                   `protobuf:"varint,1,opt,name=enable,proto3" json:"enable,omitempty"`                         // 邮箱功能总开关
-	EnableMultiAccount bool                   `protobuf:"varint,2,opt,name=enableMultiAccount,proto3" json:"enableMultiAccount,omitempty"` // 是否允许用户添加多个邮箱账户
+	Enable             bool                   `protobuf:"varint,1,opt,name=enable,proto3" json:"enable"`                         // 邮箱功能总开关
+	EnableMultiAccount bool                   `protobuf:"varint,2,opt,name=enableMultiAccount,proto3" json:"enableMultiAccount"` // 是否允许用户添加多个邮箱账户
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1659,16 +1659,16 @@ func (x *GetEmailConfigResp) GetEnableMultiAccount() bool {
 // TestEmailAccountReq 测试邮箱连接
 type TestEmailAccountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
-	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
-	ImapHost      string                 `protobuf:"bytes,3,opt,name=imapHost,proto3" json:"imapHost,omitempty"`
-	ImapPort      int32                  `protobuf:"varint,4,opt,name=imapPort,proto3" json:"imapPort,omitempty"`
-	ImapSSL       bool                   `protobuf:"varint,5,opt,name=imapSSL,proto3" json:"imapSSL,omitempty"`
-	SmtpHost      string                 `protobuf:"bytes,6,opt,name=smtpHost,proto3" json:"smtpHost,omitempty"`
-	SmtpPort      int32                  `protobuf:"varint,7,opt,name=smtpPort,proto3" json:"smtpPort,omitempty"`
-	SmtpSSL       bool                   `protobuf:"varint,8,opt,name=smtpSSL,proto3" json:"smtpSSL,omitempty"`
-	AuthUser      string                 `protobuf:"bytes,9,opt,name=authUser,proto3" json:"authUser,omitempty"`
-	AuthPassword  string                 `protobuf:"bytes,10,opt,name=authPassword,proto3" json:"authPassword,omitempty"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
+	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress"`
+	ImapHost      string                 `protobuf:"bytes,3,opt,name=imapHost,proto3" json:"imapHost"`
+	ImapPort      int32                  `protobuf:"varint,4,opt,name=imapPort,proto3" json:"imapPort"`
+	ImapSSL       bool                   `protobuf:"varint,5,opt,name=imapSSL,proto3" json:"imapSSL"`
+	SmtpHost      string                 `protobuf:"bytes,6,opt,name=smtpHost,proto3" json:"smtpHost"`
+	SmtpPort      int32                  `protobuf:"varint,7,opt,name=smtpPort,proto3" json:"smtpPort"`
+	SmtpSSL       bool                   `protobuf:"varint,8,opt,name=smtpSSL,proto3" json:"smtpSSL"`
+	AuthUser      string                 `protobuf:"bytes,9,opt,name=authUser,proto3" json:"authUser"`
+	AuthPassword  string                 `protobuf:"bytes,10,opt,name=authPassword,proto3" json:"authPassword"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1775,10 +1775,10 @@ func (x *TestEmailAccountReq) GetAuthPassword() string {
 
 type TestEmailAccountResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ImapOk        bool                   `protobuf:"varint,1,opt,name=imapOk,proto3" json:"imapOk,omitempty"`
-	SmtpOk        bool                   `protobuf:"varint,2,opt,name=smtpOk,proto3" json:"smtpOk,omitempty"`
-	ImapError     string                 `protobuf:"bytes,3,opt,name=imapError,proto3" json:"imapError,omitempty"`
-	SmtpError     string                 `protobuf:"bytes,4,opt,name=smtpError,proto3" json:"smtpError,omitempty"`
+	ImapOk        bool                   `protobuf:"varint,1,opt,name=imapOk,proto3" json:"imapOk"`
+	SmtpOk        bool                   `protobuf:"varint,2,opt,name=smtpOk,proto3" json:"smtpOk"`
+	ImapError     string                 `protobuf:"bytes,3,opt,name=imapError,proto3" json:"imapError"`
+	SmtpError     string                 `protobuf:"bytes,4,opt,name=smtpError,proto3" json:"smtpError"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1844,8 +1844,8 @@ func (x *TestEmailAccountResp) GetSmtpError() string {
 // GetEmailFoldersReq 获取文件夹列表
 type GetEmailFoldersReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1896,7 +1896,7 @@ func (x *GetEmailFoldersReq) GetUserID() string {
 
 type GetEmailFoldersResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Folders       []*EmailFolder         `protobuf:"bytes,1,rep,name=folders,proto3" json:"folders,omitempty"`
+	Folders       []*EmailFolder         `protobuf:"bytes,1,rep,name=folders,proto3" json:"folders"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1941,9 +1941,9 @@ func (x *GetEmailFoldersResp) GetFolders() []*EmailFolder {
 // CreateEmailFolderReq 创建自定义文件夹
 type CreateEmailFolderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	FolderName    string                 `protobuf:"bytes,3,opt,name=folderName,proto3" json:"folderName,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	FolderName    string                 `protobuf:"bytes,3,opt,name=folderName,proto3" json:"folderName"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2001,7 +2001,7 @@ func (x *CreateEmailFolderReq) GetFolderName() string {
 
 type CreateEmailFolderResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Folder        *EmailFolder           `protobuf:"bytes,1,opt,name=folder,proto3" json:"folder,omitempty"`
+	Folder        *EmailFolder           `protobuf:"bytes,1,opt,name=folder,proto3" json:"folder"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2043,19 +2043,132 @@ func (x *CreateEmailFolderResp) GetFolder() *EmailFolder {
 	return nil
 }
 
+// UpdateEmailFolderReq 重命名自定义文件夹
+type UpdateEmailFolderReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FolderID      string                 `protobuf:"bytes,1,opt,name=folderID,proto3" json:"folderID"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
+	FolderName    string                 `protobuf:"bytes,4,opt,name=folderName,proto3" json:"folderName"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateEmailFolderReq) Reset() {
+	*x = UpdateEmailFolderReq{}
+	mi := &file_email_email_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateEmailFolderReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateEmailFolderReq) ProtoMessage() {}
+
+func (x *UpdateEmailFolderReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateEmailFolderReq.ProtoReflect.Descriptor instead.
+func (*UpdateEmailFolderReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *UpdateEmailFolderReq) GetFolderID() string {
+	if x != nil {
+		return x.FolderID
+	}
+	return ""
+}
+
+func (x *UpdateEmailFolderReq) GetAccountID() string {
+	if x != nil {
+		return x.AccountID
+	}
+	return ""
+}
+
+func (x *UpdateEmailFolderReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *UpdateEmailFolderReq) GetFolderName() string {
+	if x != nil {
+		return x.FolderName
+	}
+	return ""
+}
+
+type UpdateEmailFolderResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Folder        *EmailFolder           `protobuf:"bytes,1,opt,name=folder,proto3" json:"folder"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateEmailFolderResp) Reset() {
+	*x = UpdateEmailFolderResp{}
+	mi := &file_email_email_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateEmailFolderResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateEmailFolderResp) ProtoMessage() {}
+
+func (x *UpdateEmailFolderResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateEmailFolderResp.ProtoReflect.Descriptor instead.
+func (*UpdateEmailFolderResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *UpdateEmailFolderResp) GetFolder() *EmailFolder {
+	if x != nil {
+		return x.Folder
+	}
+	return nil
+}
+
 // DeleteEmailFolderReq 删除自定义文件夹
 type DeleteEmailFolderReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FolderID      string                 `protobuf:"bytes,1,opt,name=folderID,proto3" json:"folderID,omitempty"`
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID,omitempty"`
+	FolderID      string                 `protobuf:"bytes,1,opt,name=folderID,proto3" json:"folderID"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteEmailFolderReq) Reset() {
 	*x = DeleteEmailFolderReq{}
-	mi := &file_email_email_proto_msgTypes[25]
+	mi := &file_email_email_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2067,7 +2180,7 @@ func (x *DeleteEmailFolderReq) String() string {
 func (*DeleteEmailFolderReq) ProtoMessage() {}
 
 func (x *DeleteEmailFolderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[25]
+	mi := &file_email_email_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2080,7 +2193,7 @@ func (x *DeleteEmailFolderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteEmailFolderReq.ProtoReflect.Descriptor instead.
 func (*DeleteEmailFolderReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{25}
+	return file_email_email_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *DeleteEmailFolderReq) GetFolderID() string {
@@ -2112,7 +2225,7 @@ type DeleteEmailFolderResp struct {
 
 func (x *DeleteEmailFolderResp) Reset() {
 	*x = DeleteEmailFolderResp{}
-	mi := &file_email_email_proto_msgTypes[26]
+	mi := &file_email_email_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2124,7 +2237,7 @@ func (x *DeleteEmailFolderResp) String() string {
 func (*DeleteEmailFolderResp) ProtoMessage() {}
 
 func (x *DeleteEmailFolderResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[26]
+	mi := &file_email_email_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2137,32 +2250,32 @@ func (x *DeleteEmailFolderResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteEmailFolderResp.ProtoReflect.Descriptor instead.
 func (*DeleteEmailFolderResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{26}
+	return file_email_email_proto_rawDescGZIP(), []int{28}
 }
 
 // SendEmailReq 发送邮件
 type SendEmailReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"` // 发信账户
-	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	To             []*EmailAddress        `protobuf:"bytes,3,rep,name=to,proto3" json:"to,omitempty"`
-	Cc             []*EmailAddress        `protobuf:"bytes,4,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc            []*EmailAddress        `protobuf:"bytes,5,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject        string                 `protobuf:"bytes,6,opt,name=subject,proto3" json:"subject,omitempty"`
-	TextBody       string                 `protobuf:"bytes,7,opt,name=textBody,proto3" json:"textBody,omitempty"`
-	HtmlBody       string                 `protobuf:"bytes,8,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
-	AttachmentURLs []string               `protobuf:"bytes,9,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"` // 附件URL列表（先通过third上传再传URL）
-	Priority       EmailPriority          `protobuf:"varint,10,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
-	InReplyTo      string                 `protobuf:"bytes,11,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`   // 回复时传原邮件 Message-ID
-	References     []string               `protobuf:"bytes,12,rep,name=references,proto3" json:"references,omitempty"` // 引用链
-	DraftID        string                 `protobuf:"bytes,13,opt,name=draftID,proto3" json:"draftID,omitempty"`       // 草稿ID（从草稿发送时传）
+	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"` // 发信账户
+	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	To             []*EmailAddress        `protobuf:"bytes,3,rep,name=to,proto3" json:"to"`
+	Cc             []*EmailAddress        `protobuf:"bytes,4,rep,name=cc,proto3" json:"cc"`
+	Bcc            []*EmailAddress        `protobuf:"bytes,5,rep,name=bcc,proto3" json:"bcc"`
+	Subject        string                 `protobuf:"bytes,6,opt,name=subject,proto3" json:"subject"`
+	TextBody       string                 `protobuf:"bytes,7,opt,name=textBody,proto3" json:"textBody"`
+	HtmlBody       string                 `protobuf:"bytes,8,opt,name=htmlBody,proto3" json:"htmlBody"`
+	AttachmentURLs []string               `protobuf:"bytes,9,rep,name=attachmentURLs,proto3" json:"attachmentURLs"` // 附件URL列表（先通过third上传再传URL）
+	Priority       EmailPriority          `protobuf:"varint,10,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority"`
+	InReplyTo      string                 `protobuf:"bytes,11,opt,name=inReplyTo,proto3" json:"inReplyTo"`   // 回复时传原邮件 Message-ID
+	References     []string               `protobuf:"bytes,12,rep,name=references,proto3" json:"references"` // 引用链
+	DraftID        string                 `protobuf:"bytes,13,opt,name=draftID,proto3" json:"draftID"`       // 草稿ID（从草稿发送时传）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SendEmailReq) Reset() {
 	*x = SendEmailReq{}
-	mi := &file_email_email_proto_msgTypes[27]
+	mi := &file_email_email_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2174,7 +2287,7 @@ func (x *SendEmailReq) String() string {
 func (*SendEmailReq) ProtoMessage() {}
 
 func (x *SendEmailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[27]
+	mi := &file_email_email_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2187,7 +2300,7 @@ func (x *SendEmailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendEmailReq.ProtoReflect.Descriptor instead.
 func (*SendEmailReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{27}
+	return file_email_email_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *SendEmailReq) GetAccountID() string {
@@ -2283,14 +2396,14 @@ func (x *SendEmailReq) GetDraftID() string {
 
 type SendEmailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendEmailResp) Reset() {
 	*x = SendEmailResp{}
-	mi := &file_email_email_proto_msgTypes[28]
+	mi := &file_email_email_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2302,7 +2415,7 @@ func (x *SendEmailResp) String() string {
 func (*SendEmailResp) ProtoMessage() {}
 
 func (x *SendEmailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[28]
+	mi := &file_email_email_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2315,7 +2428,7 @@ func (x *SendEmailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendEmailResp.ProtoReflect.Descriptor instead.
 func (*SendEmailResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{28}
+	return file_email_email_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *SendEmailResp) GetEmail() *EmailMessage {
@@ -2328,26 +2441,26 @@ func (x *SendEmailResp) GetEmail() *EmailMessage {
 // SaveDraftReq 保存草稿
 type SaveDraftReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	DraftID        string                 `protobuf:"bytes,3,opt,name=draftID,proto3" json:"draftID,omitempty"` // 已有草稿ID（更新草稿）
-	To             []*EmailAddress        `protobuf:"bytes,4,rep,name=to,proto3" json:"to,omitempty"`
-	Cc             []*EmailAddress        `protobuf:"bytes,5,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc            []*EmailAddress        `protobuf:"bytes,6,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject        string                 `protobuf:"bytes,7,opt,name=subject,proto3" json:"subject,omitempty"`
-	TextBody       string                 `protobuf:"bytes,8,opt,name=textBody,proto3" json:"textBody,omitempty"`
-	HtmlBody       string                 `protobuf:"bytes,9,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
-	AttachmentURLs []string               `protobuf:"bytes,10,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`
-	Priority       EmailPriority          `protobuf:"varint,11,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
-	InReplyTo      string                 `protobuf:"bytes,12,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`
-	References     []string               `protobuf:"bytes,13,rep,name=references,proto3" json:"references,omitempty"`
+	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	DraftID        string                 `protobuf:"bytes,3,opt,name=draftID,proto3" json:"draftID"` // 已有草稿ID（更新草稿）
+	To             []*EmailAddress        `protobuf:"bytes,4,rep,name=to,proto3" json:"to"`
+	Cc             []*EmailAddress        `protobuf:"bytes,5,rep,name=cc,proto3" json:"cc"`
+	Bcc            []*EmailAddress        `protobuf:"bytes,6,rep,name=bcc,proto3" json:"bcc"`
+	Subject        string                 `protobuf:"bytes,7,opt,name=subject,proto3" json:"subject"`
+	TextBody       string                 `protobuf:"bytes,8,opt,name=textBody,proto3" json:"textBody"`
+	HtmlBody       string                 `protobuf:"bytes,9,opt,name=htmlBody,proto3" json:"htmlBody"`
+	AttachmentURLs []string               `protobuf:"bytes,10,rep,name=attachmentURLs,proto3" json:"attachmentURLs"`
+	Priority       EmailPriority          `protobuf:"varint,11,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority"`
+	InReplyTo      string                 `protobuf:"bytes,12,opt,name=inReplyTo,proto3" json:"inReplyTo"`
+	References     []string               `protobuf:"bytes,13,rep,name=references,proto3" json:"references"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SaveDraftReq) Reset() {
 	*x = SaveDraftReq{}
-	mi := &file_email_email_proto_msgTypes[29]
+	mi := &file_email_email_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2359,7 +2472,7 @@ func (x *SaveDraftReq) String() string {
 func (*SaveDraftReq) ProtoMessage() {}
 
 func (x *SaveDraftReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[29]
+	mi := &file_email_email_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2372,7 +2485,7 @@ func (x *SaveDraftReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveDraftReq.ProtoReflect.Descriptor instead.
 func (*SaveDraftReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{29}
+	return file_email_email_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *SaveDraftReq) GetAccountID() string {
@@ -2468,14 +2581,14 @@ func (x *SaveDraftReq) GetReferences() []string {
 
 type SaveDraftResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SaveDraftResp) Reset() {
 	*x = SaveDraftResp{}
-	mi := &file_email_email_proto_msgTypes[30]
+	mi := &file_email_email_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2487,7 +2600,7 @@ func (x *SaveDraftResp) String() string {
 func (*SaveDraftResp) ProtoMessage() {}
 
 func (x *SaveDraftResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[30]
+	mi := &file_email_email_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2500,7 +2613,7 @@ func (x *SaveDraftResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveDraftResp.ProtoReflect.Descriptor instead.
 func (*SaveDraftResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{30}
+	return file_email_email_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *SaveDraftResp) GetEmail() *EmailMessage {
@@ -2513,24 +2626,24 @@ func (x *SaveDraftResp) GetEmail() *EmailMessage {
 // GetEmailsReq 获取邮件列表
 type GetEmailsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	AccountID     string                   `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                   `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	FolderID      string                   `protobuf:"bytes,3,opt,name=folderID,proto3" json:"folderID,omitempty"`
-	Keyword       string                   `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`                    // 搜索关键词
-	IsRead        *bool                    `protobuf:"varint,5,opt,name=isRead,proto3,oneof" json:"isRead,omitempty"`               // 筛选已读/未读
-	IsFlagged     *bool                    `protobuf:"varint,6,opt,name=isFlagged,proto3,oneof" json:"isFlagged,omitempty"`         // 筛选星标
-	HasAttachment *bool                    `protobuf:"varint,7,opt,name=hasAttachment,proto3,oneof" json:"hasAttachment,omitempty"` // 筛选有附件
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,8,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	StartTime     int64                    `protobuf:"varint,9,opt,name=startTime,proto3" json:"startTime,omitempty"` // 时间范围起（毫秒，0 表示不限制）
-	EndTime       int64                    `protobuf:"varint,10,opt,name=endTime,proto3" json:"endTime,omitempty"`    // 时间范围止（毫秒，0 表示不限制）
-	Sender        string                   `protobuf:"bytes,11,opt,name=sender,proto3" json:"sender,omitempty"`       // 发件人筛选（匹配名称或地址）
+	AccountID     string                   `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                   `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	FolderID      string                   `protobuf:"bytes,3,opt,name=folderID,proto3" json:"folderID"`
+	Keyword       string                   `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword"`                    // 搜索关键词
+	IsRead        *bool                    `protobuf:"varint,5,opt,name=isRead,proto3,oneof" json:"isRead"`               // 筛选已读/未读
+	IsFlagged     *bool                    `protobuf:"varint,6,opt,name=isFlagged,proto3,oneof" json:"isFlagged"`         // 筛选星标
+	HasAttachment *bool                    `protobuf:"varint,7,opt,name=hasAttachment,proto3,oneof" json:"hasAttachment"` // 筛选有附件
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,8,opt,name=pagination,proto3" json:"pagination"`
+	StartTime     int64                    `protobuf:"varint,9,opt,name=startTime,proto3" json:"startTime"` // 时间范围起（毫秒，0 表示不限制）
+	EndTime       int64                    `protobuf:"varint,10,opt,name=endTime,proto3" json:"endTime"`    // 时间范围止（毫秒，0 表示不限制）
+	Sender        string                   `protobuf:"bytes,11,opt,name=sender,proto3" json:"sender"`       // 发件人筛选（匹配名称或地址）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetEmailsReq) Reset() {
 	*x = GetEmailsReq{}
-	mi := &file_email_email_proto_msgTypes[31]
+	mi := &file_email_email_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2542,7 +2655,7 @@ func (x *GetEmailsReq) String() string {
 func (*GetEmailsReq) ProtoMessage() {}
 
 func (x *GetEmailsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[31]
+	mi := &file_email_email_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2555,7 +2668,7 @@ func (x *GetEmailsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmailsReq.ProtoReflect.Descriptor instead.
 func (*GetEmailsReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{31}
+	return file_email_email_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetEmailsReq) GetAccountID() string {
@@ -2637,15 +2750,15 @@ func (x *GetEmailsReq) GetSender() string {
 
 type GetEmailsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Emails        []*EmailMessage        `protobuf:"bytes,1,rep,name=emails,proto3" json:"emails,omitempty"`
-	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	Emails        []*EmailMessage        `protobuf:"bytes,1,rep,name=emails,proto3" json:"emails"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetEmailsResp) Reset() {
 	*x = GetEmailsResp{}
-	mi := &file_email_email_proto_msgTypes[32]
+	mi := &file_email_email_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2657,7 +2770,7 @@ func (x *GetEmailsResp) String() string {
 func (*GetEmailsResp) ProtoMessage() {}
 
 func (x *GetEmailsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[32]
+	mi := &file_email_email_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2670,7 +2783,7 @@ func (x *GetEmailsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmailsResp.ProtoReflect.Descriptor instead.
 func (*GetEmailsResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{32}
+	return file_email_email_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetEmailsResp) GetEmails() []*EmailMessage {
@@ -2690,16 +2803,16 @@ func (x *GetEmailsResp) GetTotal() int32 {
 // GetEmailDetailReq 获取邮件详情
 type GetEmailDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	EmailID       string                 `protobuf:"bytes,1,opt,name=emailID,proto3" json:"emailID,omitempty"`
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID,omitempty"`
+	EmailID       string                 `protobuf:"bytes,1,opt,name=emailID,proto3" json:"emailID"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetEmailDetailReq) Reset() {
 	*x = GetEmailDetailReq{}
-	mi := &file_email_email_proto_msgTypes[33]
+	mi := &file_email_email_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2711,7 +2824,7 @@ func (x *GetEmailDetailReq) String() string {
 func (*GetEmailDetailReq) ProtoMessage() {}
 
 func (x *GetEmailDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[33]
+	mi := &file_email_email_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2724,7 +2837,7 @@ func (x *GetEmailDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmailDetailReq.ProtoReflect.Descriptor instead.
 func (*GetEmailDetailReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{33}
+	return file_email_email_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetEmailDetailReq) GetEmailID() string {
@@ -2750,14 +2863,14 @@ func (x *GetEmailDetailReq) GetUserID() string {
 
 type GetEmailDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetEmailDetailResp) Reset() {
 	*x = GetEmailDetailResp{}
-	mi := &file_email_email_proto_msgTypes[34]
+	mi := &file_email_email_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2769,7 +2882,7 @@ func (x *GetEmailDetailResp) String() string {
 func (*GetEmailDetailResp) ProtoMessage() {}
 
 func (x *GetEmailDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[34]
+	mi := &file_email_email_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2782,7 +2895,7 @@ func (x *GetEmailDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEmailDetailResp.ProtoReflect.Descriptor instead.
 func (*GetEmailDetailResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{34}
+	return file_email_email_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetEmailDetailResp) GetEmail() *EmailMessage {
@@ -2795,17 +2908,17 @@ func (x *GetEmailDetailResp) GetEmail() *EmailMessage {
 // DeleteEmailsReq 删除邮件（移到已删除 / 永久删除）
 type DeleteEmailsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	EmailIDs      []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs,omitempty"`
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID,omitempty"`
-	Permanent     bool                   `protobuf:"varint,4,opt,name=permanent,proto3" json:"permanent,omitempty"` // 是否永久删除（已在已删除中再删为永久删除）
+	EmailIDs      []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
+	Permanent     bool                   `protobuf:"varint,4,opt,name=permanent,proto3" json:"permanent"` // 是否永久删除（已在已删除中再删为永久删除）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteEmailsReq) Reset() {
 	*x = DeleteEmailsReq{}
-	mi := &file_email_email_proto_msgTypes[35]
+	mi := &file_email_email_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2817,7 +2930,7 @@ func (x *DeleteEmailsReq) String() string {
 func (*DeleteEmailsReq) ProtoMessage() {}
 
 func (x *DeleteEmailsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[35]
+	mi := &file_email_email_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2830,7 +2943,7 @@ func (x *DeleteEmailsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteEmailsReq.ProtoReflect.Descriptor instead.
 func (*DeleteEmailsReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{35}
+	return file_email_email_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *DeleteEmailsReq) GetEmailIDs() []string {
@@ -2869,7 +2982,7 @@ type DeleteEmailsResp struct {
 
 func (x *DeleteEmailsResp) Reset() {
 	*x = DeleteEmailsResp{}
-	mi := &file_email_email_proto_msgTypes[36]
+	mi := &file_email_email_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2881,7 +2994,7 @@ func (x *DeleteEmailsResp) String() string {
 func (*DeleteEmailsResp) ProtoMessage() {}
 
 func (x *DeleteEmailsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[36]
+	mi := &file_email_email_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2894,23 +3007,23 @@ func (x *DeleteEmailsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteEmailsResp.ProtoReflect.Descriptor instead.
 func (*DeleteEmailsResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{36}
+	return file_email_email_proto_rawDescGZIP(), []int{38}
 }
 
 // MoveEmailsReq 移动邮件到指定文件夹
 type MoveEmailsReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	EmailIDs       []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs,omitempty"`
-	AccountID      string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID         string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID,omitempty"`
-	TargetFolderID string                 `protobuf:"bytes,4,opt,name=targetFolderID,proto3" json:"targetFolderID,omitempty"`
+	EmailIDs       []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs"`
+	AccountID      string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID         string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
+	TargetFolderID string                 `protobuf:"bytes,4,opt,name=targetFolderID,proto3" json:"targetFolderID"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *MoveEmailsReq) Reset() {
 	*x = MoveEmailsReq{}
-	mi := &file_email_email_proto_msgTypes[37]
+	mi := &file_email_email_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2922,7 +3035,7 @@ func (x *MoveEmailsReq) String() string {
 func (*MoveEmailsReq) ProtoMessage() {}
 
 func (x *MoveEmailsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[37]
+	mi := &file_email_email_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2935,7 +3048,7 @@ func (x *MoveEmailsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MoveEmailsReq.ProtoReflect.Descriptor instead.
 func (*MoveEmailsReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{37}
+	return file_email_email_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *MoveEmailsReq) GetEmailIDs() []string {
@@ -2974,7 +3087,7 @@ type MoveEmailsResp struct {
 
 func (x *MoveEmailsResp) Reset() {
 	*x = MoveEmailsResp{}
-	mi := &file_email_email_proto_msgTypes[38]
+	mi := &file_email_email_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2986,7 +3099,7 @@ func (x *MoveEmailsResp) String() string {
 func (*MoveEmailsResp) ProtoMessage() {}
 
 func (x *MoveEmailsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[38]
+	mi := &file_email_email_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2999,24 +3112,24 @@ func (x *MoveEmailsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MoveEmailsResp.ProtoReflect.Descriptor instead.
 func (*MoveEmailsResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{38}
+	return file_email_email_proto_rawDescGZIP(), []int{40}
 }
 
 // MarkEmailsReq 标记邮件（已读/未读/星标/取消星标）
 type MarkEmailsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	EmailIDs      []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs,omitempty"`
-	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID,omitempty"`
-	IsRead        *bool                  `protobuf:"varint,4,opt,name=isRead,proto3,oneof" json:"isRead,omitempty"`
-	IsFlagged     *bool                  `protobuf:"varint,5,opt,name=isFlagged,proto3,oneof" json:"isFlagged,omitempty"`
+	EmailIDs      []string               `protobuf:"bytes,1,rep,name=emailIDs,proto3" json:"emailIDs"`
+	AccountID     string                 `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,3,opt,name=userID,proto3" json:"userID"`
+	IsRead        *bool                  `protobuf:"varint,4,opt,name=isRead,proto3,oneof" json:"isRead"`
+	IsFlagged     *bool                  `protobuf:"varint,5,opt,name=isFlagged,proto3,oneof" json:"isFlagged"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *MarkEmailsReq) Reset() {
 	*x = MarkEmailsReq{}
-	mi := &file_email_email_proto_msgTypes[39]
+	mi := &file_email_email_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3028,7 +3141,7 @@ func (x *MarkEmailsReq) String() string {
 func (*MarkEmailsReq) ProtoMessage() {}
 
 func (x *MarkEmailsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[39]
+	mi := &file_email_email_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3041,7 +3154,7 @@ func (x *MarkEmailsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarkEmailsReq.ProtoReflect.Descriptor instead.
 func (*MarkEmailsReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{39}
+	return file_email_email_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *MarkEmailsReq) GetEmailIDs() []string {
@@ -3087,7 +3200,7 @@ type MarkEmailsResp struct {
 
 func (x *MarkEmailsResp) Reset() {
 	*x = MarkEmailsResp{}
-	mi := &file_email_email_proto_msgTypes[40]
+	mi := &file_email_email_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3099,7 +3212,7 @@ func (x *MarkEmailsResp) String() string {
 func (*MarkEmailsResp) ProtoMessage() {}
 
 func (x *MarkEmailsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[40]
+	mi := &file_email_email_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3112,21 +3225,21 @@ func (x *MarkEmailsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MarkEmailsResp.ProtoReflect.Descriptor instead.
 func (*MarkEmailsResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{40}
+	return file_email_email_proto_rawDescGZIP(), []int{42}
 }
 
 // SyncEmailsReq 同步收取邮件
 type SyncEmailsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SyncEmailsReq) Reset() {
 	*x = SyncEmailsReq{}
-	mi := &file_email_email_proto_msgTypes[41]
+	mi := &file_email_email_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3138,7 +3251,7 @@ func (x *SyncEmailsReq) String() string {
 func (*SyncEmailsReq) ProtoMessage() {}
 
 func (x *SyncEmailsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[41]
+	mi := &file_email_email_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3151,7 +3264,7 @@ func (x *SyncEmailsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncEmailsReq.ProtoReflect.Descriptor instead.
 func (*SyncEmailsReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{41}
+	return file_email_email_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *SyncEmailsReq) GetAccountID() string {
@@ -3170,14 +3283,14 @@ func (x *SyncEmailsReq) GetUserID() string {
 
 type SyncEmailsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NewCount      int32                  `protobuf:"varint,1,opt,name=newCount,proto3" json:"newCount,omitempty"` // 新收取的邮件数量
+	NewCount      int32                  `protobuf:"varint,1,opt,name=newCount,proto3" json:"newCount"` // 新收取的邮件数量
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SyncEmailsResp) Reset() {
 	*x = SyncEmailsResp{}
-	mi := &file_email_email_proto_msgTypes[42]
+	mi := &file_email_email_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3189,7 +3302,7 @@ func (x *SyncEmailsResp) String() string {
 func (*SyncEmailsResp) ProtoMessage() {}
 
 func (x *SyncEmailsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[42]
+	mi := &file_email_email_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3202,7 +3315,7 @@ func (x *SyncEmailsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncEmailsResp.ProtoReflect.Descriptor instead.
 func (*SyncEmailsResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{42}
+	return file_email_email_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *SyncEmailsResp) GetNewCount() int32 {
@@ -3215,15 +3328,15 @@ func (x *SyncEmailsResp) GetNewCount() int32 {
 // GetUnreadCountReq 获取未读数
 type GetUnreadCountReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AccountID     string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUnreadCountReq) Reset() {
 	*x = GetUnreadCountReq{}
-	mi := &file_email_email_proto_msgTypes[43]
+	mi := &file_email_email_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3235,7 +3348,7 @@ func (x *GetUnreadCountReq) String() string {
 func (*GetUnreadCountReq) ProtoMessage() {}
 
 func (x *GetUnreadCountReq) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[43]
+	mi := &file_email_email_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3248,7 +3361,7 @@ func (x *GetUnreadCountReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUnreadCountReq.ProtoReflect.Descriptor instead.
 func (*GetUnreadCountReq) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{43}
+	return file_email_email_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *GetUnreadCountReq) GetAccountID() string {
@@ -3267,7 +3380,7 @@ func (x *GetUnreadCountReq) GetUserID() string {
 
 type GetUnreadCountResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TotalUnread   int32                  `protobuf:"varint,1,opt,name=totalUnread,proto3" json:"totalUnread,omitempty"`
+	TotalUnread   int32                  `protobuf:"varint,1,opt,name=totalUnread,proto3" json:"totalUnread"`
 	FolderUnread  map[string]int32       `protobuf:"bytes,2,rep,name=folderUnread,proto3" json:"folderUnread,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"` // key: folderID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -3275,7 +3388,7 @@ type GetUnreadCountResp struct {
 
 func (x *GetUnreadCountResp) Reset() {
 	*x = GetUnreadCountResp{}
-	mi := &file_email_email_proto_msgTypes[44]
+	mi := &file_email_email_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3287,7 +3400,7 @@ func (x *GetUnreadCountResp) String() string {
 func (*GetUnreadCountResp) ProtoMessage() {}
 
 func (x *GetUnreadCountResp) ProtoReflect() protoreflect.Message {
-	mi := &file_email_email_proto_msgTypes[44]
+	mi := &file_email_email_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3300,7 +3413,7 @@ func (x *GetUnreadCountResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUnreadCountResp.ProtoReflect.Descriptor instead.
 func (*GetUnreadCountResp) Descriptor() ([]byte, []int) {
-	return file_email_email_proto_rawDescGZIP(), []int{44}
+	return file_email_email_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *GetUnreadCountResp) GetTotalUnread() int32 {
@@ -3498,6 +3611,15 @@ const file_email_email_proto_rawDesc = "" +
 	"folderName\x18\x03 \x01(\tR\n" +
 	"folderName\"J\n" +
 	"\x15CreateEmailFolderResp\x121\n" +
+	"\x06folder\x18\x01 \x01(\v2\x19.openim.email.EmailFolderR\x06folder\"\x88\x01\n" +
+	"\x14UpdateEmailFolderReq\x12\x1a\n" +
+	"\bfolderID\x18\x01 \x01(\tR\bfolderID\x12\x1c\n" +
+	"\taccountID\x18\x02 \x01(\tR\taccountID\x12\x16\n" +
+	"\x06userID\x18\x03 \x01(\tR\x06userID\x12\x1e\n" +
+	"\n" +
+	"folderName\x18\x04 \x01(\tR\n" +
+	"folderName\"J\n" +
+	"\x15UpdateEmailFolderResp\x121\n" +
 	"\x06folder\x18\x01 \x01(\v2\x19.openim.email.EmailFolderR\x06folder\"h\n" +
 	"\x14DeleteEmailFolderReq\x12\x1a\n" +
 	"\bfolderID\x18\x01 \x01(\tR\bfolderID\x12\x1c\n" +
@@ -3620,7 +3742,7 @@ const file_email_email_proto_rawDesc = "" +
 	"\vEmailStatus\x12\x11\n" +
 	"\rSTATUS_UNREAD\x10\x00\x12\x0f\n" +
 	"\vSTATUS_READ\x10\x01\x12\x12\n" +
-	"\x0eSTATUS_FLAGGED\x10\x022\xca\f\n" +
+	"\x0eSTATUS_FLAGGED\x10\x022\xa8\r\n" +
 	"\x05Email\x12V\n" +
 	"\x0fAddEmailAccount\x12 .openim.email.AddEmailAccountReq\x1a!.openim.email.AddEmailAccountResp\x12b\n" +
 	"\x13ImportEmailAccounts\x12$.openim.email.ImportEmailAccountsReq\x1a%.openim.email.ImportEmailAccountsResp\x12_\n" +
@@ -3631,6 +3753,7 @@ const file_email_email_proto_rawDesc = "" +
 	"\x0eGetEmailConfig\x12\x1f.openim.email.GetEmailConfigReq\x1a .openim.email.GetEmailConfigResp\x12V\n" +
 	"\x0fGetEmailFolders\x12 .openim.email.GetEmailFoldersReq\x1a!.openim.email.GetEmailFoldersResp\x12\\\n" +
 	"\x11CreateEmailFolder\x12\".openim.email.CreateEmailFolderReq\x1a#.openim.email.CreateEmailFolderResp\x12\\\n" +
+	"\x11UpdateEmailFolder\x12\".openim.email.UpdateEmailFolderReq\x1a#.openim.email.UpdateEmailFolderResp\x12\\\n" +
 	"\x11DeleteEmailFolder\x12\".openim.email.DeleteEmailFolderReq\x1a#.openim.email.DeleteEmailFolderResp\x12D\n" +
 	"\tSendEmail\x12\x1a.openim.email.SendEmailReq\x1a\x1b.openim.email.SendEmailResp\x12D\n" +
 	"\tSaveDraft\x12\x1a.openim.email.SaveDraftReq\x1a\x1b.openim.email.SaveDraftResp\x12D\n" +
@@ -3658,7 +3781,7 @@ func file_email_email_proto_rawDescGZIP() []byte {
 }
 
 var file_email_email_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_email_email_proto_msgTypes = make([]protoimpl.MessageInfo, 46)
+var file_email_email_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
 var file_email_email_proto_goTypes = []any{
 	(EmailFolderType)(0),            // 0: openim.email.EmailFolderType
 	(EmailPriority)(0),              // 1: openim.email.EmailPriority
@@ -3688,28 +3811,30 @@ var file_email_email_proto_goTypes = []any{
 	(*GetEmailFoldersResp)(nil),     // 25: openim.email.GetEmailFoldersResp
 	(*CreateEmailFolderReq)(nil),    // 26: openim.email.CreateEmailFolderReq
 	(*CreateEmailFolderResp)(nil),   // 27: openim.email.CreateEmailFolderResp
-	(*DeleteEmailFolderReq)(nil),    // 28: openim.email.DeleteEmailFolderReq
-	(*DeleteEmailFolderResp)(nil),   // 29: openim.email.DeleteEmailFolderResp
-	(*SendEmailReq)(nil),            // 30: openim.email.SendEmailReq
-	(*SendEmailResp)(nil),           // 31: openim.email.SendEmailResp
-	(*SaveDraftReq)(nil),            // 32: openim.email.SaveDraftReq
-	(*SaveDraftResp)(nil),           // 33: openim.email.SaveDraftResp
-	(*GetEmailsReq)(nil),            // 34: openim.email.GetEmailsReq
-	(*GetEmailsResp)(nil),           // 35: openim.email.GetEmailsResp
-	(*GetEmailDetailReq)(nil),       // 36: openim.email.GetEmailDetailReq
-	(*GetEmailDetailResp)(nil),      // 37: openim.email.GetEmailDetailResp
-	(*DeleteEmailsReq)(nil),         // 38: openim.email.DeleteEmailsReq
-	(*DeleteEmailsResp)(nil),        // 39: openim.email.DeleteEmailsResp
-	(*MoveEmailsReq)(nil),           // 40: openim.email.MoveEmailsReq
-	(*MoveEmailsResp)(nil),          // 41: openim.email.MoveEmailsResp
-	(*MarkEmailsReq)(nil),           // 42: openim.email.MarkEmailsReq
-	(*MarkEmailsResp)(nil),          // 43: openim.email.MarkEmailsResp
-	(*SyncEmailsReq)(nil),           // 44: openim.email.SyncEmailsReq
-	(*SyncEmailsResp)(nil),          // 45: openim.email.SyncEmailsResp
-	(*GetUnreadCountReq)(nil),       // 46: openim.email.GetUnreadCountReq
-	(*GetUnreadCountResp)(nil),      // 47: openim.email.GetUnreadCountResp
-	nil,                             // 48: openim.email.GetUnreadCountResp.FolderUnreadEntry
-	(*sdkws.RequestPagination)(nil), // 49: openim.sdkws.RequestPagination
+	(*UpdateEmailFolderReq)(nil),    // 28: openim.email.UpdateEmailFolderReq
+	(*UpdateEmailFolderResp)(nil),   // 29: openim.email.UpdateEmailFolderResp
+	(*DeleteEmailFolderReq)(nil),    // 30: openim.email.DeleteEmailFolderReq
+	(*DeleteEmailFolderResp)(nil),   // 31: openim.email.DeleteEmailFolderResp
+	(*SendEmailReq)(nil),            // 32: openim.email.SendEmailReq
+	(*SendEmailResp)(nil),           // 33: openim.email.SendEmailResp
+	(*SaveDraftReq)(nil),            // 34: openim.email.SaveDraftReq
+	(*SaveDraftResp)(nil),           // 35: openim.email.SaveDraftResp
+	(*GetEmailsReq)(nil),            // 36: openim.email.GetEmailsReq
+	(*GetEmailsResp)(nil),           // 37: openim.email.GetEmailsResp
+	(*GetEmailDetailReq)(nil),       // 38: openim.email.GetEmailDetailReq
+	(*GetEmailDetailResp)(nil),      // 39: openim.email.GetEmailDetailResp
+	(*DeleteEmailsReq)(nil),         // 40: openim.email.DeleteEmailsReq
+	(*DeleteEmailsResp)(nil),        // 41: openim.email.DeleteEmailsResp
+	(*MoveEmailsReq)(nil),           // 42: openim.email.MoveEmailsReq
+	(*MoveEmailsResp)(nil),          // 43: openim.email.MoveEmailsResp
+	(*MarkEmailsReq)(nil),           // 44: openim.email.MarkEmailsReq
+	(*MarkEmailsResp)(nil),          // 45: openim.email.MarkEmailsResp
+	(*SyncEmailsReq)(nil),           // 46: openim.email.SyncEmailsReq
+	(*SyncEmailsResp)(nil),          // 47: openim.email.SyncEmailsResp
+	(*GetUnreadCountReq)(nil),       // 48: openim.email.GetUnreadCountReq
+	(*GetUnreadCountResp)(nil),      // 49: openim.email.GetUnreadCountResp
+	nil,                             // 50: openim.email.GetUnreadCountResp.FolderUnreadEntry
+	(*sdkws.RequestPagination)(nil), // 51: openim.sdkws.RequestPagination
 }
 var file_email_email_proto_depIdxs = []int32{
 	0,  // 0: openim.email.EmailFolder.folderType:type_name -> openim.email.EmailFolderType
@@ -3725,63 +3850,66 @@ var file_email_email_proto_depIdxs = []int32{
 	3,  // 10: openim.email.GetEmailAccountsResp.accounts:type_name -> openim.email.EmailAccountConfig
 	4,  // 11: openim.email.GetEmailFoldersResp.folders:type_name -> openim.email.EmailFolder
 	4,  // 12: openim.email.CreateEmailFolderResp.folder:type_name -> openim.email.EmailFolder
-	5,  // 13: openim.email.SendEmailReq.to:type_name -> openim.email.EmailAddress
-	5,  // 14: openim.email.SendEmailReq.cc:type_name -> openim.email.EmailAddress
-	5,  // 15: openim.email.SendEmailReq.bcc:type_name -> openim.email.EmailAddress
-	1,  // 16: openim.email.SendEmailReq.priority:type_name -> openim.email.EmailPriority
-	7,  // 17: openim.email.SendEmailResp.email:type_name -> openim.email.EmailMessage
-	5,  // 18: openim.email.SaveDraftReq.to:type_name -> openim.email.EmailAddress
-	5,  // 19: openim.email.SaveDraftReq.cc:type_name -> openim.email.EmailAddress
-	5,  // 20: openim.email.SaveDraftReq.bcc:type_name -> openim.email.EmailAddress
-	1,  // 21: openim.email.SaveDraftReq.priority:type_name -> openim.email.EmailPriority
-	7,  // 22: openim.email.SaveDraftResp.email:type_name -> openim.email.EmailMessage
-	49, // 23: openim.email.GetEmailsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	7,  // 24: openim.email.GetEmailsResp.emails:type_name -> openim.email.EmailMessage
-	7,  // 25: openim.email.GetEmailDetailResp.email:type_name -> openim.email.EmailMessage
-	48, // 26: openim.email.GetUnreadCountResp.folderUnread:type_name -> openim.email.GetUnreadCountResp.FolderUnreadEntry
-	8,  // 27: openim.email.Email.AddEmailAccount:input_type -> openim.email.AddEmailAccountReq
-	11, // 28: openim.email.Email.ImportEmailAccounts:input_type -> openim.email.ImportEmailAccountsReq
-	14, // 29: openim.email.Email.UpdateEmailAccount:input_type -> openim.email.UpdateEmailAccountReq
-	16, // 30: openim.email.Email.DeleteEmailAccount:input_type -> openim.email.DeleteEmailAccountReq
-	18, // 31: openim.email.Email.GetEmailAccounts:input_type -> openim.email.GetEmailAccountsReq
-	22, // 32: openim.email.Email.TestEmailAccount:input_type -> openim.email.TestEmailAccountReq
-	20, // 33: openim.email.Email.GetEmailConfig:input_type -> openim.email.GetEmailConfigReq
-	24, // 34: openim.email.Email.GetEmailFolders:input_type -> openim.email.GetEmailFoldersReq
-	26, // 35: openim.email.Email.CreateEmailFolder:input_type -> openim.email.CreateEmailFolderReq
-	28, // 36: openim.email.Email.DeleteEmailFolder:input_type -> openim.email.DeleteEmailFolderReq
-	30, // 37: openim.email.Email.SendEmail:input_type -> openim.email.SendEmailReq
-	32, // 38: openim.email.Email.SaveDraft:input_type -> openim.email.SaveDraftReq
-	34, // 39: openim.email.Email.GetEmails:input_type -> openim.email.GetEmailsReq
-	36, // 40: openim.email.Email.GetEmailDetail:input_type -> openim.email.GetEmailDetailReq
-	38, // 41: openim.email.Email.DeleteEmails:input_type -> openim.email.DeleteEmailsReq
-	40, // 42: openim.email.Email.MoveEmails:input_type -> openim.email.MoveEmailsReq
-	42, // 43: openim.email.Email.MarkEmails:input_type -> openim.email.MarkEmailsReq
-	44, // 44: openim.email.Email.SyncEmails:input_type -> openim.email.SyncEmailsReq
-	46, // 45: openim.email.Email.GetUnreadCount:input_type -> openim.email.GetUnreadCountReq
-	9,  // 46: openim.email.Email.AddEmailAccount:output_type -> openim.email.AddEmailAccountResp
-	13, // 47: openim.email.Email.ImportEmailAccounts:output_type -> openim.email.ImportEmailAccountsResp
-	15, // 48: openim.email.Email.UpdateEmailAccount:output_type -> openim.email.UpdateEmailAccountResp
-	17, // 49: openim.email.Email.DeleteEmailAccount:output_type -> openim.email.DeleteEmailAccountResp
-	19, // 50: openim.email.Email.GetEmailAccounts:output_type -> openim.email.GetEmailAccountsResp
-	23, // 51: openim.email.Email.TestEmailAccount:output_type -> openim.email.TestEmailAccountResp
-	21, // 52: openim.email.Email.GetEmailConfig:output_type -> openim.email.GetEmailConfigResp
-	25, // 53: openim.email.Email.GetEmailFolders:output_type -> openim.email.GetEmailFoldersResp
-	27, // 54: openim.email.Email.CreateEmailFolder:output_type -> openim.email.CreateEmailFolderResp
-	29, // 55: openim.email.Email.DeleteEmailFolder:output_type -> openim.email.DeleteEmailFolderResp
-	31, // 56: openim.email.Email.SendEmail:output_type -> openim.email.SendEmailResp
-	33, // 57: openim.email.Email.SaveDraft:output_type -> openim.email.SaveDraftResp
-	35, // 58: openim.email.Email.GetEmails:output_type -> openim.email.GetEmailsResp
-	37, // 59: openim.email.Email.GetEmailDetail:output_type -> openim.email.GetEmailDetailResp
-	39, // 60: openim.email.Email.DeleteEmails:output_type -> openim.email.DeleteEmailsResp
-	41, // 61: openim.email.Email.MoveEmails:output_type -> openim.email.MoveEmailsResp
-	43, // 62: openim.email.Email.MarkEmails:output_type -> openim.email.MarkEmailsResp
-	45, // 63: openim.email.Email.SyncEmails:output_type -> openim.email.SyncEmailsResp
-	47, // 64: openim.email.Email.GetUnreadCount:output_type -> openim.email.GetUnreadCountResp
-	46, // [46:65] is the sub-list for method output_type
-	27, // [27:46] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	4,  // 13: openim.email.UpdateEmailFolderResp.folder:type_name -> openim.email.EmailFolder
+	5,  // 14: openim.email.SendEmailReq.to:type_name -> openim.email.EmailAddress
+	5,  // 15: openim.email.SendEmailReq.cc:type_name -> openim.email.EmailAddress
+	5,  // 16: openim.email.SendEmailReq.bcc:type_name -> openim.email.EmailAddress
+	1,  // 17: openim.email.SendEmailReq.priority:type_name -> openim.email.EmailPriority
+	7,  // 18: openim.email.SendEmailResp.email:type_name -> openim.email.EmailMessage
+	5,  // 19: openim.email.SaveDraftReq.to:type_name -> openim.email.EmailAddress
+	5,  // 20: openim.email.SaveDraftReq.cc:type_name -> openim.email.EmailAddress
+	5,  // 21: openim.email.SaveDraftReq.bcc:type_name -> openim.email.EmailAddress
+	1,  // 22: openim.email.SaveDraftReq.priority:type_name -> openim.email.EmailPriority
+	7,  // 23: openim.email.SaveDraftResp.email:type_name -> openim.email.EmailMessage
+	51, // 24: openim.email.GetEmailsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	7,  // 25: openim.email.GetEmailsResp.emails:type_name -> openim.email.EmailMessage
+	7,  // 26: openim.email.GetEmailDetailResp.email:type_name -> openim.email.EmailMessage
+	50, // 27: openim.email.GetUnreadCountResp.folderUnread:type_name -> openim.email.GetUnreadCountResp.FolderUnreadEntry
+	8,  // 28: openim.email.Email.AddEmailAccount:input_type -> openim.email.AddEmailAccountReq
+	11, // 29: openim.email.Email.ImportEmailAccounts:input_type -> openim.email.ImportEmailAccountsReq
+	14, // 30: openim.email.Email.UpdateEmailAccount:input_type -> openim.email.UpdateEmailAccountReq
+	16, // 31: openim.email.Email.DeleteEmailAccount:input_type -> openim.email.DeleteEmailAccountReq
+	18, // 32: openim.email.Email.GetEmailAccounts:input_type -> openim.email.GetEmailAccountsReq
+	22, // 33: openim.email.Email.TestEmailAccount:input_type -> openim.email.TestEmailAccountReq
+	20, // 34: openim.email.Email.GetEmailConfig:input_type -> openim.email.GetEmailConfigReq
+	24, // 35: openim.email.Email.GetEmailFolders:input_type -> openim.email.GetEmailFoldersReq
+	26, // 36: openim.email.Email.CreateEmailFolder:input_type -> openim.email.CreateEmailFolderReq
+	28, // 37: openim.email.Email.UpdateEmailFolder:input_type -> openim.email.UpdateEmailFolderReq
+	30, // 38: openim.email.Email.DeleteEmailFolder:input_type -> openim.email.DeleteEmailFolderReq
+	32, // 39: openim.email.Email.SendEmail:input_type -> openim.email.SendEmailReq
+	34, // 40: openim.email.Email.SaveDraft:input_type -> openim.email.SaveDraftReq
+	36, // 41: openim.email.Email.GetEmails:input_type -> openim.email.GetEmailsReq
+	38, // 42: openim.email.Email.GetEmailDetail:input_type -> openim.email.GetEmailDetailReq
+	40, // 43: openim.email.Email.DeleteEmails:input_type -> openim.email.DeleteEmailsReq
+	42, // 44: openim.email.Email.MoveEmails:input_type -> openim.email.MoveEmailsReq
+	44, // 45: openim.email.Email.MarkEmails:input_type -> openim.email.MarkEmailsReq
+	46, // 46: openim.email.Email.SyncEmails:input_type -> openim.email.SyncEmailsReq
+	48, // 47: openim.email.Email.GetUnreadCount:input_type -> openim.email.GetUnreadCountReq
+	9,  // 48: openim.email.Email.AddEmailAccount:output_type -> openim.email.AddEmailAccountResp
+	13, // 49: openim.email.Email.ImportEmailAccounts:output_type -> openim.email.ImportEmailAccountsResp
+	15, // 50: openim.email.Email.UpdateEmailAccount:output_type -> openim.email.UpdateEmailAccountResp
+	17, // 51: openim.email.Email.DeleteEmailAccount:output_type -> openim.email.DeleteEmailAccountResp
+	19, // 52: openim.email.Email.GetEmailAccounts:output_type -> openim.email.GetEmailAccountsResp
+	23, // 53: openim.email.Email.TestEmailAccount:output_type -> openim.email.TestEmailAccountResp
+	21, // 54: openim.email.Email.GetEmailConfig:output_type -> openim.email.GetEmailConfigResp
+	25, // 55: openim.email.Email.GetEmailFolders:output_type -> openim.email.GetEmailFoldersResp
+	27, // 56: openim.email.Email.CreateEmailFolder:output_type -> openim.email.CreateEmailFolderResp
+	29, // 57: openim.email.Email.UpdateEmailFolder:output_type -> openim.email.UpdateEmailFolderResp
+	31, // 58: openim.email.Email.DeleteEmailFolder:output_type -> openim.email.DeleteEmailFolderResp
+	33, // 59: openim.email.Email.SendEmail:output_type -> openim.email.SendEmailResp
+	35, // 60: openim.email.Email.SaveDraft:output_type -> openim.email.SaveDraftResp
+	37, // 61: openim.email.Email.GetEmails:output_type -> openim.email.GetEmailsResp
+	39, // 62: openim.email.Email.GetEmailDetail:output_type -> openim.email.GetEmailDetailResp
+	41, // 63: openim.email.Email.DeleteEmails:output_type -> openim.email.DeleteEmailsResp
+	43, // 64: openim.email.Email.MoveEmails:output_type -> openim.email.MoveEmailsResp
+	45, // 65: openim.email.Email.MarkEmails:output_type -> openim.email.MarkEmailsResp
+	47, // 66: openim.email.Email.SyncEmails:output_type -> openim.email.SyncEmailsResp
+	49, // 67: openim.email.Email.GetUnreadCount:output_type -> openim.email.GetUnreadCountResp
+	48, // [48:68] is the sub-list for method output_type
+	28, // [28:48] is the sub-list for method input_type
+	28, // [28:28] is the sub-list for extension type_name
+	28, // [28:28] is the sub-list for extension extendee
+	0,  // [0:28] is the sub-list for field type_name
 }
 
 func init() { file_email_email_proto_init() }
@@ -3790,15 +3918,15 @@ func file_email_email_proto_init() {
 		return
 	}
 	file_email_email_proto_msgTypes[11].OneofWrappers = []any{}
-	file_email_email_proto_msgTypes[31].OneofWrappers = []any{}
-	file_email_email_proto_msgTypes[39].OneofWrappers = []any{}
+	file_email_email_proto_msgTypes[33].OneofWrappers = []any{}
+	file_email_email_proto_msgTypes[41].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_email_email_proto_rawDesc), len(file_email_email_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   46,
+			NumMessages:   48,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

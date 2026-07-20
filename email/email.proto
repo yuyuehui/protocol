@@ -262,6 +262,18 @@ message CreateEmailFolderResp {
   EmailFolder folder = 1;
 }
 
+// UpdateEmailFolderReq 重命名自定义文件夹
+message UpdateEmailFolderReq {
+  string folderID   = 1;
+  string accountID  = 2;
+  string userID     = 3;
+  string folderName = 4;
+}
+
+message UpdateEmailFolderResp {
+  EmailFolder folder = 1;
+}
+
 // DeleteEmailFolderReq 删除自定义文件夹
 message DeleteEmailFolderReq {
   string folderID  = 1;
@@ -417,6 +429,7 @@ service Email {
   // 文件夹管理
   rpc GetEmailFolders(GetEmailFoldersReq) returns (GetEmailFoldersResp);
   rpc CreateEmailFolder(CreateEmailFolderReq) returns (CreateEmailFolderResp);
+  rpc UpdateEmailFolder(UpdateEmailFolderReq) returns (UpdateEmailFolderResp);
   rpc DeleteEmailFolder(DeleteEmailFolderReq) returns (DeleteEmailFolderResp);
 
   // 邮件操作

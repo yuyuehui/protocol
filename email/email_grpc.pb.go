@@ -42,6 +42,7 @@ const (
 	Email_GetEmailConfig_FullMethodName      = "/openim.email.Email/GetEmailConfig"
 	Email_GetEmailFolders_FullMethodName     = "/openim.email.Email/GetEmailFolders"
 	Email_CreateEmailFolder_FullMethodName   = "/openim.email.Email/CreateEmailFolder"
+	Email_UpdateEmailFolder_FullMethodName   = "/openim.email.Email/UpdateEmailFolder"
 	Email_DeleteEmailFolder_FullMethodName   = "/openim.email.Email/DeleteEmailFolder"
 	Email_SendEmail_FullMethodName           = "/openim.email.Email/SendEmail"
 	Email_SaveDraft_FullMethodName           = "/openim.email.Email/SaveDraft"
@@ -69,6 +70,7 @@ type EmailClient interface {
 	// 文件夹管理
 	GetEmailFolders(ctx context.Context, in *GetEmailFoldersReq, opts ...grpc.CallOption) (*GetEmailFoldersResp, error)
 	CreateEmailFolder(ctx context.Context, in *CreateEmailFolderReq, opts ...grpc.CallOption) (*CreateEmailFolderResp, error)
+	UpdateEmailFolder(ctx context.Context, in *UpdateEmailFolderReq, opts ...grpc.CallOption) (*UpdateEmailFolderResp, error)
 	DeleteEmailFolder(ctx context.Context, in *DeleteEmailFolderReq, opts ...grpc.CallOption) (*DeleteEmailFolderResp, error)
 	// 邮件操作
 	SendEmail(ctx context.Context, in *SendEmailReq, opts ...grpc.CallOption) (*SendEmailResp, error)
@@ -174,6 +176,16 @@ func (c *emailClient) CreateEmailFolder(ctx context.Context, in *CreateEmailFold
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateEmailFolderResp)
 	err := c.cc.Invoke(ctx, Email_CreateEmailFolder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) UpdateEmailFolder(ctx context.Context, in *UpdateEmailFolderReq, opts ...grpc.CallOption) (*UpdateEmailFolderResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateEmailFolderResp)
+	err := c.cc.Invoke(ctx, Email_UpdateEmailFolder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -295,6 +307,7 @@ type EmailServer interface {
 	// 文件夹管理
 	GetEmailFolders(context.Context, *GetEmailFoldersReq) (*GetEmailFoldersResp, error)
 	CreateEmailFolder(context.Context, *CreateEmailFolderReq) (*CreateEmailFolderResp, error)
+	UpdateEmailFolder(context.Context, *UpdateEmailFolderReq) (*UpdateEmailFolderResp, error)
 	DeleteEmailFolder(context.Context, *DeleteEmailFolderReq) (*DeleteEmailFolderResp, error)
 	// 邮件操作
 	SendEmail(context.Context, *SendEmailReq) (*SendEmailResp, error)
@@ -342,6 +355,9 @@ func (UnimplementedEmailServer) GetEmailFolders(context.Context, *GetEmailFolder
 }
 func (UnimplementedEmailServer) CreateEmailFolder(context.Context, *CreateEmailFolderReq) (*CreateEmailFolderResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateEmailFolder not implemented")
+}
+func (UnimplementedEmailServer) UpdateEmailFolder(context.Context, *UpdateEmailFolderReq) (*UpdateEmailFolderResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateEmailFolder not implemented")
 }
 func (UnimplementedEmailServer) DeleteEmailFolder(context.Context, *DeleteEmailFolderReq) (*DeleteEmailFolderResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteEmailFolder not implemented")
@@ -552,6 +568,24 @@ func _Email_CreateEmailFolder_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EmailServer).CreateEmailFolder(ctx, req.(*CreateEmailFolderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_UpdateEmailFolder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEmailFolderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).UpdateEmailFolder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_UpdateEmailFolder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).UpdateEmailFolder(ctx, req.(*UpdateEmailFolderReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -778,6 +812,10 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateEmailFolder",
 			Handler:    _Email_CreateEmailFolder_Handler,
+		},
+		{
+			MethodName: "UpdateEmailFolder",
+			Handler:    _Email_UpdateEmailFolder_Handler,
 		},
 		{
 			MethodName: "DeleteEmailFolder",
