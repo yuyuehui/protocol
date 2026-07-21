@@ -164,13 +164,14 @@ const (
 	SummaryRecordPublishNotification  = 2109 // 总结记录发布通知
 
 	// 日程相关通知（统一通知，通过action字段区分操作类型）
-	ScheduleNotification           = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
-	ScheduleGroupNotification      = 2111 // 日程分组变更通知（多端同步，包含创建、更新、删除、排序、添加日程、移除日程、共享、权限更新等操作）
-	ScheduleReminderNotification   = 2112 // 日程/会议统一提醒通知（替代 MeetingReminderNotification，通过 ScheduleNotificationTips action="reminder" 触发）
+	ScheduleNotification              = 2110 // 日程通知（包含创建、更新、删除、分享、取消分享、接受、拒绝等操作）
+	ScheduleGroupNotification         = 2111 // 日程分组变更通知（多端同步，包含创建、更新、删除、排序、添加日程、移除日程、共享、权限更新等操作）
+	ScheduleReminderNotification      = 2112 // 日程/会议统一提醒通知（替代 MeetingReminderNotification，通过 ScheduleNotificationTips action="reminder" 触发）
 	SpeechToTextNotification          = 2113 // 语音转文字通知
-	FavoriteChangedNotification  = 2114 // 消息收藏变更通知（新增、删除、更新）
+	FavoriteChangedNotification       = 2114 // 消息收藏变更通知（新增、删除、更新）
 	SetSpeechToTextHiddenNotification = 2115 // 语音转文字隐藏状态变更通知
-	HasReadReceipt                 = 2200 // 已读回执
+	MsgEditNotification               = 2116 // 消息编辑通知（内容原地修改，流式输出/纠错）
+	HasReadReceipt                    = 2200 // 已读回执
 
 	// LiveKit会议相关通知 (1800-1899)
 	MeetingNotificationBegin             = 1800 // 会议通知类型开始

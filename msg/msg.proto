@@ -100,6 +100,30 @@ message RevokeMsgReq {
 
 message RevokeMsgResp {}
 
+// EditMsg 编辑已发送消息内容（流式输出/纠错用）。按 serverMsgID 定位消息。
+message EditMsgReq {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string sendID = 3;      // 编辑者身份，服务端校验「仅发送者本人可编辑」
+  int32 contentType = 4;
+  string content = 5;
+}
+
+message EditMsgResp {
+  string serverMsgID = 1;
+  int64 editTime = 2;
+}
+
+message EditMsgTips {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string clientMsgID = 3;
+  int64 seq = 4;
+  int32 contentType = 5;
+  string content = 6;
+  int64 editTime = 7;
+}
+
 message MarkMsgsAsReadReq {
   string conversationID = 1;
   repeated int64 seqs = 2;
@@ -792,6 +816,7 @@ service msg {
   //获取消息发送状态
   rpc GetSendMsgStatus(GetSendMsgStatusReq) returns (GetSendMsgStatusResp);
   rpc RevokeMsg(RevokeMsgReq) returns (RevokeMsgResp);
+  rpc EditMsg(EditMsgReq) returns (EditMsgResp);
   // mark as read
   rpc MarkMsgsAsRead(MarkMsgsAsReadReq) returns (MarkMsgsAsReadResp);
   rpc MarkConversationAsRead(MarkConversationAsReadReq) returns (MarkConversationAsReadResp);
