@@ -212,6 +212,15 @@ message SearchLogsResp {
   uint32 total = 2;
 }
 
+message SpeechToTextReq {
+  string audioURL = 1;
+  string language = 2;
+}
+
+message SpeechToTextResp {
+  string recognizedText = 1;
+}
+
 service third {
   rpc PartLimit(PartLimitReq) returns (PartLimitResp);
   rpc PartSize(PartSizeReq) returns (PartSizeResp);
@@ -230,4 +239,7 @@ service third {
   rpc UploadLogs(UploadLogsReq) returns (UploadLogsResp);
   rpc DeleteLogs(DeleteLogsReq) returns (DeleteLogsResp);
   rpc SearchLogs(SearchLogsReq) returns (SearchLogsResp);
+
+  // Speech
+  rpc SpeechToText(SpeechToTextReq) returns (SpeechToTextResp);
 }

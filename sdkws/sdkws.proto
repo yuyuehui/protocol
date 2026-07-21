@@ -246,6 +246,7 @@ message MsgData {
   string ex = 23;
   LikeInfo likeInfo = 24;
   MarkInfo markInfo = 25;         // 标记信息
+  SpeechToTextInfo speechToTextInfo = 26; // 语音转文字信息
 }
 
 // 点赞信息
@@ -307,6 +308,25 @@ message MarkMsgTips {
   string markerNickname = 7;      // 标记人昵称
   string recvID = 8;              // 接收者ID
   bool isMarked = 9;              // true=标记, false=取消标记
+}
+
+// 语音转文字信息（存储在消息的 MsgData 中）
+message SpeechToTextInfo {
+  string recognizedText = 1;      // 识别结果文本
+  string language = 2;            // 语言代码
+  string operatorUserID = 3;      // 操作人用户ID
+  int64 operateTime = 4;          // 操作时间（毫秒时间戳）
+  bool hidden = 5;                // 是否隐藏（收起）
+}
+
+// 语音转文字通知提示
+message SpeechToTextMsgTips {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序号
+  string userID = 3;              // 操作人用户ID
+  SpeechToTextInfo speechToTextInfo = 4; // 语音转文字信息
+  int32 sessionType = 5;          // 会话类型
+  string recvID = 6;              // 接收者ID
 }
 
 message PushMessages {

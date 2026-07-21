@@ -252,3 +252,26 @@ func (x *DestructMsgsReq) Check() error {
 	}
 	return nil
 }
+
+func (x *SetSpeechToTextReq) Check() error {
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	if x.Seq <= 0 {
+		return errors.New("seq is invalid")
+	}
+	if x.RecognizedText == "" {
+		return errors.New("recognizedText is empty")
+	}
+	return nil
+}
+
+func (x *SetSpeechToTextHiddenReq) Check() error {
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	if x.Seq <= 0 {
+		return errors.New("seq is invalid")
+	}
+	return nil
+}

@@ -69,3 +69,10 @@ func (x *DeleteOutdatedDataReq) Check() error {
 	}
 	return nil
 }
+
+func (x *SpeechToTextReq) Check() error {
+	if x.AudioURL == "" {
+		return errors.New("audioURL is empty")
+	}
+	return nil
+}
