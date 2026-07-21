@@ -265,3 +265,13 @@ func (x *SetSpeechToTextReq) Check() error {
 	}
 	return nil
 }
+
+func (x *SetSpeechToTextHiddenReq) Check() error {
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	if x.Seq <= 0 {
+		return errors.New("seq is invalid")
+	}
+	return nil
+}

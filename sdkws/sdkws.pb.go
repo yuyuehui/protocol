@@ -2545,6 +2545,7 @@ type SpeechToTextInfo struct {
 	Language       string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language"`             // 语言代码
 	OperatorUserID string                 `protobuf:"bytes,3,opt,name=operatorUserID,proto3" json:"operatorUserID"` // 操作人用户ID
 	OperateTime    int64                  `protobuf:"varint,4,opt,name=operateTime,proto3" json:"operateTime"`      // 操作时间（毫秒时间戳）
+	Hidden         bool                   `protobuf:"varint,5,opt,name=hidden,proto3" json:"hidden"`                // 是否隐藏（收起）
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2605,6 +2606,13 @@ func (x *SpeechToTextInfo) GetOperateTime() int64 {
 		return x.OperateTime
 	}
 	return 0
+}
+
+func (x *SpeechToTextInfo) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
 }
 
 // 语音转文字通知提示
@@ -9389,12 +9397,13 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0econversationID\x18\x06 \x01(\tR\x0econversationID\x12&\n" +
 	"\x0emarkerNickname\x18\a \x01(\tR\x0emarkerNickname\x12\x16\n" +
 	"\x06recvID\x18\b \x01(\tR\x06recvID\x12\x1a\n" +
-	"\bisMarked\x18\t \x01(\bR\bisMarked\"\xa0\x01\n" +
+	"\bisMarked\x18\t \x01(\bR\bisMarked\"\xb8\x01\n" +
 	"\x10SpeechToTextInfo\x12&\n" +
 	"\x0erecognizedText\x18\x01 \x01(\tR\x0erecognizedText\x12\x1a\n" +
 	"\blanguage\x18\x02 \x01(\tR\blanguage\x12&\n" +
 	"\x0eoperatorUserID\x18\x03 \x01(\tR\x0eoperatorUserID\x12 \n" +
-	"\voperateTime\x18\x04 \x01(\x03R\voperateTime\"\xed\x01\n" +
+	"\voperateTime\x18\x04 \x01(\x03R\voperateTime\x12\x16\n" +
+	"\x06hidden\x18\x05 \x01(\bR\x06hidden\"\xed\x01\n" +
 	"\x13SpeechToTextMsgTips\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12\x10\n" +
 	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12\x16\n" +

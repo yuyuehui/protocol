@@ -316,6 +316,7 @@ message SpeechToTextInfo {
   string language = 2;            // 语言代码
   string operatorUserID = 3;      // 操作人用户ID
   int64 operateTime = 4;          // 操作时间（毫秒时间戳）
+  bool hidden = 5;                // 是否隐藏（收起）
 }
 
 // 语音转文字通知提示

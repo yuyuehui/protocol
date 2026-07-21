@@ -744,6 +744,17 @@ message SetSpeechToTextReq {
 message SetSpeechToTextResp {
 }
 
+// 设置语音转文字隐藏状态请求
+message SetSpeechToTextHiddenReq {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  bool hidden = 3;                // true=收起, false=展开
+}
+
+// 设置语音转文字隐藏状态响应
+message SetSpeechToTextHiddenResp {
+}
+
 service msg {
   //获取最小最大seq（包括用户的，以及指定群组的）
   rpc GetMaxSeq(sdkws.GetMaxSeqReq) returns (sdkws.GetMaxSeqResp);
@@ -827,4 +838,6 @@ service msg {
 
   // 语音转文字持久化接口
   rpc SetSpeechToText(SetSpeechToTextReq) returns (SetSpeechToTextResp);
+  // 设置语音转文字隐藏状态（收起/展开）
+  rpc SetSpeechToTextHidden(SetSpeechToTextHiddenReq) returns (SetSpeechToTextHiddenResp);
 }

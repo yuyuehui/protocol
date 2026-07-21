@@ -86,6 +86,7 @@ const (
 	Msg_PublishSummary_FullMethodName                   = "/openim.msg.msg/PublishSummary"
 	Msg_SyncSummaryRecords_FullMethodName               = "/openim.msg.msg/SyncSummaryRecords"
 	Msg_SetSpeechToText_FullMethodName                  = "/openim.msg.msg/SetSpeechToText"
+	Msg_SetSpeechToTextHidden_FullMethodName            = "/openim.msg.msg/SetSpeechToTextHidden"
 )
 
 // MsgClient is the client API for Msg service.
@@ -164,6 +165,8 @@ type MsgClient interface {
 	SyncSummaryRecords(ctx context.Context, in *SyncSummaryRecordsReq, opts ...grpc.CallOption) (*SyncSummaryRecordsResp, error)
 	// 语音转文字持久化接口
 	SetSpeechToText(ctx context.Context, in *SetSpeechToTextReq, opts ...grpc.CallOption) (*SetSpeechToTextResp, error)
+	// 设置语音转文字隐藏状态（收起/展开）
+	SetSpeechToTextHidden(ctx context.Context, in *SetSpeechToTextHiddenReq, opts ...grpc.CallOption) (*SetSpeechToTextHiddenResp, error)
 }
 
 type msgClient struct {
@@ -694,6 +697,16 @@ func (c *msgClient) SetSpeechToText(ctx context.Context, in *SetSpeechToTextReq,
 	return out, nil
 }
 
+func (c *msgClient) SetSpeechToTextHidden(ctx context.Context, in *SetSpeechToTextHiddenReq, opts ...grpc.CallOption) (*SetSpeechToTextHiddenResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetSpeechToTextHiddenResp)
+	err := c.cc.Invoke(ctx, Msg_SetSpeechToTextHidden_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
@@ -770,6 +783,8 @@ type MsgServer interface {
 	SyncSummaryRecords(context.Context, *SyncSummaryRecordsReq) (*SyncSummaryRecordsResp, error)
 	// 语音转文字持久化接口
 	SetSpeechToText(context.Context, *SetSpeechToTextReq) (*SetSpeechToTextResp, error)
+	// 设置语音转文字隐藏状态（收起/展开）
+	SetSpeechToTextHidden(context.Context, *SetSpeechToTextHiddenReq) (*SetSpeechToTextHiddenResp, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -935,6 +950,9 @@ func (UnimplementedMsgServer) SyncSummaryRecords(context.Context, *SyncSummaryRe
 }
 func (UnimplementedMsgServer) SetSpeechToText(context.Context, *SetSpeechToTextReq) (*SetSpeechToTextResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetSpeechToText not implemented")
+}
+func (UnimplementedMsgServer) SetSpeechToTextHidden(context.Context, *SetSpeechToTextHiddenReq) (*SetSpeechToTextHiddenResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetSpeechToTextHidden not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -1893,6 +1911,24 @@ func _Msg_SetSpeechToText_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_SetSpeechToTextHidden_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetSpeechToTextHiddenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SetSpeechToTextHidden(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_SetSpeechToTextHidden_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SetSpeechToTextHidden(ctx, req.(*SetSpeechToTextHiddenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -2107,6 +2143,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetSpeechToText",
 			Handler:    _Msg_SetSpeechToText_Handler,
+		},
+		{
+			MethodName: "SetSpeechToTextHidden",
+			Handler:    _Msg_SetSpeechToTextHidden_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

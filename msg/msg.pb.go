@@ -7179,6 +7179,104 @@ func (*SetSpeechToTextResp) Descriptor() ([]byte, []int) {
 	return file_msg_msg_proto_rawDescGZIP(), []int{120}
 }
 
+// 设置语音转文字隐藏状态请求
+type SetSpeechToTextHiddenReq struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ConversationID string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"` // 会话ID
+	Seq            int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`                      // 消息序列号
+	Hidden         bool                   `protobuf:"varint,3,opt,name=hidden,proto3" json:"hidden"`                // true=收起, false=展开
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SetSpeechToTextHiddenReq) Reset() {
+	*x = SetSpeechToTextHiddenReq{}
+	mi := &file_msg_msg_proto_msgTypes[121]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetSpeechToTextHiddenReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetSpeechToTextHiddenReq) ProtoMessage() {}
+
+func (x *SetSpeechToTextHiddenReq) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_msg_proto_msgTypes[121]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetSpeechToTextHiddenReq.ProtoReflect.Descriptor instead.
+func (*SetSpeechToTextHiddenReq) Descriptor() ([]byte, []int) {
+	return file_msg_msg_proto_rawDescGZIP(), []int{121}
+}
+
+func (x *SetSpeechToTextHiddenReq) GetConversationID() string {
+	if x != nil {
+		return x.ConversationID
+	}
+	return ""
+}
+
+func (x *SetSpeechToTextHiddenReq) GetSeq() int64 {
+	if x != nil {
+		return x.Seq
+	}
+	return 0
+}
+
+func (x *SetSpeechToTextHiddenReq) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
+}
+
+// 设置语音转文字隐藏状态响应
+type SetSpeechToTextHiddenResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetSpeechToTextHiddenResp) Reset() {
+	*x = SetSpeechToTextHiddenResp{}
+	mi := &file_msg_msg_proto_msgTypes[122]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetSpeechToTextHiddenResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetSpeechToTextHiddenResp) ProtoMessage() {}
+
+func (x *SetSpeechToTextHiddenResp) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_msg_proto_msgTypes[122]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetSpeechToTextHiddenResp.ProtoReflect.Descriptor instead.
+func (*SetSpeechToTextHiddenResp) Descriptor() ([]byte, []int) {
+	return file_msg_msg_proto_rawDescGZIP(), []int{122}
+}
+
 var File_msg_msg_proto protoreflect.FileDescriptor
 
 const file_msg_msg_proto_rawDesc = "" +
@@ -7742,7 +7840,12 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12&\n" +
 	"\x0erecognizedText\x18\x03 \x01(\tR\x0erecognizedText\x12\x1a\n" +
 	"\blanguage\x18\x04 \x01(\tR\blanguage\"\x15\n" +
-	"\x13SetSpeechToTextResp2\xe3#\n" +
+	"\x13SetSpeechToTextResp\"l\n" +
+	"\x18SetSpeechToTextHiddenReq\x12&\n" +
+	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12\x10\n" +
+	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12\x16\n" +
+	"\x06hidden\x18\x03 \x01(\bR\x06hidden\"\x1b\n" +
+	"\x19SetSpeechToTextHiddenResp2\xc9$\n" +
 	"\x03msg\x12D\n" +
 	"\tGetMaxSeq\x12\x1a.openim.sdkws.GetMaxSeqReq\x1a\x1b.openim.sdkws.GetMaxSeqResp\x12A\n" +
 	"\n" +
@@ -7797,7 +7900,8 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x12SetSummaryFavorite\x12!.openim.msg.SetSummaryFavoriteReq\x1a\".openim.msg.SetSummaryFavoriteResp\x12O\n" +
 	"\x0ePublishSummary\x12\x1d.openim.msg.PublishSummaryReq\x1a\x1e.openim.msg.PublishSummaryResp\x12[\n" +
 	"\x12SyncSummaryRecords\x12!.openim.msg.SyncSummaryRecordsReq\x1a\".openim.msg.SyncSummaryRecordsResp\x12R\n" +
-	"\x0fSetSpeechToText\x12\x1e.openim.msg.SetSpeechToTextReq\x1a\x1f.openim.msg.SetSpeechToTextRespB#Z!github.com/openimsdk/protocol/msgb\x06proto3"
+	"\x0fSetSpeechToText\x12\x1e.openim.msg.SetSpeechToTextReq\x1a\x1f.openim.msg.SetSpeechToTextResp\x12d\n" +
+	"\x15SetSpeechToTextHidden\x12$.openim.msg.SetSpeechToTextHiddenReq\x1a%.openim.msg.SetSpeechToTextHiddenRespB#Z!github.com/openimsdk/protocol/msgb\x06proto3"
 
 var (
 	file_msg_msg_proto_rawDescOnce sync.Once
@@ -7811,7 +7915,7 @@ func file_msg_msg_proto_rawDescGZIP() []byte {
 	return file_msg_msg_proto_rawDescData
 }
 
-var file_msg_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 130)
+var file_msg_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 132)
 var file_msg_msg_proto_goTypes = []any{
 	(*MsgDataToMQ)(nil),                          // 0: openim.msg.MsgDataToMQ
 	(*MsgDataToDB)(nil),                          // 1: openim.msg.MsgDataToDB
@@ -7934,66 +8038,68 @@ var file_msg_msg_proto_goTypes = []any{
 	(*SyncSummaryRecordsResp)(nil),               // 118: openim.msg.SyncSummaryRecordsResp
 	(*SetSpeechToTextReq)(nil),                   // 119: openim.msg.SetSpeechToTextReq
 	(*SetSpeechToTextResp)(nil),                  // 120: openim.msg.SetSpeechToTextResp
-	nil,                                          // 121: openim.msg.SeqsInfoResp.MaxSeqsEntry
-	nil,                                          // 122: openim.msg.GetMsgByConversationIDsReq.MaxSeqsEntry
-	nil,                                          // 123: openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry
-	nil,                                          // 124: openim.msg.GetConversationsHasReadAndMaxSeqResp.SeqsEntry
-	nil,                                          // 125: openim.msg.GetActiveUserResp.DateCountEntry
-	nil,                                          // 126: openim.msg.GetActiveGroupResp.DateCountEntry
-	nil,                                          // 127: openim.msg.GetSeqMessageResp.MsgsEntry
-	nil,                                          // 128: openim.msg.GetSeqMessageResp.NotificationMsgsEntry
-	nil,                                          // 129: openim.msg.GetLastMessageResp.MsgsEntry
-	(*sdkws.MsgData)(nil),                        // 130: openim.sdkws.MsgData
-	(*sdkws.RequestPagination)(nil),              // 131: openim.sdkws.RequestPagination
-	(*sdkws.UserInfo)(nil),                       // 132: openim.sdkws.UserInfo
-	(*sdkws.GroupInfo)(nil),                      // 133: openim.sdkws.GroupInfo
-	(*conversation.Conversation)(nil),            // 134: openim.conversation.Conversation
-	(sdkws.PullOrder)(0),                         // 135: openim.sdkws.PullOrder
-	(*sdkws.LikeInfo)(nil),                       // 136: openim.sdkws.LikeInfo
-	(*sdkws.PullMsgs)(nil),                       // 137: openim.sdkws.PullMsgs
-	(*sdkws.GetMaxSeqReq)(nil),                   // 138: openim.sdkws.GetMaxSeqReq
-	(*sdkws.PullMessageBySeqsReq)(nil),           // 139: openim.sdkws.PullMessageBySeqsReq
-	(*sdkws.GetMaxSeqResp)(nil),                  // 140: openim.sdkws.GetMaxSeqResp
-	(*sdkws.PullMessageBySeqsResp)(nil),          // 141: openim.sdkws.PullMessageBySeqsResp
+	(*SetSpeechToTextHiddenReq)(nil),             // 121: openim.msg.SetSpeechToTextHiddenReq
+	(*SetSpeechToTextHiddenResp)(nil),            // 122: openim.msg.SetSpeechToTextHiddenResp
+	nil,                                          // 123: openim.msg.SeqsInfoResp.MaxSeqsEntry
+	nil,                                          // 124: openim.msg.GetMsgByConversationIDsReq.MaxSeqsEntry
+	nil,                                          // 125: openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry
+	nil,                                          // 126: openim.msg.GetConversationsHasReadAndMaxSeqResp.SeqsEntry
+	nil,                                          // 127: openim.msg.GetActiveUserResp.DateCountEntry
+	nil,                                          // 128: openim.msg.GetActiveGroupResp.DateCountEntry
+	nil,                                          // 129: openim.msg.GetSeqMessageResp.MsgsEntry
+	nil,                                          // 130: openim.msg.GetSeqMessageResp.NotificationMsgsEntry
+	nil,                                          // 131: openim.msg.GetLastMessageResp.MsgsEntry
+	(*sdkws.MsgData)(nil),                        // 132: openim.sdkws.MsgData
+	(*sdkws.RequestPagination)(nil),              // 133: openim.sdkws.RequestPagination
+	(*sdkws.UserInfo)(nil),                       // 134: openim.sdkws.UserInfo
+	(*sdkws.GroupInfo)(nil),                      // 135: openim.sdkws.GroupInfo
+	(*conversation.Conversation)(nil),            // 136: openim.conversation.Conversation
+	(sdkws.PullOrder)(0),                         // 137: openim.sdkws.PullOrder
+	(*sdkws.LikeInfo)(nil),                       // 138: openim.sdkws.LikeInfo
+	(*sdkws.PullMsgs)(nil),                       // 139: openim.sdkws.PullMsgs
+	(*sdkws.GetMaxSeqReq)(nil),                   // 140: openim.sdkws.GetMaxSeqReq
+	(*sdkws.PullMessageBySeqsReq)(nil),           // 141: openim.sdkws.PullMessageBySeqsReq
+	(*sdkws.GetMaxSeqResp)(nil),                  // 142: openim.sdkws.GetMaxSeqResp
+	(*sdkws.PullMessageBySeqsResp)(nil),          // 143: openim.sdkws.PullMessageBySeqsResp
 }
 var file_msg_msg_proto_depIdxs = []int32{
-	130, // 0: openim.msg.MsgDataToMQ.msgData:type_name -> openim.sdkws.MsgData
-	130, // 1: openim.msg.MsgDataToDB.msgData:type_name -> openim.sdkws.MsgData
-	130, // 2: openim.msg.PushMsgDataToMQ.msgData:type_name -> openim.sdkws.MsgData
-	130, // 3: openim.msg.MsgDataToMongoByMQ.msgData:type_name -> openim.sdkws.MsgData
-	130, // 4: openim.msg.SendMsgReq.msgData:type_name -> openim.sdkws.MsgData
-	130, // 5: openim.msg.SendMsgResp.modify:type_name -> openim.sdkws.MsgData
-	130, // 6: openim.msg.SendSimpleMsgReq.msgData:type_name -> openim.sdkws.MsgData
-	130, // 7: openim.msg.SendSimpleMsgResp.modify:type_name -> openim.sdkws.MsgData
-	130, // 8: openim.msg.MsgDataToModifyByMQ.messages:type_name -> openim.sdkws.MsgData
+	132, // 0: openim.msg.MsgDataToMQ.msgData:type_name -> openim.sdkws.MsgData
+	132, // 1: openim.msg.MsgDataToDB.msgData:type_name -> openim.sdkws.MsgData
+	132, // 2: openim.msg.PushMsgDataToMQ.msgData:type_name -> openim.sdkws.MsgData
+	132, // 3: openim.msg.MsgDataToMongoByMQ.msgData:type_name -> openim.sdkws.MsgData
+	132, // 4: openim.msg.SendMsgReq.msgData:type_name -> openim.sdkws.MsgData
+	132, // 5: openim.msg.SendMsgResp.modify:type_name -> openim.sdkws.MsgData
+	132, // 6: openim.msg.SendSimpleMsgReq.msgData:type_name -> openim.sdkws.MsgData
+	132, // 7: openim.msg.SendSimpleMsgResp.modify:type_name -> openim.sdkws.MsgData
+	132, // 8: openim.msg.MsgDataToModifyByMQ.messages:type_name -> openim.sdkws.MsgData
 	27,  // 9: openim.msg.ClearConversationsMsgReq.deleteSyncOpt:type_name -> openim.msg.DeleteSyncOpt
 	27,  // 10: openim.msg.UserClearAllMsgReq.deleteSyncOpt:type_name -> openim.msg.DeleteSyncOpt
 	27,  // 11: openim.msg.DeleteMsgsReq.deleteSyncOpt:type_name -> openim.msg.DeleteSyncOpt
-	121, // 12: openim.msg.SeqsInfoResp.maxSeqs:type_name -> openim.msg.SeqsInfoResp.MaxSeqsEntry
-	122, // 13: openim.msg.GetMsgByConversationIDsReq.maxSeqs:type_name -> openim.msg.GetMsgByConversationIDsReq.MaxSeqsEntry
-	123, // 14: openim.msg.GetMsgByConversationIDsResp.msgDatas:type_name -> openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry
-	124, // 15: openim.msg.GetConversationsHasReadAndMaxSeqResp.seqs:type_name -> openim.msg.GetConversationsHasReadAndMaxSeqResp.SeqsEntry
-	131, // 16: openim.msg.GetActiveUserReq.pagination:type_name -> openim.sdkws.RequestPagination
-	132, // 17: openim.msg.ActiveUser.user:type_name -> openim.sdkws.UserInfo
-	125, // 18: openim.msg.GetActiveUserResp.dateCount:type_name -> openim.msg.GetActiveUserResp.DateCountEntry
+	123, // 12: openim.msg.SeqsInfoResp.maxSeqs:type_name -> openim.msg.SeqsInfoResp.MaxSeqsEntry
+	124, // 13: openim.msg.GetMsgByConversationIDsReq.maxSeqs:type_name -> openim.msg.GetMsgByConversationIDsReq.MaxSeqsEntry
+	125, // 14: openim.msg.GetMsgByConversationIDsResp.msgDatas:type_name -> openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry
+	126, // 15: openim.msg.GetConversationsHasReadAndMaxSeqResp.seqs:type_name -> openim.msg.GetConversationsHasReadAndMaxSeqResp.SeqsEntry
+	133, // 16: openim.msg.GetActiveUserReq.pagination:type_name -> openim.sdkws.RequestPagination
+	134, // 17: openim.msg.ActiveUser.user:type_name -> openim.sdkws.UserInfo
+	127, // 18: openim.msg.GetActiveUserResp.dateCount:type_name -> openim.msg.GetActiveUserResp.DateCountEntry
 	49,  // 19: openim.msg.GetActiveUserResp.users:type_name -> openim.msg.ActiveUser
-	131, // 20: openim.msg.GetActiveGroupReq.pagination:type_name -> openim.sdkws.RequestPagination
-	133, // 21: openim.msg.ActiveGroup.group:type_name -> openim.sdkws.GroupInfo
-	126, // 22: openim.msg.GetActiveGroupResp.dateCount:type_name -> openim.msg.GetActiveGroupResp.DateCountEntry
+	133, // 20: openim.msg.GetActiveGroupReq.pagination:type_name -> openim.sdkws.RequestPagination
+	135, // 21: openim.msg.ActiveGroup.group:type_name -> openim.sdkws.GroupInfo
+	128, // 22: openim.msg.GetActiveGroupResp.dateCount:type_name -> openim.msg.GetActiveGroupResp.DateCountEntry
 	52,  // 23: openim.msg.GetActiveGroupResp.groups:type_name -> openim.msg.ActiveGroup
-	131, // 24: openim.msg.SearchMessageReq.pagination:type_name -> openim.sdkws.RequestPagination
+	133, // 24: openim.msg.SearchMessageReq.pagination:type_name -> openim.sdkws.RequestPagination
 	58,  // 25: openim.msg.SearchChatLog.chatLog:type_name -> openim.msg.ChatLog
-	130, // 26: openim.msg.SearchedMsgData.msgData:type_name -> openim.sdkws.MsgData
+	132, // 26: openim.msg.SearchedMsgData.msgData:type_name -> openim.sdkws.MsgData
 	55,  // 27: openim.msg.SearchMessageResp.chatLogs:type_name -> openim.msg.SearchChatLog
-	130, // 28: openim.msg.batchSendMessageReq.msgData:type_name -> openim.sdkws.MsgData
-	134, // 29: openim.msg.ClearMsgReq.conversations:type_name -> openim.conversation.Conversation
+	132, // 28: openim.msg.batchSendMessageReq.msgData:type_name -> openim.sdkws.MsgData
+	136, // 29: openim.msg.ClearMsgReq.conversations:type_name -> openim.conversation.Conversation
 	69,  // 30: openim.msg.GetSeqMessageReq.conversations:type_name -> openim.msg.ConversationSeqs
-	135, // 31: openim.msg.GetSeqMessageReq.order:type_name -> openim.sdkws.PullOrder
-	127, // 32: openim.msg.GetSeqMessageResp.msgs:type_name -> openim.msg.GetSeqMessageResp.MsgsEntry
-	128, // 33: openim.msg.GetSeqMessageResp.notificationMsgs:type_name -> openim.msg.GetSeqMessageResp.NotificationMsgsEntry
+	137, // 31: openim.msg.GetSeqMessageReq.order:type_name -> openim.sdkws.PullOrder
+	129, // 32: openim.msg.GetSeqMessageResp.msgs:type_name -> openim.msg.GetSeqMessageResp.MsgsEntry
+	130, // 33: openim.msg.GetSeqMessageResp.notificationMsgs:type_name -> openim.msg.GetSeqMessageResp.NotificationMsgsEntry
 	73,  // 34: openim.msg.GetActiveConversationResp.conversations:type_name -> openim.msg.ActiveConversation
-	129, // 35: openim.msg.GetLastMessageResp.msgs:type_name -> openim.msg.GetLastMessageResp.MsgsEntry
-	136, // 36: openim.msg.LikeMsgResp.fullLikeInfo:type_name -> openim.sdkws.LikeInfo
+	131, // 35: openim.msg.GetLastMessageResp.msgs:type_name -> openim.msg.GetLastMessageResp.MsgsEntry
+	138, // 36: openim.msg.LikeMsgResp.fullLikeInfo:type_name -> openim.sdkws.LikeInfo
 	85,  // 37: openim.msg.GetFavoriteListResp.favorites:type_name -> openim.msg.FavoriteMessage
 	94,  // 38: openim.msg.GetGroupMessageReaderListResp.hasReadList:type_name -> openim.msg.GroupMsgReadUser
 	94,  // 39: openim.msg.GetGroupMessageReaderListResp.unreadList:type_name -> openim.msg.GroupMsgReadUser
@@ -8001,17 +8107,17 @@ var file_msg_msg_proto_depIdxs = []int32{
 	104, // 41: openim.msg.GetSummaryRecordListResp.records:type_name -> openim.msg.SummaryRecord
 	104, // 42: openim.msg.GetSummaryRecordResp.record:type_name -> openim.msg.SummaryRecord
 	104, // 43: openim.msg.SyncSummaryRecordsResp.records:type_name -> openim.msg.SummaryRecord
-	130, // 44: openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry.value:type_name -> openim.sdkws.MsgData
+	132, // 44: openim.msg.GetMsgByConversationIDsResp.MsgDatasEntry.value:type_name -> openim.sdkws.MsgData
 	46,  // 45: openim.msg.GetConversationsHasReadAndMaxSeqResp.SeqsEntry.value:type_name -> openim.msg.Seqs
-	137, // 46: openim.msg.GetSeqMessageResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	137, // 47: openim.msg.GetSeqMessageResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
-	130, // 48: openim.msg.GetLastMessageResp.MsgsEntry.value:type_name -> openim.sdkws.MsgData
-	138, // 49: openim.msg.msg.GetMaxSeq:input_type -> openim.sdkws.GetMaxSeqReq
+	139, // 46: openim.msg.GetSeqMessageResp.MsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	139, // 47: openim.msg.GetSeqMessageResp.NotificationMsgsEntry.value:type_name -> openim.sdkws.PullMsgs
+	132, // 48: openim.msg.GetLastMessageResp.MsgsEntry.value:type_name -> openim.sdkws.MsgData
+	140, // 49: openim.msg.msg.GetMaxSeq:input_type -> openim.sdkws.GetMaxSeqReq
 	38,  // 50: openim.msg.msg.GetMaxSeqs:input_type -> openim.msg.GetMaxSeqsReq
 	39,  // 51: openim.msg.msg.GetHasReadSeqs:input_type -> openim.msg.GetHasReadSeqsReq
 	41,  // 52: openim.msg.msg.GetMsgByConversationIDs:input_type -> openim.msg.GetMsgByConversationIDsReq
 	43,  // 53: openim.msg.msg.GetConversationMaxSeq:input_type -> openim.msg.GetConversationMaxSeqReq
-	139, // 54: openim.msg.msg.PullMessageBySeqs:input_type -> openim.sdkws.PullMessageBySeqsReq
+	141, // 54: openim.msg.msg.PullMessageBySeqs:input_type -> openim.sdkws.PullMessageBySeqsReq
 	70,  // 55: openim.msg.msg.GetSeqMessage:input_type -> openim.msg.GetSeqMessageReq
 	54,  // 56: openim.msg.msg.SearchMessage:input_type -> openim.msg.SearchMessageReq
 	6,   // 57: openim.msg.msg.SendMsg:input_type -> openim.msg.SendMsgReq
@@ -8058,60 +8164,62 @@ var file_msg_msg_proto_depIdxs = []int32{
 	115, // 98: openim.msg.msg.PublishSummary:input_type -> openim.msg.PublishSummaryReq
 	117, // 99: openim.msg.msg.SyncSummaryRecords:input_type -> openim.msg.SyncSummaryRecordsReq
 	119, // 100: openim.msg.msg.SetSpeechToText:input_type -> openim.msg.SetSpeechToTextReq
-	140, // 101: openim.msg.msg.GetMaxSeq:output_type -> openim.sdkws.GetMaxSeqResp
-	40,  // 102: openim.msg.msg.GetMaxSeqs:output_type -> openim.msg.SeqsInfoResp
-	40,  // 103: openim.msg.msg.GetHasReadSeqs:output_type -> openim.msg.SeqsInfoResp
-	42,  // 104: openim.msg.msg.GetMsgByConversationIDs:output_type -> openim.msg.GetMsgByConversationIDsResp
-	44,  // 105: openim.msg.msg.GetConversationMaxSeq:output_type -> openim.msg.GetConversationMaxSeqResp
-	141, // 106: openim.msg.msg.PullMessageBySeqs:output_type -> openim.sdkws.PullMessageBySeqsResp
-	71,  // 107: openim.msg.msg.GetSeqMessage:output_type -> openim.msg.GetSeqMessageResp
-	57,  // 108: openim.msg.msg.SearchMessage:output_type -> openim.msg.SearchMessageResp
-	7,   // 109: openim.msg.msg.SendMsg:output_type -> openim.msg.SendMsgResp
-	9,   // 110: openim.msg.msg.SendSimpleMsg:output_type -> openim.msg.SendSimpleMsgResp
-	68,  // 111: openim.msg.msg.SetUserConversationsMinSeq:output_type -> openim.msg.SetUserConversationsMinSeqResp
-	29,  // 112: openim.msg.msg.ClearConversationsMsg:output_type -> openim.msg.ClearConversationsMsgResp
-	31,  // 113: openim.msg.msg.UserClearAllMsg:output_type -> openim.msg.UserClearAllMsgResp
-	33,  // 114: openim.msg.msg.DeleteMsgs:output_type -> openim.msg.DeleteMsgsResp
-	37,  // 115: openim.msg.msg.DeleteMsgPhysicalBySeq:output_type -> openim.msg.DeleteMsgPhysicalBySeqResp
-	35,  // 116: openim.msg.msg.DeleteMsgPhysical:output_type -> openim.msg.DeleteMsgPhysicalResp
-	11,  // 117: openim.msg.msg.SetSendMsgStatus:output_type -> openim.msg.SetSendMsgStatusResp
-	13,  // 118: openim.msg.msg.GetSendMsgStatus:output_type -> openim.msg.GetSendMsgStatusResp
-	18,  // 119: openim.msg.msg.RevokeMsg:output_type -> openim.msg.RevokeMsgResp
-	20,  // 120: openim.msg.msg.MarkMsgsAsRead:output_type -> openim.msg.MarkMsgsAsReadResp
-	22,  // 121: openim.msg.msg.MarkConversationAsRead:output_type -> openim.msg.MarkConversationAsReadResp
-	24,  // 122: openim.msg.msg.MarkConversationAsUnread:output_type -> openim.msg.MarkConversationAsUnreadResp
-	26,  // 123: openim.msg.msg.SetConversationHasReadSeq:output_type -> openim.msg.SetConversationHasReadSeqResp
-	47,  // 124: openim.msg.msg.GetConversationsHasReadAndMaxSeq:output_type -> openim.msg.GetConversationsHasReadAndMaxSeqResp
-	50,  // 125: openim.msg.msg.GetActiveUser:output_type -> openim.msg.GetActiveUserResp
-	53,  // 126: openim.msg.msg.GetActiveGroup:output_type -> openim.msg.GetActiveGroupResp
-	62,  // 127: openim.msg.msg.GetServerTime:output_type -> openim.msg.GetServerTimeResp
-	64,  // 128: openim.msg.msg.ClearMsg:output_type -> openim.msg.ClearMsgResp
-	66,  // 129: openim.msg.msg.DestructMsgs:output_type -> openim.msg.DestructMsgsResp
-	74,  // 130: openim.msg.msg.GetActiveConversation:output_type -> openim.msg.GetActiveConversationResp
-	76,  // 131: openim.msg.msg.SetUserConversationMaxSeq:output_type -> openim.msg.SetUserConversationMaxSeqResp
-	78,  // 132: openim.msg.msg.SetUserConversationMinSeq:output_type -> openim.msg.SetUserConversationMinSeqResp
-	80,  // 133: openim.msg.msg.GetLastMessageSeqByTime:output_type -> openim.msg.GetLastMessageSeqByTimeResp
-	82,  // 134: openim.msg.msg.GetLastMessage:output_type -> openim.msg.GetLastMessageResp
-	84,  // 135: openim.msg.msg.LikeMessage:output_type -> openim.msg.LikeMsgResp
-	84,  // 136: openim.msg.msg.UnLikeMessage:output_type -> openim.msg.LikeMsgResp
-	96,  // 137: openim.msg.msg.GetGroupMessageReaderList:output_type -> openim.msg.GetGroupMessageReaderListResp
-	87,  // 138: openim.msg.msg.AddFavorite:output_type -> openim.msg.AddFavoriteResp
-	89,  // 139: openim.msg.msg.DeleteFavorite:output_type -> openim.msg.DeleteFavoriteResp
-	91,  // 140: openim.msg.msg.GetFavoriteList:output_type -> openim.msg.GetFavoriteListResp
-	93,  // 141: openim.msg.msg.UpdateFavorite:output_type -> openim.msg.UpdateFavoriteResp
-	98,  // 142: openim.msg.msg.MarkMessage:output_type -> openim.msg.MarkMsgResp
-	100, // 143: openim.msg.msg.UnmarkMessage:output_type -> openim.msg.UnmarkMsgResp
-	103, // 144: openim.msg.msg.GetMarkedMessageList:output_type -> openim.msg.GetMarkedMsgListResp
-	106, // 145: openim.msg.msg.CreateSummaryRecord:output_type -> openim.msg.CreateSummaryRecordResp
-	108, // 146: openim.msg.msg.DeleteSummaryRecord:output_type -> openim.msg.DeleteSummaryRecordResp
-	110, // 147: openim.msg.msg.GetSummaryRecordList:output_type -> openim.msg.GetSummaryRecordListResp
-	112, // 148: openim.msg.msg.GetSummaryRecord:output_type -> openim.msg.GetSummaryRecordResp
-	114, // 149: openim.msg.msg.SetSummaryFavorite:output_type -> openim.msg.SetSummaryFavoriteResp
-	116, // 150: openim.msg.msg.PublishSummary:output_type -> openim.msg.PublishSummaryResp
-	118, // 151: openim.msg.msg.SyncSummaryRecords:output_type -> openim.msg.SyncSummaryRecordsResp
-	120, // 152: openim.msg.msg.SetSpeechToText:output_type -> openim.msg.SetSpeechToTextResp
-	101, // [101:153] is the sub-list for method output_type
-	49,  // [49:101] is the sub-list for method input_type
+	121, // 101: openim.msg.msg.SetSpeechToTextHidden:input_type -> openim.msg.SetSpeechToTextHiddenReq
+	142, // 102: openim.msg.msg.GetMaxSeq:output_type -> openim.sdkws.GetMaxSeqResp
+	40,  // 103: openim.msg.msg.GetMaxSeqs:output_type -> openim.msg.SeqsInfoResp
+	40,  // 104: openim.msg.msg.GetHasReadSeqs:output_type -> openim.msg.SeqsInfoResp
+	42,  // 105: openim.msg.msg.GetMsgByConversationIDs:output_type -> openim.msg.GetMsgByConversationIDsResp
+	44,  // 106: openim.msg.msg.GetConversationMaxSeq:output_type -> openim.msg.GetConversationMaxSeqResp
+	143, // 107: openim.msg.msg.PullMessageBySeqs:output_type -> openim.sdkws.PullMessageBySeqsResp
+	71,  // 108: openim.msg.msg.GetSeqMessage:output_type -> openim.msg.GetSeqMessageResp
+	57,  // 109: openim.msg.msg.SearchMessage:output_type -> openim.msg.SearchMessageResp
+	7,   // 110: openim.msg.msg.SendMsg:output_type -> openim.msg.SendMsgResp
+	9,   // 111: openim.msg.msg.SendSimpleMsg:output_type -> openim.msg.SendSimpleMsgResp
+	68,  // 112: openim.msg.msg.SetUserConversationsMinSeq:output_type -> openim.msg.SetUserConversationsMinSeqResp
+	29,  // 113: openim.msg.msg.ClearConversationsMsg:output_type -> openim.msg.ClearConversationsMsgResp
+	31,  // 114: openim.msg.msg.UserClearAllMsg:output_type -> openim.msg.UserClearAllMsgResp
+	33,  // 115: openim.msg.msg.DeleteMsgs:output_type -> openim.msg.DeleteMsgsResp
+	37,  // 116: openim.msg.msg.DeleteMsgPhysicalBySeq:output_type -> openim.msg.DeleteMsgPhysicalBySeqResp
+	35,  // 117: openim.msg.msg.DeleteMsgPhysical:output_type -> openim.msg.DeleteMsgPhysicalResp
+	11,  // 118: openim.msg.msg.SetSendMsgStatus:output_type -> openim.msg.SetSendMsgStatusResp
+	13,  // 119: openim.msg.msg.GetSendMsgStatus:output_type -> openim.msg.GetSendMsgStatusResp
+	18,  // 120: openim.msg.msg.RevokeMsg:output_type -> openim.msg.RevokeMsgResp
+	20,  // 121: openim.msg.msg.MarkMsgsAsRead:output_type -> openim.msg.MarkMsgsAsReadResp
+	22,  // 122: openim.msg.msg.MarkConversationAsRead:output_type -> openim.msg.MarkConversationAsReadResp
+	24,  // 123: openim.msg.msg.MarkConversationAsUnread:output_type -> openim.msg.MarkConversationAsUnreadResp
+	26,  // 124: openim.msg.msg.SetConversationHasReadSeq:output_type -> openim.msg.SetConversationHasReadSeqResp
+	47,  // 125: openim.msg.msg.GetConversationsHasReadAndMaxSeq:output_type -> openim.msg.GetConversationsHasReadAndMaxSeqResp
+	50,  // 126: openim.msg.msg.GetActiveUser:output_type -> openim.msg.GetActiveUserResp
+	53,  // 127: openim.msg.msg.GetActiveGroup:output_type -> openim.msg.GetActiveGroupResp
+	62,  // 128: openim.msg.msg.GetServerTime:output_type -> openim.msg.GetServerTimeResp
+	64,  // 129: openim.msg.msg.ClearMsg:output_type -> openim.msg.ClearMsgResp
+	66,  // 130: openim.msg.msg.DestructMsgs:output_type -> openim.msg.DestructMsgsResp
+	74,  // 131: openim.msg.msg.GetActiveConversation:output_type -> openim.msg.GetActiveConversationResp
+	76,  // 132: openim.msg.msg.SetUserConversationMaxSeq:output_type -> openim.msg.SetUserConversationMaxSeqResp
+	78,  // 133: openim.msg.msg.SetUserConversationMinSeq:output_type -> openim.msg.SetUserConversationMinSeqResp
+	80,  // 134: openim.msg.msg.GetLastMessageSeqByTime:output_type -> openim.msg.GetLastMessageSeqByTimeResp
+	82,  // 135: openim.msg.msg.GetLastMessage:output_type -> openim.msg.GetLastMessageResp
+	84,  // 136: openim.msg.msg.LikeMessage:output_type -> openim.msg.LikeMsgResp
+	84,  // 137: openim.msg.msg.UnLikeMessage:output_type -> openim.msg.LikeMsgResp
+	96,  // 138: openim.msg.msg.GetGroupMessageReaderList:output_type -> openim.msg.GetGroupMessageReaderListResp
+	87,  // 139: openim.msg.msg.AddFavorite:output_type -> openim.msg.AddFavoriteResp
+	89,  // 140: openim.msg.msg.DeleteFavorite:output_type -> openim.msg.DeleteFavoriteResp
+	91,  // 141: openim.msg.msg.GetFavoriteList:output_type -> openim.msg.GetFavoriteListResp
+	93,  // 142: openim.msg.msg.UpdateFavorite:output_type -> openim.msg.UpdateFavoriteResp
+	98,  // 143: openim.msg.msg.MarkMessage:output_type -> openim.msg.MarkMsgResp
+	100, // 144: openim.msg.msg.UnmarkMessage:output_type -> openim.msg.UnmarkMsgResp
+	103, // 145: openim.msg.msg.GetMarkedMessageList:output_type -> openim.msg.GetMarkedMsgListResp
+	106, // 146: openim.msg.msg.CreateSummaryRecord:output_type -> openim.msg.CreateSummaryRecordResp
+	108, // 147: openim.msg.msg.DeleteSummaryRecord:output_type -> openim.msg.DeleteSummaryRecordResp
+	110, // 148: openim.msg.msg.GetSummaryRecordList:output_type -> openim.msg.GetSummaryRecordListResp
+	112, // 149: openim.msg.msg.GetSummaryRecord:output_type -> openim.msg.GetSummaryRecordResp
+	114, // 150: openim.msg.msg.SetSummaryFavorite:output_type -> openim.msg.SetSummaryFavoriteResp
+	116, // 151: openim.msg.msg.PublishSummary:output_type -> openim.msg.PublishSummaryResp
+	118, // 152: openim.msg.msg.SyncSummaryRecords:output_type -> openim.msg.SyncSummaryRecordsResp
+	120, // 153: openim.msg.msg.SetSpeechToText:output_type -> openim.msg.SetSpeechToTextResp
+	122, // 154: openim.msg.msg.SetSpeechToTextHidden:output_type -> openim.msg.SetSpeechToTextHiddenResp
+	102, // [102:155] is the sub-list for method output_type
+	49,  // [49:102] is the sub-list for method input_type
 	49,  // [49:49] is the sub-list for extension type_name
 	49,  // [49:49] is the sub-list for extension extendee
 	0,   // [0:49] is the sub-list for field type_name
@@ -8128,7 +8236,7 @@ func file_msg_msg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_msg_msg_proto_rawDesc), len(file_msg_msg_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   130,
+			NumMessages:   132,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
