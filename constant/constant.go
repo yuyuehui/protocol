@@ -170,7 +170,7 @@ const (
 	SpeechToTextNotification          = 2113 // 语音转文字通知
 	FavoriteChangedNotification       = 2114 // 消息收藏变更通知（新增、删除、更新）
 	SetSpeechToTextHiddenNotification = 2115 // 语音转文字隐藏状态变更通知
-	MsgEditNotification               = 2116 // 消息编辑通知（内容原地修改，流式输出/纠错）
+	MsgEditNotification               = 2117 // 消息编辑通知（内容原地修改，流式输出/纠错）
 	HasReadReceipt                    = 2200 // 已读回执
 
 	// LiveKit会议相关通知 (1800-1899)
