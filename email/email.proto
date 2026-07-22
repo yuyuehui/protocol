@@ -80,6 +80,7 @@ message EmailFolder {
   int32           unreadCount = 6;  // 未读数
   int32           sortOrder  = 7;
   int64           createTime = 8;
+  string          parentFolderID = 9; // 父级自定义文件夹 ID，空表示“我的文件夹”根目录
 }
 
 // EmailAddress 邮件地址（姓名+邮箱）
@@ -185,6 +186,7 @@ message UpdateEmailAccountReq {
   optional string authUser     = 10;
   optional string authPassword = 11;
   optional bool   isDefault    = 12;
+  optional string emailAddress = 13; // 测试阶段允许改绑；改绑时必须同时提供授权码
 }
 
 message UpdateEmailAccountResp {
@@ -206,6 +208,21 @@ message GetEmailAccountsReq {
 
 message GetEmailAccountsResp {
   repeated EmailAccountConfig accounts = 1;
+}
+
+// GetDefaultEmailAddressesReq 批量获取用户默认邮箱地址。
+// 地址仅从邮箱账号表读取；无账号时会按用户 attribute.email 初始化默认账号。
+message GetDefaultEmailAddressesReq {
+  repeated string userIDs = 1;
+}
+
+message UserDefaultEmailAddress {
+  string userID       = 1;
+  string emailAddress = 2;
+}
+
+message GetDefaultEmailAddressesResp {
+  repeated UserDefaultEmailAddress addresses = 1;
 }
 
 // GetEmailConfigReq 获取邮箱服务配置（前端能力开关）
@@ -256,6 +273,7 @@ message CreateEmailFolderReq {
   string accountID  = 1;
   string userID     = 2;
   string folderName = 3;
+  string parentFolderID = 4; // 父级自定义文件夹 ID，空表示根目录
 }
 
 message CreateEmailFolderResp {
@@ -423,6 +441,7 @@ service Email {
   rpc UpdateEmailAccount(UpdateEmailAccountReq) returns (UpdateEmailAccountResp);
   rpc DeleteEmailAccount(DeleteEmailAccountReq) returns (DeleteEmailAccountResp);
   rpc GetEmailAccounts(GetEmailAccountsReq) returns (GetEmailAccountsResp);
+  rpc GetDefaultEmailAddresses(GetDefaultEmailAddressesReq) returns (GetDefaultEmailAddressesResp);
   rpc TestEmailAccount(TestEmailAccountReq) returns (TestEmailAccountResp);
   rpc GetEmailConfig(GetEmailConfigReq) returns (GetEmailConfigResp);
 

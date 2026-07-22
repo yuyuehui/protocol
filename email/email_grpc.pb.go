@@ -33,26 +33,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Email_AddEmailAccount_FullMethodName     = "/openim.email.Email/AddEmailAccount"
-	Email_ImportEmailAccounts_FullMethodName = "/openim.email.Email/ImportEmailAccounts"
-	Email_UpdateEmailAccount_FullMethodName  = "/openim.email.Email/UpdateEmailAccount"
-	Email_DeleteEmailAccount_FullMethodName  = "/openim.email.Email/DeleteEmailAccount"
-	Email_GetEmailAccounts_FullMethodName    = "/openim.email.Email/GetEmailAccounts"
-	Email_TestEmailAccount_FullMethodName    = "/openim.email.Email/TestEmailAccount"
-	Email_GetEmailConfig_FullMethodName      = "/openim.email.Email/GetEmailConfig"
-	Email_GetEmailFolders_FullMethodName     = "/openim.email.Email/GetEmailFolders"
-	Email_CreateEmailFolder_FullMethodName   = "/openim.email.Email/CreateEmailFolder"
-	Email_UpdateEmailFolder_FullMethodName   = "/openim.email.Email/UpdateEmailFolder"
-	Email_DeleteEmailFolder_FullMethodName   = "/openim.email.Email/DeleteEmailFolder"
-	Email_SendEmail_FullMethodName           = "/openim.email.Email/SendEmail"
-	Email_SaveDraft_FullMethodName           = "/openim.email.Email/SaveDraft"
-	Email_GetEmails_FullMethodName           = "/openim.email.Email/GetEmails"
-	Email_GetEmailDetail_FullMethodName      = "/openim.email.Email/GetEmailDetail"
-	Email_DeleteEmails_FullMethodName        = "/openim.email.Email/DeleteEmails"
-	Email_MoveEmails_FullMethodName          = "/openim.email.Email/MoveEmails"
-	Email_MarkEmails_FullMethodName          = "/openim.email.Email/MarkEmails"
-	Email_SyncEmails_FullMethodName          = "/openim.email.Email/SyncEmails"
-	Email_GetUnreadCount_FullMethodName      = "/openim.email.Email/GetUnreadCount"
+	Email_AddEmailAccount_FullMethodName          = "/openim.email.Email/AddEmailAccount"
+	Email_ImportEmailAccounts_FullMethodName      = "/openim.email.Email/ImportEmailAccounts"
+	Email_UpdateEmailAccount_FullMethodName       = "/openim.email.Email/UpdateEmailAccount"
+	Email_DeleteEmailAccount_FullMethodName       = "/openim.email.Email/DeleteEmailAccount"
+	Email_GetEmailAccounts_FullMethodName         = "/openim.email.Email/GetEmailAccounts"
+	Email_GetDefaultEmailAddresses_FullMethodName = "/openim.email.Email/GetDefaultEmailAddresses"
+	Email_TestEmailAccount_FullMethodName         = "/openim.email.Email/TestEmailAccount"
+	Email_GetEmailConfig_FullMethodName           = "/openim.email.Email/GetEmailConfig"
+	Email_GetEmailFolders_FullMethodName          = "/openim.email.Email/GetEmailFolders"
+	Email_CreateEmailFolder_FullMethodName        = "/openim.email.Email/CreateEmailFolder"
+	Email_UpdateEmailFolder_FullMethodName        = "/openim.email.Email/UpdateEmailFolder"
+	Email_DeleteEmailFolder_FullMethodName        = "/openim.email.Email/DeleteEmailFolder"
+	Email_SendEmail_FullMethodName                = "/openim.email.Email/SendEmail"
+	Email_SaveDraft_FullMethodName                = "/openim.email.Email/SaveDraft"
+	Email_GetEmails_FullMethodName                = "/openim.email.Email/GetEmails"
+	Email_GetEmailDetail_FullMethodName           = "/openim.email.Email/GetEmailDetail"
+	Email_DeleteEmails_FullMethodName             = "/openim.email.Email/DeleteEmails"
+	Email_MoveEmails_FullMethodName               = "/openim.email.Email/MoveEmails"
+	Email_MarkEmails_FullMethodName               = "/openim.email.Email/MarkEmails"
+	Email_SyncEmails_FullMethodName               = "/openim.email.Email/SyncEmails"
+	Email_GetUnreadCount_FullMethodName           = "/openim.email.Email/GetUnreadCount"
 )
 
 // EmailClient is the client API for Email service.
@@ -65,6 +66,7 @@ type EmailClient interface {
 	UpdateEmailAccount(ctx context.Context, in *UpdateEmailAccountReq, opts ...grpc.CallOption) (*UpdateEmailAccountResp, error)
 	DeleteEmailAccount(ctx context.Context, in *DeleteEmailAccountReq, opts ...grpc.CallOption) (*DeleteEmailAccountResp, error)
 	GetEmailAccounts(ctx context.Context, in *GetEmailAccountsReq, opts ...grpc.CallOption) (*GetEmailAccountsResp, error)
+	GetDefaultEmailAddresses(ctx context.Context, in *GetDefaultEmailAddressesReq, opts ...grpc.CallOption) (*GetDefaultEmailAddressesResp, error)
 	TestEmailAccount(ctx context.Context, in *TestEmailAccountReq, opts ...grpc.CallOption) (*TestEmailAccountResp, error)
 	GetEmailConfig(ctx context.Context, in *GetEmailConfigReq, opts ...grpc.CallOption) (*GetEmailConfigResp, error)
 	// 文件夹管理
@@ -136,6 +138,16 @@ func (c *emailClient) GetEmailAccounts(ctx context.Context, in *GetEmailAccounts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetEmailAccountsResp)
 	err := c.cc.Invoke(ctx, Email_GetEmailAccounts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) GetDefaultEmailAddresses(ctx context.Context, in *GetDefaultEmailAddressesReq, opts ...grpc.CallOption) (*GetDefaultEmailAddressesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDefaultEmailAddressesResp)
+	err := c.cc.Invoke(ctx, Email_GetDefaultEmailAddresses_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -302,6 +314,7 @@ type EmailServer interface {
 	UpdateEmailAccount(context.Context, *UpdateEmailAccountReq) (*UpdateEmailAccountResp, error)
 	DeleteEmailAccount(context.Context, *DeleteEmailAccountReq) (*DeleteEmailAccountResp, error)
 	GetEmailAccounts(context.Context, *GetEmailAccountsReq) (*GetEmailAccountsResp, error)
+	GetDefaultEmailAddresses(context.Context, *GetDefaultEmailAddressesReq) (*GetDefaultEmailAddressesResp, error)
 	TestEmailAccount(context.Context, *TestEmailAccountReq) (*TestEmailAccountResp, error)
 	GetEmailConfig(context.Context, *GetEmailConfigReq) (*GetEmailConfigResp, error)
 	// 文件夹管理
@@ -343,6 +356,9 @@ func (UnimplementedEmailServer) DeleteEmailAccount(context.Context, *DeleteEmail
 }
 func (UnimplementedEmailServer) GetEmailAccounts(context.Context, *GetEmailAccountsReq) (*GetEmailAccountsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetEmailAccounts not implemented")
+}
+func (UnimplementedEmailServer) GetDefaultEmailAddresses(context.Context, *GetDefaultEmailAddressesReq) (*GetDefaultEmailAddressesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDefaultEmailAddresses not implemented")
 }
 func (UnimplementedEmailServer) TestEmailAccount(context.Context, *TestEmailAccountReq) (*TestEmailAccountResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method TestEmailAccount not implemented")
@@ -496,6 +512,24 @@ func _Email_GetEmailAccounts_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EmailServer).GetEmailAccounts(ctx, req.(*GetEmailAccountsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_GetDefaultEmailAddresses_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDefaultEmailAddressesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetDefaultEmailAddresses(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetDefaultEmailAddresses_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetDefaultEmailAddresses(ctx, req.(*GetDefaultEmailAddressesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -796,6 +830,10 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEmailAccounts",
 			Handler:    _Email_GetEmailAccounts_Handler,
+		},
+		{
+			MethodName: "GetDefaultEmailAddresses",
+			Handler:    _Email_GetDefaultEmailAddresses_Handler,
 		},
 		{
 			MethodName: "TestEmailAccount",
