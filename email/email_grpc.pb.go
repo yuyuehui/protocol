@@ -41,6 +41,8 @@ const (
 	Email_GetDefaultEmailAddresses_FullMethodName = "/openim.email.Email/GetDefaultEmailAddresses"
 	Email_TestEmailAccount_FullMethodName         = "/openim.email.Email/TestEmailAccount"
 	Email_GetEmailConfig_FullMethodName           = "/openim.email.Email/GetEmailConfig"
+	Email_GetEmailServiceConfig_FullMethodName    = "/openim.email.Email/GetEmailServiceConfig"
+	Email_SetEmailServiceConfig_FullMethodName    = "/openim.email.Email/SetEmailServiceConfig"
 	Email_GetEmailFolders_FullMethodName          = "/openim.email.Email/GetEmailFolders"
 	Email_CreateEmailFolder_FullMethodName        = "/openim.email.Email/CreateEmailFolder"
 	Email_UpdateEmailFolder_FullMethodName        = "/openim.email.Email/UpdateEmailFolder"
@@ -69,6 +71,9 @@ type EmailClient interface {
 	GetDefaultEmailAddresses(ctx context.Context, in *GetDefaultEmailAddressesReq, opts ...grpc.CallOption) (*GetDefaultEmailAddressesResp, error)
 	TestEmailAccount(ctx context.Context, in *TestEmailAccountReq, opts ...grpc.CallOption) (*TestEmailAccountResp, error)
 	GetEmailConfig(ctx context.Context, in *GetEmailConfigReq, opts ...grpc.CallOption) (*GetEmailConfigResp, error)
+	// 后台全局配置（调用方负责管理员鉴权）
+	GetEmailServiceConfig(ctx context.Context, in *GetEmailServiceConfigReq, opts ...grpc.CallOption) (*GetEmailServiceConfigResp, error)
+	SetEmailServiceConfig(ctx context.Context, in *SetEmailServiceConfigReq, opts ...grpc.CallOption) (*SetEmailServiceConfigResp, error)
 	// 文件夹管理
 	GetEmailFolders(ctx context.Context, in *GetEmailFoldersReq, opts ...grpc.CallOption) (*GetEmailFoldersResp, error)
 	CreateEmailFolder(ctx context.Context, in *CreateEmailFolderReq, opts ...grpc.CallOption) (*CreateEmailFolderResp, error)
@@ -168,6 +173,26 @@ func (c *emailClient) GetEmailConfig(ctx context.Context, in *GetEmailConfigReq,
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetEmailConfigResp)
 	err := c.cc.Invoke(ctx, Email_GetEmailConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) GetEmailServiceConfig(ctx context.Context, in *GetEmailServiceConfigReq, opts ...grpc.CallOption) (*GetEmailServiceConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailServiceConfigResp)
+	err := c.cc.Invoke(ctx, Email_GetEmailServiceConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) SetEmailServiceConfig(ctx context.Context, in *SetEmailServiceConfigReq, opts ...grpc.CallOption) (*SetEmailServiceConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetEmailServiceConfigResp)
+	err := c.cc.Invoke(ctx, Email_SetEmailServiceConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -317,6 +342,9 @@ type EmailServer interface {
 	GetDefaultEmailAddresses(context.Context, *GetDefaultEmailAddressesReq) (*GetDefaultEmailAddressesResp, error)
 	TestEmailAccount(context.Context, *TestEmailAccountReq) (*TestEmailAccountResp, error)
 	GetEmailConfig(context.Context, *GetEmailConfigReq) (*GetEmailConfigResp, error)
+	// 后台全局配置（调用方负责管理员鉴权）
+	GetEmailServiceConfig(context.Context, *GetEmailServiceConfigReq) (*GetEmailServiceConfigResp, error)
+	SetEmailServiceConfig(context.Context, *SetEmailServiceConfigReq) (*SetEmailServiceConfigResp, error)
 	// 文件夹管理
 	GetEmailFolders(context.Context, *GetEmailFoldersReq) (*GetEmailFoldersResp, error)
 	CreateEmailFolder(context.Context, *CreateEmailFolderReq) (*CreateEmailFolderResp, error)
@@ -365,6 +393,12 @@ func (UnimplementedEmailServer) TestEmailAccount(context.Context, *TestEmailAcco
 }
 func (UnimplementedEmailServer) GetEmailConfig(context.Context, *GetEmailConfigReq) (*GetEmailConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetEmailConfig not implemented")
+}
+func (UnimplementedEmailServer) GetEmailServiceConfig(context.Context, *GetEmailServiceConfigReq) (*GetEmailServiceConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEmailServiceConfig not implemented")
+}
+func (UnimplementedEmailServer) SetEmailServiceConfig(context.Context, *SetEmailServiceConfigReq) (*SetEmailServiceConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetEmailServiceConfig not implemented")
 }
 func (UnimplementedEmailServer) GetEmailFolders(context.Context, *GetEmailFoldersReq) (*GetEmailFoldersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetEmailFolders not implemented")
@@ -566,6 +600,42 @@ func _Email_GetEmailConfig_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EmailServer).GetEmailConfig(ctx, req.(*GetEmailConfigReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_GetEmailServiceConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailServiceConfigReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetEmailServiceConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetEmailServiceConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetEmailServiceConfig(ctx, req.(*GetEmailServiceConfigReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_SetEmailServiceConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetEmailServiceConfigReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).SetEmailServiceConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_SetEmailServiceConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).SetEmailServiceConfig(ctx, req.(*SetEmailServiceConfigReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -842,6 +912,14 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEmailConfig",
 			Handler:    _Email_GetEmailConfig_Handler,
+		},
+		{
+			MethodName: "GetEmailServiceConfig",
+			Handler:    _Email_GetEmailServiceConfig_Handler,
+		},
+		{
+			MethodName: "SetEmailServiceConfig",
+			Handler:    _Email_SetEmailServiceConfig_Handler,
 		},
 		{
 			MethodName: "GetEmailFolders",

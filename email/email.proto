@@ -235,6 +235,45 @@ message GetEmailConfigResp {
   bool enableMultiAccount = 2;  // 是否允许用户添加多个邮箱账户
 }
 
+// EmailServiceProvider 邮箱服务商配置。
+// 服务端不会在读取响应中返回 authPassword，避免凭据泄露。
+message EmailServiceProvider {
+  string name         = 1;
+  repeated string domains = 2;
+  string imapHost     = 3;
+  int32 imapPort      = 4;
+  bool imapSSL        = 5;
+  string smtpHost     = 6;
+  int32 smtpPort      = 7;
+  bool smtpSSL        = 8;
+  bool requireAuth    = 9;
+  string authUser     = 10;
+}
+
+// GetEmailServiceConfigReq 获取后台邮箱全局配置。
+message GetEmailServiceConfigReq {
+}
+
+message GetEmailServiceConfigResp {
+  bool enable                    = 1;
+  bool enableMultiAccount        = 2;
+  int32 initialSyncMaxFetch      = 3;
+  repeated EmailServiceProvider services = 4;
+  bool fromDB                    = 5;
+  int64 updateTime               = 6;
+}
+
+// SetEmailServiceConfigReq 保存后台邮箱全局配置。
+message SetEmailServiceConfigReq {
+  bool enable                    = 1;
+  bool enableMultiAccount        = 2;
+  int32 initialSyncMaxFetch      = 3;
+  repeated EmailServiceProvider services = 4;
+}
+
+message SetEmailServiceConfigResp {
+}
+
 // TestEmailAccountReq 测试邮箱连接
 message TestEmailAccountReq {
   string userID       = 1;
@@ -444,6 +483,9 @@ service Email {
   rpc GetDefaultEmailAddresses(GetDefaultEmailAddressesReq) returns (GetDefaultEmailAddressesResp);
   rpc TestEmailAccount(TestEmailAccountReq) returns (TestEmailAccountResp);
   rpc GetEmailConfig(GetEmailConfigReq) returns (GetEmailConfigResp);
+  // 后台全局配置（调用方负责管理员鉴权）
+  rpc GetEmailServiceConfig(GetEmailServiceConfigReq) returns (GetEmailServiceConfigResp);
+  rpc SetEmailServiceConfig(SetEmailServiceConfigReq) returns (SetEmailServiceConfigResp);
 
   // 文件夹管理
   rpc GetEmailFolders(GetEmailFoldersReq) returns (GetEmailFoldersResp);
