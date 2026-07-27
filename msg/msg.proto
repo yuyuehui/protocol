@@ -107,11 +107,14 @@ message EditMsgReq {
   string sendID = 3;      // 编辑者身份，服务端校验「仅发送者本人可编辑」
   int32 contentType = 4;
   string content = 5;
+  int64 seq = 6;          // 可选：已知 seq 时按 seq O(1) 定位分片文档，避免按 serverMsgID 全会话扫描
+  bool transient = 7;     // true=流式中间片（只通知在线端，不写 Mongo）；默认 false=终稿/普通编辑，正常落库
 }
 
 message EditMsgResp {
   string serverMsgID = 1;
   int64 editTime = 2;
+  int64 seq = 3;          // 回传 seq，调用方后续编辑同一条消息时带上即可走 O(1) 定位
 }
 
 message EditMsgTips {
