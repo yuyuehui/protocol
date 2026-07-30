@@ -14,7 +14,10 @@
 
 package email
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestSendEmailReqCheckRejectsInvalidRecipientsAndHeaders(t *testing.T) {
 	tests := []struct {
@@ -44,5 +47,21 @@ func TestSendEmailReqCheckRejectsInvalidRecipientsAndHeaders(t *testing.T) {
 				t.Fatal("invalid request was accepted")
 			}
 		})
+	}
+}
+
+func TestEmailAccountReqStringRedactsPassword(t *testing.T) {
+	req := &TestEmailAccountReq{
+		EmailAddress: "user@example.com",
+		AuthUser:     "user@example.com",
+		AuthPassword: "secret-authorization-code",
+	}
+
+	got := req.String()
+	if strings.Contains(got, req.AuthPassword) {
+		t.Fatalf("String() leaked auth password: %s", got)
+	}
+	if !strings.Contains(got, "[REDACTED]") {
+		t.Fatalf("String() did not include redaction marker: %s", got)
 	}
 }

@@ -2183,7 +2183,24 @@ func (x *TestEmailAccountReq) Reset() {
 }
 
 func (x *TestEmailAccountReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
+	if x == nil {
+		return "<nil>"
+	}
+	redacted := &TestEmailAccountReq{
+		UserID:       x.UserID,
+		EmailAddress: x.EmailAddress,
+		ImapHost:     x.ImapHost,
+		ImapPort:     x.ImapPort,
+		ImapSSL:      x.ImapSSL,
+		SmtpHost:     x.SmtpHost,
+		SmtpPort:     x.SmtpPort,
+		SmtpSSL:      x.SmtpSSL,
+		AuthUser:     x.AuthUser,
+	}
+	if x.AuthPassword != "" {
+		redacted.AuthPassword = "[REDACTED]"
+	}
+	return protoimpl.X.MessageStringOf(redacted)
 }
 
 func (*TestEmailAccountReq) ProtoMessage() {}
