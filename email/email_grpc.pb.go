@@ -39,6 +39,11 @@ const (
 	Email_DeleteEmailAccount_FullMethodName       = "/openim.email.Email/DeleteEmailAccount"
 	Email_GetEmailAccounts_FullMethodName         = "/openim.email.Email/GetEmailAccounts"
 	Email_GetDefaultEmailAddresses_FullMethodName = "/openim.email.Email/GetDefaultEmailAddresses"
+	Email_GetEmailContact_FullMethodName          = "/openim.email.Email/GetEmailContact"
+	Email_GetEmailContacts_FullMethodName         = "/openim.email.Email/GetEmailContacts"
+	Email_UpsertEmailContact_FullMethodName       = "/openim.email.Email/UpsertEmailContact"
+	Email_DeleteEmailContact_FullMethodName       = "/openim.email.Email/DeleteEmailContact"
+	Email_GetEmailCorrespondence_FullMethodName   = "/openim.email.Email/GetEmailCorrespondence"
 	Email_TestEmailAccount_FullMethodName         = "/openim.email.Email/TestEmailAccount"
 	Email_GetEmailConfig_FullMethodName           = "/openim.email.Email/GetEmailConfig"
 	Email_GetEmailServiceConfig_FullMethodName    = "/openim.email.Email/GetEmailServiceConfig"
@@ -69,6 +74,11 @@ type EmailClient interface {
 	DeleteEmailAccount(ctx context.Context, in *DeleteEmailAccountReq, opts ...grpc.CallOption) (*DeleteEmailAccountResp, error)
 	GetEmailAccounts(ctx context.Context, in *GetEmailAccountsReq, opts ...grpc.CallOption) (*GetEmailAccountsResp, error)
 	GetDefaultEmailAddresses(ctx context.Context, in *GetDefaultEmailAddressesReq, opts ...grpc.CallOption) (*GetDefaultEmailAddressesResp, error)
+	GetEmailContact(ctx context.Context, in *GetEmailContactReq, opts ...grpc.CallOption) (*GetEmailContactResp, error)
+	GetEmailContacts(ctx context.Context, in *GetEmailContactsReq, opts ...grpc.CallOption) (*GetEmailContactsResp, error)
+	UpsertEmailContact(ctx context.Context, in *UpsertEmailContactReq, opts ...grpc.CallOption) (*UpsertEmailContactResp, error)
+	DeleteEmailContact(ctx context.Context, in *DeleteEmailContactReq, opts ...grpc.CallOption) (*DeleteEmailContactResp, error)
+	GetEmailCorrespondence(ctx context.Context, in *GetEmailCorrespondenceReq, opts ...grpc.CallOption) (*GetEmailCorrespondenceResp, error)
 	TestEmailAccount(ctx context.Context, in *TestEmailAccountReq, opts ...grpc.CallOption) (*TestEmailAccountResp, error)
 	GetEmailConfig(ctx context.Context, in *GetEmailConfigReq, opts ...grpc.CallOption) (*GetEmailConfigResp, error)
 	// 后台全局配置（调用方负责管理员鉴权）
@@ -153,6 +163,56 @@ func (c *emailClient) GetDefaultEmailAddresses(ctx context.Context, in *GetDefau
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetDefaultEmailAddressesResp)
 	err := c.cc.Invoke(ctx, Email_GetDefaultEmailAddresses_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) GetEmailContact(ctx context.Context, in *GetEmailContactReq, opts ...grpc.CallOption) (*GetEmailContactResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailContactResp)
+	err := c.cc.Invoke(ctx, Email_GetEmailContact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) GetEmailContacts(ctx context.Context, in *GetEmailContactsReq, opts ...grpc.CallOption) (*GetEmailContactsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailContactsResp)
+	err := c.cc.Invoke(ctx, Email_GetEmailContacts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) UpsertEmailContact(ctx context.Context, in *UpsertEmailContactReq, opts ...grpc.CallOption) (*UpsertEmailContactResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpsertEmailContactResp)
+	err := c.cc.Invoke(ctx, Email_UpsertEmailContact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) DeleteEmailContact(ctx context.Context, in *DeleteEmailContactReq, opts ...grpc.CallOption) (*DeleteEmailContactResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteEmailContactResp)
+	err := c.cc.Invoke(ctx, Email_DeleteEmailContact_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailClient) GetEmailCorrespondence(ctx context.Context, in *GetEmailCorrespondenceReq, opts ...grpc.CallOption) (*GetEmailCorrespondenceResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetEmailCorrespondenceResp)
+	err := c.cc.Invoke(ctx, Email_GetEmailCorrespondence_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -340,6 +400,11 @@ type EmailServer interface {
 	DeleteEmailAccount(context.Context, *DeleteEmailAccountReq) (*DeleteEmailAccountResp, error)
 	GetEmailAccounts(context.Context, *GetEmailAccountsReq) (*GetEmailAccountsResp, error)
 	GetDefaultEmailAddresses(context.Context, *GetDefaultEmailAddressesReq) (*GetDefaultEmailAddressesResp, error)
+	GetEmailContact(context.Context, *GetEmailContactReq) (*GetEmailContactResp, error)
+	GetEmailContacts(context.Context, *GetEmailContactsReq) (*GetEmailContactsResp, error)
+	UpsertEmailContact(context.Context, *UpsertEmailContactReq) (*UpsertEmailContactResp, error)
+	DeleteEmailContact(context.Context, *DeleteEmailContactReq) (*DeleteEmailContactResp, error)
+	GetEmailCorrespondence(context.Context, *GetEmailCorrespondenceReq) (*GetEmailCorrespondenceResp, error)
 	TestEmailAccount(context.Context, *TestEmailAccountReq) (*TestEmailAccountResp, error)
 	GetEmailConfig(context.Context, *GetEmailConfigReq) (*GetEmailConfigResp, error)
 	// 后台全局配置（调用方负责管理员鉴权）
@@ -387,6 +452,21 @@ func (UnimplementedEmailServer) GetEmailAccounts(context.Context, *GetEmailAccou
 }
 func (UnimplementedEmailServer) GetDefaultEmailAddresses(context.Context, *GetDefaultEmailAddressesReq) (*GetDefaultEmailAddressesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetDefaultEmailAddresses not implemented")
+}
+func (UnimplementedEmailServer) GetEmailContact(context.Context, *GetEmailContactReq) (*GetEmailContactResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEmailContact not implemented")
+}
+func (UnimplementedEmailServer) GetEmailContacts(context.Context, *GetEmailContactsReq) (*GetEmailContactsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEmailContacts not implemented")
+}
+func (UnimplementedEmailServer) UpsertEmailContact(context.Context, *UpsertEmailContactReq) (*UpsertEmailContactResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpsertEmailContact not implemented")
+}
+func (UnimplementedEmailServer) DeleteEmailContact(context.Context, *DeleteEmailContactReq) (*DeleteEmailContactResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteEmailContact not implemented")
+}
+func (UnimplementedEmailServer) GetEmailCorrespondence(context.Context, *GetEmailCorrespondenceReq) (*GetEmailCorrespondenceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetEmailCorrespondence not implemented")
 }
 func (UnimplementedEmailServer) TestEmailAccount(context.Context, *TestEmailAccountReq) (*TestEmailAccountResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method TestEmailAccount not implemented")
@@ -564,6 +644,96 @@ func _Email_GetDefaultEmailAddresses_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EmailServer).GetDefaultEmailAddresses(ctx, req.(*GetDefaultEmailAddressesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_GetEmailContact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailContactReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetEmailContact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetEmailContact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetEmailContact(ctx, req.(*GetEmailContactReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_GetEmailContacts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailContactsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetEmailContacts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetEmailContacts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetEmailContacts(ctx, req.(*GetEmailContactsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_UpsertEmailContact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertEmailContactReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).UpsertEmailContact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_UpsertEmailContact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).UpsertEmailContact(ctx, req.(*UpsertEmailContactReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_DeleteEmailContact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEmailContactReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).DeleteEmailContact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_DeleteEmailContact_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).DeleteEmailContact(ctx, req.(*DeleteEmailContactReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Email_GetEmailCorrespondence_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEmailCorrespondenceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetEmailCorrespondence(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetEmailCorrespondence_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetEmailCorrespondence(ctx, req.(*GetEmailCorrespondenceReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -904,6 +1074,26 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDefaultEmailAddresses",
 			Handler:    _Email_GetDefaultEmailAddresses_Handler,
+		},
+		{
+			MethodName: "GetEmailContact",
+			Handler:    _Email_GetEmailContact_Handler,
+		},
+		{
+			MethodName: "GetEmailContacts",
+			Handler:    _Email_GetEmailContacts_Handler,
+		},
+		{
+			MethodName: "UpsertEmailContact",
+			Handler:    _Email_UpsertEmailContact_Handler,
+		},
+		{
+			MethodName: "DeleteEmailContact",
+			Handler:    _Email_DeleteEmailContact_Handler,
+		},
+		{
+			MethodName: "GetEmailCorrespondence",
+			Handler:    _Email_GetEmailCorrespondence_Handler,
 		},
 		{
 			MethodName: "TestEmailAccount",

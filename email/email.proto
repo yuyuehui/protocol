@@ -358,6 +358,7 @@ message SendEmailReq {
   string inReplyTo            = 11; // 回复时传原邮件 Message-ID
   repeated string references  = 12; // 引用链
   string draftID              = 13; // 草稿ID（从草稿发送时传）
+  repeated string attachmentFileNames = 14; // 附件原始文件名，与 attachmentURLs 顺序一致
 }
 
 message SendEmailResp {
@@ -379,6 +380,7 @@ message SaveDraftReq {
   EmailPriority priority      = 11;
   string inReplyTo            = 12;
   repeated string references  = 13;
+  repeated string attachmentFileNames = 14; // 附件原始文件名，与 attachmentURLs 顺序一致
 }
 
 message SaveDraftResp {
@@ -471,6 +473,72 @@ message GetUnreadCountResp {
   map<string, int32> folderUnread = 2;  // key: folderID
 }
 
+// ===================== 邮件联系人 =====================
+
+message EmailContact {
+  string contactID       = 1;
+  string userID          = 2;
+  string emailAddress    = 3;
+  string displayName     = 4;
+  string avatarURL       = 5;
+  bool isStarred         = 6;
+  bool specialReminder   = 7;
+  int64 createTime       = 8;
+  int64 updateTime       = 9;
+}
+
+message GetEmailContactReq {
+  string userID       = 1;
+  string emailAddress = 2;
+}
+
+message GetEmailContactResp {
+  EmailContact contact = 1;
+}
+
+message GetEmailContactsReq {
+  string userID = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+
+message GetEmailContactsResp {
+  repeated EmailContact contacts = 1;
+  int32 total = 2;
+}
+
+message UpsertEmailContactReq {
+  string userID          = 1;
+  string emailAddress    = 2;
+  string displayName     = 3;
+  string avatarURL       = 4;
+  bool isStarred         = 5;
+  bool specialReminder   = 6;
+}
+
+message UpsertEmailContactResp {
+  EmailContact contact = 1;
+}
+
+message DeleteEmailContactReq {
+  string userID       = 1;
+  string emailAddress = 2;
+}
+
+message DeleteEmailContactResp {}
+
+message GetEmailCorrespondenceReq {
+  string userID       = 1;
+  string accountID    = 2;
+  string emailAddress = 3;
+  sdkws.RequestPagination pagination = 4;
+}
+
+message GetEmailCorrespondenceResp {
+  repeated EmailMessage emails = 1;
+  int32 total = 2;
+}
+
 // ===================== Service 定义 =====================
 
 service Email {
@@ -481,6 +549,11 @@ service Email {
   rpc DeleteEmailAccount(DeleteEmailAccountReq) returns (DeleteEmailAccountResp);
   rpc GetEmailAccounts(GetEmailAccountsReq) returns (GetEmailAccountsResp);
   rpc GetDefaultEmailAddresses(GetDefaultEmailAddressesReq) returns (GetDefaultEmailAddressesResp);
+  rpc GetEmailContact(GetEmailContactReq) returns (GetEmailContactResp);
+  rpc GetEmailContacts(GetEmailContactsReq) returns (GetEmailContactsResp);
+  rpc UpsertEmailContact(UpsertEmailContactReq) returns (UpsertEmailContactResp);
+  rpc DeleteEmailContact(DeleteEmailContactReq) returns (DeleteEmailContactResp);
+  rpc GetEmailCorrespondence(GetEmailCorrespondenceReq) returns (GetEmailCorrespondenceResp);
   rpc TestEmailAccount(TestEmailAccountReq) returns (TestEmailAccountResp);
   rpc GetEmailConfig(GetEmailConfigReq) returns (GetEmailConfigResp);
   // 后台全局配置（调用方负责管理员鉴权）

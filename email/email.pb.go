@@ -2782,22 +2782,23 @@ func (*DeleteEmailFolderResp) Descriptor() ([]byte, []int) {
 
 // SendEmailReq 发送邮件
 type SendEmailReq struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"` // 发信账户
-	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	To             []*EmailAddress        `protobuf:"bytes,3,rep,name=to,proto3" json:"to,omitempty"`
-	Cc             []*EmailAddress        `protobuf:"bytes,4,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc            []*EmailAddress        `protobuf:"bytes,5,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject        string                 `protobuf:"bytes,6,opt,name=subject,proto3" json:"subject,omitempty"`
-	TextBody       string                 `protobuf:"bytes,7,opt,name=textBody,proto3" json:"textBody,omitempty"`
-	HtmlBody       string                 `protobuf:"bytes,8,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
-	AttachmentURLs []string               `protobuf:"bytes,9,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"` // 附件URL列表（先通过third上传再传URL）
-	Priority       EmailPriority          `protobuf:"varint,10,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
-	InReplyTo      string                 `protobuf:"bytes,11,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`   // 回复时传原邮件 Message-ID
-	References     []string               `protobuf:"bytes,12,rep,name=references,proto3" json:"references,omitempty"` // 引用链
-	DraftID        string                 `protobuf:"bytes,13,opt,name=draftID,proto3" json:"draftID,omitempty"`       // 草稿ID（从草稿发送时传）
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	AccountID           string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"` // 发信账户
+	UserID              string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	To                  []*EmailAddress        `protobuf:"bytes,3,rep,name=to,proto3" json:"to,omitempty"`
+	Cc                  []*EmailAddress        `protobuf:"bytes,4,rep,name=cc,proto3" json:"cc,omitempty"`
+	Bcc                 []*EmailAddress        `protobuf:"bytes,5,rep,name=bcc,proto3" json:"bcc,omitempty"`
+	Subject             string                 `protobuf:"bytes,6,opt,name=subject,proto3" json:"subject,omitempty"`
+	TextBody            string                 `protobuf:"bytes,7,opt,name=textBody,proto3" json:"textBody,omitempty"`
+	HtmlBody            string                 `protobuf:"bytes,8,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
+	AttachmentURLs      []string               `protobuf:"bytes,9,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"` // 附件URL列表（先通过third上传再传URL）
+	Priority            EmailPriority          `protobuf:"varint,10,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
+	InReplyTo           string                 `protobuf:"bytes,11,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`                     // 回复时传原邮件 Message-ID
+	References          []string               `protobuf:"bytes,12,rep,name=references,proto3" json:"references,omitempty"`                   // 引用链
+	DraftID             string                 `protobuf:"bytes,13,opt,name=draftID,proto3" json:"draftID,omitempty"`                         // 草稿ID（从草稿发送时传）
+	AttachmentFileNames []string               `protobuf:"bytes,14,rep,name=attachmentFileNames,proto3" json:"attachmentFileNames,omitempty"` // 附件原始文件名，与 attachmentURLs 顺序一致
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *SendEmailReq) Reset() {
@@ -2921,6 +2922,13 @@ func (x *SendEmailReq) GetDraftID() string {
 	return ""
 }
 
+func (x *SendEmailReq) GetAttachmentFileNames() []string {
+	if x != nil {
+		return x.AttachmentFileNames
+	}
+	return nil
+}
+
 type SendEmailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         *EmailMessage          `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
@@ -2967,22 +2975,23 @@ func (x *SendEmailResp) GetEmail() *EmailMessage {
 
 // SaveDraftReq 保存草稿
 type SaveDraftReq struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	AccountID      string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
-	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	DraftID        string                 `protobuf:"bytes,3,opt,name=draftID,proto3" json:"draftID,omitempty"` // 已有草稿ID（更新草稿）
-	To             []*EmailAddress        `protobuf:"bytes,4,rep,name=to,proto3" json:"to,omitempty"`
-	Cc             []*EmailAddress        `protobuf:"bytes,5,rep,name=cc,proto3" json:"cc,omitempty"`
-	Bcc            []*EmailAddress        `protobuf:"bytes,6,rep,name=bcc,proto3" json:"bcc,omitempty"`
-	Subject        string                 `protobuf:"bytes,7,opt,name=subject,proto3" json:"subject,omitempty"`
-	TextBody       string                 `protobuf:"bytes,8,opt,name=textBody,proto3" json:"textBody,omitempty"`
-	HtmlBody       string                 `protobuf:"bytes,9,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
-	AttachmentURLs []string               `protobuf:"bytes,10,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`
-	Priority       EmailPriority          `protobuf:"varint,11,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
-	InReplyTo      string                 `protobuf:"bytes,12,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`
-	References     []string               `protobuf:"bytes,13,rep,name=references,proto3" json:"references,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	AccountID           string                 `protobuf:"bytes,1,opt,name=accountID,proto3" json:"accountID,omitempty"`
+	UserID              string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	DraftID             string                 `protobuf:"bytes,3,opt,name=draftID,proto3" json:"draftID,omitempty"` // 已有草稿ID（更新草稿）
+	To                  []*EmailAddress        `protobuf:"bytes,4,rep,name=to,proto3" json:"to,omitempty"`
+	Cc                  []*EmailAddress        `protobuf:"bytes,5,rep,name=cc,proto3" json:"cc,omitempty"`
+	Bcc                 []*EmailAddress        `protobuf:"bytes,6,rep,name=bcc,proto3" json:"bcc,omitempty"`
+	Subject             string                 `protobuf:"bytes,7,opt,name=subject,proto3" json:"subject,omitempty"`
+	TextBody            string                 `protobuf:"bytes,8,opt,name=textBody,proto3" json:"textBody,omitempty"`
+	HtmlBody            string                 `protobuf:"bytes,9,opt,name=htmlBody,proto3" json:"htmlBody,omitempty"`
+	AttachmentURLs      []string               `protobuf:"bytes,10,rep,name=attachmentURLs,proto3" json:"attachmentURLs,omitempty"`
+	Priority            EmailPriority          `protobuf:"varint,11,opt,name=priority,proto3,enum=openim.email.EmailPriority" json:"priority,omitempty"`
+	InReplyTo           string                 `protobuf:"bytes,12,opt,name=inReplyTo,proto3" json:"inReplyTo,omitempty"`
+	References          []string               `protobuf:"bytes,13,rep,name=references,proto3" json:"references,omitempty"`
+	AttachmentFileNames []string               `protobuf:"bytes,14,rep,name=attachmentFileNames,proto3" json:"attachmentFileNames,omitempty"` // 附件原始文件名，与 attachmentURLs 顺序一致
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *SaveDraftReq) Reset() {
@@ -3102,6 +3111,13 @@ func (x *SaveDraftReq) GetInReplyTo() string {
 func (x *SaveDraftReq) GetReferences() []string {
 	if x != nil {
 		return x.References
+	}
+	return nil
+}
+
+func (x *SaveDraftReq) GetAttachmentFileNames() []string {
+	if x != nil {
+		return x.AttachmentFileNames
 	}
 	return nil
 }
@@ -3957,6 +3973,658 @@ func (x *GetUnreadCountResp) GetFolderUnread() map[string]int32 {
 	return nil
 }
 
+type EmailContact struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ContactID       string                 `protobuf:"bytes,1,opt,name=contactID,proto3" json:"contactID,omitempty"`
+	UserID          string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	EmailAddress    string                 `protobuf:"bytes,3,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
+	DisplayName     string                 `protobuf:"bytes,4,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	AvatarURL       string                 `protobuf:"bytes,5,opt,name=avatarURL,proto3" json:"avatarURL,omitempty"`
+	IsStarred       bool                   `protobuf:"varint,6,opt,name=isStarred,proto3" json:"isStarred,omitempty"`
+	SpecialReminder bool                   `protobuf:"varint,7,opt,name=specialReminder,proto3" json:"specialReminder,omitempty"`
+	CreateTime      int64                  `protobuf:"varint,8,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime      int64                  `protobuf:"varint,9,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *EmailContact) Reset() {
+	*x = EmailContact{}
+	mi := &file_email_email_proto_msgTypes[55]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EmailContact) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EmailContact) ProtoMessage() {}
+
+func (x *EmailContact) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[55]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EmailContact.ProtoReflect.Descriptor instead.
+func (*EmailContact) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *EmailContact) GetContactID() string {
+	if x != nil {
+		return x.ContactID
+	}
+	return ""
+}
+
+func (x *EmailContact) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *EmailContact) GetEmailAddress() string {
+	if x != nil {
+		return x.EmailAddress
+	}
+	return ""
+}
+
+func (x *EmailContact) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *EmailContact) GetAvatarURL() string {
+	if x != nil {
+		return x.AvatarURL
+	}
+	return ""
+}
+
+func (x *EmailContact) GetIsStarred() bool {
+	if x != nil {
+		return x.IsStarred
+	}
+	return false
+}
+
+func (x *EmailContact) GetSpecialReminder() bool {
+	if x != nil {
+		return x.SpecialReminder
+	}
+	return false
+}
+
+func (x *EmailContact) GetCreateTime() int64 {
+	if x != nil {
+		return x.CreateTime
+	}
+	return 0
+}
+
+func (x *EmailContact) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
+type GetEmailContactReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailContactReq) Reset() {
+	*x = GetEmailContactReq{}
+	mi := &file_email_email_proto_msgTypes[56]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailContactReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailContactReq) ProtoMessage() {}
+
+func (x *GetEmailContactReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[56]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailContactReq.ProtoReflect.Descriptor instead.
+func (*GetEmailContactReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{56}
+}
+
+func (x *GetEmailContactReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *GetEmailContactReq) GetEmailAddress() string {
+	if x != nil {
+		return x.EmailAddress
+	}
+	return ""
+}
+
+type GetEmailContactResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Contact       *EmailContact          `protobuf:"bytes,1,opt,name=contact,proto3" json:"contact,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailContactResp) Reset() {
+	*x = GetEmailContactResp{}
+	mi := &file_email_email_proto_msgTypes[57]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailContactResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailContactResp) ProtoMessage() {}
+
+func (x *GetEmailContactResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[57]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailContactResp.ProtoReflect.Descriptor instead.
+func (*GetEmailContactResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{57}
+}
+
+func (x *GetEmailContactResp) GetContact() *EmailContact {
+	if x != nil {
+		return x.Contact
+	}
+	return nil
+}
+
+type GetEmailContactsReq struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	UserID        string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	Keyword       string                   `protobuf:"bytes,2,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailContactsReq) Reset() {
+	*x = GetEmailContactsReq{}
+	mi := &file_email_email_proto_msgTypes[58]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailContactsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailContactsReq) ProtoMessage() {}
+
+func (x *GetEmailContactsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[58]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailContactsReq.ProtoReflect.Descriptor instead.
+func (*GetEmailContactsReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{58}
+}
+
+func (x *GetEmailContactsReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *GetEmailContactsReq) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *GetEmailContactsReq) GetPagination() *sdkws.RequestPagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type GetEmailContactsResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Contacts      []*EmailContact        `protobuf:"bytes,1,rep,name=contacts,proto3" json:"contacts,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailContactsResp) Reset() {
+	*x = GetEmailContactsResp{}
+	mi := &file_email_email_proto_msgTypes[59]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailContactsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailContactsResp) ProtoMessage() {}
+
+func (x *GetEmailContactsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[59]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailContactsResp.ProtoReflect.Descriptor instead.
+func (*GetEmailContactsResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *GetEmailContactsResp) GetContacts() []*EmailContact {
+	if x != nil {
+		return x.Contacts
+	}
+	return nil
+}
+
+func (x *GetEmailContactsResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type UpsertEmailContactReq struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	UserID          string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	EmailAddress    string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
+	DisplayName     string                 `protobuf:"bytes,3,opt,name=displayName,proto3" json:"displayName,omitempty"`
+	AvatarURL       string                 `protobuf:"bytes,4,opt,name=avatarURL,proto3" json:"avatarURL,omitempty"`
+	IsStarred       bool                   `protobuf:"varint,5,opt,name=isStarred,proto3" json:"isStarred,omitempty"`
+	SpecialReminder bool                   `protobuf:"varint,6,opt,name=specialReminder,proto3" json:"specialReminder,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *UpsertEmailContactReq) Reset() {
+	*x = UpsertEmailContactReq{}
+	mi := &file_email_email_proto_msgTypes[60]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpsertEmailContactReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpsertEmailContactReq) ProtoMessage() {}
+
+func (x *UpsertEmailContactReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[60]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpsertEmailContactReq.ProtoReflect.Descriptor instead.
+func (*UpsertEmailContactReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{60}
+}
+
+func (x *UpsertEmailContactReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *UpsertEmailContactReq) GetEmailAddress() string {
+	if x != nil {
+		return x.EmailAddress
+	}
+	return ""
+}
+
+func (x *UpsertEmailContactReq) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *UpsertEmailContactReq) GetAvatarURL() string {
+	if x != nil {
+		return x.AvatarURL
+	}
+	return ""
+}
+
+func (x *UpsertEmailContactReq) GetIsStarred() bool {
+	if x != nil {
+		return x.IsStarred
+	}
+	return false
+}
+
+func (x *UpsertEmailContactReq) GetSpecialReminder() bool {
+	if x != nil {
+		return x.SpecialReminder
+	}
+	return false
+}
+
+type UpsertEmailContactResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Contact       *EmailContact          `protobuf:"bytes,1,opt,name=contact,proto3" json:"contact,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpsertEmailContactResp) Reset() {
+	*x = UpsertEmailContactResp{}
+	mi := &file_email_email_proto_msgTypes[61]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpsertEmailContactResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpsertEmailContactResp) ProtoMessage() {}
+
+func (x *UpsertEmailContactResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[61]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpsertEmailContactResp.ProtoReflect.Descriptor instead.
+func (*UpsertEmailContactResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{61}
+}
+
+func (x *UpsertEmailContactResp) GetContact() *EmailContact {
+	if x != nil {
+		return x.Contact
+	}
+	return nil
+}
+
+type DeleteEmailContactReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	EmailAddress  string                 `protobuf:"bytes,2,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteEmailContactReq) Reset() {
+	*x = DeleteEmailContactReq{}
+	mi := &file_email_email_proto_msgTypes[62]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteEmailContactReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteEmailContactReq) ProtoMessage() {}
+
+func (x *DeleteEmailContactReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[62]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteEmailContactReq.ProtoReflect.Descriptor instead.
+func (*DeleteEmailContactReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *DeleteEmailContactReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *DeleteEmailContactReq) GetEmailAddress() string {
+	if x != nil {
+		return x.EmailAddress
+	}
+	return ""
+}
+
+type DeleteEmailContactResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteEmailContactResp) Reset() {
+	*x = DeleteEmailContactResp{}
+	mi := &file_email_email_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteEmailContactResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteEmailContactResp) ProtoMessage() {}
+
+func (x *DeleteEmailContactResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteEmailContactResp.ProtoReflect.Descriptor instead.
+func (*DeleteEmailContactResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{63}
+}
+
+type GetEmailCorrespondenceReq struct {
+	state         protoimpl.MessageState   `protogen:"open.v1"`
+	UserID        string                   `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	AccountID     string                   `protobuf:"bytes,2,opt,name=accountID,proto3" json:"accountID,omitempty"`
+	EmailAddress  string                   `protobuf:"bytes,3,opt,name=emailAddress,proto3" json:"emailAddress,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailCorrespondenceReq) Reset() {
+	*x = GetEmailCorrespondenceReq{}
+	mi := &file_email_email_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailCorrespondenceReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailCorrespondenceReq) ProtoMessage() {}
+
+func (x *GetEmailCorrespondenceReq) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailCorrespondenceReq.ProtoReflect.Descriptor instead.
+func (*GetEmailCorrespondenceReq) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *GetEmailCorrespondenceReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *GetEmailCorrespondenceReq) GetAccountID() string {
+	if x != nil {
+		return x.AccountID
+	}
+	return ""
+}
+
+func (x *GetEmailCorrespondenceReq) GetEmailAddress() string {
+	if x != nil {
+		return x.EmailAddress
+	}
+	return ""
+}
+
+func (x *GetEmailCorrespondenceReq) GetPagination() *sdkws.RequestPagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type GetEmailCorrespondenceResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Emails        []*EmailMessage        `protobuf:"bytes,1,rep,name=emails,proto3" json:"emails,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEmailCorrespondenceResp) Reset() {
+	*x = GetEmailCorrespondenceResp{}
+	mi := &file_email_email_proto_msgTypes[65]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEmailCorrespondenceResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEmailCorrespondenceResp) ProtoMessage() {}
+
+func (x *GetEmailCorrespondenceResp) ProtoReflect() protoreflect.Message {
+	mi := &file_email_email_proto_msgTypes[65]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEmailCorrespondenceResp.ProtoReflect.Descriptor instead.
+func (*GetEmailCorrespondenceResp) Descriptor() ([]byte, []int) {
+	return file_email_email_proto_rawDescGZIP(), []int{65}
+}
+
+func (x *GetEmailCorrespondenceResp) GetEmails() []*EmailMessage {
+	if x != nil {
+		return x.Emails
+	}
+	return nil
+}
+
+func (x *GetEmailCorrespondenceResp) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_email_email_proto protoreflect.FileDescriptor
 
 const file_email_email_proto_rawDesc = "" +
@@ -4192,7 +4860,7 @@ const file_email_email_proto_rawDesc = "" +
 	"\bfolderID\x18\x01 \x01(\tR\bfolderID\x12\x1c\n" +
 	"\taccountID\x18\x02 \x01(\tR\taccountID\x12\x16\n" +
 	"\x06userID\x18\x03 \x01(\tR\x06userID\"\x17\n" +
-	"\x15DeleteEmailFolderResp\"\xd5\x03\n" +
+	"\x15DeleteEmailFolderResp\"\x87\x04\n" +
 	"\fSendEmailReq\x12\x1c\n" +
 	"\taccountID\x18\x01 \x01(\tR\taccountID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12*\n" +
@@ -4209,9 +4877,10 @@ const file_email_email_proto_rawDesc = "" +
 	"\n" +
 	"references\x18\f \x03(\tR\n" +
 	"references\x12\x18\n" +
-	"\adraftID\x18\r \x01(\tR\adraftID\"A\n" +
+	"\adraftID\x18\r \x01(\tR\adraftID\x120\n" +
+	"\x13attachmentFileNames\x18\x0e \x03(\tR\x13attachmentFileNames\"A\n" +
 	"\rSendEmailResp\x120\n" +
-	"\x05email\x18\x01 \x01(\v2\x1a.openim.email.EmailMessageR\x05email\"\xd5\x03\n" +
+	"\x05email\x18\x01 \x01(\v2\x1a.openim.email.EmailMessageR\x05email\"\x87\x04\n" +
 	"\fSaveDraftReq\x12\x1c\n" +
 	"\taccountID\x18\x01 \x01(\tR\taccountID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x18\n" +
@@ -4228,7 +4897,8 @@ const file_email_email_proto_rawDesc = "" +
 	"\tinReplyTo\x18\f \x01(\tR\tinReplyTo\x12\x1e\n" +
 	"\n" +
 	"references\x18\r \x03(\tR\n" +
-	"references\"A\n" +
+	"references\x120\n" +
+	"\x13attachmentFileNames\x18\x0e \x03(\tR\x13attachmentFileNames\"A\n" +
 	"\rSaveDraftResp\x120\n" +
 	"\x05email\x18\x01 \x01(\v2\x1a.openim.email.EmailMessageR\x05email\"\xa1\x03\n" +
 	"\fGetEmailsReq\x12\x1c\n" +
@@ -4294,7 +4964,58 @@ const file_email_email_proto_rawDesc = "" +
 	"\ffolderUnread\x18\x02 \x03(\v22.openim.email.GetUnreadCountResp.FolderUnreadEntryR\ffolderUnread\x1a?\n" +
 	"\x11FolderUnreadEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01*}\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xb0\x02\n" +
+	"\fEmailContact\x12\x1c\n" +
+	"\tcontactID\x18\x01 \x01(\tR\tcontactID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\"\n" +
+	"\femailAddress\x18\x03 \x01(\tR\femailAddress\x12 \n" +
+	"\vdisplayName\x18\x04 \x01(\tR\vdisplayName\x12\x1c\n" +
+	"\tavatarURL\x18\x05 \x01(\tR\tavatarURL\x12\x1c\n" +
+	"\tisStarred\x18\x06 \x01(\bR\tisStarred\x12(\n" +
+	"\x0fspecialReminder\x18\a \x01(\bR\x0fspecialReminder\x12\x1e\n" +
+	"\n" +
+	"createTime\x18\b \x01(\x03R\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\t \x01(\x03R\n" +
+	"updateTime\"P\n" +
+	"\x12GetEmailContactReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\"\n" +
+	"\femailAddress\x18\x02 \x01(\tR\femailAddress\"K\n" +
+	"\x13GetEmailContactResp\x124\n" +
+	"\acontact\x18\x01 \x01(\v2\x1a.openim.email.EmailContactR\acontact\"\x88\x01\n" +
+	"\x13GetEmailContactsReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x18\n" +
+	"\akeyword\x18\x02 \x01(\tR\akeyword\x12?\n" +
+	"\n" +
+	"pagination\x18\x03 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"d\n" +
+	"\x14GetEmailContactsResp\x126\n" +
+	"\bcontacts\x18\x01 \x03(\v2\x1a.openim.email.EmailContactR\bcontacts\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\"\xdb\x01\n" +
+	"\x15UpsertEmailContactReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\"\n" +
+	"\femailAddress\x18\x02 \x01(\tR\femailAddress\x12 \n" +
+	"\vdisplayName\x18\x03 \x01(\tR\vdisplayName\x12\x1c\n" +
+	"\tavatarURL\x18\x04 \x01(\tR\tavatarURL\x12\x1c\n" +
+	"\tisStarred\x18\x05 \x01(\bR\tisStarred\x12(\n" +
+	"\x0fspecialReminder\x18\x06 \x01(\bR\x0fspecialReminder\"N\n" +
+	"\x16UpsertEmailContactResp\x124\n" +
+	"\acontact\x18\x01 \x01(\v2\x1a.openim.email.EmailContactR\acontact\"S\n" +
+	"\x15DeleteEmailContactReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\"\n" +
+	"\femailAddress\x18\x02 \x01(\tR\femailAddress\"\x18\n" +
+	"\x16DeleteEmailContactResp\"\xb6\x01\n" +
+	"\x19GetEmailCorrespondenceReq\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1c\n" +
+	"\taccountID\x18\x02 \x01(\tR\taccountID\x12\"\n" +
+	"\femailAddress\x18\x03 \x01(\tR\femailAddress\x12?\n" +
+	"\n" +
+	"pagination\x18\x04 \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
+	"pagination\"f\n" +
+	"\x1aGetEmailCorrespondenceResp\x122\n" +
+	"\x06emails\x18\x01 \x03(\v2\x1a.openim.email.EmailMessageR\x06emails\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total*}\n" +
 	"\x0fEmailFolderType\x12\x10\n" +
 	"\fFOLDER_INBOX\x10\x00\x12\x11\n" +
 	"\rFOLDER_DRAFTS\x10\x01\x12\x0f\n" +
@@ -4309,14 +5030,19 @@ const file_email_email_proto_rawDesc = "" +
 	"\vEmailStatus\x12\x11\n" +
 	"\rSTATUS_UNREAD\x10\x00\x12\x0f\n" +
 	"\vSTATUS_READ\x10\x01\x12\x12\n" +
-	"\x0eSTATUS_FLAGGED\x10\x022\xef\x0f\n" +
+	"\x0eSTATUS_FLAGGED\x10\x022\xd1\x13\n" +
 	"\x05Email\x12V\n" +
 	"\x0fAddEmailAccount\x12 .openim.email.AddEmailAccountReq\x1a!.openim.email.AddEmailAccountResp\x12b\n" +
 	"\x13ImportEmailAccounts\x12$.openim.email.ImportEmailAccountsReq\x1a%.openim.email.ImportEmailAccountsResp\x12_\n" +
 	"\x12UpdateEmailAccount\x12#.openim.email.UpdateEmailAccountReq\x1a$.openim.email.UpdateEmailAccountResp\x12_\n" +
 	"\x12DeleteEmailAccount\x12#.openim.email.DeleteEmailAccountReq\x1a$.openim.email.DeleteEmailAccountResp\x12Y\n" +
 	"\x10GetEmailAccounts\x12!.openim.email.GetEmailAccountsReq\x1a\".openim.email.GetEmailAccountsResp\x12q\n" +
-	"\x18GetDefaultEmailAddresses\x12).openim.email.GetDefaultEmailAddressesReq\x1a*.openim.email.GetDefaultEmailAddressesResp\x12Y\n" +
+	"\x18GetDefaultEmailAddresses\x12).openim.email.GetDefaultEmailAddressesReq\x1a*.openim.email.GetDefaultEmailAddressesResp\x12V\n" +
+	"\x0fGetEmailContact\x12 .openim.email.GetEmailContactReq\x1a!.openim.email.GetEmailContactResp\x12Y\n" +
+	"\x10GetEmailContacts\x12!.openim.email.GetEmailContactsReq\x1a\".openim.email.GetEmailContactsResp\x12_\n" +
+	"\x12UpsertEmailContact\x12#.openim.email.UpsertEmailContactReq\x1a$.openim.email.UpsertEmailContactResp\x12_\n" +
+	"\x12DeleteEmailContact\x12#.openim.email.DeleteEmailContactReq\x1a$.openim.email.DeleteEmailContactResp\x12k\n" +
+	"\x16GetEmailCorrespondence\x12'.openim.email.GetEmailCorrespondenceReq\x1a(.openim.email.GetEmailCorrespondenceResp\x12Y\n" +
 	"\x10TestEmailAccount\x12!.openim.email.TestEmailAccountReq\x1a\".openim.email.TestEmailAccountResp\x12S\n" +
 	"\x0eGetEmailConfig\x12\x1f.openim.email.GetEmailConfigReq\x1a .openim.email.GetEmailConfigResp\x12h\n" +
 	"\x15GetEmailServiceConfig\x12&.openim.email.GetEmailServiceConfigReq\x1a'.openim.email.GetEmailServiceConfigResp\x12h\n" +
@@ -4351,7 +5077,7 @@ func file_email_email_proto_rawDescGZIP() []byte {
 }
 
 var file_email_email_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_email_email_proto_msgTypes = make([]protoimpl.MessageInfo, 56)
+var file_email_email_proto_msgTypes = make([]protoimpl.MessageInfo, 67)
 var file_email_email_proto_goTypes = []any{
 	(EmailFolderType)(0),                 // 0: openim.email.EmailFolderType
 	(EmailPriority)(0),                   // 1: openim.email.EmailPriority
@@ -4411,8 +5137,19 @@ var file_email_email_proto_goTypes = []any{
 	(*SyncEmailsResp)(nil),               // 55: openim.email.SyncEmailsResp
 	(*GetUnreadCountReq)(nil),            // 56: openim.email.GetUnreadCountReq
 	(*GetUnreadCountResp)(nil),           // 57: openim.email.GetUnreadCountResp
-	nil,                                  // 58: openim.email.GetUnreadCountResp.FolderUnreadEntry
-	(*sdkws.RequestPagination)(nil),      // 59: openim.sdkws.RequestPagination
+	(*EmailContact)(nil),                 // 58: openim.email.EmailContact
+	(*GetEmailContactReq)(nil),           // 59: openim.email.GetEmailContactReq
+	(*GetEmailContactResp)(nil),          // 60: openim.email.GetEmailContactResp
+	(*GetEmailContactsReq)(nil),          // 61: openim.email.GetEmailContactsReq
+	(*GetEmailContactsResp)(nil),         // 62: openim.email.GetEmailContactsResp
+	(*UpsertEmailContactReq)(nil),        // 63: openim.email.UpsertEmailContactReq
+	(*UpsertEmailContactResp)(nil),       // 64: openim.email.UpsertEmailContactResp
+	(*DeleteEmailContactReq)(nil),        // 65: openim.email.DeleteEmailContactReq
+	(*DeleteEmailContactResp)(nil),       // 66: openim.email.DeleteEmailContactResp
+	(*GetEmailCorrespondenceReq)(nil),    // 67: openim.email.GetEmailCorrespondenceReq
+	(*GetEmailCorrespondenceResp)(nil),   // 68: openim.email.GetEmailCorrespondenceResp
+	nil,                                  // 69: openim.email.GetUnreadCountResp.FolderUnreadEntry
+	(*sdkws.RequestPagination)(nil),      // 70: openim.sdkws.RequestPagination
 }
 var file_email_email_proto_depIdxs = []int32{
 	0,  // 0: openim.email.EmailFolder.folderType:type_name -> openim.email.EmailFolderType
@@ -4442,61 +5179,77 @@ var file_email_email_proto_depIdxs = []int32{
 	5,  // 24: openim.email.SaveDraftReq.bcc:type_name -> openim.email.EmailAddress
 	1,  // 25: openim.email.SaveDraftReq.priority:type_name -> openim.email.EmailPriority
 	7,  // 26: openim.email.SaveDraftResp.email:type_name -> openim.email.EmailMessage
-	59, // 27: openim.email.GetEmailsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	70, // 27: openim.email.GetEmailsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	7,  // 28: openim.email.GetEmailsResp.emails:type_name -> openim.email.EmailMessage
 	7,  // 29: openim.email.GetEmailDetailResp.email:type_name -> openim.email.EmailMessage
-	58, // 30: openim.email.GetUnreadCountResp.folderUnread:type_name -> openim.email.GetUnreadCountResp.FolderUnreadEntry
-	8,  // 31: openim.email.Email.AddEmailAccount:input_type -> openim.email.AddEmailAccountReq
-	11, // 32: openim.email.Email.ImportEmailAccounts:input_type -> openim.email.ImportEmailAccountsReq
-	14, // 33: openim.email.Email.UpdateEmailAccount:input_type -> openim.email.UpdateEmailAccountReq
-	16, // 34: openim.email.Email.DeleteEmailAccount:input_type -> openim.email.DeleteEmailAccountReq
-	18, // 35: openim.email.Email.GetEmailAccounts:input_type -> openim.email.GetEmailAccountsReq
-	20, // 36: openim.email.Email.GetDefaultEmailAddresses:input_type -> openim.email.GetDefaultEmailAddressesReq
-	30, // 37: openim.email.Email.TestEmailAccount:input_type -> openim.email.TestEmailAccountReq
-	23, // 38: openim.email.Email.GetEmailConfig:input_type -> openim.email.GetEmailConfigReq
-	26, // 39: openim.email.Email.GetEmailServiceConfig:input_type -> openim.email.GetEmailServiceConfigReq
-	28, // 40: openim.email.Email.SetEmailServiceConfig:input_type -> openim.email.SetEmailServiceConfigReq
-	32, // 41: openim.email.Email.GetEmailFolders:input_type -> openim.email.GetEmailFoldersReq
-	34, // 42: openim.email.Email.CreateEmailFolder:input_type -> openim.email.CreateEmailFolderReq
-	36, // 43: openim.email.Email.UpdateEmailFolder:input_type -> openim.email.UpdateEmailFolderReq
-	38, // 44: openim.email.Email.DeleteEmailFolder:input_type -> openim.email.DeleteEmailFolderReq
-	40, // 45: openim.email.Email.SendEmail:input_type -> openim.email.SendEmailReq
-	42, // 46: openim.email.Email.SaveDraft:input_type -> openim.email.SaveDraftReq
-	44, // 47: openim.email.Email.GetEmails:input_type -> openim.email.GetEmailsReq
-	46, // 48: openim.email.Email.GetEmailDetail:input_type -> openim.email.GetEmailDetailReq
-	48, // 49: openim.email.Email.DeleteEmails:input_type -> openim.email.DeleteEmailsReq
-	50, // 50: openim.email.Email.MoveEmails:input_type -> openim.email.MoveEmailsReq
-	52, // 51: openim.email.Email.MarkEmails:input_type -> openim.email.MarkEmailsReq
-	54, // 52: openim.email.Email.SyncEmails:input_type -> openim.email.SyncEmailsReq
-	56, // 53: openim.email.Email.GetUnreadCount:input_type -> openim.email.GetUnreadCountReq
-	9,  // 54: openim.email.Email.AddEmailAccount:output_type -> openim.email.AddEmailAccountResp
-	13, // 55: openim.email.Email.ImportEmailAccounts:output_type -> openim.email.ImportEmailAccountsResp
-	15, // 56: openim.email.Email.UpdateEmailAccount:output_type -> openim.email.UpdateEmailAccountResp
-	17, // 57: openim.email.Email.DeleteEmailAccount:output_type -> openim.email.DeleteEmailAccountResp
-	19, // 58: openim.email.Email.GetEmailAccounts:output_type -> openim.email.GetEmailAccountsResp
-	22, // 59: openim.email.Email.GetDefaultEmailAddresses:output_type -> openim.email.GetDefaultEmailAddressesResp
-	31, // 60: openim.email.Email.TestEmailAccount:output_type -> openim.email.TestEmailAccountResp
-	24, // 61: openim.email.Email.GetEmailConfig:output_type -> openim.email.GetEmailConfigResp
-	27, // 62: openim.email.Email.GetEmailServiceConfig:output_type -> openim.email.GetEmailServiceConfigResp
-	29, // 63: openim.email.Email.SetEmailServiceConfig:output_type -> openim.email.SetEmailServiceConfigResp
-	33, // 64: openim.email.Email.GetEmailFolders:output_type -> openim.email.GetEmailFoldersResp
-	35, // 65: openim.email.Email.CreateEmailFolder:output_type -> openim.email.CreateEmailFolderResp
-	37, // 66: openim.email.Email.UpdateEmailFolder:output_type -> openim.email.UpdateEmailFolderResp
-	39, // 67: openim.email.Email.DeleteEmailFolder:output_type -> openim.email.DeleteEmailFolderResp
-	41, // 68: openim.email.Email.SendEmail:output_type -> openim.email.SendEmailResp
-	43, // 69: openim.email.Email.SaveDraft:output_type -> openim.email.SaveDraftResp
-	45, // 70: openim.email.Email.GetEmails:output_type -> openim.email.GetEmailsResp
-	47, // 71: openim.email.Email.GetEmailDetail:output_type -> openim.email.GetEmailDetailResp
-	49, // 72: openim.email.Email.DeleteEmails:output_type -> openim.email.DeleteEmailsResp
-	51, // 73: openim.email.Email.MoveEmails:output_type -> openim.email.MoveEmailsResp
-	53, // 74: openim.email.Email.MarkEmails:output_type -> openim.email.MarkEmailsResp
-	55, // 75: openim.email.Email.SyncEmails:output_type -> openim.email.SyncEmailsResp
-	57, // 76: openim.email.Email.GetUnreadCount:output_type -> openim.email.GetUnreadCountResp
-	54, // [54:77] is the sub-list for method output_type
-	31, // [31:54] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	69, // 30: openim.email.GetUnreadCountResp.folderUnread:type_name -> openim.email.GetUnreadCountResp.FolderUnreadEntry
+	58, // 31: openim.email.GetEmailContactResp.contact:type_name -> openim.email.EmailContact
+	70, // 32: openim.email.GetEmailContactsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	58, // 33: openim.email.GetEmailContactsResp.contacts:type_name -> openim.email.EmailContact
+	58, // 34: openim.email.UpsertEmailContactResp.contact:type_name -> openim.email.EmailContact
+	70, // 35: openim.email.GetEmailCorrespondenceReq.pagination:type_name -> openim.sdkws.RequestPagination
+	7,  // 36: openim.email.GetEmailCorrespondenceResp.emails:type_name -> openim.email.EmailMessage
+	8,  // 37: openim.email.Email.AddEmailAccount:input_type -> openim.email.AddEmailAccountReq
+	11, // 38: openim.email.Email.ImportEmailAccounts:input_type -> openim.email.ImportEmailAccountsReq
+	14, // 39: openim.email.Email.UpdateEmailAccount:input_type -> openim.email.UpdateEmailAccountReq
+	16, // 40: openim.email.Email.DeleteEmailAccount:input_type -> openim.email.DeleteEmailAccountReq
+	18, // 41: openim.email.Email.GetEmailAccounts:input_type -> openim.email.GetEmailAccountsReq
+	20, // 42: openim.email.Email.GetDefaultEmailAddresses:input_type -> openim.email.GetDefaultEmailAddressesReq
+	59, // 43: openim.email.Email.GetEmailContact:input_type -> openim.email.GetEmailContactReq
+	61, // 44: openim.email.Email.GetEmailContacts:input_type -> openim.email.GetEmailContactsReq
+	63, // 45: openim.email.Email.UpsertEmailContact:input_type -> openim.email.UpsertEmailContactReq
+	65, // 46: openim.email.Email.DeleteEmailContact:input_type -> openim.email.DeleteEmailContactReq
+	67, // 47: openim.email.Email.GetEmailCorrespondence:input_type -> openim.email.GetEmailCorrespondenceReq
+	30, // 48: openim.email.Email.TestEmailAccount:input_type -> openim.email.TestEmailAccountReq
+	23, // 49: openim.email.Email.GetEmailConfig:input_type -> openim.email.GetEmailConfigReq
+	26, // 50: openim.email.Email.GetEmailServiceConfig:input_type -> openim.email.GetEmailServiceConfigReq
+	28, // 51: openim.email.Email.SetEmailServiceConfig:input_type -> openim.email.SetEmailServiceConfigReq
+	32, // 52: openim.email.Email.GetEmailFolders:input_type -> openim.email.GetEmailFoldersReq
+	34, // 53: openim.email.Email.CreateEmailFolder:input_type -> openim.email.CreateEmailFolderReq
+	36, // 54: openim.email.Email.UpdateEmailFolder:input_type -> openim.email.UpdateEmailFolderReq
+	38, // 55: openim.email.Email.DeleteEmailFolder:input_type -> openim.email.DeleteEmailFolderReq
+	40, // 56: openim.email.Email.SendEmail:input_type -> openim.email.SendEmailReq
+	42, // 57: openim.email.Email.SaveDraft:input_type -> openim.email.SaveDraftReq
+	44, // 58: openim.email.Email.GetEmails:input_type -> openim.email.GetEmailsReq
+	46, // 59: openim.email.Email.GetEmailDetail:input_type -> openim.email.GetEmailDetailReq
+	48, // 60: openim.email.Email.DeleteEmails:input_type -> openim.email.DeleteEmailsReq
+	50, // 61: openim.email.Email.MoveEmails:input_type -> openim.email.MoveEmailsReq
+	52, // 62: openim.email.Email.MarkEmails:input_type -> openim.email.MarkEmailsReq
+	54, // 63: openim.email.Email.SyncEmails:input_type -> openim.email.SyncEmailsReq
+	56, // 64: openim.email.Email.GetUnreadCount:input_type -> openim.email.GetUnreadCountReq
+	9,  // 65: openim.email.Email.AddEmailAccount:output_type -> openim.email.AddEmailAccountResp
+	13, // 66: openim.email.Email.ImportEmailAccounts:output_type -> openim.email.ImportEmailAccountsResp
+	15, // 67: openim.email.Email.UpdateEmailAccount:output_type -> openim.email.UpdateEmailAccountResp
+	17, // 68: openim.email.Email.DeleteEmailAccount:output_type -> openim.email.DeleteEmailAccountResp
+	19, // 69: openim.email.Email.GetEmailAccounts:output_type -> openim.email.GetEmailAccountsResp
+	22, // 70: openim.email.Email.GetDefaultEmailAddresses:output_type -> openim.email.GetDefaultEmailAddressesResp
+	60, // 71: openim.email.Email.GetEmailContact:output_type -> openim.email.GetEmailContactResp
+	62, // 72: openim.email.Email.GetEmailContacts:output_type -> openim.email.GetEmailContactsResp
+	64, // 73: openim.email.Email.UpsertEmailContact:output_type -> openim.email.UpsertEmailContactResp
+	66, // 74: openim.email.Email.DeleteEmailContact:output_type -> openim.email.DeleteEmailContactResp
+	68, // 75: openim.email.Email.GetEmailCorrespondence:output_type -> openim.email.GetEmailCorrespondenceResp
+	31, // 76: openim.email.Email.TestEmailAccount:output_type -> openim.email.TestEmailAccountResp
+	24, // 77: openim.email.Email.GetEmailConfig:output_type -> openim.email.GetEmailConfigResp
+	27, // 78: openim.email.Email.GetEmailServiceConfig:output_type -> openim.email.GetEmailServiceConfigResp
+	29, // 79: openim.email.Email.SetEmailServiceConfig:output_type -> openim.email.SetEmailServiceConfigResp
+	33, // 80: openim.email.Email.GetEmailFolders:output_type -> openim.email.GetEmailFoldersResp
+	35, // 81: openim.email.Email.CreateEmailFolder:output_type -> openim.email.CreateEmailFolderResp
+	37, // 82: openim.email.Email.UpdateEmailFolder:output_type -> openim.email.UpdateEmailFolderResp
+	39, // 83: openim.email.Email.DeleteEmailFolder:output_type -> openim.email.DeleteEmailFolderResp
+	41, // 84: openim.email.Email.SendEmail:output_type -> openim.email.SendEmailResp
+	43, // 85: openim.email.Email.SaveDraft:output_type -> openim.email.SaveDraftResp
+	45, // 86: openim.email.Email.GetEmails:output_type -> openim.email.GetEmailsResp
+	47, // 87: openim.email.Email.GetEmailDetail:output_type -> openim.email.GetEmailDetailResp
+	49, // 88: openim.email.Email.DeleteEmails:output_type -> openim.email.DeleteEmailsResp
+	51, // 89: openim.email.Email.MoveEmails:output_type -> openim.email.MoveEmailsResp
+	53, // 90: openim.email.Email.MarkEmails:output_type -> openim.email.MarkEmailsResp
+	55, // 91: openim.email.Email.SyncEmails:output_type -> openim.email.SyncEmailsResp
+	57, // 92: openim.email.Email.GetUnreadCount:output_type -> openim.email.GetUnreadCountResp
+	65, // [65:93] is the sub-list for method output_type
+	37, // [37:65] is the sub-list for method input_type
+	37, // [37:37] is the sub-list for extension type_name
+	37, // [37:37] is the sub-list for extension extendee
+	0,  // [0:37] is the sub-list for field type_name
 }
 
 func init() { file_email_email_proto_init() }
@@ -4513,7 +5266,7 @@ func file_email_email_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_email_email_proto_rawDesc), len(file_email_email_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   56,
+			NumMessages:   67,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
