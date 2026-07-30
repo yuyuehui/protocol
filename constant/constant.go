@@ -60,6 +60,7 @@ const (
 	ScheduleGroupPermissionMessage = 211 // 日程分组权限修改消息（显示为：XXX将你对"日历名"的权限修改为了「可管理」）
 	WorkbenchNotifyMessage         = 212 // 工作台通知消息
 	MeetingInviteCardMessage       = 213 // 群会议邀请卡片消息
+	EmailForwardMessage            = 214 // 邮件转发卡片消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -361,17 +362,18 @@ const (
 
 // 内容类型到推送内容的映射
 var ContentType2PushContent = map[int64]string{
-	Picture:          "[PICTURE]",          // 图片
-	Voice:            "[VOICE]",            // 语音
-	Video:            "[VIDEO]",            // 视频
-	File:             "[File]",             // 文件
-	Text:             "[TEXT]",             // 文本
-	AtText:           "[@TEXT]",            // @文本
-	Emoji:            "[EMOJI]",            // 表情包
-	MixedTextPicture: "[MIXEDTEXTPICTURE]", // 图片和文字混合消息
-	GroupMsg:         "[GROUPMSG]]",        // 群组消息
-	Common:           "[NEWMSG]",           // 通用消息
-	SignalMsg:        "[SIGNALINVITE]",     // 信令邀请
+	Picture:             "[PICTURE]",          // 图片
+	Voice:               "[VOICE]",            // 语音
+	Video:               "[VIDEO]",            // 视频
+	File:                "[File]",             // 文件
+	Text:                "[TEXT]",             // 文本
+	AtText:              "[@TEXT]",            // @文本
+	Emoji:               "[EMOJI]",            // 表情包
+	MixedTextPicture:    "[MIXEDTEXTPICTURE]", // 图片和文字混合消息
+	EmailForwardMessage: "[EMAIL]",            // 邮件转发卡片
+	GroupMsg:            "[GROUPMSG]]",        // 群组消息
+	Common:              "[NEWMSG]",           // 通用消息
+	SignalMsg:           "[SIGNALINVITE]",     // 信令邀请
 }
 
 const (
