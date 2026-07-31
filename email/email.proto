@@ -473,6 +473,30 @@ message GetUnreadCountResp {
   map<string, int32> folderUnread = 2;  // key: folderID
 }
 
+// ===================== 用户邮箱设置 =====================
+
+message EmailUserSettings {
+  bool newEmailNotification = 1; // 是否启用新邮件系统通知
+  int64 updateTime = 2;
+}
+
+message GetEmailUserSettingsReq {
+  string userID = 1;
+}
+
+message GetEmailUserSettingsResp {
+  EmailUserSettings settings = 1;
+}
+
+message UpdateEmailUserSettingsReq {
+  string userID = 1;
+  optional bool newEmailNotification = 2;
+}
+
+message UpdateEmailUserSettingsResp {
+  EmailUserSettings settings = 1;
+}
+
 // ===================== 邮件联系人 =====================
 
 message EmailContact {
@@ -549,6 +573,8 @@ service Email {
   rpc DeleteEmailAccount(DeleteEmailAccountReq) returns (DeleteEmailAccountResp);
   rpc GetEmailAccounts(GetEmailAccountsReq) returns (GetEmailAccountsResp);
   rpc GetDefaultEmailAddresses(GetDefaultEmailAddressesReq) returns (GetDefaultEmailAddressesResp);
+  rpc GetEmailUserSettings(GetEmailUserSettingsReq) returns (GetEmailUserSettingsResp);
+  rpc UpdateEmailUserSettings(UpdateEmailUserSettingsReq) returns (UpdateEmailUserSettingsResp);
   rpc GetEmailContact(GetEmailContactReq) returns (GetEmailContactResp);
   rpc GetEmailContacts(GetEmailContactsReq) returns (GetEmailContactsResp);
   rpc UpsertEmailContact(UpsertEmailContactReq) returns (UpsertEmailContactResp);
