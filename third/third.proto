@@ -221,6 +221,17 @@ message SpeechToTextResp {
   string recognizedText = 1;
 }
 
+message TranslateTextReq {
+  string text = 1;
+  string targetLanguage = 2;
+  string sourceLanguage = 3;
+  string model = 4;
+}
+
+message TranslateTextResp {
+  string translatedText = 1;
+}
+
 service third {
   rpc PartLimit(PartLimitReq) returns (PartLimitResp);
   rpc PartSize(PartSizeReq) returns (PartSizeResp);
@@ -242,4 +253,7 @@ service third {
 
   // Speech
   rpc SpeechToText(SpeechToTextReq) returns (SpeechToTextResp);
+
+  // Translation
+  rpc TranslateText(TranslateTextReq) returns (TranslateTextResp);
 }

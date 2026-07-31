@@ -76,3 +76,13 @@ func (x *SpeechToTextReq) Check() error {
 	}
 	return nil
 }
+
+func (x *TranslateTextReq) Check() error {
+	if x.Text == "" {
+		return errors.New("text is empty")
+	}
+	if x.TargetLanguage == "" {
+		return errors.New("targetLanguage is empty")
+	}
+	return nil
+}
