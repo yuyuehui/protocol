@@ -100,6 +100,33 @@ message RevokeMsgReq {
 
 message RevokeMsgResp {}
 
+// EditMsg 编辑已发送消息内容（流式输出/纠错用）。按 serverMsgID 定位消息。
+message EditMsgReq {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string sendID = 3;      // 编辑者身份，服务端校验「仅发送者本人可编辑」
+  int32 contentType = 4;
+  string content = 5;
+  int64 seq = 6;          // 可选：已知 seq 时按 seq O(1) 定位分片文档，避免按 serverMsgID 全会话扫描
+  bool transient = 7;     // true=流式中间片（只通知在线端，不写 Mongo）；默认 false=终稿/普通编辑，正常落库
+}
+
+message EditMsgResp {
+  string serverMsgID = 1;
+  int64 editTime = 2;
+  int64 seq = 3;          // 回传 seq，调用方后续编辑同一条消息时带上即可走 O(1) 定位
+}
+
+message EditMsgTips {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string clientMsgID = 3;
+  int64 seq = 4;
+  int32 contentType = 5;
+  string content = 6;
+  int64 editTime = 7;
+}
+
 message MarkMsgsAsReadReq {
   string conversationID = 1;
   repeated int64 seqs = 2;
@@ -732,6 +759,29 @@ message SyncSummaryRecordsResp {
   int64 syncTime = 3;                  // 本次同步时间
 }
 
+// 设置语音转文字请求
+message SetSpeechToTextReq {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  string recognizedText = 3;      // 识别结果文本
+  string language = 4;            // 语言代码
+}
+
+// 设置语音转文字响应
+message SetSpeechToTextResp {
+}
+
+// 设置语音转文字隐藏状态请求
+message SetSpeechToTextHiddenReq {
+  string conversationID = 1;      // 会话ID
+  int64 seq = 2;                  // 消息序列号
+  bool hidden = 3;                // true=收起, false=展开
+}
+
+// 设置语音转文字隐藏状态响应
+message SetSpeechToTextHiddenResp {
+}
+
 service msg {
   //获取最小最大seq（包括用户的，以及指定群组的）
   rpc GetMaxSeq(sdkws.GetMaxSeqReq) returns (sdkws.GetMaxSeqResp);
@@ -769,6 +819,7 @@ service msg {
   //获取消息发送状态
   rpc GetSendMsgStatus(GetSendMsgStatusReq) returns (GetSendMsgStatusResp);
   rpc RevokeMsg(RevokeMsgReq) returns (RevokeMsgResp);
+  rpc EditMsg(EditMsgReq) returns (EditMsgResp);
   // mark as read
   rpc MarkMsgsAsRead(MarkMsgsAsReadReq) returns (MarkMsgsAsReadResp);
   rpc MarkConversationAsRead(MarkConversationAsReadReq) returns (MarkConversationAsReadResp);
@@ -812,4 +863,9 @@ service msg {
   rpc SetSummaryFavorite(SetSummaryFavoriteReq) returns (SetSummaryFavoriteResp);
   rpc PublishSummary(PublishSummaryReq) returns (PublishSummaryResp);
   rpc SyncSummaryRecords(SyncSummaryRecordsReq) returns (SyncSummaryRecordsResp);
+
+  // 语音转文字持久化接口
+  rpc SetSpeechToText(SetSpeechToTextReq) returns (SetSpeechToTextResp);
+  // 设置语音转文字隐藏状态（收起/展开）
+  rpc SetSpeechToTextHidden(SetSpeechToTextHiddenReq) returns (SetSpeechToTextHiddenResp);
 }
