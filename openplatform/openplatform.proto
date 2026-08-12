@@ -1,0 +1,70 @@
+syntax = "proto3";
+package openim.openplatform;
+
+import "workbench/workbench.proto";
+
+option go_package = "github.com/openimsdk/protocol/openplatform";
+
+service OpenPlatform {
+  // ---- Credential & OAuth ----
+  rpc createCredential(openim.workbench.CreateCredentialReq) returns (openim.workbench.CreateCredentialResp);
+  rpc resetSecret(openim.workbench.ResetSecretReq) returns (openim.workbench.ResetSecretResp);
+  rpc getCredential(openim.workbench.GetCredentialReq) returns (openim.workbench.GetCredentialResp);
+  rpc setIPWhitelist(openim.workbench.SetIPWhitelistReq) returns (openim.workbench.SetIPWhitelistResp);
+  rpc getAccessToken(openim.workbench.GetAccessTokenReq) returns (openim.workbench.GetAccessTokenResp);
+  rpc authorizeApp(openim.workbench.AuthorizeAppReq) returns (openim.workbench.AuthorizeAppResp);
+  rpc revokeAuth(openim.workbench.RevokeAuthReq) returns (openim.workbench.RevokeAuthResp);
+  rpc getAuthDetail(openim.workbench.GetAuthDetailReq) returns (openim.workbench.GetAuthDetailResp);
+
+  // ---- SSO ----
+  rpc createTicket(openim.workbench.CreateTicketReq) returns (openim.workbench.CreateTicketResp);
+  rpc getUserByTicket(openim.workbench.GetUserByTicketReq) returns (openim.workbench.GetUserByTicketResp);
+
+  // ---- Notification ----
+  rpc createMsgTemplate(openim.workbench.CreateMsgTemplateReq) returns (openim.workbench.CreateMsgTemplateResp);
+  rpc updateMsgTemplate(openim.workbench.UpdateMsgTemplateReq) returns (openim.workbench.UpdateMsgTemplateResp);
+  rpc deleteMsgTemplate(openim.workbench.DeleteMsgTemplateReq) returns (openim.workbench.DeleteMsgTemplateResp);
+  rpc getMsgTemplateList(openim.workbench.GetMsgTemplateListReq) returns (openim.workbench.GetMsgTemplateListResp);
+  rpc previewMsgTemplate(openim.workbench.PreviewMsgTemplateReq) returns (openim.workbench.PreviewMsgTemplateResp);
+  rpc sendNotify(openim.workbench.SendNotifyReq) returns (openim.workbench.SendNotifyResp);
+  rpc batchSendNotify(openim.workbench.BatchSendNotifyReq) returns (openim.workbench.BatchSendNotifyResp);
+  rpc updateNotify(openim.workbench.UpdateNotifyReq) returns (openim.workbench.UpdateNotifyResp);
+  rpc revokeNotify(openim.workbench.RevokeNotifyReq) returns (openim.workbench.RevokeNotifyResp);
+  rpc queryNotify(openim.workbench.QueryNotifyReq) returns (openim.workbench.QueryNotifyResp);
+  rpc getNotifyList(openim.workbench.GetNotifyListReq) returns (openim.workbench.GetNotifyListResp);
+  rpc getNotifyStats(openim.workbench.GetNotifyStatsReq) returns (openim.workbench.GetNotifyStatsResp);
+
+  // ---- Developer ----
+  rpc registerDeveloper(openim.workbench.RegisterDeveloperReq) returns (openim.workbench.RegisterDeveloperResp);
+  rpc loginDeveloper(openim.workbench.LoginDeveloperReq) returns (openim.workbench.LoginDeveloperResp);
+  rpc updateDeveloper(openim.workbench.UpdateDeveloperReq) returns (openim.workbench.UpdateDeveloperResp);
+  rpc getDeveloperList(openim.workbench.GetDeveloperListReq) returns (openim.workbench.GetDeveloperListResp);
+  rpc reviewDeveloper(openim.workbench.ReviewDeveloperReq) returns (openim.workbench.ReviewDeveloperResp);
+  rpc disableDeveloper(openim.workbench.DisableDeveloperReq) returns (openim.workbench.DisableDeveloperResp);
+  rpc createDeveloperApp(openim.workbench.CreateDeveloperAppReq) returns (openim.workbench.CreateDeveloperAppResp);
+  rpc submitApp(openim.workbench.SubmitAppReq) returns (openim.workbench.SubmitAppResp);
+  rpc withdrawSubmit(openim.workbench.WithdrawSubmitReq) returns (openim.workbench.WithdrawSubmitResp);
+  rpc getDeveloperApps(openim.workbench.GetDeveloperAppsReq) returns (openim.workbench.GetDeveloperAppsResp);
+
+  // ---- App Review (platform) ----
+  rpc getPendingReviews(openim.workbench.GetPendingReviewsReq) returns (openim.workbench.GetPendingReviewsResp);
+  rpc getReviewDetail(openim.workbench.GetReviewDetailReq) returns (openim.workbench.GetReviewDetailResp);
+  rpc reviewAction(openim.workbench.ReviewActionReq) returns (openim.workbench.ReviewActionResp);
+  rpc forceOffline(openim.workbench.ForceOfflineReq) returns (openim.workbench.ForceOfflineResp);
+
+  // ---- Notification (additional) ----
+  rpc getNotifyDetail(openim.workbench.GetNotifyDetailReq) returns (openim.workbench.GetNotifyDetailResp);
+
+  // ---- App Review (additional) ----
+  rpc getReviewList(openim.workbench.GetReviewListReq) returns (openim.workbench.GetReviewListResp);
+
+  // ---- Stats ----
+  rpc getPlatformStats(openim.workbench.GetPlatformStatsReq) returns (openim.workbench.GetPlatformStatsResp);
+  rpc getTenantStats(openim.workbench.GetTenantStatsReq) returns (openim.workbench.GetTenantStatsResp);
+
+  // ---- Webhook ----
+  rpc setWebhook(openim.workbench.SetWebhookReq) returns (openim.workbench.SetWebhookResp);
+  rpc getWebhook(openim.workbench.GetWebhookReq) returns (openim.workbench.GetWebhookResp);
+  rpc getWebhookLogs(openim.workbench.GetWebhookLogsReq) returns (openim.workbench.GetWebhookLogsResp);
+  rpc retryWebhook(openim.workbench.RetryWebhookReq) returns (openim.workbench.RetryWebhookResp);
+}

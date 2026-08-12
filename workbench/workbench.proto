@@ -1,0 +1,1088 @@
+syntax = "proto3";
+package openim.workbench;
+
+import "sdkws/sdkws.proto";
+import "wrapperspb/wrapperspb.proto";
+
+option go_package = "github.com/openimsdk/protocol/workbench";
+
+// ==================== Enums ====================
+
+enum AppSource {
+  APP_SOURCE_UNSPECIFIED = 0;
+  APP_SOURCE_PLATFORM_BUILTIN = 1;  // 平台内置应用
+  APP_SOURCE_ENTERPRISE_CUSTOM = 2; // 企业自建应用
+  APP_SOURCE_ISV = 3;               // ISV第三方应用
+}
+
+enum AppType {
+  APP_TYPE_UNSPECIFIED = 0;
+  APP_TYPE_H5 = 1;            // 内部H5
+  APP_TYPE_EXTERNAL_LINK = 2; // 外部链接
+  APP_TYPE_MINI_PROGRAM = 3;  // 小程序
+  APP_TYPE_NATIVE = 4;        // 原生模块
+}
+
+enum OpenMethod {
+  OPEN_METHOD_UNSPECIFIED = 0;
+  OPEN_METHOD_WEBVIEW = 1;   // 内嵌WebView
+  OPEN_METHOD_BROWSER = 2;   // 外部浏览器
+  OPEN_METHOD_NATIVE = 3;    // 原生跳转
+}
+
+enum AppStatus {
+  APP_STATUS_UNSPECIFIED = 0;
+  APP_STATUS_ACTIVE = 1;       // 上架
+  APP_STATUS_INACTIVE = 2;     // 下架
+  APP_STATUS_UNDER_REVIEW = 3; // 审核中
+}
+
+enum PublishStatus {
+  PUBLISH_STATUS_UNSPECIFIED = 0;
+  PUBLISH_STATUS_DRAFT = 1;        // 草稿
+  PUBLISH_STATUS_REVIEWING = 2;    // 审核中
+  PUBLISH_STATUS_APPROVED = 3;     // 已通过
+  PUBLISH_STATUS_REJECTED = 4;     // 已拒绝
+  PUBLISH_STATUS_PUBLISHED = 5;    // 已上架
+}
+
+enum ScopeType {
+  SCOPE_TYPE_UNSPECIFIED = 0;
+  SCOPE_TYPE_DEPARTMENT = 1; // 部门
+  SCOPE_TYPE_ROLE = 2;       // 角色
+  SCOPE_TYPE_USER = 3;       // 指定用户
+}
+
+enum VisibilityType {
+  VISIBILITY_TYPE_UNSPECIFIED = 0;
+  VISIBILITY_TYPE_ALL = 1;    // 全员可见
+  VISIBILITY_TYPE_CUSTOM = 2; // 自定义范围
+}
+
+enum NotifyStatus {
+  NOTIFY_STATUS_UNSPECIFIED = 0;
+  NOTIFY_STATUS_SENT = 1;     // 已发送
+  NOTIFY_STATUS_READ = 2;     // 已读
+  NOTIFY_STATUS_EXPIRED = 3;  // 已过期
+  NOTIFY_STATUS_REVOKED = 4;  // 已撤回
+}
+
+enum ReviewAction {
+  REVIEW_ACTION_UNSPECIFIED = 0;
+  REVIEW_ACTION_APPROVE = 1; // 通过
+  REVIEW_ACTION_REJECT = 2;  // 拒绝
+}
+
+// ==================== Base Messages ====================
+
+message AppInfo {
+  string appID = 1;
+  string appKey = 2;
+  string name = 3;
+  string icon = 4;
+  string description = 5;
+  int32 appSource = 6;       // AppSource
+  int32 appType = 7;         // AppType
+  string url = 8;
+  int32 openMethod = 9;      // OpenMethod
+  string categoryID = 10;
+  string categoryName = 11;
+  int32 sortOrder = 12;
+  int32 status = 13;         // AppStatus
+  int32 visibilityType = 14; // VisibilityType
+  string developerID = 15;
+  string developerName = 16;
+  string tenantID = 17;
+  int32 publishStatus = 18;  // PublishStatus
+  int64 installCount = 19;
+  bool defaultInstall = 20;
+  string config = 21;        // JSON扩展配置
+  int64 createdAt = 22;
+  int64 updatedAt = 23;
+  // 客户端辅助字段
+  bool isInstalled = 24;     // 当前租户是否已安装
+  bool isSelected = 25;      // 当前用户是否已自选
+  int32 unreadCount = 26;    // 未读通知数
+}
+
+message AppVersionInfo {
+  string versionID = 1;
+  string appID = 2;
+  string version = 3;
+  string changelog = 4;
+  string url = 5;
+  string config = 6;
+  int32 status = 7;          // PublishStatus
+  string reviewNote = 8;
+  int64 submittedAt = 9;
+  int64 reviewedAt = 10;
+  int64 publishedAt = 11;
+}
+
+message CategoryInfo {
+  string categoryID = 1;
+  string name = 2;
+  string icon = 3;
+  int32 sortOrder = 4;
+  string parentID = 5;
+  int32 status = 6;
+  int32 appCount = 7;
+  repeated CategoryInfo children = 8;
+}
+
+message BannerInfo {
+  string bannerID = 1;
+  string tenantID = 2;
+  string title = 3;
+  string imageURL = 4;
+  int32 linkType = 5;     // 1跳转应用/2跳转H5/3无跳转
+  string linkValue = 6;
+  int32 position = 7;     // 1顶部轮播/2推荐位
+  int32 sortOrder = 8;
+  int64 startTime = 9;
+  int64 endTime = 10;
+  int32 status = 11;
+  int64 createdAt = 12;
+}
+
+message AppInstallInfo {
+  string tenantID = 1;
+  string appID = 2;
+  string installedBy = 3;
+  int32 status = 4;        // 1已安装/2已卸载
+  int64 installedAt = 5;
+  int64 uninstalledAt = 6;
+}
+
+message AppScopeInfo {
+  int32 scopeType = 1;    // ScopeType
+  string scopeID = 2;
+  string scopeName = 3;   // 回填名称
+}
+
+message UserAppInfo {
+  string appID = 1;
+  int32 sortOrder = 2;
+  bool pinned = 3;
+  int64 addedAt = 4;
+}
+
+message AppCredentialInfo {
+  string appID = 1;
+  string appKey = 2;
+  string appSecret = 3;     // 查看时脱敏
+  int32 tokenExpireSeconds = 4;
+  string callbackURL = 5;
+  repeated string ipWhitelist = 6;
+  repeated string allowedScopes = 7;
+  int32 status = 8;
+  int64 createdAt = 9;
+}
+
+message OAuthAuthInfo {
+  string tenantID = 1;
+  string appID = 2;
+  string authorizedBy = 3;
+  repeated string scopes = 4;
+  int32 status = 5;        // 1有效/2已撤销
+  int64 authorizedAt = 6;
+  int64 revokedAt = 7;
+}
+
+message MsgTemplateInfo {
+  string templateID = 1;
+  string appID = 2;
+  string templateKey = 3;
+  string name = 4;
+  string titlePattern = 5;
+  string contentPattern = 6;
+  bool hasActions = 7;
+  string actionConfig = 8;   // JSON
+  int32 status = 9;
+  int64 useCount = 10;
+  int64 createdAt = 11;
+  int64 updatedAt = 12;
+}
+
+message NotifyLogInfo {
+  string notifyID = 1;
+  string tenantID = 2;
+  string appID = 3;
+  string appName = 4;
+  string templateID = 5;
+  string toUserID = 6;
+  string toUserName = 7;
+  string bizID = 8;
+  string title = 9;
+  string content = 10;
+  string url = 11;
+  int32 status = 12;       // NotifyStatus
+  string msgID = 13;
+  string extra = 14;       // JSON
+  int64 createdAt = 15;
+  int64 readAt = 16;
+}
+
+message DeveloperInfo {
+  string developerID = 1;
+  string name = 2;
+  int32 type = 3;          // 1个人/2企业
+  string contactEmail = 4;
+  string contactPhone = 5;
+  string companyName = 6;
+  string licenseURL = 7;
+  string description = 8;
+  string linkedUserID = 9;
+  string linkedTenantID = 10;
+  int32 status = 11;       // 1正常/2禁用/3待审核
+  bool verified = 12;
+  int32 appCount = 13;
+  int64 createdAt = 14;
+}
+
+message AppReviewInfo {
+  string reviewID = 1;
+  string appID = 2;
+  string appName = 3;
+  string appIcon = 4;
+  string versionID = 5;
+  string version = 6;
+  string changelog = 7;
+  string developerID = 8;
+  string developerName = 9;
+  int32 submitType = 10;   // 1首次/2版本更新
+  int32 reviewStatus = 11; // PublishStatus
+  string reviewerID = 12;
+  string reviewNote = 13;
+  int64 submittedAt = 14;
+  int64 reviewedAt = 15;
+}
+
+message WebhookInfo {
+  string webhookID = 1;
+  string appID = 2;
+  string callbackURL = 3;
+  repeated string events = 4;
+  string secret = 5;
+  int32 status = 6;
+  int64 createdAt = 7;
+}
+
+message WebhookLogInfo {
+  string logID = 1;
+  string appID = 2;
+  string webhookID = 3;
+  string eventType = 4;
+  string requestBody = 5;
+  int32 responseCode = 6;
+  string responseBody = 7;
+  int64 costMs = 8;
+  int32 retryCount = 9;
+  int32 status = 10;       // 1成功/2失败/3重试中
+  int64 createdAt = 11;
+}
+
+// ==================== App Management ====================
+
+message CreateAppReq {
+  string tenantID = 1;     // 企业自建时从context获取；平台内置时为空
+  string name = 2;
+  string icon = 3;
+  string description = 4;
+  int32 appSource = 5;
+  int32 appType = 6;
+  string url = 7;
+  int32 openMethod = 8;
+  string categoryID = 9;
+  int32 sortOrder = 10;
+  bool defaultInstall = 11; // 仅平台内置应用有效
+  string config = 12;
+  string developerID = 13;  // ISV应用传入
+}
+message CreateAppResp {
+  string appID = 1;
+  string appKey = 2;
+}
+
+message UpdateAppReq {
+  string appID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.StringValue icon = 3;
+  openim.protobuf.StringValue description = 4;
+  openim.protobuf.Int32Value appType = 5;
+  openim.protobuf.StringValue url = 6;
+  openim.protobuf.Int32Value openMethod = 7;
+  openim.protobuf.StringValue categoryID = 8;
+  openim.protobuf.Int32Value sortOrder = 9;
+  openim.protobuf.BoolValue defaultInstall = 10;
+  openim.protobuf.StringValue config = 11;
+}
+message UpdateAppResp {}
+
+message DeleteAppReq {
+  string appID = 1;
+}
+message DeleteAppResp {}
+
+message GetAppReq {
+  string appID = 1;
+}
+message GetAppResp {
+  AppInfo app = 1;
+}
+
+message GetAppListReq {
+  string tenantID = 1;
+  int32 appSource = 2;       // 按来源筛选,0=全部
+  int32 status = 3;          // 按状态筛选,0=全部
+  string categoryID = 4;
+  string keyword = 5;
+  sdkws.RequestPagination pagination = 6;
+}
+message GetAppListResp {
+  int64 total = 1;
+  repeated AppInfo apps = 2;
+}
+
+message SetAppStatusReq {
+  string appID = 1;
+  int32 status = 2;          // AppStatus
+}
+message SetAppStatusResp {}
+
+message PushInstallReq {
+  string appID = 1;
+  repeated string tenantIDs = 2; // 空=所有租户
+}
+message PushInstallResp {
+  int64 successCount = 1;
+  int64 skipCount = 2;
+}
+
+// ==================== Category ====================
+
+message CreateCategoryReq {
+  string name = 1;
+  string icon = 2;
+  int32 sortOrder = 3;
+  string parentID = 4;
+}
+message CreateCategoryResp {
+  string categoryID = 1;
+}
+
+message UpdateCategoryReq {
+  string categoryID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.StringValue icon = 3;
+  openim.protobuf.Int32Value sortOrder = 4;
+}
+message UpdateCategoryResp {}
+
+message DeleteCategoryReq {
+  string categoryID = 1;
+}
+message DeleteCategoryResp {}
+
+message GetCategoryListReq {}
+message GetCategoryListResp {
+  repeated CategoryInfo categories = 1;
+}
+
+message SortCategoriesReq {
+  repeated CategorySortItem items = 1;
+}
+message CategorySortItem {
+  string categoryID = 1;
+  int32 sortOrder = 2;
+}
+message SortCategoriesResp {}
+
+// ==================== Banner ====================
+
+message CreateBannerReq {
+  string tenantID = 1;     // 为空=平台级
+  string title = 2;
+  string imageURL = 3;
+  int32 linkType = 4;
+  string linkValue = 5;
+  int32 position = 6;
+  int32 sortOrder = 7;
+  int64 startTime = 8;
+  int64 endTime = 9;
+}
+message CreateBannerResp {
+  string bannerID = 1;
+}
+
+message UpdateBannerReq {
+  string bannerID = 1;
+  openim.protobuf.StringValue title = 2;
+  openim.protobuf.StringValue imageURL = 3;
+  openim.protobuf.Int32Value linkType = 4;
+  openim.protobuf.StringValue linkValue = 5;
+  openim.protobuf.Int32Value position = 6;
+  openim.protobuf.Int32Value sortOrder = 7;
+  openim.protobuf.Int64Value startTime = 8;
+  openim.protobuf.Int64Value endTime = 9;
+  openim.protobuf.Int32Value status = 10;
+}
+message UpdateBannerResp {}
+
+message DeleteBannerReq {
+  string bannerID = 1;
+}
+message DeleteBannerResp {}
+
+message GetBannerListReq {
+  string tenantID = 1;
+  int32 position = 2;      // 0=全部
+  int32 status = 3;        // 0=全部
+  sdkws.RequestPagination pagination = 4;
+}
+message GetBannerListResp {
+  int64 total = 1;
+  repeated BannerInfo banners = 2;
+}
+
+// ==================== Install / Market ====================
+
+message InstallAppReq {
+  string tenantID = 1;
+  string appID = 2;
+}
+message InstallAppResp {}
+
+message UninstallAppReq {
+  string tenantID = 1;
+  string appID = 2;
+}
+message UninstallAppResp {}
+
+message GetInstalledAppsReq {
+  string tenantID = 1;
+  int32 appSource = 2;
+  string keyword = 3;
+  sdkws.RequestPagination pagination = 4;
+}
+message GetInstalledAppsResp {
+  int64 total = 1;
+  repeated AppInfo apps = 2;
+}
+
+message GetMarketAppsReq {
+  string tenantID = 1;       // 用于标记已安装状态
+  string categoryID = 2;
+  string keyword = 3;
+  string sortBy = 4;         // popular/latest/rating
+  sdkws.RequestPagination pagination = 5;
+}
+message GetMarketAppsResp {
+  int64 total = 1;
+  repeated AppInfo apps = 2;
+}
+
+message SearchMarketReq {
+  string tenantID = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message SearchMarketResp {
+  int64 total = 1;
+  repeated AppInfo apps = 2;
+}
+
+message GetRecommendReq {
+  string tenantID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message GetRecommendResp {
+  repeated AppInfo recommended = 1;
+  repeated AppInfo popular = 2;
+}
+
+// ==================== Scope ====================
+
+message SetAppScopeReq {
+  string tenantID = 1;
+  string appID = 2;
+  int32 visibilityType = 3; // VisibilityType
+  repeated AppScopeInfo scopes = 4;
+}
+message SetAppScopeResp {}
+
+message GetAppScopeReq {
+  string tenantID = 1;
+  string appID = 2;
+}
+message GetAppScopeResp {
+  int32 visibilityType = 1;
+  repeated AppScopeInfo scopes = 2;
+}
+
+// ==================== User App ====================
+
+message AddUserAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+  repeated string appIDs = 3;
+}
+message AddUserAppsResp {}
+
+message RemoveUserAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+  repeated string appIDs = 3;
+}
+message RemoveUserAppsResp {}
+
+message SortUserAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+  repeated UserAppSortItem items = 3;
+}
+message UserAppSortItem {
+  string appID = 1;
+  int32 sortOrder = 2;
+}
+message SortUserAppsResp {}
+
+message PinUserAppReq {
+  string tenantID = 1;
+  string userID = 2;
+  string appID = 3;
+  bool pinned = 4;
+}
+message PinUserAppResp {}
+
+message GetUserAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+}
+message GetUserAppsResp {
+  repeated AppInfo apps = 1;
+}
+
+message GetAvailableAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+}
+message GetAvailableAppsResp {
+  repeated AppInfo apps = 1;
+}
+
+// ==================== Notification (P1) ====================
+
+message CreateMsgTemplateReq {
+  string appID = 1;
+  string templateKey = 2;
+  string name = 3;
+  string titlePattern = 4;
+  string contentPattern = 5;
+  bool hasActions = 6;
+  string actionConfig = 7;  // JSON
+}
+message CreateMsgTemplateResp {
+  string templateID = 1;
+}
+
+message UpdateMsgTemplateReq {
+  string templateID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.StringValue titlePattern = 3;
+  openim.protobuf.StringValue contentPattern = 4;
+  openim.protobuf.BoolValue hasActions = 5;
+  openim.protobuf.StringValue actionConfig = 6;
+  openim.protobuf.Int32Value status = 7;
+}
+message UpdateMsgTemplateResp {}
+
+message DeleteMsgTemplateReq {
+  string templateID = 1;
+}
+message DeleteMsgTemplateResp {}
+
+message GetMsgTemplateListReq {
+  string appID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message GetMsgTemplateListResp {
+  int64 total = 1;
+  repeated MsgTemplateInfo templates = 2;
+}
+
+message PreviewMsgTemplateReq {
+  string templateID = 1;
+  map<string, string> mockData = 2;
+}
+message PreviewMsgTemplateResp {
+  string title = 1;
+  string content = 2;
+  string actionConfig = 3;
+}
+
+message SendNotifyReq {
+  string appID = 1;
+  string templateKey = 2;
+  string toUserID = 3;
+  map<string, string> data = 4;
+  string url = 5;
+  string bizID = 6;
+  string extra = 7;
+}
+message SendNotifyResp {
+  string notifyID = 1;
+  string msgID = 2;
+}
+
+message BatchSendNotifyReq {
+  string appID = 1;
+  string templateKey = 2;
+  repeated string toUserIDs = 3;
+  map<string, string> data = 4;
+  string url = 5;
+  string bizID = 6;
+}
+message BatchSendNotifyResp {
+  string batchID = 1;
+}
+
+message UpdateNotifyReq {
+  string notifyID = 1;
+  string bizID = 2;          // notifyID或bizID二选一
+  map<string, string> data = 3;
+  string statusText = 4;
+}
+message UpdateNotifyResp {}
+
+message RevokeNotifyReq {
+  string notifyID = 1;
+  string bizID = 2;
+}
+message RevokeNotifyResp {}
+
+message QueryNotifyReq {
+  repeated string notifyIDs = 1;
+  repeated string bizIDs = 2;
+}
+message QueryNotifyResp {
+  repeated NotifyLogInfo logs = 1;
+}
+
+message GetNotifyListReq {
+  string tenantID = 1;
+  string appID = 2;
+  string toUserID = 3;
+  int32 status = 4;
+  int64 startTime = 5;
+  int64 endTime = 6;
+  sdkws.RequestPagination pagination = 7;
+}
+message GetNotifyListResp {
+  int64 total = 1;
+  repeated NotifyLogInfo logs = 2;
+}
+
+message GetNotifyStatsReq {
+  string tenantID = 1;
+  string appID = 2;
+  int64 startTime = 3;
+  int64 endTime = 4;
+}
+message GetNotifyStatsResp {
+  int64 totalSent = 1;
+  int64 totalRead = 2;
+  double readRate = 3;
+}
+
+// ==================== Credential & OAuth (P1) ====================
+
+message CreateCredentialReq {
+  string appID = 1;
+}
+message CreateCredentialResp {
+  string appKey = 1;
+  string appSecret = 2;
+}
+
+message ResetSecretReq {
+  string appID = 1;
+}
+message ResetSecretResp {
+  string appSecret = 1;
+}
+
+message GetCredentialReq {
+  string appID = 1;
+}
+message GetCredentialResp {
+  AppCredentialInfo credential = 1;
+}
+
+message SetIPWhitelistReq {
+  string appID = 1;
+  repeated string ipList = 2;
+}
+message SetIPWhitelistResp {}
+
+message GetAccessTokenReq {
+  string appKey = 1;
+  string appSecret = 2;
+}
+message GetAccessTokenResp {
+  string accessToken = 1;
+  int64 expiresIn = 2;
+}
+
+message AuthorizeAppReq {
+  string tenantID = 1;
+  string appID = 2;
+  repeated string scopes = 3;
+}
+message AuthorizeAppResp {}
+
+message RevokeAuthReq {
+  string tenantID = 1;
+  string appID = 2;
+}
+message RevokeAuthResp {}
+
+message GetAuthDetailReq {
+  string tenantID = 1;
+  string appID = 2;
+}
+message GetAuthDetailResp {
+  OAuthAuthInfo auth = 1;
+}
+
+// ==================== SSO (P1) ====================
+
+message CreateTicketReq {
+  string appID = 1;
+  string userID = 2;
+}
+message CreateTicketResp {
+  string ticket = 1;
+  int64 expiresIn = 2;
+}
+
+message GetUserByTicketReq {
+  string ticket = 1;
+  string appID = 2;
+}
+message GetUserByTicketResp {
+  string userID = 1;
+  string nickname = 2;
+  string faceURL = 3;
+  string phone = 4;
+  string tenantID = 5;
+  string email = 6;
+}
+
+// ==================== Developer (P1) ====================
+
+message RegisterDeveloperReq {
+  string name = 1;
+  int32 type = 2;            // 1个人/2企业
+  string contactEmail = 3;
+  string password = 4;
+  string companyName = 5;
+  string licenseURL = 6;
+  string description = 7;
+  string linkedUserID = 8;   // 关联IM用户(企业开发者)
+  string linkedTenantID = 9;
+}
+message RegisterDeveloperResp {
+  string developerID = 1;
+}
+
+message LoginDeveloperReq {
+  string email = 1;
+  string password = 2;
+}
+message LoginDeveloperResp {
+  string token = 1;
+  DeveloperInfo developer = 2;
+}
+
+message UpdateDeveloperReq {
+  string developerID = 1;
+  openim.protobuf.StringValue name = 2;
+  openim.protobuf.StringValue contactEmail = 3;
+  openim.protobuf.StringValue contactPhone = 4;
+  openim.protobuf.StringValue description = 5;
+}
+message UpdateDeveloperResp {}
+
+message GetDeveloperListReq {
+  int32 status = 1;
+  int32 type = 2;
+  string keyword = 3;
+  sdkws.RequestPagination pagination = 4;
+}
+message GetDeveloperListResp {
+  int64 total = 1;
+  repeated DeveloperInfo developers = 2;
+}
+
+message ReviewDeveloperReq {
+  string developerID = 1;
+  int32 action = 2;          // ReviewAction
+  string note = 3;
+}
+message ReviewDeveloperResp {}
+
+message DisableDeveloperReq {
+  string developerID = 1;
+}
+message DisableDeveloperResp {}
+
+message CreateDeveloperAppReq {
+  string developerID = 1;
+  string name = 2;
+  string icon = 3;
+  string description = 4;
+  int32 appType = 5;
+  string url = 6;
+  int32 openMethod = 7;
+  string categoryID = 8;
+  repeated string screenshots = 9;
+  string privacyPolicyURL = 10;
+}
+message CreateDeveloperAppResp {
+  string appID = 1;
+}
+
+message SubmitAppReq {
+  string appID = 1;
+  string version = 2;
+  string changelog = 3;
+}
+message SubmitAppResp {
+  string reviewID = 1;
+}
+
+message WithdrawSubmitReq {
+  string appID = 1;
+}
+message WithdrawSubmitResp {}
+
+message GetDeveloperAppsReq {
+  string developerID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message GetDeveloperAppsResp {
+  int64 total = 1;
+  repeated AppInfo apps = 2;
+}
+
+// ==================== App Review (P1) ====================
+
+message GetPendingReviewsReq {
+  sdkws.RequestPagination pagination = 1;
+}
+message GetPendingReviewsResp {
+  int64 total = 1;
+  repeated AppReviewInfo reviews = 2;
+}
+
+message GetReviewDetailReq {
+  string reviewID = 1;
+}
+message GetReviewDetailResp {
+  AppReviewInfo review = 1;
+  AppInfo app = 2;
+  DeveloperInfo developer = 3;
+}
+
+message ReviewActionReq {
+  string reviewID = 1;
+  int32 action = 2;          // ReviewAction
+  string note = 3;
+}
+message ReviewActionResp {}
+
+message ForceOfflineReq {
+  string appID = 1;
+  string reason = 2;
+}
+message ForceOfflineResp {}
+
+// ==================== Webhook (P1) ====================
+
+message SetWebhookReq {
+  string appID = 1;
+  string callbackURL = 2;
+  repeated string events = 3;
+  string secret = 4;
+}
+message SetWebhookResp {
+  string webhookID = 1;
+}
+
+message GetWebhookReq {
+  string appID = 1;
+}
+message GetWebhookResp {
+  WebhookInfo webhook = 1;
+}
+
+message GetWebhookLogsReq {
+  string appID = 1;
+  string eventType = 2;
+  int32 status = 3;
+  sdkws.RequestPagination pagination = 4;
+}
+message GetWebhookLogsResp {
+  int64 total = 1;
+  repeated WebhookLogInfo logs = 2;
+}
+
+message RetryWebhookReq {
+  string logID = 1;
+}
+message RetryWebhookResp {}
+
+// ==================== Market Detail & Batch Install ====================
+
+message GetMarketAppDetailReq {
+  string appID = 1;
+  string tenantID = 2;   // 用于标记已安装状态
+}
+message GetMarketAppDetailResp {
+  AppInfo app = 1;
+  DeveloperInfo developer = 2;
+  repeated AppVersionInfo versions = 3;
+}
+
+message BatchInstallAppReq {
+  string tenantID = 1;
+  repeated string appIDs = 2;
+}
+message BatchInstallAppResp {
+  int64 successCount = 1;
+  int64 failCount = 2;
+}
+
+// ==================== Notify Detail ====================
+
+message GetNotifyDetailReq {
+  string notifyID = 1;
+}
+message GetNotifyDetailResp {
+  NotifyLogInfo log = 1;
+}
+
+// ==================== Review List (with filters) ====================
+
+message GetReviewListReq {
+  int32 reviewStatus = 1;    // 0=全部
+  string appID = 2;
+  string developerID = 3;
+  int64 startTime = 4;
+  int64 endTime = 5;
+  sdkws.RequestPagination pagination = 6;
+}
+message GetReviewListResp {
+  int64 total = 1;
+  repeated AppReviewInfo reviews = 2;
+}
+
+// ==================== Platform & Tenant Stats ====================
+
+message GetPlatformStatsReq {}
+message GetPlatformStatsResp {
+  int64 totalApps = 1;
+  int64 totalInstalls = 2;
+  int64 totalDevelopers = 3;
+  int64 totalNotifications = 4;
+}
+
+message GetTenantStatsReq {
+  string tenantID = 1;
+}
+message GetTenantStatsResp {
+  int64 installedApps = 1;
+  int64 totalNotifications = 2;
+  int64 activeUsers = 3;
+}
+
+// ==================== Client Aggregation ====================
+
+message GetHomeReq {
+  string tenantID = 1;
+  string userID = 2;
+  string dataVersion = 3;  // 客户端缓存版本号
+}
+message GetHomeResp {
+  repeated BannerInfo banners = 1;
+  repeated CategoryInfo categories = 2;
+  repeated AppInfo apps = 3;
+  string dataVersion = 4;
+  bool notModified = 5;    // true=数据未变化,客户端用缓存
+}
+
+message ClickAppReq {
+  string tenantID = 1;
+  string userID = 2;
+  string appID = 3;
+}
+message ClickAppResp {}
+
+// ==================== Service Definition ====================
+
+service Workbench {
+  // ---- App Management ----
+  rpc createApp(CreateAppReq) returns (CreateAppResp);
+  rpc updateApp(UpdateAppReq) returns (UpdateAppResp);
+  rpc deleteApp(DeleteAppReq) returns (DeleteAppResp);
+  rpc getApp(GetAppReq) returns (GetAppResp);
+  rpc getAppList(GetAppListReq) returns (GetAppListResp);
+  rpc setAppStatus(SetAppStatusReq) returns (SetAppStatusResp);
+  rpc pushInstall(PushInstallReq) returns (PushInstallResp);
+
+  // ---- Category ----
+  rpc createCategory(CreateCategoryReq) returns (CreateCategoryResp);
+  rpc updateCategory(UpdateCategoryReq) returns (UpdateCategoryResp);
+  rpc deleteCategory(DeleteCategoryReq) returns (DeleteCategoryResp);
+  rpc getCategoryList(GetCategoryListReq) returns (GetCategoryListResp);
+  rpc sortCategories(SortCategoriesReq) returns (SortCategoriesResp);
+
+  // ---- Banner ----
+  rpc createBanner(CreateBannerReq) returns (CreateBannerResp);
+  rpc updateBanner(UpdateBannerReq) returns (UpdateBannerResp);
+  rpc deleteBanner(DeleteBannerReq) returns (DeleteBannerResp);
+  rpc getBannerList(GetBannerListReq) returns (GetBannerListResp);
+
+  // ---- Install / Market ----
+  rpc installApp(InstallAppReq) returns (InstallAppResp);
+  rpc uninstallApp(UninstallAppReq) returns (UninstallAppResp);
+  rpc getInstalledApps(GetInstalledAppsReq) returns (GetInstalledAppsResp);
+  rpc getMarketApps(GetMarketAppsReq) returns (GetMarketAppsResp);
+  rpc searchMarket(SearchMarketReq) returns (SearchMarketResp);
+  rpc getRecommend(GetRecommendReq) returns (GetRecommendResp);
+
+  // ---- Scope ----
+  rpc setAppScope(SetAppScopeReq) returns (SetAppScopeResp);
+  rpc getAppScope(GetAppScopeReq) returns (GetAppScopeResp);
+
+  // ---- User App ----
+  rpc addUserApps(AddUserAppsReq) returns (AddUserAppsResp);
+  rpc removeUserApps(RemoveUserAppsReq) returns (RemoveUserAppsResp);
+  rpc sortUserApps(SortUserAppsReq) returns (SortUserAppsResp);
+  rpc pinUserApp(PinUserAppReq) returns (PinUserAppResp);
+  rpc getUserApps(GetUserAppsReq) returns (GetUserAppsResp);
+  rpc getAvailableApps(GetAvailableAppsReq) returns (GetAvailableAppsResp);
+
+  // ---- Market Detail ----
+  rpc getMarketAppDetail(GetMarketAppDetailReq) returns (GetMarketAppDetailResp);
+  rpc batchInstallApp(BatchInstallAppReq) returns (BatchInstallAppResp);
+
+  // ---- Stats ----
+  rpc getPlatformStats(GetPlatformStatsReq) returns (GetPlatformStatsResp);
+  rpc getTenantStats(GetTenantStatsReq) returns (GetTenantStatsResp);
+
+  // ---- Client Aggregation ----
+  rpc getHome(GetHomeReq) returns (GetHomeResp);
+  rpc clickApp(ClickAppReq) returns (ClickAppResp);
+}
