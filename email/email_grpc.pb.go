@@ -58,6 +58,7 @@ const (
 	Email_SaveDraft_FullMethodName                = "/openim.email.Email/SaveDraft"
 	Email_GetEmails_FullMethodName                = "/openim.email.Email/GetEmails"
 	Email_GetEmailDetail_FullMethodName           = "/openim.email.Email/GetEmailDetail"
+	Email_GetAdjacentEmail_FullMethodName         = "/openim.email.Email/GetAdjacentEmail"
 	Email_DeleteEmails_FullMethodName             = "/openim.email.Email/DeleteEmails"
 	Email_MoveEmails_FullMethodName               = "/openim.email.Email/MoveEmails"
 	Email_MarkEmails_FullMethodName               = "/openim.email.Email/MarkEmails"
@@ -98,6 +99,7 @@ type EmailClient interface {
 	SaveDraft(ctx context.Context, in *SaveDraftReq, opts ...grpc.CallOption) (*SaveDraftResp, error)
 	GetEmails(ctx context.Context, in *GetEmailsReq, opts ...grpc.CallOption) (*GetEmailsResp, error)
 	GetEmailDetail(ctx context.Context, in *GetEmailDetailReq, opts ...grpc.CallOption) (*GetEmailDetailResp, error)
+	GetAdjacentEmail(ctx context.Context, in *GetAdjacentEmailReq, opts ...grpc.CallOption) (*GetAdjacentEmailResp, error)
 	DeleteEmails(ctx context.Context, in *DeleteEmailsReq, opts ...grpc.CallOption) (*DeleteEmailsResp, error)
 	MoveEmails(ctx context.Context, in *MoveEmailsReq, opts ...grpc.CallOption) (*MoveEmailsResp, error)
 	MarkEmails(ctx context.Context, in *MarkEmailsReq, opts ...grpc.CallOption) (*MarkEmailsResp, error)
@@ -363,6 +365,16 @@ func (c *emailClient) GetEmailDetail(ctx context.Context, in *GetEmailDetailReq,
 	return out, nil
 }
 
+func (c *emailClient) GetAdjacentEmail(ctx context.Context, in *GetAdjacentEmailReq, opts ...grpc.CallOption) (*GetAdjacentEmailResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAdjacentEmailResp)
+	err := c.cc.Invoke(ctx, Email_GetAdjacentEmail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *emailClient) DeleteEmails(ctx context.Context, in *DeleteEmailsReq, opts ...grpc.CallOption) (*DeleteEmailsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteEmailsResp)
@@ -446,6 +458,7 @@ type EmailServer interface {
 	SaveDraft(context.Context, *SaveDraftReq) (*SaveDraftResp, error)
 	GetEmails(context.Context, *GetEmailsReq) (*GetEmailsResp, error)
 	GetEmailDetail(context.Context, *GetEmailDetailReq) (*GetEmailDetailResp, error)
+	GetAdjacentEmail(context.Context, *GetAdjacentEmailReq) (*GetAdjacentEmailResp, error)
 	DeleteEmails(context.Context, *DeleteEmailsReq) (*DeleteEmailsResp, error)
 	MoveEmails(context.Context, *MoveEmailsReq) (*MoveEmailsResp, error)
 	MarkEmails(context.Context, *MarkEmailsReq) (*MarkEmailsResp, error)
@@ -535,6 +548,9 @@ func (UnimplementedEmailServer) GetEmails(context.Context, *GetEmailsReq) (*GetE
 }
 func (UnimplementedEmailServer) GetEmailDetail(context.Context, *GetEmailDetailReq) (*GetEmailDetailResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetEmailDetail not implemented")
+}
+func (UnimplementedEmailServer) GetAdjacentEmail(context.Context, *GetAdjacentEmailReq) (*GetAdjacentEmailResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAdjacentEmail not implemented")
 }
 func (UnimplementedEmailServer) DeleteEmails(context.Context, *DeleteEmailsReq) (*DeleteEmailsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteEmails not implemented")
@@ -1022,6 +1038,24 @@ func _Email_GetEmailDetail_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Email_GetAdjacentEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdjacentEmailReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).GetAdjacentEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_GetAdjacentEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).GetAdjacentEmail(ctx, req.(*GetAdjacentEmailReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Email_DeleteEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteEmailsReq)
 	if err := dec(in); err != nil {
@@ -1218,6 +1252,10 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEmailDetail",
 			Handler:    _Email_GetEmailDetail_Handler,
+		},
+		{
+			MethodName: "GetAdjacentEmail",
+			Handler:    _Email_GetAdjacentEmail_Handler,
 		},
 		{
 			MethodName: "DeleteEmails",

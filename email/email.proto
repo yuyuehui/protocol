@@ -418,6 +418,28 @@ message GetEmailDetailResp {
   EmailMessage email = 1;
 }
 
+// GetAdjacentEmailReq 获取上一封/下一封邮件（按列表同样的筛选条件与时间倒序定位）
+message GetAdjacentEmailReq {
+  string emailID   = 1;  // 当前邮件
+  string accountID = 2;
+  string userID    = 3;
+  string folderID  = 4;  // 为空时取当前邮件所在文件夹
+  string direction = 5;  // prev: 上一封（更新）/ next: 下一封（更旧）
+  string keyword   = 6;
+  optional bool isRead    = 7;
+  optional bool isFlagged = 8;
+  optional bool hasAttachment = 9;
+  int64 startTime = 10;
+  int64 endTime   = 11;
+  string sender   = 12;
+}
+
+message GetAdjacentEmailResp {
+  EmailMessage email = 1;  // 相邻邮件，无则返回空
+  bool hasPrev = 2;
+  bool hasNext = 3;
+}
+
 // DeleteEmailsReq 删除邮件（移到已删除 / 永久删除）
 message DeleteEmailsReq {
   repeated string emailIDs = 1;
@@ -597,6 +619,7 @@ service Email {
   rpc SaveDraft(SaveDraftReq) returns (SaveDraftResp);
   rpc GetEmails(GetEmailsReq) returns (GetEmailsResp);
   rpc GetEmailDetail(GetEmailDetailReq) returns (GetEmailDetailResp);
+  rpc GetAdjacentEmail(GetAdjacentEmailReq) returns (GetAdjacentEmailResp);
   rpc DeleteEmails(DeleteEmailsReq) returns (DeleteEmailsResp);
   rpc MoveEmails(MoveEmailsReq) returns (MoveEmailsResp);
   rpc MarkEmails(MarkEmailsReq) returns (MarkEmailsResp);
