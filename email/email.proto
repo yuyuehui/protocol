@@ -484,6 +484,18 @@ message SyncEmailsResp {
   int32 newCount = 1;  // 新收取的邮件数量
 }
 
+// SyncOlderEmailsReq 分页拉取更早的历史邮件（首次同步只拉最新 N 封，此接口补充拉取更早的）
+message SyncOlderEmailsReq {
+  string accountID = 1;
+  string userID    = 2;
+  int32  maxFetch  = 3;  // 本次最多拉取的封数，0 使用默认值
+}
+
+message SyncOlderEmailsResp {
+  int32 newCount  = 1;  // 本次新入库的邮件数量
+  bool  hasMore   = 2;  // 是否还有更早的邮件可拉取
+}
+
 // GetUnreadCountReq 获取未读数
 message GetUnreadCountReq {
   string accountID = 1;
@@ -624,5 +636,6 @@ service Email {
   rpc MoveEmails(MoveEmailsReq) returns (MoveEmailsResp);
   rpc MarkEmails(MarkEmailsReq) returns (MarkEmailsResp);
   rpc SyncEmails(SyncEmailsReq) returns (SyncEmailsResp);
+  rpc SyncOlderEmails(SyncOlderEmailsReq) returns (SyncOlderEmailsResp);
   rpc GetUnreadCount(GetUnreadCountReq) returns (GetUnreadCountResp);
 }

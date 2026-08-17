@@ -63,6 +63,7 @@ const (
 	Email_MoveEmails_FullMethodName               = "/openim.email.Email/MoveEmails"
 	Email_MarkEmails_FullMethodName               = "/openim.email.Email/MarkEmails"
 	Email_SyncEmails_FullMethodName               = "/openim.email.Email/SyncEmails"
+	Email_SyncOlderEmails_FullMethodName          = "/openim.email.Email/SyncOlderEmails"
 	Email_GetUnreadCount_FullMethodName           = "/openim.email.Email/GetUnreadCount"
 )
 
@@ -104,6 +105,7 @@ type EmailClient interface {
 	MoveEmails(ctx context.Context, in *MoveEmailsReq, opts ...grpc.CallOption) (*MoveEmailsResp, error)
 	MarkEmails(ctx context.Context, in *MarkEmailsReq, opts ...grpc.CallOption) (*MarkEmailsResp, error)
 	SyncEmails(ctx context.Context, in *SyncEmailsReq, opts ...grpc.CallOption) (*SyncEmailsResp, error)
+	SyncOlderEmails(ctx context.Context, in *SyncOlderEmailsReq, opts ...grpc.CallOption) (*SyncOlderEmailsResp, error)
 	GetUnreadCount(ctx context.Context, in *GetUnreadCountReq, opts ...grpc.CallOption) (*GetUnreadCountResp, error)
 }
 
@@ -415,6 +417,16 @@ func (c *emailClient) SyncEmails(ctx context.Context, in *SyncEmailsReq, opts ..
 	return out, nil
 }
 
+func (c *emailClient) SyncOlderEmails(ctx context.Context, in *SyncOlderEmailsReq, opts ...grpc.CallOption) (*SyncOlderEmailsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncOlderEmailsResp)
+	err := c.cc.Invoke(ctx, Email_SyncOlderEmails_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *emailClient) GetUnreadCount(ctx context.Context, in *GetUnreadCountReq, opts ...grpc.CallOption) (*GetUnreadCountResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUnreadCountResp)
@@ -463,6 +475,7 @@ type EmailServer interface {
 	MoveEmails(context.Context, *MoveEmailsReq) (*MoveEmailsResp, error)
 	MarkEmails(context.Context, *MarkEmailsReq) (*MarkEmailsResp, error)
 	SyncEmails(context.Context, *SyncEmailsReq) (*SyncEmailsResp, error)
+	SyncOlderEmails(context.Context, *SyncOlderEmailsReq) (*SyncOlderEmailsResp, error)
 	GetUnreadCount(context.Context, *GetUnreadCountReq) (*GetUnreadCountResp, error)
 	mustEmbedUnimplementedEmailServer()
 }
@@ -563,6 +576,9 @@ func (UnimplementedEmailServer) MarkEmails(context.Context, *MarkEmailsReq) (*Ma
 }
 func (UnimplementedEmailServer) SyncEmails(context.Context, *SyncEmailsReq) (*SyncEmailsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SyncEmails not implemented")
+}
+func (UnimplementedEmailServer) SyncOlderEmails(context.Context, *SyncOlderEmailsReq) (*SyncOlderEmailsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncOlderEmails not implemented")
 }
 func (UnimplementedEmailServer) GetUnreadCount(context.Context, *GetUnreadCountReq) (*GetUnreadCountResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUnreadCount not implemented")
@@ -1128,6 +1144,24 @@ func _Email_SyncEmails_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Email_SyncOlderEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncOlderEmailsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailServer).SyncOlderEmails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Email_SyncOlderEmails_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailServer).SyncOlderEmails(ctx, req.(*SyncOlderEmailsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Email_GetUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUnreadCountReq)
 	if err := dec(in); err != nil {
@@ -1272,6 +1306,10 @@ var Email_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SyncEmails",
 			Handler:    _Email_SyncEmails_Handler,
+		},
+		{
+			MethodName: "SyncOlderEmails",
+			Handler:    _Email_SyncOlderEmails_Handler,
 		},
 		{
 			MethodName: "GetUnreadCount",
