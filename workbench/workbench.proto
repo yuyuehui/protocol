@@ -65,6 +65,7 @@ enum NotifyStatus {
   NOTIFY_STATUS_READ = 2;     // 已读
   NOTIFY_STATUS_EXPIRED = 3;  // 已过期
   NOTIFY_STATUS_REVOKED = 4;  // 已撤回
+  NOTIFY_STATUS_FAILED = 5;   // 发送失败
 }
 
 enum ReviewAction {
@@ -128,6 +129,7 @@ message CategoryInfo {
   int32 status = 6;
   int32 appCount = 7;
   repeated CategoryInfo children = 8;
+  string tenantID = 9;
 }
 
 message BannerInfo {
@@ -366,6 +368,7 @@ message CreateCategoryReq {
   string icon = 2;
   int32 sortOrder = 3;
   string parentID = 4;
+  string tenantID = 5;
 }
 message CreateCategoryResp {
   string categoryID = 1;
@@ -384,7 +387,9 @@ message DeleteCategoryReq {
 }
 message DeleteCategoryResp {}
 
-message GetCategoryListReq {}
+message GetCategoryListReq {
+  string tenantID = 1;
+}
 message GetCategoryListResp {
   repeated CategoryInfo categories = 1;
 }
