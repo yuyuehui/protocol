@@ -34,7 +34,7 @@ if not "!HAVE_GO!"=="%WANT_GO%" (
 )
 
 rem Keep this list in sync with gen.sh; add new .proto dirs to both.
-set "PROTO_NAMES=auth call conversation egress errinfo group jssdk livekit_meeting meeting_room msg msggateway oa push relation rtc schedule sdkws statistics third user wrapperspb"
+set "PROTO_NAMES=auth call conversation egress email errinfo group jssdk livekit_meeting meeting_room msg msggateway oa push relation rtc schedule sdkws statistics third user wrapperspb"
 
 for %%i in (%PROTO_NAMES%) do (
     protoc --go_out=./%%i --go_opt=module=github.com/openimsdk/protocol/%%i %%i/%%i.proto

@@ -53,6 +53,7 @@ PROTO_NAMES=(
     "meeting_room"
     "schedule"
     "egress"
+    "email"
     "call"
 )
 
