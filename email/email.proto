@@ -509,9 +509,37 @@ message GetUnreadCountResp {
 
 // ===================== 用户邮箱设置 =====================
 
+message EmailFontStyle {
+  string chineseFont = 1;
+  string englishFont = 2;
+  int32 fontSize = 3;
+  string color = 4;
+  double lineHeight = 5;
+}
+
+message UpdateEmailFontStyle {
+  optional string chineseFont = 1;
+  optional string englishFont = 2;
+  optional int32 fontSize = 3;
+  optional string color = 4;
+  optional double lineHeight = 5;
+}
+
+message EmailSignature {
+  string id = 1;
+  string name = 2;
+  string content = 3;
+}
+
 message EmailUserSettings {
   bool newEmailNotification = 1; // 是否启用新邮件系统通知
   int64 updateTime = 2;
+  string defaultSenderAddress = 3;
+  EmailFontStyle fontStyle = 4;
+  repeated EmailSignature signatures = 5;
+  string defaultSignatureNew = 6;
+  string defaultSignatureReply = 7;
+  optional int32 settingsVersion = 8; // 新版服务端始终显式返回；旧文档和默认响应值为 0
 }
 
 message GetEmailUserSettingsReq {
@@ -524,7 +552,14 @@ message GetEmailUserSettingsResp {
 
 message UpdateEmailUserSettingsReq {
   string userID = 1;
-  optional bool newEmailNotification = 2;
+  optional bool newEmailNotification = 2; // 保留原字段编号，兼容旧客户端
+  optional string defaultSenderAddress = 3;
+  optional UpdateEmailFontStyle fontStyle = 4; // 消息及内部字段均有 presence，可按字体子字段更新
+  repeated EmailSignature signatures = 5;
+  optional string defaultSignatureNew = 6;
+  optional string defaultSignatureReply = 7;
+  optional bool updateSignatures = 8; // true 时更新 signatures；配合空数组可明确清空
+  optional int32 settingsVersion = 9; // 仅显式提交时更新；完整新版设置使用 1
 }
 
 message UpdateEmailUserSettingsResp {

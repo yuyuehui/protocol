@@ -17,6 +17,9 @@ package email
 import (
 	"strings"
 	"testing"
+
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestSendEmailReqCheckRejectsInvalidRecipientsAndHeaders(t *testing.T) {
@@ -63,5 +66,60 @@ func TestEmailAccountReqStringRedactsPassword(t *testing.T) {
 	}
 	if !strings.Contains(got, "[REDACTED]") {
 		t.Fatalf("String() did not include redaction marker: %s", got)
+	}
+}
+
+func TestEmailUserSettingsSettingsVersionProtoJSONPresence(t *testing.T) {
+	withoutVersion, err := protojson.Marshal(&EmailUserSettings{})
+	if err != nil {
+		t.Fatalf("marshal settings without version: %v", err)
+	}
+	if strings.Contains(string(withoutVersion), "settingsVersion") {
+		t.Fatalf("unset settingsVersion must be omitted, got %s", withoutVersion)
+	}
+
+	version := int32(0)
+	withVersion, err := protojson.Marshal(&EmailUserSettings{SettingsVersion: &version})
+	if err != nil {
+		t.Fatalf("marshal settings with version: %v", err)
+	}
+	if !strings.Contains(string(withVersion), `"settingsVersion":0`) {
+		t.Fatalf("explicit zero settingsVersion must be present, got %s", withVersion)
+	}
+}
+
+func TestUpdateEmailUserSettingsReqPreservesFieldPresence(t *testing.T) {
+	clearSignatures := true
+	empty := ""
+	fontSize := int32(0)
+	settingsVersion := int32(1)
+	request := &UpdateEmailUserSettingsReq{
+		UserID:               "user-1",
+		DefaultSenderAddress: &empty,
+		FontStyle:            &UpdateEmailFontStyle{FontSize: &fontSize},
+		Signatures:           []*EmailSignature{},
+		UpdateSignatures:     &clearSignatures,
+		SettingsVersion:      &settingsVersion,
+	}
+
+	data, err := proto.Marshal(request)
+	if err != nil {
+		t.Fatalf("marshal settings update: %v", err)
+	}
+	var decoded UpdateEmailUserSettingsReq
+	if err := proto.Unmarshal(data, &decoded); err != nil {
+		t.Fatalf("unmarshal settings update: %v", err)
+	}
+	if decoded.DefaultSenderAddress == nil || decoded.GetDefaultSenderAddress() != "" {
+		t.Fatalf("empty default sender presence was not preserved: %#v", decoded.DefaultSenderAddress)
+	}
+	if decoded.FontStyle == nil || decoded.FontStyle.FontSize == nil || decoded.FontStyle.GetFontSize() != 0 {
+		t.Fatalf("zero font size presence was not preserved: %#v", decoded.FontStyle)
+	}
+	if decoded.UpdateSignatures == nil || !decoded.GetUpdateSignatures() || len(decoded.Signatures) != 0 {
+		t.Fatalf("signature clear intent was not preserved: %#v", &decoded)
+	}
+	if decoded.SettingsVersion == nil || decoded.GetSettingsVersion() != 1 {
+		t.Fatalf("settings version presence was not preserved: %#v", decoded.SettingsVersion)
 	}
 }
