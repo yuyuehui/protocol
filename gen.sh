@@ -55,6 +55,8 @@ PROTO_NAMES=(
     "egress"
     "email"
     "call"
+    "workbench"
+    "openplatform"
 )
 
 for name in "${PROTO_NAMES[@]}"; do

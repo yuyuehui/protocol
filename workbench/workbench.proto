@@ -104,6 +104,7 @@ message AppInfo {
   bool isInstalled = 24;     // 当前租户是否已安装
   bool isSelected = 25;      // 当前用户是否已自选
   int32 unreadCount = 26;    // 未读通知数
+  string homeData = 27;      // 合并后的自定义主页数据 JSON
 }
 
 message AppVersionInfo {
@@ -204,6 +205,7 @@ message MsgTemplateInfo {
   int64 useCount = 10;
   int64 createdAt = 11;
   int64 updatedAt = 12;
+  string cardJSON = 13; // Versioned message template, rendered as JSON values
 }
 
 message NotifyLogInfo {
@@ -223,6 +225,9 @@ message NotifyLogInfo {
   string extra = 14;       // JSON
   int64 createdAt = 15;
   int64 readAt = 16;
+  string payloadJSON = 17;
+  string detailJSON = 18;
+  int64 revision = 19;
 }
 
 message DeveloperInfo {
@@ -586,6 +591,7 @@ message CreateMsgTemplateReq {
   string contentPattern = 5;
   bool hasActions = 6;
   string actionConfig = 7;  // JSON
+  string cardJSON = 8;
 }
 message CreateMsgTemplateResp {
   string templateID = 1;
@@ -599,6 +605,7 @@ message UpdateMsgTemplateReq {
   openim.protobuf.BoolValue hasActions = 5;
   openim.protobuf.StringValue actionConfig = 6;
   openim.protobuf.Int32Value status = 7;
+  openim.protobuf.StringValue cardJSON = 8;
 }
 message UpdateMsgTemplateResp {}
 
@@ -624,6 +631,7 @@ message PreviewMsgTemplateResp {
   string title = 1;
   string content = 2;
   string actionConfig = 3;
+  string cardJSON = 4;
 }
 
 message SendNotifyReq {
@@ -634,6 +642,7 @@ message SendNotifyReq {
   string url = 5;
   string bizID = 6;
   string extra = 7;
+  string detailJSON = 8;
 }
 message SendNotifyResp {
   string notifyID = 1;
@@ -647,18 +656,25 @@ message BatchSendNotifyReq {
   map<string, string> data = 4;
   string url = 5;
   string bizID = 6;
+  string detailJSON = 7;
 }
 message BatchSendNotifyResp {
   string batchID = 1;
+  repeated NotifySendResult results = 2;
 }
 
 message UpdateNotifyReq {
   string notifyID = 1;
-  string bizID = 2;          // notifyID或bizID二选一
+  string bizID = 2;          // Deprecated for update: notifyID is required.
   map<string, string> data = 3;
   string statusText = 4;
+  int64 expectedRevision = 5;
+  openim.protobuf.StringValue cardJSON = 6;
+  openim.protobuf.StringValue detailJSON = 7;
 }
-message UpdateNotifyResp {}
+message UpdateNotifyResp {
+  int64 revision = 1;
+}
 
 message RevokeNotifyReq {
   string notifyID = 1;
@@ -682,6 +698,7 @@ message GetNotifyListReq {
   int64 startTime = 5;
   int64 endTime = 6;
   sdkws.RequestPagination pagination = 7;
+  bool selfOnly = 8; // Bound to the current IM user when true
 }
 message GetNotifyListResp {
   int64 total = 1;
@@ -774,6 +791,8 @@ message CreateTicketResp {
 message GetUserByTicketReq {
   string ticket = 1;
   string appID = 2;
+  string redirectURI = 3;
+  string codeVerifier = 4;
 }
 message GetUserByTicketResp {
   string userID = 1;
@@ -973,6 +992,7 @@ message BatchInstallAppResp {
 
 message GetNotifyDetailReq {
   string notifyID = 1;
+  bool markRead = 2; // Recipient only; idempotent read acknowledgement
 }
 message GetNotifyDetailResp {
   NotifyLogInfo log = 1;
@@ -1034,6 +1054,24 @@ message ClickAppReq {
 }
 message ClickAppResp {}
 
+// ==================== SSO Launch ====================
+
+message LaunchAppReq {
+  string tenantID = 1;
+  string userID = 2;
+  string appID = 3;
+  string state = 4;
+  string redirectURI = 5;
+  string codeChallenge = 6; // PKCE S256
+}
+message LaunchAppResp {
+  string launchURL = 1;     // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
+  int32 openMethod = 2;     // OpenMethod
+  int64 expiresIn = 3;      // ticket 剩余有效秒数；非 SSO 应用为 0
+  bool ssoEnabled = 4;      // 该应用是否启用了 SSO 免登
+  string authMode = 5; // none, legacy_ticket, im_code, federation
+}
+
 // ==================== Service Definition ====================
 
 service Workbench {
@@ -1090,4 +1128,44 @@ service Workbench {
   // ---- Client Aggregation ----
   rpc getHome(GetHomeReq) returns (GetHomeResp);
   rpc clickApp(ClickAppReq) returns (ClickAppResp);
+  rpc launchApp(LaunchAppReq) returns (LaunchAppResp);
 }
+
+message NotifySendResult {
+  string toUserID = 1;
+  string notifyID = 2;
+  string msgID = 3;
+  string error = 4;
+}
+
+// ==================== Card Action (Interaction Callback) ====================
+
+message CardActionReq {
+  string notifyID = 1;
+  string actionType = 2;    // button_click / vote_submit / select_submit
+  string actionKey = 3;
+  string actionValue = 4;
+  string taskID = 5;
+  int64 expectedRevision = 6; // Required current notification revision
+
+}
+
+message CardActionResp {
+  bool cardUpdated = 1;
+  string eventID = 2;
+  int64 revision = 3;
+  string submissionStatus = 4; // accepted, not business completion
+
+}
+
+// ==================== Workbench Home Data ====================
+
+message SetWorkbenchDataReq {
+  string agentid = 1;
+  string type = 2;              // keydata / image / list / webview
+  string data = 3;              // JSON
+  bool replaceUserData = 4;
+  string userID = 5;
+}
+
+message SetWorkbenchDataResp {}

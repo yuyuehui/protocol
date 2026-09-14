@@ -67,4 +67,10 @@ service OpenPlatform {
   rpc getWebhook(openim.workbench.GetWebhookReq) returns (openim.workbench.GetWebhookResp);
   rpc getWebhookLogs(openim.workbench.GetWebhookLogsReq) returns (openim.workbench.GetWebhookLogsResp);
   rpc retryWebhook(openim.workbench.RetryWebhookReq) returns (openim.workbench.RetryWebhookResp);
+
+  // ---- Card Action ----
+  rpc cardAction(openim.workbench.CardActionReq) returns (openim.workbench.CardActionResp);
+
+  // ---- Workbench Data ----
+  rpc setWorkbenchData(openim.workbench.SetWorkbenchDataReq) returns (openim.workbench.SetWorkbenchDataResp);
 }

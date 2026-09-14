@@ -55,6 +55,7 @@ const (
 	Workbench_GetTenantStats_FullMethodName     = "/openim.workbench.Workbench/getTenantStats"
 	Workbench_GetHome_FullMethodName            = "/openim.workbench.Workbench/getHome"
 	Workbench_ClickApp_FullMethodName           = "/openim.workbench.Workbench/clickApp"
+	Workbench_LaunchApp_FullMethodName          = "/openim.workbench.Workbench/launchApp"
 )
 
 // WorkbenchClient is the client API for Workbench service.
@@ -106,6 +107,7 @@ type WorkbenchClient interface {
 	// ---- Client Aggregation ----
 	GetHome(ctx context.Context, in *GetHomeReq, opts ...grpc.CallOption) (*GetHomeResp, error)
 	ClickApp(ctx context.Context, in *ClickAppReq, opts ...grpc.CallOption) (*ClickAppResp, error)
+	LaunchApp(ctx context.Context, in *LaunchAppReq, opts ...grpc.CallOption) (*LaunchAppResp, error)
 }
 
 type workbenchClient struct {
@@ -476,6 +478,16 @@ func (c *workbenchClient) ClickApp(ctx context.Context, in *ClickAppReq, opts ..
 	return out, nil
 }
 
+func (c *workbenchClient) LaunchApp(ctx context.Context, in *LaunchAppReq, opts ...grpc.CallOption) (*LaunchAppResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LaunchAppResp)
+	err := c.cc.Invoke(ctx, Workbench_LaunchApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WorkbenchServer is the server API for Workbench service.
 // All implementations must embed UnimplementedWorkbenchServer
 // for forward compatibility.
@@ -525,6 +537,7 @@ type WorkbenchServer interface {
 	// ---- Client Aggregation ----
 	GetHome(context.Context, *GetHomeReq) (*GetHomeResp, error)
 	ClickApp(context.Context, *ClickAppReq) (*ClickAppResp, error)
+	LaunchApp(context.Context, *LaunchAppReq) (*LaunchAppResp, error)
 	mustEmbedUnimplementedWorkbenchServer()
 }
 
@@ -642,6 +655,9 @@ func (UnimplementedWorkbenchServer) GetHome(context.Context, *GetHomeReq) (*GetH
 }
 func (UnimplementedWorkbenchServer) ClickApp(context.Context, *ClickAppReq) (*ClickAppResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClickApp not implemented")
+}
+func (UnimplementedWorkbenchServer) LaunchApp(context.Context, *LaunchAppReq) (*LaunchAppResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method LaunchApp not implemented")
 }
 func (UnimplementedWorkbenchServer) mustEmbedUnimplementedWorkbenchServer() {}
 func (UnimplementedWorkbenchServer) testEmbeddedByValue()                   {}
@@ -1312,6 +1328,24 @@ func _Workbench_ClickApp_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Workbench_LaunchApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LaunchAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkbenchServer).LaunchApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Workbench_LaunchApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkbenchServer).LaunchApp(ctx, req.(*LaunchAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Workbench_ServiceDesc is the grpc.ServiceDesc for Workbench service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1462,6 +1496,10 @@ var Workbench_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "clickApp",
 			Handler:    _Workbench_ClickApp_Handler,
+		},
+		{
+			MethodName: "launchApp",
+			Handler:    _Workbench_LaunchApp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -526,9 +526,10 @@ type AppInfo struct {
 	CreatedAt      int64                  `protobuf:"varint,22,opt,name=createdAt,proto3" json:"createdAt"`
 	UpdatedAt      int64                  `protobuf:"varint,23,opt,name=updatedAt,proto3" json:"updatedAt"`
 	// 客户端辅助字段
-	IsInstalled   bool  `protobuf:"varint,24,opt,name=isInstalled,proto3" json:"isInstalled"` // 当前租户是否已安装
-	IsSelected    bool  `protobuf:"varint,25,opt,name=isSelected,proto3" json:"isSelected"`   // 当前用户是否已自选
-	UnreadCount   int32 `protobuf:"varint,26,opt,name=unreadCount,proto3" json:"unreadCount"` // 未读通知数
+	IsInstalled   bool   `protobuf:"varint,24,opt,name=isInstalled,proto3" json:"isInstalled"` // 当前租户是否已安装
+	IsSelected    bool   `protobuf:"varint,25,opt,name=isSelected,proto3" json:"isSelected"`   // 当前用户是否已自选
+	UnreadCount   int32  `protobuf:"varint,26,opt,name=unreadCount,proto3" json:"unreadCount"` // 未读通知数
+	HomeData      string `protobuf:"bytes,27,opt,name=homeData,proto3" json:"homeData"`        // 合并后的自定义主页数据 JSON
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -743,6 +744,13 @@ func (x *AppInfo) GetUnreadCount() int32 {
 		return x.UnreadCount
 	}
 	return 0
+}
+
+func (x *AppInfo) GetHomeData() string {
+	if x != nil {
+		return x.HomeData
+	}
+	return ""
 }
 
 type AppVersionInfo struct {
@@ -1535,6 +1543,7 @@ type MsgTemplateInfo struct {
 	UseCount       int64                  `protobuf:"varint,10,opt,name=useCount,proto3" json:"useCount"`
 	CreatedAt      int64                  `protobuf:"varint,11,opt,name=createdAt,proto3" json:"createdAt"`
 	UpdatedAt      int64                  `protobuf:"varint,12,opt,name=updatedAt,proto3" json:"updatedAt"`
+	CardJSON       string                 `protobuf:"bytes,13,opt,name=cardJSON,proto3" json:"cardJSON"` // Versioned message template, rendered as JSON values
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1653,6 +1662,13 @@ func (x *MsgTemplateInfo) GetUpdatedAt() int64 {
 	return 0
 }
 
+func (x *MsgTemplateInfo) GetCardJSON() string {
+	if x != nil {
+		return x.CardJSON
+	}
+	return ""
+}
+
 type NotifyLogInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
@@ -1671,6 +1687,9 @@ type NotifyLogInfo struct {
 	Extra         string                 `protobuf:"bytes,14,opt,name=extra,proto3" json:"extra"` // JSON
 	CreatedAt     int64                  `protobuf:"varint,15,opt,name=createdAt,proto3" json:"createdAt"`
 	ReadAt        int64                  `protobuf:"varint,16,opt,name=readAt,proto3" json:"readAt"`
+	PayloadJSON   string                 `protobuf:"bytes,17,opt,name=payloadJSON,proto3" json:"payloadJSON"`
+	DetailJSON    string                 `protobuf:"bytes,18,opt,name=detailJSON,proto3" json:"detailJSON"`
+	Revision      int64                  `protobuf:"varint,19,opt,name=revision,proto3" json:"revision"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1813,6 +1832,27 @@ func (x *NotifyLogInfo) GetCreatedAt() int64 {
 func (x *NotifyLogInfo) GetReadAt() int64 {
 	if x != nil {
 		return x.ReadAt
+	}
+	return 0
+}
+
+func (x *NotifyLogInfo) GetPayloadJSON() string {
+	if x != nil {
+		return x.PayloadJSON
+	}
+	return ""
+}
+
+func (x *NotifyLogInfo) GetDetailJSON() string {
+	if x != nil {
+		return x.DetailJSON
+	}
+	return ""
+}
+
+func (x *NotifyLogInfo) GetRevision() int64 {
+	if x != nil {
+		return x.Revision
 	}
 	return 0
 }
@@ -5706,6 +5746,7 @@ type CreateMsgTemplateReq struct {
 	ContentPattern string                 `protobuf:"bytes,5,opt,name=contentPattern,proto3" json:"contentPattern"`
 	HasActions     bool                   `protobuf:"varint,6,opt,name=hasActions,proto3" json:"hasActions"`
 	ActionConfig   string                 `protobuf:"bytes,7,opt,name=actionConfig,proto3" json:"actionConfig"` // JSON
+	CardJSON       string                 `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -5789,6 +5830,13 @@ func (x *CreateMsgTemplateReq) GetActionConfig() string {
 	return ""
 }
 
+func (x *CreateMsgTemplateReq) GetCardJSON() string {
+	if x != nil {
+		return x.CardJSON
+	}
+	return ""
+}
+
 type CreateMsgTemplateResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
@@ -5842,6 +5890,7 @@ type UpdateMsgTemplateReq struct {
 	HasActions     *wrapperspb.BoolValue   `protobuf:"bytes,5,opt,name=hasActions,proto3" json:"hasActions"`
 	ActionConfig   *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=actionConfig,proto3" json:"actionConfig"`
 	Status         *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=status,proto3" json:"status"`
+	CardJSON       *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -5921,6 +5970,13 @@ func (x *UpdateMsgTemplateReq) GetActionConfig() *wrapperspb.StringValue {
 func (x *UpdateMsgTemplateReq) GetStatus() *wrapperspb.Int32Value {
 	if x != nil {
 		return x.Status
+	}
+	return nil
+}
+
+func (x *UpdateMsgTemplateReq) GetCardJSON() *wrapperspb.StringValue {
+	if x != nil {
+		return x.CardJSON
 	}
 	return nil
 }
@@ -6202,6 +6258,7 @@ type PreviewMsgTemplateResp struct {
 	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content"`
 	ActionConfig  string                 `protobuf:"bytes,3,opt,name=actionConfig,proto3" json:"actionConfig"`
+	CardJSON      string                 `protobuf:"bytes,4,opt,name=cardJSON,proto3" json:"cardJSON"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6257,6 +6314,13 @@ func (x *PreviewMsgTemplateResp) GetActionConfig() string {
 	return ""
 }
 
+func (x *PreviewMsgTemplateResp) GetCardJSON() string {
+	if x != nil {
+		return x.CardJSON
+	}
+	return ""
+}
+
 type SendNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
@@ -6266,6 +6330,7 @@ type SendNotifyReq struct {
 	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"`
 	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID"`
 	Extra         string                 `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra"`
+	DetailJSON    string                 `protobuf:"bytes,8,opt,name=detailJSON,proto3" json:"detailJSON"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6349,6 +6414,13 @@ func (x *SendNotifyReq) GetExtra() string {
 	return ""
 }
 
+func (x *SendNotifyReq) GetDetailJSON() string {
+	if x != nil {
+		return x.DetailJSON
+	}
+	return ""
+}
+
 type SendNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
@@ -6409,6 +6481,7 @@ type BatchSendNotifyReq struct {
 	Data          map[string]string      `protobuf:"bytes,4,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"`
 	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID"`
+	DetailJSON    string                 `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6485,9 +6558,17 @@ func (x *BatchSendNotifyReq) GetBizID() string {
 	return ""
 }
 
+func (x *BatchSendNotifyReq) GetDetailJSON() string {
+	if x != nil {
+		return x.DetailJSON
+	}
+	return ""
+}
+
 type BatchSendNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BatchID       string                 `protobuf:"bytes,1,opt,name=batchID,proto3" json:"batchID"`
+	Results       []*NotifySendResult    `protobuf:"bytes,2,rep,name=results,proto3" json:"results"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6529,14 +6610,24 @@ func (x *BatchSendNotifyResp) GetBatchID() string {
 	return ""
 }
 
+func (x *BatchSendNotifyResp) GetResults() []*NotifySendResult {
+	if x != nil {
+		return x.Results
+	}
+	return nil
+}
+
 type UpdateNotifyReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	BizID         string                 `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID"` // notifyID或bizID二选一
-	Data          map[string]string      `protobuf:"bytes,3,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	StatusText    string                 `protobuf:"bytes,4,opt,name=statusText,proto3" json:"statusText"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState  `protogen:"open.v1"`
+	NotifyID         string                  `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
+	BizID            string                  `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID"` // Deprecated for update: notifyID is required.
+	Data             map[string]string       `protobuf:"bytes,3,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	StatusText       string                  `protobuf:"bytes,4,opt,name=statusText,proto3" json:"statusText"`
+	ExpectedRevision int64                   `protobuf:"varint,5,opt,name=expectedRevision,proto3" json:"expectedRevision"`
+	CardJSON         *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=cardJSON,proto3" json:"cardJSON"`
+	DetailJSON       *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *UpdateNotifyReq) Reset() {
@@ -6597,8 +6688,30 @@ func (x *UpdateNotifyReq) GetStatusText() string {
 	return ""
 }
 
+func (x *UpdateNotifyReq) GetExpectedRevision() int64 {
+	if x != nil {
+		return x.ExpectedRevision
+	}
+	return 0
+}
+
+func (x *UpdateNotifyReq) GetCardJSON() *wrapperspb.StringValue {
+	if x != nil {
+		return x.CardJSON
+	}
+	return nil
+}
+
+func (x *UpdateNotifyReq) GetDetailJSON() *wrapperspb.StringValue {
+	if x != nil {
+		return x.DetailJSON
+	}
+	return nil
+}
+
 type UpdateNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Revision      int64                  `protobuf:"varint,1,opt,name=revision,proto3" json:"revision"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6631,6 +6744,13 @@ func (x *UpdateNotifyResp) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateNotifyResp.ProtoReflect.Descriptor instead.
 func (*UpdateNotifyResp) Descriptor() ([]byte, []int) {
 	return file_workbench_workbench_proto_rawDescGZIP(), []int{92}
+}
+
+func (x *UpdateNotifyResp) GetRevision() int64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
 }
 
 type RevokeNotifyReq struct {
@@ -6826,6 +6946,7 @@ type GetNotifyListReq struct {
 	StartTime     int64                    `protobuf:"varint,5,opt,name=startTime,proto3" json:"startTime"`
 	EndTime       int64                    `protobuf:"varint,6,opt,name=endTime,proto3" json:"endTime"`
 	Pagination    *sdkws.RequestPagination `protobuf:"bytes,7,opt,name=pagination,proto3" json:"pagination"`
+	SelfOnly      bool                     `protobuf:"varint,8,opt,name=selfOnly,proto3" json:"selfOnly"` // Bound to the current IM user when true
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6907,6 +7028,13 @@ func (x *GetNotifyListReq) GetPagination() *sdkws.RequestPagination {
 		return x.Pagination
 	}
 	return nil
+}
+
+func (x *GetNotifyListReq) GetSelfOnly() bool {
+	if x != nil {
+		return x.SelfOnly
+	}
+	return false
 }
 
 type GetNotifyListResp struct {
@@ -7941,6 +8069,8 @@ type GetUserByTicketReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket"`
 	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	RedirectURI   string                 `protobuf:"bytes,3,opt,name=redirectURI,proto3" json:"redirectURI"`
+	CodeVerifier  string                 `protobuf:"bytes,4,opt,name=codeVerifier,proto3" json:"codeVerifier"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -7985,6 +8115,20 @@ func (x *GetUserByTicketReq) GetTicket() string {
 func (x *GetUserByTicketReq) GetAppID() string {
 	if x != nil {
 		return x.AppID
+	}
+	return ""
+}
+
+func (x *GetUserByTicketReq) GetRedirectURI() string {
+	if x != nil {
+		return x.RedirectURI
+	}
+	return ""
+}
+
+func (x *GetUserByTicketReq) GetCodeVerifier() string {
+	if x != nil {
+		return x.CodeVerifier
 	}
 	return ""
 }
@@ -10188,6 +10332,7 @@ func (x *BatchInstallAppResp) GetFailCount() int64 {
 type GetNotifyDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
+	MarkRead      bool                   `protobuf:"varint,2,opt,name=markRead,proto3" json:"markRead"` // Recipient only; idempotent read acknowledgement
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -10227,6 +10372,13 @@ func (x *GetNotifyDetailReq) GetNotifyID() string {
 		return x.NotifyID
 	}
 	return ""
+}
+
+func (x *GetNotifyDetailReq) GetMarkRead() bool {
+	if x != nil {
+		return x.MarkRead
+	}
+	return false
 }
 
 type GetNotifyDetailResp struct {
@@ -10849,11 +11001,503 @@ func (*ClickAppResp) Descriptor() ([]byte, []int) {
 	return file_workbench_workbench_proto_rawDescGZIP(), []int{172}
 }
 
+type LaunchAppReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID"`
+	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state"`
+	RedirectURI   string                 `protobuf:"bytes,5,opt,name=redirectURI,proto3" json:"redirectURI"`
+	CodeChallenge string                 `protobuf:"bytes,6,opt,name=codeChallenge,proto3" json:"codeChallenge"` // PKCE S256
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LaunchAppReq) Reset() {
+	*x = LaunchAppReq{}
+	mi := &file_workbench_workbench_proto_msgTypes[173]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LaunchAppReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LaunchAppReq) ProtoMessage() {}
+
+func (x *LaunchAppReq) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[173]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LaunchAppReq.ProtoReflect.Descriptor instead.
+func (*LaunchAppReq) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{173}
+}
+
+func (x *LaunchAppReq) GetTenantID() string {
+	if x != nil {
+		return x.TenantID
+	}
+	return ""
+}
+
+func (x *LaunchAppReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *LaunchAppReq) GetAppID() string {
+	if x != nil {
+		return x.AppID
+	}
+	return ""
+}
+
+func (x *LaunchAppReq) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *LaunchAppReq) GetRedirectURI() string {
+	if x != nil {
+		return x.RedirectURI
+	}
+	return ""
+}
+
+func (x *LaunchAppReq) GetCodeChallenge() string {
+	if x != nil {
+		return x.CodeChallenge
+	}
+	return ""
+}
+
+type LaunchAppResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LaunchURL     string                 `protobuf:"bytes,1,opt,name=launchURL,proto3" json:"launchURL"`    // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
+	OpenMethod    int32                  `protobuf:"varint,2,opt,name=openMethod,proto3" json:"openMethod"` // OpenMethod
+	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn"`   // ticket 剩余有效秒数；非 SSO 应用为 0
+	SsoEnabled    bool                   `protobuf:"varint,4,opt,name=ssoEnabled,proto3" json:"ssoEnabled"` // 该应用是否启用了 SSO 免登
+	AuthMode      string                 `protobuf:"bytes,5,opt,name=authMode,proto3" json:"authMode"`      // none, legacy_ticket, im_code, federation
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LaunchAppResp) Reset() {
+	*x = LaunchAppResp{}
+	mi := &file_workbench_workbench_proto_msgTypes[174]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LaunchAppResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LaunchAppResp) ProtoMessage() {}
+
+func (x *LaunchAppResp) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[174]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LaunchAppResp.ProtoReflect.Descriptor instead.
+func (*LaunchAppResp) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{174}
+}
+
+func (x *LaunchAppResp) GetLaunchURL() string {
+	if x != nil {
+		return x.LaunchURL
+	}
+	return ""
+}
+
+func (x *LaunchAppResp) GetOpenMethod() int32 {
+	if x != nil {
+		return x.OpenMethod
+	}
+	return 0
+}
+
+func (x *LaunchAppResp) GetExpiresIn() int64 {
+	if x != nil {
+		return x.ExpiresIn
+	}
+	return 0
+}
+
+func (x *LaunchAppResp) GetSsoEnabled() bool {
+	if x != nil {
+		return x.SsoEnabled
+	}
+	return false
+}
+
+func (x *LaunchAppResp) GetAuthMode() string {
+	if x != nil {
+		return x.AuthMode
+	}
+	return ""
+}
+
+type NotifySendResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ToUserID      string                 `protobuf:"bytes,1,opt,name=toUserID,proto3" json:"toUserID"`
+	NotifyID      string                 `protobuf:"bytes,2,opt,name=notifyID,proto3" json:"notifyID"`
+	MsgID         string                 `protobuf:"bytes,3,opt,name=msgID,proto3" json:"msgID"`
+	Error         string                 `protobuf:"bytes,4,opt,name=error,proto3" json:"error"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotifySendResult) Reset() {
+	*x = NotifySendResult{}
+	mi := &file_workbench_workbench_proto_msgTypes[175]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotifySendResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifySendResult) ProtoMessage() {}
+
+func (x *NotifySendResult) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[175]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifySendResult.ProtoReflect.Descriptor instead.
+func (*NotifySendResult) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{175}
+}
+
+func (x *NotifySendResult) GetToUserID() string {
+	if x != nil {
+		return x.ToUserID
+	}
+	return ""
+}
+
+func (x *NotifySendResult) GetNotifyID() string {
+	if x != nil {
+		return x.NotifyID
+	}
+	return ""
+}
+
+func (x *NotifySendResult) GetMsgID() string {
+	if x != nil {
+		return x.MsgID
+	}
+	return ""
+}
+
+func (x *NotifySendResult) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+type CardActionReq struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	NotifyID         string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
+	ActionType       string                 `protobuf:"bytes,2,opt,name=actionType,proto3" json:"actionType"` // button_click / vote_submit / select_submit
+	ActionKey        string                 `protobuf:"bytes,3,opt,name=actionKey,proto3" json:"actionKey"`
+	ActionValue      string                 `protobuf:"bytes,4,opt,name=actionValue,proto3" json:"actionValue"`
+	TaskID           string                 `protobuf:"bytes,5,opt,name=taskID,proto3" json:"taskID"`
+	ExpectedRevision int64                  `protobuf:"varint,6,opt,name=expectedRevision,proto3" json:"expectedRevision"` // Required current notification revision
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *CardActionReq) Reset() {
+	*x = CardActionReq{}
+	mi := &file_workbench_workbench_proto_msgTypes[176]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardActionReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardActionReq) ProtoMessage() {}
+
+func (x *CardActionReq) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[176]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CardActionReq.ProtoReflect.Descriptor instead.
+func (*CardActionReq) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{176}
+}
+
+func (x *CardActionReq) GetNotifyID() string {
+	if x != nil {
+		return x.NotifyID
+	}
+	return ""
+}
+
+func (x *CardActionReq) GetActionType() string {
+	if x != nil {
+		return x.ActionType
+	}
+	return ""
+}
+
+func (x *CardActionReq) GetActionKey() string {
+	if x != nil {
+		return x.ActionKey
+	}
+	return ""
+}
+
+func (x *CardActionReq) GetActionValue() string {
+	if x != nil {
+		return x.ActionValue
+	}
+	return ""
+}
+
+func (x *CardActionReq) GetTaskID() string {
+	if x != nil {
+		return x.TaskID
+	}
+	return ""
+}
+
+func (x *CardActionReq) GetExpectedRevision() int64 {
+	if x != nil {
+		return x.ExpectedRevision
+	}
+	return 0
+}
+
+type CardActionResp struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	CardUpdated      bool                   `protobuf:"varint,1,opt,name=cardUpdated,proto3" json:"cardUpdated"`
+	EventID          string                 `protobuf:"bytes,2,opt,name=eventID,proto3" json:"eventID"`
+	Revision         int64                  `protobuf:"varint,3,opt,name=revision,proto3" json:"revision"`
+	SubmissionStatus string                 `protobuf:"bytes,4,opt,name=submissionStatus,proto3" json:"submissionStatus"` // accepted, not business completion
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *CardActionResp) Reset() {
+	*x = CardActionResp{}
+	mi := &file_workbench_workbench_proto_msgTypes[177]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CardActionResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CardActionResp) ProtoMessage() {}
+
+func (x *CardActionResp) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[177]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CardActionResp.ProtoReflect.Descriptor instead.
+func (*CardActionResp) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{177}
+}
+
+func (x *CardActionResp) GetCardUpdated() bool {
+	if x != nil {
+		return x.CardUpdated
+	}
+	return false
+}
+
+func (x *CardActionResp) GetEventID() string {
+	if x != nil {
+		return x.EventID
+	}
+	return ""
+}
+
+func (x *CardActionResp) GetRevision() int64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *CardActionResp) GetSubmissionStatus() string {
+	if x != nil {
+		return x.SubmissionStatus
+	}
+	return ""
+}
+
+type SetWorkbenchDataReq struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Agentid         string                 `protobuf:"bytes,1,opt,name=agentid,proto3" json:"agentid"`
+	Type            string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type"` // keydata / image / list / webview
+	Data            string                 `protobuf:"bytes,3,opt,name=data,proto3" json:"data"` // JSON
+	ReplaceUserData bool                   `protobuf:"varint,4,opt,name=replaceUserData,proto3" json:"replaceUserData"`
+	UserID          string                 `protobuf:"bytes,5,opt,name=userID,proto3" json:"userID"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *SetWorkbenchDataReq) Reset() {
+	*x = SetWorkbenchDataReq{}
+	mi := &file_workbench_workbench_proto_msgTypes[178]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetWorkbenchDataReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetWorkbenchDataReq) ProtoMessage() {}
+
+func (x *SetWorkbenchDataReq) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[178]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetWorkbenchDataReq.ProtoReflect.Descriptor instead.
+func (*SetWorkbenchDataReq) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{178}
+}
+
+func (x *SetWorkbenchDataReq) GetAgentid() string {
+	if x != nil {
+		return x.Agentid
+	}
+	return ""
+}
+
+func (x *SetWorkbenchDataReq) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *SetWorkbenchDataReq) GetData() string {
+	if x != nil {
+		return x.Data
+	}
+	return ""
+}
+
+func (x *SetWorkbenchDataReq) GetReplaceUserData() bool {
+	if x != nil {
+		return x.ReplaceUserData
+	}
+	return false
+}
+
+func (x *SetWorkbenchDataReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+type SetWorkbenchDataResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetWorkbenchDataResp) Reset() {
+	*x = SetWorkbenchDataResp{}
+	mi := &file_workbench_workbench_proto_msgTypes[179]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetWorkbenchDataResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetWorkbenchDataResp) ProtoMessage() {}
+
+func (x *SetWorkbenchDataResp) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[179]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetWorkbenchDataResp.ProtoReflect.Descriptor instead.
+func (*SetWorkbenchDataResp) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{179}
+}
+
 var File_workbench_workbench_proto protoreflect.FileDescriptor
 
 const file_workbench_workbench_proto_rawDesc = "" +
 	"\n" +
-	"\x19workbench/workbench.proto\x12\x10openim.workbench\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\x9b\x06\n" +
+	"\x19workbench/workbench.proto\x12\x10openim.workbench\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\xb7\x06\n" +
 	"\aAppInfo\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12\x16\n" +
 	"\x06appKey\x18\x02 \x01(\tR\x06appKey\x12\x12\n" +
@@ -10887,7 +11531,8 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\n" +
 	"isSelected\x18\x19 \x01(\bR\n" +
 	"isSelected\x12 \n" +
-	"\vunreadCount\x18\x1a \x01(\x05R\vunreadCount\"\xc2\x02\n" +
+	"\vunreadCount\x18\x1a \x01(\x05R\vunreadCount\x12\x1a\n" +
+	"\bhomeData\x18\x1b \x01(\tR\bhomeData\"\xc2\x02\n" +
 	"\x0eAppVersionInfo\x12\x1c\n" +
 	"\tversionID\x18\x01 \x01(\tR\tversionID\x12\x14\n" +
 	"\x05appID\x18\x02 \x01(\tR\x05appID\x12\x18\n" +
@@ -10965,7 +11610,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x06scopes\x18\x04 \x03(\tR\x06scopes\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x05R\x06status\x12\"\n" +
 	"\fauthorizedAt\x18\x06 \x01(\x03R\fauthorizedAt\x12\x1c\n" +
-	"\trevokedAt\x18\a \x01(\x03R\trevokedAt\"\xfd\x02\n" +
+	"\trevokedAt\x18\a \x01(\x03R\trevokedAt\"\x99\x03\n" +
 	"\x0fMsgTemplateInfo\x12\x1e\n" +
 	"\n" +
 	"templateID\x18\x01 \x01(\tR\n" +
@@ -10983,7 +11628,8 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\buseCount\x18\n" +
 	" \x01(\x03R\buseCount\x12\x1c\n" +
 	"\tcreatedAt\x18\v \x01(\x03R\tcreatedAt\x12\x1c\n" +
-	"\tupdatedAt\x18\f \x01(\x03R\tupdatedAt\"\xa5\x03\n" +
+	"\tupdatedAt\x18\f \x01(\x03R\tupdatedAt\x12\x1a\n" +
+	"\bcardJSON\x18\r \x01(\tR\bcardJSON\"\x83\x04\n" +
 	"\rNotifyLogInfo\x12\x1a\n" +
 	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x1a\n" +
 	"\btenantID\x18\x02 \x01(\tR\btenantID\x12\x14\n" +
@@ -11005,7 +11651,12 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x05msgID\x18\r \x01(\tR\x05msgID\x12\x14\n" +
 	"\x05extra\x18\x0e \x01(\tR\x05extra\x12\x1c\n" +
 	"\tcreatedAt\x18\x0f \x01(\x03R\tcreatedAt\x12\x16\n" +
-	"\x06readAt\x18\x10 \x01(\x03R\x06readAt\"\xbf\x03\n" +
+	"\x06readAt\x18\x10 \x01(\x03R\x06readAt\x12 \n" +
+	"\vpayloadJSON\x18\x11 \x01(\tR\vpayloadJSON\x12\x1e\n" +
+	"\n" +
+	"detailJSON\x18\x12 \x01(\tR\n" +
+	"detailJSON\x12\x1a\n" +
+	"\brevision\x18\x13 \x01(\x03R\brevision\"\xbf\x03\n" +
 	"\rDeveloperInfo\x12 \n" +
 	"\vdeveloperID\x18\x01 \x01(\tR\vdeveloperID\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
@@ -11312,7 +11963,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"E\n" +
 	"\x14GetAvailableAppsResp\x12-\n" +
-	"\x04apps\x18\x01 \x03(\v2\x19.openim.workbench.AppInfoR\x04apps\"\xf2\x01\n" +
+	"\x04apps\x18\x01 \x03(\v2\x19.openim.workbench.AppInfoR\x04apps\"\x8e\x02\n" +
 	"\x14CreateMsgTemplateReq\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12 \n" +
 	"\vtemplateKey\x18\x02 \x01(\tR\vtemplateKey\x12\x12\n" +
@@ -11322,11 +11973,12 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\n" +
 	"hasActions\x18\x06 \x01(\bR\n" +
 	"hasActions\x12\"\n" +
-	"\factionConfig\x18\a \x01(\tR\factionConfig\"7\n" +
+	"\factionConfig\x18\a \x01(\tR\factionConfig\x12\x1a\n" +
+	"\bcardJSON\x18\b \x01(\tR\bcardJSON\"7\n" +
 	"\x15CreateMsgTemplateResp\x12\x1e\n" +
 	"\n" +
 	"templateID\x18\x01 \x01(\tR\n" +
-	"templateID\"\xa3\x03\n" +
+	"templateID\"\xdd\x03\n" +
 	"\x14UpdateMsgTemplateReq\x12\x1e\n" +
 	"\n" +
 	"templateID\x18\x01 \x01(\tR\n" +
@@ -11338,7 +11990,8 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"hasActions\x18\x05 \x01(\v2\x1a.openim.protobuf.BoolValueR\n" +
 	"hasActions\x12@\n" +
 	"\factionConfig\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\factionConfig\x123\n" +
-	"\x06status\x18\a \x01(\v2\x1b.openim.protobuf.Int32ValueR\x06status\"\x17\n" +
+	"\x06status\x18\a \x01(\v2\x1b.openim.protobuf.Int32ValueR\x06status\x128\n" +
+	"\bcardJSON\x18\b \x01(\v2\x1c.openim.protobuf.StringValueR\bcardJSON\"\x17\n" +
 	"\x15UpdateMsgTemplateResp\"6\n" +
 	"\x14DeleteMsgTemplateReq\x12\x1e\n" +
 	"\n" +
@@ -11360,11 +12013,12 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\bmockData\x18\x02 \x03(\v25.openim.workbench.PreviewMsgTemplateReq.MockDataEntryR\bmockData\x1a;\n" +
 	"\rMockDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"l\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x88\x01\n" +
 	"\x16PreviewMsgTemplateResp\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\"\n" +
-	"\factionConfig\x18\x03 \x01(\tR\factionConfig\"\x99\x02\n" +
+	"\factionConfig\x18\x03 \x01(\tR\factionConfig\x12\x1a\n" +
+	"\bcardJSON\x18\x04 \x01(\tR\bcardJSON\"\xb9\x02\n" +
 	"\rSendNotifyReq\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12 \n" +
 	"\vtemplateKey\x18\x02 \x01(\tR\vtemplateKey\x12\x1a\n" +
@@ -11372,36 +12026,49 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x04data\x18\x04 \x03(\v2).openim.workbench.SendNotifyReq.DataEntryR\x04data\x12\x10\n" +
 	"\x03url\x18\x05 \x01(\tR\x03url\x12\x14\n" +
 	"\x05bizID\x18\x06 \x01(\tR\x05bizID\x12\x14\n" +
-	"\x05extra\x18\a \x01(\tR\x05extra\x1a7\n" +
+	"\x05extra\x18\a \x01(\tR\x05extra\x12\x1e\n" +
+	"\n" +
+	"detailJSON\x18\b \x01(\tR\n" +
+	"detailJSON\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"B\n" +
 	"\x0eSendNotifyResp\x12\x1a\n" +
 	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x14\n" +
-	"\x05msgID\x18\x02 \x01(\tR\x05msgID\"\x8f\x02\n" +
+	"\x05msgID\x18\x02 \x01(\tR\x05msgID\"\xaf\x02\n" +
 	"\x12BatchSendNotifyReq\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12 \n" +
 	"\vtemplateKey\x18\x02 \x01(\tR\vtemplateKey\x12\x1c\n" +
 	"\ttoUserIDs\x18\x03 \x03(\tR\ttoUserIDs\x12B\n" +
 	"\x04data\x18\x04 \x03(\v2..openim.workbench.BatchSendNotifyReq.DataEntryR\x04data\x12\x10\n" +
 	"\x03url\x18\x05 \x01(\tR\x03url\x12\x14\n" +
-	"\x05bizID\x18\x06 \x01(\tR\x05bizID\x1a7\n" +
+	"\x05bizID\x18\x06 \x01(\tR\x05bizID\x12\x1e\n" +
+	"\n" +
+	"detailJSON\x18\a \x01(\tR\n" +
+	"detailJSON\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"/\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"m\n" +
 	"\x13BatchSendNotifyResp\x12\x18\n" +
-	"\abatchID\x18\x01 \x01(\tR\abatchID\"\xdd\x01\n" +
+	"\abatchID\x18\x01 \x01(\tR\abatchID\x12<\n" +
+	"\aresults\x18\x02 \x03(\v2\".openim.workbench.NotifySendResultR\aresults\"\x81\x03\n" +
 	"\x0fUpdateNotifyReq\x12\x1a\n" +
 	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x14\n" +
 	"\x05bizID\x18\x02 \x01(\tR\x05bizID\x12?\n" +
 	"\x04data\x18\x03 \x03(\v2+.openim.workbench.UpdateNotifyReq.DataEntryR\x04data\x12\x1e\n" +
 	"\n" +
 	"statusText\x18\x04 \x01(\tR\n" +
-	"statusText\x1a7\n" +
+	"statusText\x12*\n" +
+	"\x10expectedRevision\x18\x05 \x01(\x03R\x10expectedRevision\x128\n" +
+	"\bcardJSON\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\bcardJSON\x12<\n" +
+	"\n" +
+	"detailJSON\x18\a \x01(\v2\x1c.openim.protobuf.StringValueR\n" +
+	"detailJSON\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x12\n" +
-	"\x10UpdateNotifyResp\"C\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\".\n" +
+	"\x10UpdateNotifyResp\x12\x1a\n" +
+	"\brevision\x18\x01 \x01(\x03R\brevision\"C\n" +
 	"\x0fRevokeNotifyReq\x12\x1a\n" +
 	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x14\n" +
 	"\x05bizID\x18\x02 \x01(\tR\x05bizID\"\x12\n" +
@@ -11410,7 +12077,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\tnotifyIDs\x18\x01 \x03(\tR\tnotifyIDs\x12\x16\n" +
 	"\x06bizIDs\x18\x02 \x03(\tR\x06bizIDs\"F\n" +
 	"\x0fQueryNotifyResp\x123\n" +
-	"\x04logs\x18\x01 \x03(\v2\x1f.openim.workbench.NotifyLogInfoR\x04logs\"\xf1\x01\n" +
+	"\x04logs\x18\x01 \x03(\v2\x1f.openim.workbench.NotifyLogInfoR\x04logs\"\x8d\x02\n" +
 	"\x10GetNotifyListReq\x12\x1a\n" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x14\n" +
 	"\x05appID\x18\x02 \x01(\tR\x05appID\x12\x1a\n" +
@@ -11420,7 +12087,8 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\aendTime\x18\x06 \x01(\x03R\aendTime\x12?\n" +
 	"\n" +
 	"pagination\x18\a \x01(\v2\x1f.openim.sdkws.RequestPaginationR\n" +
-	"pagination\"^\n" +
+	"pagination\x12\x1a\n" +
+	"\bselfOnly\x18\b \x01(\bR\bselfOnly\"^\n" +
 	"\x11GetNotifyListResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x03R\x05total\x123\n" +
 	"\x04logs\x18\x02 \x03(\v2\x1f.openim.workbench.NotifyLogInfoR\x04logs\"}\n" +
@@ -11477,10 +12145,12 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"H\n" +
 	"\x10CreateTicketResp\x12\x16\n" +
 	"\x06ticket\x18\x01 \x01(\tR\x06ticket\x12\x1c\n" +
-	"\texpiresIn\x18\x02 \x01(\x03R\texpiresIn\"B\n" +
+	"\texpiresIn\x18\x02 \x01(\x03R\texpiresIn\"\x88\x01\n" +
 	"\x12GetUserByTicketReq\x12\x16\n" +
 	"\x06ticket\x18\x01 \x01(\tR\x06ticket\x12\x14\n" +
-	"\x05appID\x18\x02 \x01(\tR\x05appID\"\xab\x01\n" +
+	"\x05appID\x18\x02 \x01(\tR\x05appID\x12 \n" +
+	"\vredirectURI\x18\x03 \x01(\tR\vredirectURI\x12\"\n" +
+	"\fcodeVerifier\x18\x04 \x01(\tR\fcodeVerifier\"\xab\x01\n" +
 	"\x13GetUserByTicketResp\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
@@ -11628,9 +12298,10 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x06appIDs\x18\x02 \x03(\tR\x06appIDs\"W\n" +
 	"\x13BatchInstallAppResp\x12\"\n" +
 	"\fsuccessCount\x18\x01 \x01(\x03R\fsuccessCount\x12\x1c\n" +
-	"\tfailCount\x18\x02 \x01(\x03R\tfailCount\"0\n" +
+	"\tfailCount\x18\x02 \x01(\x03R\tfailCount\"L\n" +
 	"\x12GetNotifyDetailReq\x12\x1a\n" +
-	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\"H\n" +
+	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x1a\n" +
+	"\bmarkRead\x18\x02 \x01(\bR\bmarkRead\"H\n" +
 	"\x13GetNotifyDetailResp\x121\n" +
 	"\x03log\x18\x01 \x01(\v2\x1f.openim.workbench.NotifyLogInfoR\x03log\"\xe7\x01\n" +
 	"\x10GetReviewListReq\x12\"\n" +
@@ -11674,7 +12345,50 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
 	"\x05appID\x18\x03 \x01(\tR\x05appID\"\x0e\n" +
-	"\fClickAppResp*~\n" +
+	"\fClickAppResp\"\xb6\x01\n" +
+	"\fLaunchAppReq\x12\x1a\n" +
+	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
+	"\x05appID\x18\x03 \x01(\tR\x05appID\x12\x14\n" +
+	"\x05state\x18\x04 \x01(\tR\x05state\x12 \n" +
+	"\vredirectURI\x18\x05 \x01(\tR\vredirectURI\x12$\n" +
+	"\rcodeChallenge\x18\x06 \x01(\tR\rcodeChallenge\"\xa7\x01\n" +
+	"\rLaunchAppResp\x12\x1c\n" +
+	"\tlaunchURL\x18\x01 \x01(\tR\tlaunchURL\x12\x1e\n" +
+	"\n" +
+	"openMethod\x18\x02 \x01(\x05R\n" +
+	"openMethod\x12\x1c\n" +
+	"\texpiresIn\x18\x03 \x01(\x03R\texpiresIn\x12\x1e\n" +
+	"\n" +
+	"ssoEnabled\x18\x04 \x01(\bR\n" +
+	"ssoEnabled\x12\x1a\n" +
+	"\bauthMode\x18\x05 \x01(\tR\bauthMode\"v\n" +
+	"\x10NotifySendResult\x12\x1a\n" +
+	"\btoUserID\x18\x01 \x01(\tR\btoUserID\x12\x1a\n" +
+	"\bnotifyID\x18\x02 \x01(\tR\bnotifyID\x12\x14\n" +
+	"\x05msgID\x18\x03 \x01(\tR\x05msgID\x12\x14\n" +
+	"\x05error\x18\x04 \x01(\tR\x05error\"\xcf\x01\n" +
+	"\rCardActionReq\x12\x1a\n" +
+	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x1e\n" +
+	"\n" +
+	"actionType\x18\x02 \x01(\tR\n" +
+	"actionType\x12\x1c\n" +
+	"\tactionKey\x18\x03 \x01(\tR\tactionKey\x12 \n" +
+	"\vactionValue\x18\x04 \x01(\tR\vactionValue\x12\x16\n" +
+	"\x06taskID\x18\x05 \x01(\tR\x06taskID\x12*\n" +
+	"\x10expectedRevision\x18\x06 \x01(\x03R\x10expectedRevision\"\x94\x01\n" +
+	"\x0eCardActionResp\x12 \n" +
+	"\vcardUpdated\x18\x01 \x01(\bR\vcardUpdated\x12\x18\n" +
+	"\aeventID\x18\x02 \x01(\tR\aeventID\x12\x1a\n" +
+	"\brevision\x18\x03 \x01(\x03R\brevision\x12*\n" +
+	"\x10submissionStatus\x18\x04 \x01(\tR\x10submissionStatus\"\x99\x01\n" +
+	"\x13SetWorkbenchDataReq\x12\x18\n" +
+	"\aagentid\x18\x01 \x01(\tR\aagentid\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12\x12\n" +
+	"\x04data\x18\x03 \x01(\tR\x04data\x12(\n" +
+	"\x0freplaceUserData\x18\x04 \x01(\bR\x0freplaceUserData\x12\x16\n" +
+	"\x06userID\x18\x05 \x01(\tR\x06userID\"\x16\n" +
+	"\x14SetWorkbenchDataResp*~\n" +
 	"\tAppSource\x12\x1a\n" +
 	"\x16APP_SOURCE_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bAPP_SOURCE_PLATFORM_BUILTIN\x10\x01\x12 \n" +
@@ -11723,7 +12437,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\fReviewAction\x12\x1d\n" +
 	"\x19REVIEW_ACTION_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15REVIEW_ACTION_APPROVE\x10\x01\x12\x18\n" +
-	"\x14REVIEW_ACTION_REJECT\x10\x022\xd0\x18\n" +
+	"\x14REVIEW_ACTION_REJECT\x10\x022\x9e\x19\n" +
 	"\tWorkbench\x12L\n" +
 	"\tcreateApp\x12\x1e.openim.workbench.CreateAppReq\x1a\x1f.openim.workbench.CreateAppResp\x12L\n" +
 	"\tupdateApp\x12\x1e.openim.workbench.UpdateAppReq\x1a\x1f.openim.workbench.UpdateAppResp\x12L\n" +
@@ -11763,7 +12477,8 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x10getPlatformStats\x12%.openim.workbench.GetPlatformStatsReq\x1a&.openim.workbench.GetPlatformStatsResp\x12[\n" +
 	"\x0egetTenantStats\x12#.openim.workbench.GetTenantStatsReq\x1a$.openim.workbench.GetTenantStatsResp\x12F\n" +
 	"\agetHome\x12\x1c.openim.workbench.GetHomeReq\x1a\x1d.openim.workbench.GetHomeResp\x12I\n" +
-	"\bclickApp\x12\x1d.openim.workbench.ClickAppReq\x1a\x1e.openim.workbench.ClickAppRespB)Z'github.com/openimsdk/protocol/workbenchb\x06proto3"
+	"\bclickApp\x12\x1d.openim.workbench.ClickAppReq\x1a\x1e.openim.workbench.ClickAppResp\x12L\n" +
+	"\tlaunchApp\x12\x1e.openim.workbench.LaunchAppReq\x1a\x1f.openim.workbench.LaunchAppRespB)Z'github.com/openimsdk/protocol/workbenchb\x06proto3"
 
 var (
 	file_workbench_workbench_proto_rawDescOnce sync.Once
@@ -11778,7 +12493,7 @@ func file_workbench_workbench_proto_rawDescGZIP() []byte {
 }
 
 var file_workbench_workbench_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 177)
+var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 184)
 var file_workbench_workbench_proto_goTypes = []any{
 	(AppSource)(0),                  // 0: openim.workbench.AppSource
 	(AppType)(0),                    // 1: openim.workbench.AppType
@@ -11962,54 +12677,61 @@ var file_workbench_workbench_proto_goTypes = []any{
 	(*GetHomeResp)(nil),             // 179: openim.workbench.GetHomeResp
 	(*ClickAppReq)(nil),             // 180: openim.workbench.ClickAppReq
 	(*ClickAppResp)(nil),            // 181: openim.workbench.ClickAppResp
-	nil,                             // 182: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	nil,                             // 183: openim.workbench.SendNotifyReq.DataEntry
-	nil,                             // 184: openim.workbench.BatchSendNotifyReq.DataEntry
-	nil,                             // 185: openim.workbench.UpdateNotifyReq.DataEntry
-	(*wrapperspb.StringValue)(nil),  // 186: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),   // 187: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),    // 188: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil), // 189: openim.sdkws.RequestPagination
-	(*wrapperspb.Int64Value)(nil),   // 190: openim.protobuf.Int64Value
+	(*LaunchAppReq)(nil),            // 182: openim.workbench.LaunchAppReq
+	(*LaunchAppResp)(nil),           // 183: openim.workbench.LaunchAppResp
+	(*NotifySendResult)(nil),        // 184: openim.workbench.NotifySendResult
+	(*CardActionReq)(nil),           // 185: openim.workbench.CardActionReq
+	(*CardActionResp)(nil),          // 186: openim.workbench.CardActionResp
+	(*SetWorkbenchDataReq)(nil),     // 187: openim.workbench.SetWorkbenchDataReq
+	(*SetWorkbenchDataResp)(nil),    // 188: openim.workbench.SetWorkbenchDataResp
+	nil,                             // 189: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	nil,                             // 190: openim.workbench.SendNotifyReq.DataEntry
+	nil,                             // 191: openim.workbench.BatchSendNotifyReq.DataEntry
+	nil,                             // 192: openim.workbench.UpdateNotifyReq.DataEntry
+	(*wrapperspb.StringValue)(nil),  // 193: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),   // 194: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),    // 195: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil), // 196: openim.sdkws.RequestPagination
+	(*wrapperspb.Int64Value)(nil),   // 197: openim.protobuf.Int64Value
 }
 var file_workbench_workbench_proto_depIdxs = []int32{
 	11,  // 0: openim.workbench.CategoryInfo.children:type_name -> openim.workbench.CategoryInfo
-	186, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
-	186, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
-	186, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
-	187, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
-	186, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
-	187, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
-	186, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
-	187, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	188, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
-	186, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
+	193, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
+	193, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
+	193, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
+	194, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
+	193, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
+	194, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
+	193, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
+	194, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	195, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
+	193, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
 	9,   // 11: openim.workbench.GetAppResp.app:type_name -> openim.workbench.AppInfo
-	189, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 13: openim.workbench.GetAppListResp.apps:type_name -> openim.workbench.AppInfo
-	186, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
-	186, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
-	187, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	193, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
+	193, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
+	194, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
 	11,  // 17: openim.workbench.GetCategoryListResp.categories:type_name -> openim.workbench.CategoryInfo
 	47,  // 18: openim.workbench.SortCategoriesReq.items:type_name -> openim.workbench.CategorySortItem
-	186, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
-	186, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
-	187, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
-	186, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
-	187, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
-	187, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	190, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
-	190, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
-	187, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
-	189, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	193, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
+	193, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
+	194, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
+	193, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
+	194, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
+	194, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	197, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
+	197, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
+	194, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
+	196, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	12,  // 29: openim.workbench.GetBannerListResp.banners:type_name -> openim.workbench.BannerInfo
-	189, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 31: openim.workbench.GetInstalledAppsResp.apps:type_name -> openim.workbench.AppInfo
-	189, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 33: openim.workbench.GetMarketAppsResp.apps:type_name -> openim.workbench.AppInfo
-	189, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 35: openim.workbench.SearchMarketResp.apps:type_name -> openim.workbench.AppInfo
-	189, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 37: openim.workbench.GetRecommendResp.recommended:type_name -> openim.workbench.AppInfo
 	9,   // 38: openim.workbench.GetRecommendResp.popular:type_name -> openim.workbench.AppInfo
 	14,  // 39: openim.workbench.SetAppScopeReq.scopes:type_name -> openim.workbench.AppScopeInfo
@@ -12017,126 +12739,132 @@ var file_workbench_workbench_proto_depIdxs = []int32{
 	78,  // 41: openim.workbench.SortUserAppsReq.items:type_name -> openim.workbench.UserAppSortItem
 	9,   // 42: openim.workbench.GetUserAppsResp.apps:type_name -> openim.workbench.AppInfo
 	9,   // 43: openim.workbench.GetAvailableAppsResp.apps:type_name -> openim.workbench.AppInfo
-	186, // 44: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
-	186, // 45: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
-	186, // 46: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
-	188, // 47: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
-	186, // 48: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
-	187, // 49: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
-	189, // 50: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	18,  // 51: openim.workbench.GetMsgTemplateListResp.templates:type_name -> openim.workbench.MsgTemplateInfo
-	182, // 52: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	183, // 53: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
-	184, // 54: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
-	185, // 55: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
-	19,  // 56: openim.workbench.QueryNotifyResp.logs:type_name -> openim.workbench.NotifyLogInfo
-	189, // 57: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	19,  // 58: openim.workbench.GetNotifyListResp.logs:type_name -> openim.workbench.NotifyLogInfo
-	16,  // 59: openim.workbench.GetCredentialResp.credential:type_name -> openim.workbench.AppCredentialInfo
-	17,  // 60: openim.workbench.GetAuthDetailResp.auth:type_name -> openim.workbench.OAuthAuthInfo
-	20,  // 61: openim.workbench.LoginDeveloperResp.developer:type_name -> openim.workbench.DeveloperInfo
-	186, // 62: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
-	186, // 63: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
-	186, // 64: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
-	186, // 65: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
-	189, // 66: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	20,  // 67: openim.workbench.GetDeveloperListResp.developers:type_name -> openim.workbench.DeveloperInfo
-	189, // 68: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	9,   // 69: openim.workbench.GetDeveloperAppsResp.apps:type_name -> openim.workbench.AppInfo
-	189, // 70: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	21,  // 71: openim.workbench.GetPendingReviewsResp.reviews:type_name -> openim.workbench.AppReviewInfo
-	21,  // 72: openim.workbench.GetReviewDetailResp.review:type_name -> openim.workbench.AppReviewInfo
-	9,   // 73: openim.workbench.GetReviewDetailResp.app:type_name -> openim.workbench.AppInfo
-	20,  // 74: openim.workbench.GetReviewDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
-	22,  // 75: openim.workbench.GetWebhookResp.webhook:type_name -> openim.workbench.WebhookInfo
-	189, // 76: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	23,  // 77: openim.workbench.GetWebhookLogsResp.logs:type_name -> openim.workbench.WebhookLogInfo
-	9,   // 78: openim.workbench.GetMarketAppDetailResp.app:type_name -> openim.workbench.AppInfo
-	20,  // 79: openim.workbench.GetMarketAppDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
-	10,  // 80: openim.workbench.GetMarketAppDetailResp.versions:type_name -> openim.workbench.AppVersionInfo
-	19,  // 81: openim.workbench.GetNotifyDetailResp.log:type_name -> openim.workbench.NotifyLogInfo
-	189, // 82: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	21,  // 83: openim.workbench.GetReviewListResp.reviews:type_name -> openim.workbench.AppReviewInfo
-	12,  // 84: openim.workbench.GetHomeResp.banners:type_name -> openim.workbench.BannerInfo
-	11,  // 85: openim.workbench.GetHomeResp.categories:type_name -> openim.workbench.CategoryInfo
-	9,   // 86: openim.workbench.GetHomeResp.apps:type_name -> openim.workbench.AppInfo
-	24,  // 87: openim.workbench.Workbench.createApp:input_type -> openim.workbench.CreateAppReq
-	26,  // 88: openim.workbench.Workbench.updateApp:input_type -> openim.workbench.UpdateAppReq
-	28,  // 89: openim.workbench.Workbench.deleteApp:input_type -> openim.workbench.DeleteAppReq
-	30,  // 90: openim.workbench.Workbench.getApp:input_type -> openim.workbench.GetAppReq
-	32,  // 91: openim.workbench.Workbench.getAppList:input_type -> openim.workbench.GetAppListReq
-	34,  // 92: openim.workbench.Workbench.setAppStatus:input_type -> openim.workbench.SetAppStatusReq
-	36,  // 93: openim.workbench.Workbench.pushInstall:input_type -> openim.workbench.PushInstallReq
-	38,  // 94: openim.workbench.Workbench.createCategory:input_type -> openim.workbench.CreateCategoryReq
-	40,  // 95: openim.workbench.Workbench.updateCategory:input_type -> openim.workbench.UpdateCategoryReq
-	42,  // 96: openim.workbench.Workbench.deleteCategory:input_type -> openim.workbench.DeleteCategoryReq
-	44,  // 97: openim.workbench.Workbench.getCategoryList:input_type -> openim.workbench.GetCategoryListReq
-	46,  // 98: openim.workbench.Workbench.sortCategories:input_type -> openim.workbench.SortCategoriesReq
-	49,  // 99: openim.workbench.Workbench.createBanner:input_type -> openim.workbench.CreateBannerReq
-	51,  // 100: openim.workbench.Workbench.updateBanner:input_type -> openim.workbench.UpdateBannerReq
-	53,  // 101: openim.workbench.Workbench.deleteBanner:input_type -> openim.workbench.DeleteBannerReq
-	55,  // 102: openim.workbench.Workbench.getBannerList:input_type -> openim.workbench.GetBannerListReq
-	57,  // 103: openim.workbench.Workbench.installApp:input_type -> openim.workbench.InstallAppReq
-	59,  // 104: openim.workbench.Workbench.uninstallApp:input_type -> openim.workbench.UninstallAppReq
-	61,  // 105: openim.workbench.Workbench.getInstalledApps:input_type -> openim.workbench.GetInstalledAppsReq
-	63,  // 106: openim.workbench.Workbench.getMarketApps:input_type -> openim.workbench.GetMarketAppsReq
-	65,  // 107: openim.workbench.Workbench.searchMarket:input_type -> openim.workbench.SearchMarketReq
-	67,  // 108: openim.workbench.Workbench.getRecommend:input_type -> openim.workbench.GetRecommendReq
-	69,  // 109: openim.workbench.Workbench.setAppScope:input_type -> openim.workbench.SetAppScopeReq
-	71,  // 110: openim.workbench.Workbench.getAppScope:input_type -> openim.workbench.GetAppScopeReq
-	73,  // 111: openim.workbench.Workbench.addUserApps:input_type -> openim.workbench.AddUserAppsReq
-	75,  // 112: openim.workbench.Workbench.removeUserApps:input_type -> openim.workbench.RemoveUserAppsReq
-	77,  // 113: openim.workbench.Workbench.sortUserApps:input_type -> openim.workbench.SortUserAppsReq
-	80,  // 114: openim.workbench.Workbench.pinUserApp:input_type -> openim.workbench.PinUserAppReq
-	82,  // 115: openim.workbench.Workbench.getUserApps:input_type -> openim.workbench.GetUserAppsReq
-	84,  // 116: openim.workbench.Workbench.getAvailableApps:input_type -> openim.workbench.GetAvailableAppsReq
-	166, // 117: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
-	168, // 118: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
-	174, // 119: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
-	176, // 120: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
-	178, // 121: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
-	180, // 122: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
-	25,  // 123: openim.workbench.Workbench.createApp:output_type -> openim.workbench.CreateAppResp
-	27,  // 124: openim.workbench.Workbench.updateApp:output_type -> openim.workbench.UpdateAppResp
-	29,  // 125: openim.workbench.Workbench.deleteApp:output_type -> openim.workbench.DeleteAppResp
-	31,  // 126: openim.workbench.Workbench.getApp:output_type -> openim.workbench.GetAppResp
-	33,  // 127: openim.workbench.Workbench.getAppList:output_type -> openim.workbench.GetAppListResp
-	35,  // 128: openim.workbench.Workbench.setAppStatus:output_type -> openim.workbench.SetAppStatusResp
-	37,  // 129: openim.workbench.Workbench.pushInstall:output_type -> openim.workbench.PushInstallResp
-	39,  // 130: openim.workbench.Workbench.createCategory:output_type -> openim.workbench.CreateCategoryResp
-	41,  // 131: openim.workbench.Workbench.updateCategory:output_type -> openim.workbench.UpdateCategoryResp
-	43,  // 132: openim.workbench.Workbench.deleteCategory:output_type -> openim.workbench.DeleteCategoryResp
-	45,  // 133: openim.workbench.Workbench.getCategoryList:output_type -> openim.workbench.GetCategoryListResp
-	48,  // 134: openim.workbench.Workbench.sortCategories:output_type -> openim.workbench.SortCategoriesResp
-	50,  // 135: openim.workbench.Workbench.createBanner:output_type -> openim.workbench.CreateBannerResp
-	52,  // 136: openim.workbench.Workbench.updateBanner:output_type -> openim.workbench.UpdateBannerResp
-	54,  // 137: openim.workbench.Workbench.deleteBanner:output_type -> openim.workbench.DeleteBannerResp
-	56,  // 138: openim.workbench.Workbench.getBannerList:output_type -> openim.workbench.GetBannerListResp
-	58,  // 139: openim.workbench.Workbench.installApp:output_type -> openim.workbench.InstallAppResp
-	60,  // 140: openim.workbench.Workbench.uninstallApp:output_type -> openim.workbench.UninstallAppResp
-	62,  // 141: openim.workbench.Workbench.getInstalledApps:output_type -> openim.workbench.GetInstalledAppsResp
-	64,  // 142: openim.workbench.Workbench.getMarketApps:output_type -> openim.workbench.GetMarketAppsResp
-	66,  // 143: openim.workbench.Workbench.searchMarket:output_type -> openim.workbench.SearchMarketResp
-	68,  // 144: openim.workbench.Workbench.getRecommend:output_type -> openim.workbench.GetRecommendResp
-	70,  // 145: openim.workbench.Workbench.setAppScope:output_type -> openim.workbench.SetAppScopeResp
-	72,  // 146: openim.workbench.Workbench.getAppScope:output_type -> openim.workbench.GetAppScopeResp
-	74,  // 147: openim.workbench.Workbench.addUserApps:output_type -> openim.workbench.AddUserAppsResp
-	76,  // 148: openim.workbench.Workbench.removeUserApps:output_type -> openim.workbench.RemoveUserAppsResp
-	79,  // 149: openim.workbench.Workbench.sortUserApps:output_type -> openim.workbench.SortUserAppsResp
-	81,  // 150: openim.workbench.Workbench.pinUserApp:output_type -> openim.workbench.PinUserAppResp
-	83,  // 151: openim.workbench.Workbench.getUserApps:output_type -> openim.workbench.GetUserAppsResp
-	85,  // 152: openim.workbench.Workbench.getAvailableApps:output_type -> openim.workbench.GetAvailableAppsResp
-	167, // 153: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
-	169, // 154: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
-	175, // 155: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
-	177, // 156: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
-	179, // 157: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
-	181, // 158: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
-	123, // [123:159] is the sub-list for method output_type
-	87,  // [87:123] is the sub-list for method input_type
-	87,  // [87:87] is the sub-list for extension type_name
-	87,  // [87:87] is the sub-list for extension extendee
-	0,   // [0:87] is the sub-list for field type_name
+	193, // 44: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
+	193, // 45: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
+	193, // 46: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
+	195, // 47: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
+	193, // 48: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
+	194, // 49: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
+	193, // 50: openim.workbench.UpdateMsgTemplateReq.cardJSON:type_name -> openim.protobuf.StringValue
+	196, // 51: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	18,  // 52: openim.workbench.GetMsgTemplateListResp.templates:type_name -> openim.workbench.MsgTemplateInfo
+	189, // 53: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	190, // 54: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
+	191, // 55: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
+	184, // 56: openim.workbench.BatchSendNotifyResp.results:type_name -> openim.workbench.NotifySendResult
+	192, // 57: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
+	193, // 58: openim.workbench.UpdateNotifyReq.cardJSON:type_name -> openim.protobuf.StringValue
+	193, // 59: openim.workbench.UpdateNotifyReq.detailJSON:type_name -> openim.protobuf.StringValue
+	19,  // 60: openim.workbench.QueryNotifyResp.logs:type_name -> openim.workbench.NotifyLogInfo
+	196, // 61: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	19,  // 62: openim.workbench.GetNotifyListResp.logs:type_name -> openim.workbench.NotifyLogInfo
+	16,  // 63: openim.workbench.GetCredentialResp.credential:type_name -> openim.workbench.AppCredentialInfo
+	17,  // 64: openim.workbench.GetAuthDetailResp.auth:type_name -> openim.workbench.OAuthAuthInfo
+	20,  // 65: openim.workbench.LoginDeveloperResp.developer:type_name -> openim.workbench.DeveloperInfo
+	193, // 66: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
+	193, // 67: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
+	193, // 68: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
+	193, // 69: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
+	196, // 70: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	20,  // 71: openim.workbench.GetDeveloperListResp.developers:type_name -> openim.workbench.DeveloperInfo
+	196, // 72: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	9,   // 73: openim.workbench.GetDeveloperAppsResp.apps:type_name -> openim.workbench.AppInfo
+	196, // 74: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	21,  // 75: openim.workbench.GetPendingReviewsResp.reviews:type_name -> openim.workbench.AppReviewInfo
+	21,  // 76: openim.workbench.GetReviewDetailResp.review:type_name -> openim.workbench.AppReviewInfo
+	9,   // 77: openim.workbench.GetReviewDetailResp.app:type_name -> openim.workbench.AppInfo
+	20,  // 78: openim.workbench.GetReviewDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
+	22,  // 79: openim.workbench.GetWebhookResp.webhook:type_name -> openim.workbench.WebhookInfo
+	196, // 80: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	23,  // 81: openim.workbench.GetWebhookLogsResp.logs:type_name -> openim.workbench.WebhookLogInfo
+	9,   // 82: openim.workbench.GetMarketAppDetailResp.app:type_name -> openim.workbench.AppInfo
+	20,  // 83: openim.workbench.GetMarketAppDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
+	10,  // 84: openim.workbench.GetMarketAppDetailResp.versions:type_name -> openim.workbench.AppVersionInfo
+	19,  // 85: openim.workbench.GetNotifyDetailResp.log:type_name -> openim.workbench.NotifyLogInfo
+	196, // 86: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	21,  // 87: openim.workbench.GetReviewListResp.reviews:type_name -> openim.workbench.AppReviewInfo
+	12,  // 88: openim.workbench.GetHomeResp.banners:type_name -> openim.workbench.BannerInfo
+	11,  // 89: openim.workbench.GetHomeResp.categories:type_name -> openim.workbench.CategoryInfo
+	9,   // 90: openim.workbench.GetHomeResp.apps:type_name -> openim.workbench.AppInfo
+	24,  // 91: openim.workbench.Workbench.createApp:input_type -> openim.workbench.CreateAppReq
+	26,  // 92: openim.workbench.Workbench.updateApp:input_type -> openim.workbench.UpdateAppReq
+	28,  // 93: openim.workbench.Workbench.deleteApp:input_type -> openim.workbench.DeleteAppReq
+	30,  // 94: openim.workbench.Workbench.getApp:input_type -> openim.workbench.GetAppReq
+	32,  // 95: openim.workbench.Workbench.getAppList:input_type -> openim.workbench.GetAppListReq
+	34,  // 96: openim.workbench.Workbench.setAppStatus:input_type -> openim.workbench.SetAppStatusReq
+	36,  // 97: openim.workbench.Workbench.pushInstall:input_type -> openim.workbench.PushInstallReq
+	38,  // 98: openim.workbench.Workbench.createCategory:input_type -> openim.workbench.CreateCategoryReq
+	40,  // 99: openim.workbench.Workbench.updateCategory:input_type -> openim.workbench.UpdateCategoryReq
+	42,  // 100: openim.workbench.Workbench.deleteCategory:input_type -> openim.workbench.DeleteCategoryReq
+	44,  // 101: openim.workbench.Workbench.getCategoryList:input_type -> openim.workbench.GetCategoryListReq
+	46,  // 102: openim.workbench.Workbench.sortCategories:input_type -> openim.workbench.SortCategoriesReq
+	49,  // 103: openim.workbench.Workbench.createBanner:input_type -> openim.workbench.CreateBannerReq
+	51,  // 104: openim.workbench.Workbench.updateBanner:input_type -> openim.workbench.UpdateBannerReq
+	53,  // 105: openim.workbench.Workbench.deleteBanner:input_type -> openim.workbench.DeleteBannerReq
+	55,  // 106: openim.workbench.Workbench.getBannerList:input_type -> openim.workbench.GetBannerListReq
+	57,  // 107: openim.workbench.Workbench.installApp:input_type -> openim.workbench.InstallAppReq
+	59,  // 108: openim.workbench.Workbench.uninstallApp:input_type -> openim.workbench.UninstallAppReq
+	61,  // 109: openim.workbench.Workbench.getInstalledApps:input_type -> openim.workbench.GetInstalledAppsReq
+	63,  // 110: openim.workbench.Workbench.getMarketApps:input_type -> openim.workbench.GetMarketAppsReq
+	65,  // 111: openim.workbench.Workbench.searchMarket:input_type -> openim.workbench.SearchMarketReq
+	67,  // 112: openim.workbench.Workbench.getRecommend:input_type -> openim.workbench.GetRecommendReq
+	69,  // 113: openim.workbench.Workbench.setAppScope:input_type -> openim.workbench.SetAppScopeReq
+	71,  // 114: openim.workbench.Workbench.getAppScope:input_type -> openim.workbench.GetAppScopeReq
+	73,  // 115: openim.workbench.Workbench.addUserApps:input_type -> openim.workbench.AddUserAppsReq
+	75,  // 116: openim.workbench.Workbench.removeUserApps:input_type -> openim.workbench.RemoveUserAppsReq
+	77,  // 117: openim.workbench.Workbench.sortUserApps:input_type -> openim.workbench.SortUserAppsReq
+	80,  // 118: openim.workbench.Workbench.pinUserApp:input_type -> openim.workbench.PinUserAppReq
+	82,  // 119: openim.workbench.Workbench.getUserApps:input_type -> openim.workbench.GetUserAppsReq
+	84,  // 120: openim.workbench.Workbench.getAvailableApps:input_type -> openim.workbench.GetAvailableAppsReq
+	166, // 121: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
+	168, // 122: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
+	174, // 123: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
+	176, // 124: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
+	178, // 125: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
+	180, // 126: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
+	182, // 127: openim.workbench.Workbench.launchApp:input_type -> openim.workbench.LaunchAppReq
+	25,  // 128: openim.workbench.Workbench.createApp:output_type -> openim.workbench.CreateAppResp
+	27,  // 129: openim.workbench.Workbench.updateApp:output_type -> openim.workbench.UpdateAppResp
+	29,  // 130: openim.workbench.Workbench.deleteApp:output_type -> openim.workbench.DeleteAppResp
+	31,  // 131: openim.workbench.Workbench.getApp:output_type -> openim.workbench.GetAppResp
+	33,  // 132: openim.workbench.Workbench.getAppList:output_type -> openim.workbench.GetAppListResp
+	35,  // 133: openim.workbench.Workbench.setAppStatus:output_type -> openim.workbench.SetAppStatusResp
+	37,  // 134: openim.workbench.Workbench.pushInstall:output_type -> openim.workbench.PushInstallResp
+	39,  // 135: openim.workbench.Workbench.createCategory:output_type -> openim.workbench.CreateCategoryResp
+	41,  // 136: openim.workbench.Workbench.updateCategory:output_type -> openim.workbench.UpdateCategoryResp
+	43,  // 137: openim.workbench.Workbench.deleteCategory:output_type -> openim.workbench.DeleteCategoryResp
+	45,  // 138: openim.workbench.Workbench.getCategoryList:output_type -> openim.workbench.GetCategoryListResp
+	48,  // 139: openim.workbench.Workbench.sortCategories:output_type -> openim.workbench.SortCategoriesResp
+	50,  // 140: openim.workbench.Workbench.createBanner:output_type -> openim.workbench.CreateBannerResp
+	52,  // 141: openim.workbench.Workbench.updateBanner:output_type -> openim.workbench.UpdateBannerResp
+	54,  // 142: openim.workbench.Workbench.deleteBanner:output_type -> openim.workbench.DeleteBannerResp
+	56,  // 143: openim.workbench.Workbench.getBannerList:output_type -> openim.workbench.GetBannerListResp
+	58,  // 144: openim.workbench.Workbench.installApp:output_type -> openim.workbench.InstallAppResp
+	60,  // 145: openim.workbench.Workbench.uninstallApp:output_type -> openim.workbench.UninstallAppResp
+	62,  // 146: openim.workbench.Workbench.getInstalledApps:output_type -> openim.workbench.GetInstalledAppsResp
+	64,  // 147: openim.workbench.Workbench.getMarketApps:output_type -> openim.workbench.GetMarketAppsResp
+	66,  // 148: openim.workbench.Workbench.searchMarket:output_type -> openim.workbench.SearchMarketResp
+	68,  // 149: openim.workbench.Workbench.getRecommend:output_type -> openim.workbench.GetRecommendResp
+	70,  // 150: openim.workbench.Workbench.setAppScope:output_type -> openim.workbench.SetAppScopeResp
+	72,  // 151: openim.workbench.Workbench.getAppScope:output_type -> openim.workbench.GetAppScopeResp
+	74,  // 152: openim.workbench.Workbench.addUserApps:output_type -> openim.workbench.AddUserAppsResp
+	76,  // 153: openim.workbench.Workbench.removeUserApps:output_type -> openim.workbench.RemoveUserAppsResp
+	79,  // 154: openim.workbench.Workbench.sortUserApps:output_type -> openim.workbench.SortUserAppsResp
+	81,  // 155: openim.workbench.Workbench.pinUserApp:output_type -> openim.workbench.PinUserAppResp
+	83,  // 156: openim.workbench.Workbench.getUserApps:output_type -> openim.workbench.GetUserAppsResp
+	85,  // 157: openim.workbench.Workbench.getAvailableApps:output_type -> openim.workbench.GetAvailableAppsResp
+	167, // 158: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
+	169, // 159: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
+	175, // 160: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
+	177, // 161: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
+	179, // 162: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
+	181, // 163: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
+	183, // 164: openim.workbench.Workbench.launchApp:output_type -> openim.workbench.LaunchAppResp
+	128, // [128:165] is the sub-list for method output_type
+	91,  // [91:128] is the sub-list for method input_type
+	91,  // [91:91] is the sub-list for extension type_name
+	91,  // [91:91] is the sub-list for extension extendee
+	0,   // [0:91] is the sub-list for field type_name
 }
 
 func init() { file_workbench_workbench_proto_init() }
@@ -12150,7 +12878,7 @@ func file_workbench_workbench_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workbench_workbench_proto_rawDesc), len(file_workbench_workbench_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   177,
+			NumMessages:   184,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
