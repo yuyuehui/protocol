@@ -271,6 +271,43 @@ func (x *DeleteScheduleReq) Check() error {
 }
 
 // GetScheduleReq Check 查询日程详情请求参数校验
+func checkMeetingLinkageRequest(scheduleID, operatorUserID string) error {
+	if scheduleID == "" {
+		return errs.ErrArgs.WrapMsg("scheduleID is empty")
+	}
+	if operatorUserID == "" {
+		return errs.ErrArgs.WrapMsg("operatorUserID is empty")
+	}
+	return nil
+}
+
+func (x *CompleteScheduleByMeetingReq) Check() error {
+	return checkMeetingLinkageRequest(x.ScheduleID, x.OperatorUserID)
+}
+
+func (x *CancelScheduleByMeetingReq) Check() error {
+	return checkMeetingLinkageRequest(x.ScheduleID, x.OperatorUserID)
+}
+
+func (x *DeleteScheduleByMeetingReq) Check() error {
+	return checkMeetingLinkageRequest(x.ScheduleID, x.OperatorUserID)
+}
+
+func (x *AddScheduleAttendeesByMeetingReq) Check() error {
+	if err := checkMeetingLinkageRequest(x.ScheduleID, x.OperatorUserID); err != nil {
+		return err
+	}
+	if len(x.UserIDs) == 0 {
+		return errs.ErrArgs.WrapMsg("userIDs is empty")
+	}
+	for _, userID := range x.UserIDs {
+		if userID == "" {
+			return errs.ErrArgs.WrapMsg("userIDs contains an empty userID")
+		}
+	}
+	return nil
+}
+
 func (x *GetScheduleReq) Check() error {
 	if x.ScheduleID == "" {
 		return errs.ErrArgs.WrapMsg("scheduleID is empty")

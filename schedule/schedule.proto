@@ -443,6 +443,37 @@ message GetScheduleMonthViewResp {
 }
 
 // Schedule 日程服务
+// Internal requests used by the meeting service to keep a linked schedule in sync.
+message CompleteScheduleByMeetingReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+}
+
+message CompleteScheduleByMeetingResp {}
+
+message CancelScheduleByMeetingReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+  string reason = 3;
+}
+
+message CancelScheduleByMeetingResp {}
+
+message DeleteScheduleByMeetingReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+}
+
+message DeleteScheduleByMeetingResp {}
+
+message AddScheduleAttendeesByMeetingReq {
+  string scheduleID = 1;
+  string operatorUserID = 2;
+  repeated string userIDs = 3;
+}
+
+message AddScheduleAttendeesByMeetingResp {}
+
 service Schedule {
   // 创建日程
   rpc CreateSchedule(CreateScheduleReq) returns (CreateScheduleResp);
@@ -452,6 +483,13 @@ service Schedule {
   
   // 删除日程
   rpc DeleteSchedule(DeleteScheduleReq) returns (DeleteScheduleResp);
+
+  // Internal meeting-to-schedule synchronization. These methods do not call
+  // back into the meeting service.
+  rpc CompleteScheduleByMeeting(CompleteScheduleByMeetingReq) returns (CompleteScheduleByMeetingResp);
+  rpc CancelScheduleByMeeting(CancelScheduleByMeetingReq) returns (CancelScheduleByMeetingResp);
+  rpc DeleteScheduleByMeeting(DeleteScheduleByMeetingReq) returns (DeleteScheduleByMeetingResp);
+  rpc AddScheduleAttendeesByMeeting(AddScheduleAttendeesByMeetingReq) returns (AddScheduleAttendeesByMeetingResp);
   
   // 查询日程详情
   rpc GetSchedule(GetScheduleReq) returns (GetScheduleResp);

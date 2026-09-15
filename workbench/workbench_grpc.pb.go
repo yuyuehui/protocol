@@ -49,6 +49,7 @@ const (
 	Workbench_PinUserApp_FullMethodName         = "/openim.workbench.Workbench/pinUserApp"
 	Workbench_GetUserApps_FullMethodName        = "/openim.workbench.Workbench/getUserApps"
 	Workbench_GetAvailableApps_FullMethodName   = "/openim.workbench.Workbench/getAvailableApps"
+	Workbench_GetWorkbenchApps_FullMethodName   = "/openim.workbench.Workbench/getWorkbenchApps"
 	Workbench_GetMarketAppDetail_FullMethodName = "/openim.workbench.Workbench/getMarketAppDetail"
 	Workbench_BatchInstallApp_FullMethodName    = "/openim.workbench.Workbench/batchInstallApp"
 	Workbench_GetPlatformStats_FullMethodName   = "/openim.workbench.Workbench/getPlatformStats"
@@ -98,6 +99,7 @@ type WorkbenchClient interface {
 	PinUserApp(ctx context.Context, in *PinUserAppReq, opts ...grpc.CallOption) (*PinUserAppResp, error)
 	GetUserApps(ctx context.Context, in *GetUserAppsReq, opts ...grpc.CallOption) (*GetUserAppsResp, error)
 	GetAvailableApps(ctx context.Context, in *GetAvailableAppsReq, opts ...grpc.CallOption) (*GetAvailableAppsResp, error)
+	GetWorkbenchApps(ctx context.Context, in *GetWorkbenchAppsReq, opts ...grpc.CallOption) (*GetWorkbenchAppsResp, error)
 	// ---- Market Detail ----
 	GetMarketAppDetail(ctx context.Context, in *GetMarketAppDetailReq, opts ...grpc.CallOption) (*GetMarketAppDetailResp, error)
 	BatchInstallApp(ctx context.Context, in *BatchInstallAppReq, opts ...grpc.CallOption) (*BatchInstallAppResp, error)
@@ -418,6 +420,16 @@ func (c *workbenchClient) GetAvailableApps(ctx context.Context, in *GetAvailable
 	return out, nil
 }
 
+func (c *workbenchClient) GetWorkbenchApps(ctx context.Context, in *GetWorkbenchAppsReq, opts ...grpc.CallOption) (*GetWorkbenchAppsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWorkbenchAppsResp)
+	err := c.cc.Invoke(ctx, Workbench_GetWorkbenchApps_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *workbenchClient) GetMarketAppDetail(ctx context.Context, in *GetMarketAppDetailReq, opts ...grpc.CallOption) (*GetMarketAppDetailResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetMarketAppDetailResp)
@@ -528,6 +540,7 @@ type WorkbenchServer interface {
 	PinUserApp(context.Context, *PinUserAppReq) (*PinUserAppResp, error)
 	GetUserApps(context.Context, *GetUserAppsReq) (*GetUserAppsResp, error)
 	GetAvailableApps(context.Context, *GetAvailableAppsReq) (*GetAvailableAppsResp, error)
+	GetWorkbenchApps(context.Context, *GetWorkbenchAppsReq) (*GetWorkbenchAppsResp, error)
 	// ---- Market Detail ----
 	GetMarketAppDetail(context.Context, *GetMarketAppDetailReq) (*GetMarketAppDetailResp, error)
 	BatchInstallApp(context.Context, *BatchInstallAppReq) (*BatchInstallAppResp, error)
@@ -637,6 +650,9 @@ func (UnimplementedWorkbenchServer) GetUserApps(context.Context, *GetUserAppsReq
 }
 func (UnimplementedWorkbenchServer) GetAvailableApps(context.Context, *GetAvailableAppsReq) (*GetAvailableAppsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAvailableApps not implemented")
+}
+func (UnimplementedWorkbenchServer) GetWorkbenchApps(context.Context, *GetWorkbenchAppsReq) (*GetWorkbenchAppsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetWorkbenchApps not implemented")
 }
 func (UnimplementedWorkbenchServer) GetMarketAppDetail(context.Context, *GetMarketAppDetailReq) (*GetMarketAppDetailResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMarketAppDetail not implemented")
@@ -1220,6 +1236,24 @@ func _Workbench_GetAvailableApps_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Workbench_GetWorkbenchApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkbenchAppsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkbenchServer).GetWorkbenchApps(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Workbench_GetWorkbenchApps_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkbenchServer).GetWorkbenchApps(ctx, req.(*GetWorkbenchAppsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Workbench_GetMarketAppDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetMarketAppDetailReq)
 	if err := dec(in); err != nil {
@@ -1472,6 +1506,10 @@ var Workbench_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getAvailableApps",
 			Handler:    _Workbench_GetAvailableApps_Handler,
+		},
+		{
+			MethodName: "getWorkbenchApps",
+			Handler:    _Workbench_GetWorkbenchApps_Handler,
 		},
 		{
 			MethodName: "getMarketAppDetail",

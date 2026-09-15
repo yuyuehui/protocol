@@ -581,6 +581,15 @@ message GetAvailableAppsResp {
   repeated AppInfo apps = 1;
 }
 
+message GetWorkbenchAppsReq {
+  string tenantID = 1;
+  string userID = 2;
+}
+message GetWorkbenchAppsResp {
+  repeated CategoryInfo categories = 1;
+  repeated AppInfo apps = 2;
+}
+
 // ==================== Notification (P1) ====================
 
 message CreateMsgTemplateReq {
@@ -1116,6 +1125,7 @@ service Workbench {
   rpc pinUserApp(PinUserAppReq) returns (PinUserAppResp);
   rpc getUserApps(GetUserAppsReq) returns (GetUserAppsResp);
   rpc getAvailableApps(GetAvailableAppsReq) returns (GetAvailableAppsResp);
+  rpc getWorkbenchApps(GetWorkbenchAppsReq) returns (GetWorkbenchAppsResp);
 
   // ---- Market Detail ----
   rpc getMarketAppDetail(GetMarketAppDetailReq) returns (GetMarketAppDetailResp);
