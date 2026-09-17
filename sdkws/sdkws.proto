@@ -816,6 +816,18 @@ message ConversationHasReadTips {
   int64 unreadCountTime = 4;
 }
 
+// Group message pin change; no source content is included.
+message GroupMessagePinTips {
+  string operatorUserID = 1;
+  string operatorNickname = 2;
+  string groupID = 3;
+  string conversationID = 4;
+  int64 seq = 5;
+  string action = 6; // pin / unpin
+  int64 operationTime = 7;
+  string text = 8; // Human-readable fallback for notification consumers.
+}
+
 message NotificationElem {
   string detail = 1;
 }

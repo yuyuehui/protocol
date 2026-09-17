@@ -173,6 +173,7 @@ const (
 	SetSpeechToTextHiddenNotification = 2115 // 语音转文字隐藏状态变更通知
 	SpeechToTextNotification          = 2116 // 语音转文字通知
 	MsgEditNotification               = 2117 // 消息编辑通知（内容原地修改，流式输出/纠错）
+		GroupMessagePinNotification       = 2119 // 群消息置顶/取消置顶通知
 	EmailChangedNotification          = 2118 // 邮箱变更通知（避开语音转文字与消息编辑通知编号）
 	HasReadReceipt                    = 2200 // 已读回执
 
