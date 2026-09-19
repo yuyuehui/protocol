@@ -247,6 +247,7 @@ message MsgData {
   LikeInfo likeInfo = 24;
   MarkInfo markInfo = 25;         // 标记信息
   SpeechToTextInfo speechToTextInfo = 26; // 语音转文字信息
+  PinInfo pinInfo = 27;           // 置顶信息（随消息体同步/落库，跟设备走）
 }
 
 // 点赞信息
@@ -256,6 +257,13 @@ message LikeInfo {
   // 版本号：每次该消息的 LikeInfo 在服务端被修改（点赞 / 取消点赞 / 换 emoji）就自增 1。
   // 客户端用它判断"通知是否漏单"——本地 version 与到达的 version 不连续时再触发兜底拉取。
   int64 version = 3;
+}
+
+// 置顶信息（消息级，随 MsgData 同步与落库；存在即表示已置顶）
+message PinInfo {
+  string pinnedBy = 1;          // 执行置顶的用户ID
+  int64 pinnedAt = 2;           // 置顶时间（Unix毫秒时间戳）
+  string pinnedByNickname = 3;  // 操作者当时的昵称快照
 }
 
 // 点赞用户信息
