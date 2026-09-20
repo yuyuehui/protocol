@@ -47,6 +47,7 @@ const (
 	Workbench_RemoveUserApps_FullMethodName     = "/openim.workbench.Workbench/removeUserApps"
 	Workbench_SortUserApps_FullMethodName       = "/openim.workbench.Workbench/sortUserApps"
 	Workbench_PinUserApp_FullMethodName         = "/openim.workbench.Workbench/pinUserApp"
+	Workbench_HideUserApp_FullMethodName        = "/openim.workbench.Workbench/hideUserApp"
 	Workbench_GetUserApps_FullMethodName        = "/openim.workbench.Workbench/getUserApps"
 	Workbench_GetAvailableApps_FullMethodName   = "/openim.workbench.Workbench/getAvailableApps"
 	Workbench_GetWorkbenchApps_FullMethodName   = "/openim.workbench.Workbench/getWorkbenchApps"
@@ -97,6 +98,7 @@ type WorkbenchClient interface {
 	RemoveUserApps(ctx context.Context, in *RemoveUserAppsReq, opts ...grpc.CallOption) (*RemoveUserAppsResp, error)
 	SortUserApps(ctx context.Context, in *SortUserAppsReq, opts ...grpc.CallOption) (*SortUserAppsResp, error)
 	PinUserApp(ctx context.Context, in *PinUserAppReq, opts ...grpc.CallOption) (*PinUserAppResp, error)
+	HideUserApp(ctx context.Context, in *HideUserAppReq, opts ...grpc.CallOption) (*HideUserAppResp, error)
 	GetUserApps(ctx context.Context, in *GetUserAppsReq, opts ...grpc.CallOption) (*GetUserAppsResp, error)
 	GetAvailableApps(ctx context.Context, in *GetAvailableAppsReq, opts ...grpc.CallOption) (*GetAvailableAppsResp, error)
 	GetWorkbenchApps(ctx context.Context, in *GetWorkbenchAppsReq, opts ...grpc.CallOption) (*GetWorkbenchAppsResp, error)
@@ -400,6 +402,16 @@ func (c *workbenchClient) PinUserApp(ctx context.Context, in *PinUserAppReq, opt
 	return out, nil
 }
 
+func (c *workbenchClient) HideUserApp(ctx context.Context, in *HideUserAppReq, opts ...grpc.CallOption) (*HideUserAppResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HideUserAppResp)
+	err := c.cc.Invoke(ctx, Workbench_HideUserApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *workbenchClient) GetUserApps(ctx context.Context, in *GetUserAppsReq, opts ...grpc.CallOption) (*GetUserAppsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserAppsResp)
@@ -538,6 +550,7 @@ type WorkbenchServer interface {
 	RemoveUserApps(context.Context, *RemoveUserAppsReq) (*RemoveUserAppsResp, error)
 	SortUserApps(context.Context, *SortUserAppsReq) (*SortUserAppsResp, error)
 	PinUserApp(context.Context, *PinUserAppReq) (*PinUserAppResp, error)
+	HideUserApp(context.Context, *HideUserAppReq) (*HideUserAppResp, error)
 	GetUserApps(context.Context, *GetUserAppsReq) (*GetUserAppsResp, error)
 	GetAvailableApps(context.Context, *GetAvailableAppsReq) (*GetAvailableAppsResp, error)
 	GetWorkbenchApps(context.Context, *GetWorkbenchAppsReq) (*GetWorkbenchAppsResp, error)
@@ -644,6 +657,9 @@ func (UnimplementedWorkbenchServer) SortUserApps(context.Context, *SortUserAppsR
 }
 func (UnimplementedWorkbenchServer) PinUserApp(context.Context, *PinUserAppReq) (*PinUserAppResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PinUserApp not implemented")
+}
+func (UnimplementedWorkbenchServer) HideUserApp(context.Context, *HideUserAppReq) (*HideUserAppResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method HideUserApp not implemented")
 }
 func (UnimplementedWorkbenchServer) GetUserApps(context.Context, *GetUserAppsReq) (*GetUserAppsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserApps not implemented")
@@ -1200,6 +1216,24 @@ func _Workbench_PinUserApp_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Workbench_HideUserApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HideUserAppReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorkbenchServer).HideUserApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Workbench_HideUserApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorkbenchServer).HideUserApp(ctx, req.(*HideUserAppReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Workbench_GetUserApps_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserAppsReq)
 	if err := dec(in); err != nil {
@@ -1498,6 +1532,10 @@ var Workbench_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "pinUserApp",
 			Handler:    _Workbench_PinUserApp_Handler,
+		},
+		{
+			MethodName: "hideUserApp",
+			Handler:    _Workbench_HideUserApp_Handler,
 		},
 		{
 			MethodName: "getUserApps",

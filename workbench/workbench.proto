@@ -565,6 +565,14 @@ message PinUserAppReq {
 }
 message PinUserAppResp {}
 
+message HideUserAppReq {
+  string tenantID = 1;
+  string userID = 2;
+  string appID = 3;
+  bool hidden = 4;        // true=隐藏, false=取消隐藏
+}
+message HideUserAppResp {}
+
 message GetUserAppsReq {
   string tenantID = 1;
   string userID = 2;
@@ -1051,9 +1059,11 @@ message GetHomeReq {
 message GetHomeResp {
   repeated BannerInfo banners = 1;
   repeated CategoryInfo categories = 2;
-  repeated AppInfo apps = 3;
+  repeated AppInfo apps = 3;           // 普通（未隐藏未置顶）
   string dataVersion = 4;
-  bool notModified = 5;    // true=数据未变化,客户端用缓存
+  bool notModified = 5;                // true=数据未变化,客户端用缓存
+  repeated AppInfo pinnedApps = 6;     // 常用（置顶）
+  repeated AppInfo hiddenApps = 7;     // 隐藏
 }
 
 message ClickAppReq {
@@ -1123,6 +1133,7 @@ service Workbench {
   rpc removeUserApps(RemoveUserAppsReq) returns (RemoveUserAppsResp);
   rpc sortUserApps(SortUserAppsReq) returns (SortUserAppsResp);
   rpc pinUserApp(PinUserAppReq) returns (PinUserAppResp);
+  rpc hideUserApp(HideUserAppReq) returns (HideUserAppResp);
   rpc getUserApps(GetUserAppsReq) returns (GetUserAppsResp);
   rpc getAvailableApps(GetAvailableAppsReq) returns (GetAvailableAppsResp);
   rpc getWorkbenchApps(GetWorkbenchAppsReq) returns (GetWorkbenchAppsResp);

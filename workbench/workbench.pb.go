@@ -502,34 +502,34 @@ func (ReviewAction) EnumDescriptor() ([]byte, []int) {
 
 type AppInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AppID          string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	AppKey         string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey"`
-	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
-	Icon           string                 `protobuf:"bytes,4,opt,name=icon,proto3" json:"icon"`
-	Description    string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description"`
-	AppSource      int32                  `protobuf:"varint,6,opt,name=appSource,proto3" json:"appSource"` // AppSource
-	AppType        int32                  `protobuf:"varint,7,opt,name=appType,proto3" json:"appType"`     // AppType
-	Url            string                 `protobuf:"bytes,8,opt,name=url,proto3" json:"url"`
-	OpenMethod     int32                  `protobuf:"varint,9,opt,name=openMethod,proto3" json:"openMethod"` // OpenMethod
-	CategoryID     string                 `protobuf:"bytes,10,opt,name=categoryID,proto3" json:"categoryID"`
-	CategoryName   string                 `protobuf:"bytes,11,opt,name=categoryName,proto3" json:"categoryName"`
-	SortOrder      int32                  `protobuf:"varint,12,opt,name=sortOrder,proto3" json:"sortOrder"`
-	Status         int32                  `protobuf:"varint,13,opt,name=status,proto3" json:"status"`                 // AppStatus
-	VisibilityType int32                  `protobuf:"varint,14,opt,name=visibilityType,proto3" json:"visibilityType"` // VisibilityType
-	DeveloperID    string                 `protobuf:"bytes,15,opt,name=developerID,proto3" json:"developerID"`
-	DeveloperName  string                 `protobuf:"bytes,16,opt,name=developerName,proto3" json:"developerName"`
-	TenantID       string                 `protobuf:"bytes,17,opt,name=tenantID,proto3" json:"tenantID"`
-	PublishStatus  int32                  `protobuf:"varint,18,opt,name=publishStatus,proto3" json:"publishStatus"` // PublishStatus
-	InstallCount   int64                  `protobuf:"varint,19,opt,name=installCount,proto3" json:"installCount"`
-	DefaultInstall bool                   `protobuf:"varint,20,opt,name=defaultInstall,proto3" json:"defaultInstall"`
-	Config         string                 `protobuf:"bytes,21,opt,name=config,proto3" json:"config"` // JSON扩展配置
-	CreatedAt      int64                  `protobuf:"varint,22,opt,name=createdAt,proto3" json:"createdAt"`
-	UpdatedAt      int64                  `protobuf:"varint,23,opt,name=updatedAt,proto3" json:"updatedAt"`
+	AppID          string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	AppKey         string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Icon           string                 `protobuf:"bytes,4,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description    string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	AppSource      int32                  `protobuf:"varint,6,opt,name=appSource,proto3" json:"appSource,omitempty"` // AppSource
+	AppType        int32                  `protobuf:"varint,7,opt,name=appType,proto3" json:"appType,omitempty"`     // AppType
+	Url            string                 `protobuf:"bytes,8,opt,name=url,proto3" json:"url,omitempty"`
+	OpenMethod     int32                  `protobuf:"varint,9,opt,name=openMethod,proto3" json:"openMethod,omitempty"` // OpenMethod
+	CategoryID     string                 `protobuf:"bytes,10,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	CategoryName   string                 `protobuf:"bytes,11,opt,name=categoryName,proto3" json:"categoryName,omitempty"`
+	SortOrder      int32                  `protobuf:"varint,12,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	Status         int32                  `protobuf:"varint,13,opt,name=status,proto3" json:"status,omitempty"`                 // AppStatus
+	VisibilityType int32                  `protobuf:"varint,14,opt,name=visibilityType,proto3" json:"visibilityType,omitempty"` // VisibilityType
+	DeveloperID    string                 `protobuf:"bytes,15,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	DeveloperName  string                 `protobuf:"bytes,16,opt,name=developerName,proto3" json:"developerName,omitempty"`
+	TenantID       string                 `protobuf:"bytes,17,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	PublishStatus  int32                  `protobuf:"varint,18,opt,name=publishStatus,proto3" json:"publishStatus,omitempty"` // PublishStatus
+	InstallCount   int64                  `protobuf:"varint,19,opt,name=installCount,proto3" json:"installCount,omitempty"`
+	DefaultInstall bool                   `protobuf:"varint,20,opt,name=defaultInstall,proto3" json:"defaultInstall,omitempty"`
+	Config         string                 `protobuf:"bytes,21,opt,name=config,proto3" json:"config,omitempty"` // JSON扩展配置
+	CreatedAt      int64                  `protobuf:"varint,22,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt      int64                  `protobuf:"varint,23,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	// 客户端辅助字段
-	IsInstalled   bool   `protobuf:"varint,24,opt,name=isInstalled,proto3" json:"isInstalled"` // 当前租户是否已安装
-	IsSelected    bool   `protobuf:"varint,25,opt,name=isSelected,proto3" json:"isSelected"`   // 当前用户是否已自选
-	UnreadCount   int32  `protobuf:"varint,26,opt,name=unreadCount,proto3" json:"unreadCount"` // 未读通知数
-	HomeData      string `protobuf:"bytes,27,opt,name=homeData,proto3" json:"homeData"`        // 合并后的自定义主页数据 JSON
+	IsInstalled   bool   `protobuf:"varint,24,opt,name=isInstalled,proto3" json:"isInstalled,omitempty"` // 当前租户是否已安装
+	IsSelected    bool   `protobuf:"varint,25,opt,name=isSelected,proto3" json:"isSelected,omitempty"`   // 当前用户是否已自选
+	UnreadCount   int32  `protobuf:"varint,26,opt,name=unreadCount,proto3" json:"unreadCount,omitempty"` // 未读通知数
+	HomeData      string `protobuf:"bytes,27,opt,name=homeData,proto3" json:"homeData,omitempty"`        // 合并后的自定义主页数据 JSON
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -755,17 +755,17 @@ func (x *AppInfo) GetHomeData() string {
 
 type AppVersionInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	VersionID     string                 `protobuf:"bytes,1,opt,name=versionID,proto3" json:"versionID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version"`
-	Changelog     string                 `protobuf:"bytes,4,opt,name=changelog,proto3" json:"changelog"`
-	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"`
-	Config        string                 `protobuf:"bytes,6,opt,name=config,proto3" json:"config"`
-	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status"` // PublishStatus
-	ReviewNote    string                 `protobuf:"bytes,8,opt,name=reviewNote,proto3" json:"reviewNote"`
-	SubmittedAt   int64                  `protobuf:"varint,9,opt,name=submittedAt,proto3" json:"submittedAt"`
-	ReviewedAt    int64                  `protobuf:"varint,10,opt,name=reviewedAt,proto3" json:"reviewedAt"`
-	PublishedAt   int64                  `protobuf:"varint,11,opt,name=publishedAt,proto3" json:"publishedAt"`
+	VersionID     string                 `protobuf:"bytes,1,opt,name=versionID,proto3" json:"versionID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	Version       string                 `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`
+	Changelog     string                 `protobuf:"bytes,4,opt,name=changelog,proto3" json:"changelog,omitempty"`
+	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
+	Config        string                 `protobuf:"bytes,6,opt,name=config,proto3" json:"config,omitempty"`
+	Status        int32                  `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"` // PublishStatus
+	ReviewNote    string                 `protobuf:"bytes,8,opt,name=reviewNote,proto3" json:"reviewNote,omitempty"`
+	SubmittedAt   int64                  `protobuf:"varint,9,opt,name=submittedAt,proto3" json:"submittedAt,omitempty"`
+	ReviewedAt    int64                  `protobuf:"varint,10,opt,name=reviewedAt,proto3" json:"reviewedAt,omitempty"`
+	PublishedAt   int64                  `protobuf:"varint,11,opt,name=publishedAt,proto3" json:"publishedAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -879,15 +879,15 @@ func (x *AppVersionInfo) GetPublishedAt() int64 {
 
 type CategoryInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Icon          string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon"`
-	SortOrder     int32                  `protobuf:"varint,4,opt,name=sortOrder,proto3" json:"sortOrder"`
-	ParentID      string                 `protobuf:"bytes,5,opt,name=parentID,proto3" json:"parentID"`
-	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status"`
-	AppCount      int32                  `protobuf:"varint,7,opt,name=appCount,proto3" json:"appCount"`
-	Children      []*CategoryInfo        `protobuf:"bytes,8,rep,name=children,proto3" json:"children"`
-	TenantID      string                 `protobuf:"bytes,9,opt,name=tenantID,proto3" json:"tenantID"`
+	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Icon          string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,4,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	ParentID      string                 `protobuf:"bytes,5,opt,name=parentID,proto3" json:"parentID,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	AppCount      int32                  `protobuf:"varint,7,opt,name=appCount,proto3" json:"appCount,omitempty"`
+	Children      []*CategoryInfo        `protobuf:"bytes,8,rep,name=children,proto3" json:"children,omitempty"`
+	TenantID      string                 `protobuf:"bytes,9,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -987,18 +987,18 @@ func (x *CategoryInfo) GetTenantID() string {
 
 type BannerInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID"`
-	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID"`
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title"`
-	ImageURL      string                 `protobuf:"bytes,4,opt,name=imageURL,proto3" json:"imageURL"`
-	LinkType      int32                  `protobuf:"varint,5,opt,name=linkType,proto3" json:"linkType"` // 1跳转应用/2跳转H5/3无跳转
-	LinkValue     string                 `protobuf:"bytes,6,opt,name=linkValue,proto3" json:"linkValue"`
-	Position      int32                  `protobuf:"varint,7,opt,name=position,proto3" json:"position"` // 1顶部轮播/2推荐位
-	SortOrder     int32                  `protobuf:"varint,8,opt,name=sortOrder,proto3" json:"sortOrder"`
-	StartTime     int64                  `protobuf:"varint,9,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       int64                  `protobuf:"varint,10,opt,name=endTime,proto3" json:"endTime"`
-	Status        int32                  `protobuf:"varint,11,opt,name=status,proto3" json:"status"`
-	CreatedAt     int64                  `protobuf:"varint,12,opt,name=createdAt,proto3" json:"createdAt"`
+	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID,omitempty"`
+	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	ImageURL      string                 `protobuf:"bytes,4,opt,name=imageURL,proto3" json:"imageURL,omitempty"`
+	LinkType      int32                  `protobuf:"varint,5,opt,name=linkType,proto3" json:"linkType,omitempty"` // 1跳转应用/2跳转H5/3无跳转
+	LinkValue     string                 `protobuf:"bytes,6,opt,name=linkValue,proto3" json:"linkValue,omitempty"`
+	Position      int32                  `protobuf:"varint,7,opt,name=position,proto3" json:"position,omitempty"` // 1顶部轮播/2推荐位
+	SortOrder     int32                  `protobuf:"varint,8,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	StartTime     int64                  `protobuf:"varint,9,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       int64                  `protobuf:"varint,10,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Status        int32                  `protobuf:"varint,11,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,12,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1119,12 +1119,12 @@ func (x *BannerInfo) GetCreatedAt() int64 {
 
 type AppInstallInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	InstalledBy   string                 `protobuf:"bytes,3,opt,name=installedBy,proto3" json:"installedBy"`
-	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status"` // 1已安装/2已卸载
-	InstalledAt   int64                  `protobuf:"varint,5,opt,name=installedAt,proto3" json:"installedAt"`
-	UninstalledAt int64                  `protobuf:"varint,6,opt,name=uninstalledAt,proto3" json:"uninstalledAt"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	InstalledBy   string                 `protobuf:"bytes,3,opt,name=installedBy,proto3" json:"installedBy,omitempty"`
+	Status        int32                  `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"` // 1已安装/2已卸载
+	InstalledAt   int64                  `protobuf:"varint,5,opt,name=installedAt,proto3" json:"installedAt,omitempty"`
+	UninstalledAt int64                  `protobuf:"varint,6,opt,name=uninstalledAt,proto3" json:"uninstalledAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1203,9 +1203,9 @@ func (x *AppInstallInfo) GetUninstalledAt() int64 {
 
 type AppScopeInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ScopeType     int32                  `protobuf:"varint,1,opt,name=scopeType,proto3" json:"scopeType"` // ScopeType
-	ScopeID       string                 `protobuf:"bytes,2,opt,name=scopeID,proto3" json:"scopeID"`
-	ScopeName     string                 `protobuf:"bytes,3,opt,name=scopeName,proto3" json:"scopeName"` // 回填名称
+	ScopeType     int32                  `protobuf:"varint,1,opt,name=scopeType,proto3" json:"scopeType,omitempty"` // ScopeType
+	ScopeID       string                 `protobuf:"bytes,2,opt,name=scopeID,proto3" json:"scopeID,omitempty"`
+	ScopeName     string                 `protobuf:"bytes,3,opt,name=scopeName,proto3" json:"scopeName,omitempty"` // 回填名称
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1263,10 +1263,10 @@ func (x *AppScopeInfo) GetScopeName() string {
 
 type UserAppInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder"`
-	Pinned        bool                   `protobuf:"varint,3,opt,name=pinned,proto3" json:"pinned"`
-	AddedAt       int64                  `protobuf:"varint,4,opt,name=addedAt,proto3" json:"addedAt"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	Pinned        bool                   `protobuf:"varint,3,opt,name=pinned,proto3" json:"pinned,omitempty"`
+	AddedAt       int64                  `protobuf:"varint,4,opt,name=addedAt,proto3" json:"addedAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1331,15 +1331,15 @@ func (x *UserAppInfo) GetAddedAt() int64 {
 
 type AppCredentialInfo struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	AppID              string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	AppKey             string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey"`
-	AppSecret          string                 `protobuf:"bytes,3,opt,name=appSecret,proto3" json:"appSecret"` // 查看时脱敏
-	TokenExpireSeconds int32                  `protobuf:"varint,4,opt,name=tokenExpireSeconds,proto3" json:"tokenExpireSeconds"`
-	CallbackURL        string                 `protobuf:"bytes,5,opt,name=callbackURL,proto3" json:"callbackURL"`
-	IpWhitelist        []string               `protobuf:"bytes,6,rep,name=ipWhitelist,proto3" json:"ipWhitelist"`
-	AllowedScopes      []string               `protobuf:"bytes,7,rep,name=allowedScopes,proto3" json:"allowedScopes"`
-	Status             int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status"`
-	CreatedAt          int64                  `protobuf:"varint,9,opt,name=createdAt,proto3" json:"createdAt"`
+	AppID              string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	AppKey             string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	AppSecret          string                 `protobuf:"bytes,3,opt,name=appSecret,proto3" json:"appSecret,omitempty"` // 查看时脱敏
+	TokenExpireSeconds int32                  `protobuf:"varint,4,opt,name=tokenExpireSeconds,proto3" json:"tokenExpireSeconds,omitempty"`
+	CallbackURL        string                 `protobuf:"bytes,5,opt,name=callbackURL,proto3" json:"callbackURL,omitempty"`
+	IpWhitelist        []string               `protobuf:"bytes,6,rep,name=ipWhitelist,proto3" json:"ipWhitelist,omitempty"`
+	AllowedScopes      []string               `protobuf:"bytes,7,rep,name=allowedScopes,proto3" json:"allowedScopes,omitempty"`
+	Status             int32                  `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt          int64                  `protobuf:"varint,9,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -1439,13 +1439,13 @@ func (x *AppCredentialInfo) GetCreatedAt() int64 {
 
 type OAuthAuthInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	AuthorizedBy  string                 `protobuf:"bytes,3,opt,name=authorizedBy,proto3" json:"authorizedBy"`
-	Scopes        []string               `protobuf:"bytes,4,rep,name=scopes,proto3" json:"scopes"`
-	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status"` // 1有效/2已撤销
-	AuthorizedAt  int64                  `protobuf:"varint,6,opt,name=authorizedAt,proto3" json:"authorizedAt"`
-	RevokedAt     int64                  `protobuf:"varint,7,opt,name=revokedAt,proto3" json:"revokedAt"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	AuthorizedBy  string                 `protobuf:"bytes,3,opt,name=authorizedBy,proto3" json:"authorizedBy,omitempty"`
+	Scopes        []string               `protobuf:"bytes,4,rep,name=scopes,proto3" json:"scopes,omitempty"`
+	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1有效/2已撤销
+	AuthorizedAt  int64                  `protobuf:"varint,6,opt,name=authorizedAt,proto3" json:"authorizedAt,omitempty"`
+	RevokedAt     int64                  `protobuf:"varint,7,opt,name=revokedAt,proto3" json:"revokedAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1531,19 +1531,19 @@ func (x *OAuthAuthInfo) GetRevokedAt() int64 {
 
 type MsgTemplateInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	TemplateID     string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
-	AppID          string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	TemplateKey    string                 `protobuf:"bytes,3,opt,name=templateKey,proto3" json:"templateKey"`
-	Name           string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name"`
-	TitlePattern   string                 `protobuf:"bytes,5,opt,name=titlePattern,proto3" json:"titlePattern"`
-	ContentPattern string                 `protobuf:"bytes,6,opt,name=contentPattern,proto3" json:"contentPattern"`
-	HasActions     bool                   `protobuf:"varint,7,opt,name=hasActions,proto3" json:"hasActions"`
-	ActionConfig   string                 `protobuf:"bytes,8,opt,name=actionConfig,proto3" json:"actionConfig"` // JSON
-	Status         int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status"`
-	UseCount       int64                  `protobuf:"varint,10,opt,name=useCount,proto3" json:"useCount"`
-	CreatedAt      int64                  `protobuf:"varint,11,opt,name=createdAt,proto3" json:"createdAt"`
-	UpdatedAt      int64                  `protobuf:"varint,12,opt,name=updatedAt,proto3" json:"updatedAt"`
-	CardJSON       string                 `protobuf:"bytes,13,opt,name=cardJSON,proto3" json:"cardJSON"` // Versioned message template, rendered as JSON values
+	TemplateID     string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID,omitempty"`
+	AppID          string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	TemplateKey    string                 `protobuf:"bytes,3,opt,name=templateKey,proto3" json:"templateKey,omitempty"`
+	Name           string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	TitlePattern   string                 `protobuf:"bytes,5,opt,name=titlePattern,proto3" json:"titlePattern,omitempty"`
+	ContentPattern string                 `protobuf:"bytes,6,opt,name=contentPattern,proto3" json:"contentPattern,omitempty"`
+	HasActions     bool                   `protobuf:"varint,7,opt,name=hasActions,proto3" json:"hasActions,omitempty"`
+	ActionConfig   string                 `protobuf:"bytes,8,opt,name=actionConfig,proto3" json:"actionConfig,omitempty"` // JSON
+	Status         int32                  `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	UseCount       int64                  `protobuf:"varint,10,opt,name=useCount,proto3" json:"useCount,omitempty"`
+	CreatedAt      int64                  `protobuf:"varint,11,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt      int64                  `protobuf:"varint,12,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	CardJSON       string                 `protobuf:"bytes,13,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"` // Versioned message template, rendered as JSON values
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1671,25 +1671,25 @@ func (x *MsgTemplateInfo) GetCardJSON() string {
 
 type NotifyLogInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID"`
-	AppName       string                 `protobuf:"bytes,4,opt,name=appName,proto3" json:"appName"`
-	TemplateID    string                 `protobuf:"bytes,5,opt,name=templateID,proto3" json:"templateID"`
-	ToUserID      string                 `protobuf:"bytes,6,opt,name=toUserID,proto3" json:"toUserID"`
-	ToUserName    string                 `protobuf:"bytes,7,opt,name=toUserName,proto3" json:"toUserName"`
-	BizID         string                 `protobuf:"bytes,8,opt,name=bizID,proto3" json:"bizID"`
-	Title         string                 `protobuf:"bytes,9,opt,name=title,proto3" json:"title"`
-	Content       string                 `protobuf:"bytes,10,opt,name=content,proto3" json:"content"`
-	Url           string                 `protobuf:"bytes,11,opt,name=url,proto3" json:"url"`
-	Status        int32                  `protobuf:"varint,12,opt,name=status,proto3" json:"status"` // NotifyStatus
-	MsgID         string                 `protobuf:"bytes,13,opt,name=msgID,proto3" json:"msgID"`
-	Extra         string                 `protobuf:"bytes,14,opt,name=extra,proto3" json:"extra"` // JSON
-	CreatedAt     int64                  `protobuf:"varint,15,opt,name=createdAt,proto3" json:"createdAt"`
-	ReadAt        int64                  `protobuf:"varint,16,opt,name=readAt,proto3" json:"readAt"`
-	PayloadJSON   string                 `protobuf:"bytes,17,opt,name=payloadJSON,proto3" json:"payloadJSON"`
-	DetailJSON    string                 `protobuf:"bytes,18,opt,name=detailJSON,proto3" json:"detailJSON"`
-	Revision      int64                  `protobuf:"varint,19,opt,name=revision,proto3" json:"revision"`
+	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
+	AppName       string                 `protobuf:"bytes,4,opt,name=appName,proto3" json:"appName,omitempty"`
+	TemplateID    string                 `protobuf:"bytes,5,opt,name=templateID,proto3" json:"templateID,omitempty"`
+	ToUserID      string                 `protobuf:"bytes,6,opt,name=toUserID,proto3" json:"toUserID,omitempty"`
+	ToUserName    string                 `protobuf:"bytes,7,opt,name=toUserName,proto3" json:"toUserName,omitempty"`
+	BizID         string                 `protobuf:"bytes,8,opt,name=bizID,proto3" json:"bizID,omitempty"`
+	Title         string                 `protobuf:"bytes,9,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,10,opt,name=content,proto3" json:"content,omitempty"`
+	Url           string                 `protobuf:"bytes,11,opt,name=url,proto3" json:"url,omitempty"`
+	Status        int32                  `protobuf:"varint,12,opt,name=status,proto3" json:"status,omitempty"` // NotifyStatus
+	MsgID         string                 `protobuf:"bytes,13,opt,name=msgID,proto3" json:"msgID,omitempty"`
+	Extra         string                 `protobuf:"bytes,14,opt,name=extra,proto3" json:"extra,omitempty"` // JSON
+	CreatedAt     int64                  `protobuf:"varint,15,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	ReadAt        int64                  `protobuf:"varint,16,opt,name=readAt,proto3" json:"readAt,omitempty"`
+	PayloadJSON   string                 `protobuf:"bytes,17,opt,name=payloadJSON,proto3" json:"payloadJSON,omitempty"`
+	DetailJSON    string                 `protobuf:"bytes,18,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
+	Revision      int64                  `protobuf:"varint,19,opt,name=revision,proto3" json:"revision,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1859,20 +1859,20 @@ func (x *NotifyLogInfo) GetRevision() int64 {
 
 type DeveloperInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	DeveloperID    string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Type           int32                  `protobuf:"varint,3,opt,name=type,proto3" json:"type"` // 1个人/2企业
-	ContactEmail   string                 `protobuf:"bytes,4,opt,name=contactEmail,proto3" json:"contactEmail"`
-	ContactPhone   string                 `protobuf:"bytes,5,opt,name=contactPhone,proto3" json:"contactPhone"`
-	CompanyName    string                 `protobuf:"bytes,6,opt,name=companyName,proto3" json:"companyName"`
-	LicenseURL     string                 `protobuf:"bytes,7,opt,name=licenseURL,proto3" json:"licenseURL"`
-	Description    string                 `protobuf:"bytes,8,opt,name=description,proto3" json:"description"`
-	LinkedUserID   string                 `protobuf:"bytes,9,opt,name=linkedUserID,proto3" json:"linkedUserID"`
-	LinkedTenantID string                 `protobuf:"bytes,10,opt,name=linkedTenantID,proto3" json:"linkedTenantID"`
-	Status         int32                  `protobuf:"varint,11,opt,name=status,proto3" json:"status"` // 1正常/2禁用/3待审核
-	Verified       bool                   `protobuf:"varint,12,opt,name=verified,proto3" json:"verified"`
-	AppCount       int32                  `protobuf:"varint,13,opt,name=appCount,proto3" json:"appCount"`
-	CreatedAt      int64                  `protobuf:"varint,14,opt,name=createdAt,proto3" json:"createdAt"`
+	DeveloperID    string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Type           int32                  `protobuf:"varint,3,opt,name=type,proto3" json:"type,omitempty"` // 1个人/2企业
+	ContactEmail   string                 `protobuf:"bytes,4,opt,name=contactEmail,proto3" json:"contactEmail,omitempty"`
+	ContactPhone   string                 `protobuf:"bytes,5,opt,name=contactPhone,proto3" json:"contactPhone,omitempty"`
+	CompanyName    string                 `protobuf:"bytes,6,opt,name=companyName,proto3" json:"companyName,omitempty"`
+	LicenseURL     string                 `protobuf:"bytes,7,opt,name=licenseURL,proto3" json:"licenseURL,omitempty"`
+	Description    string                 `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	LinkedUserID   string                 `protobuf:"bytes,9,opt,name=linkedUserID,proto3" json:"linkedUserID,omitempty"`
+	LinkedTenantID string                 `protobuf:"bytes,10,opt,name=linkedTenantID,proto3" json:"linkedTenantID,omitempty"`
+	Status         int32                  `protobuf:"varint,11,opt,name=status,proto3" json:"status,omitempty"` // 1正常/2禁用/3待审核
+	Verified       bool                   `protobuf:"varint,12,opt,name=verified,proto3" json:"verified,omitempty"`
+	AppCount       int32                  `protobuf:"varint,13,opt,name=appCount,proto3" json:"appCount,omitempty"`
+	CreatedAt      int64                  `protobuf:"varint,14,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2007,21 +2007,21 @@ func (x *DeveloperInfo) GetCreatedAt() int64 {
 
 type AppReviewInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	AppName       string                 `protobuf:"bytes,3,opt,name=appName,proto3" json:"appName"`
-	AppIcon       string                 `protobuf:"bytes,4,opt,name=appIcon,proto3" json:"appIcon"`
-	VersionID     string                 `protobuf:"bytes,5,opt,name=versionID,proto3" json:"versionID"`
-	Version       string                 `protobuf:"bytes,6,opt,name=version,proto3" json:"version"`
-	Changelog     string                 `protobuf:"bytes,7,opt,name=changelog,proto3" json:"changelog"`
-	DeveloperID   string                 `protobuf:"bytes,8,opt,name=developerID,proto3" json:"developerID"`
-	DeveloperName string                 `protobuf:"bytes,9,opt,name=developerName,proto3" json:"developerName"`
-	SubmitType    int32                  `protobuf:"varint,10,opt,name=submitType,proto3" json:"submitType"`     // 1首次/2版本更新
-	ReviewStatus  int32                  `protobuf:"varint,11,opt,name=reviewStatus,proto3" json:"reviewStatus"` // PublishStatus
-	ReviewerID    string                 `protobuf:"bytes,12,opt,name=reviewerID,proto3" json:"reviewerID"`
-	ReviewNote    string                 `protobuf:"bytes,13,opt,name=reviewNote,proto3" json:"reviewNote"`
-	SubmittedAt   int64                  `protobuf:"varint,14,opt,name=submittedAt,proto3" json:"submittedAt"`
-	ReviewedAt    int64                  `protobuf:"varint,15,opt,name=reviewedAt,proto3" json:"reviewedAt"`
+	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	AppName       string                 `protobuf:"bytes,3,opt,name=appName,proto3" json:"appName,omitempty"`
+	AppIcon       string                 `protobuf:"bytes,4,opt,name=appIcon,proto3" json:"appIcon,omitempty"`
+	VersionID     string                 `protobuf:"bytes,5,opt,name=versionID,proto3" json:"versionID,omitempty"`
+	Version       string                 `protobuf:"bytes,6,opt,name=version,proto3" json:"version,omitempty"`
+	Changelog     string                 `protobuf:"bytes,7,opt,name=changelog,proto3" json:"changelog,omitempty"`
+	DeveloperID   string                 `protobuf:"bytes,8,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	DeveloperName string                 `protobuf:"bytes,9,opt,name=developerName,proto3" json:"developerName,omitempty"`
+	SubmitType    int32                  `protobuf:"varint,10,opt,name=submitType,proto3" json:"submitType,omitempty"`     // 1首次/2版本更新
+	ReviewStatus  int32                  `protobuf:"varint,11,opt,name=reviewStatus,proto3" json:"reviewStatus,omitempty"` // PublishStatus
+	ReviewerID    string                 `protobuf:"bytes,12,opt,name=reviewerID,proto3" json:"reviewerID,omitempty"`
+	ReviewNote    string                 `protobuf:"bytes,13,opt,name=reviewNote,proto3" json:"reviewNote,omitempty"`
+	SubmittedAt   int64                  `protobuf:"varint,14,opt,name=submittedAt,proto3" json:"submittedAt,omitempty"`
+	ReviewedAt    int64                  `protobuf:"varint,15,opt,name=reviewedAt,proto3" json:"reviewedAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2163,13 +2163,13 @@ func (x *AppReviewInfo) GetReviewedAt() int64 {
 
 type WebhookInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	WebhookID     string                 `protobuf:"bytes,1,opt,name=webhookID,proto3" json:"webhookID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	CallbackURL   string                 `protobuf:"bytes,3,opt,name=callbackURL,proto3" json:"callbackURL"`
-	Events        []string               `protobuf:"bytes,4,rep,name=events,proto3" json:"events"`
-	Secret        string                 `protobuf:"bytes,5,opt,name=secret,proto3" json:"secret"`
-	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status"`
-	CreatedAt     int64                  `protobuf:"varint,7,opt,name=createdAt,proto3" json:"createdAt"`
+	WebhookID     string                 `protobuf:"bytes,1,opt,name=webhookID,proto3" json:"webhookID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	CallbackURL   string                 `protobuf:"bytes,3,opt,name=callbackURL,proto3" json:"callbackURL,omitempty"`
+	Events        []string               `protobuf:"bytes,4,rep,name=events,proto3" json:"events,omitempty"`
+	Secret        string                 `protobuf:"bytes,5,opt,name=secret,proto3" json:"secret,omitempty"`
+	Status        int32                  `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     int64                  `protobuf:"varint,7,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2255,17 +2255,17 @@ func (x *WebhookInfo) GetCreatedAt() int64 {
 
 type WebhookLogInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LogID         string                 `protobuf:"bytes,1,opt,name=logID,proto3" json:"logID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	WebhookID     string                 `protobuf:"bytes,3,opt,name=webhookID,proto3" json:"webhookID"`
-	EventType     string                 `protobuf:"bytes,4,opt,name=eventType,proto3" json:"eventType"`
-	RequestBody   string                 `protobuf:"bytes,5,opt,name=requestBody,proto3" json:"requestBody"`
-	ResponseCode  int32                  `protobuf:"varint,6,opt,name=responseCode,proto3" json:"responseCode"`
-	ResponseBody  string                 `protobuf:"bytes,7,opt,name=responseBody,proto3" json:"responseBody"`
-	CostMs        int64                  `protobuf:"varint,8,opt,name=costMs,proto3" json:"costMs"`
-	RetryCount    int32                  `protobuf:"varint,9,opt,name=retryCount,proto3" json:"retryCount"`
-	Status        int32                  `protobuf:"varint,10,opt,name=status,proto3" json:"status"` // 1成功/2失败/3重试中
-	CreatedAt     int64                  `protobuf:"varint,11,opt,name=createdAt,proto3" json:"createdAt"`
+	LogID         string                 `protobuf:"bytes,1,opt,name=logID,proto3" json:"logID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	WebhookID     string                 `protobuf:"bytes,3,opt,name=webhookID,proto3" json:"webhookID,omitempty"`
+	EventType     string                 `protobuf:"bytes,4,opt,name=eventType,proto3" json:"eventType,omitempty"`
+	RequestBody   string                 `protobuf:"bytes,5,opt,name=requestBody,proto3" json:"requestBody,omitempty"`
+	ResponseCode  int32                  `protobuf:"varint,6,opt,name=responseCode,proto3" json:"responseCode,omitempty"`
+	ResponseBody  string                 `protobuf:"bytes,7,opt,name=responseBody,proto3" json:"responseBody,omitempty"`
+	CostMs        int64                  `protobuf:"varint,8,opt,name=costMs,proto3" json:"costMs,omitempty"`
+	RetryCount    int32                  `protobuf:"varint,9,opt,name=retryCount,proto3" json:"retryCount,omitempty"`
+	Status        int32                  `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"` // 1成功/2失败/3重试中
+	CreatedAt     int64                  `protobuf:"varint,11,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2379,19 +2379,19 @@ func (x *WebhookLogInfo) GetCreatedAt() int64 {
 
 type CreateAppReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	TenantID       string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"` // 企业自建时从context获取；平台内置时为空
-	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Icon           string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon"`
-	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description"`
-	AppSource      int32                  `protobuf:"varint,5,opt,name=appSource,proto3" json:"appSource"`
-	AppType        int32                  `protobuf:"varint,6,opt,name=appType,proto3" json:"appType"`
-	Url            string                 `protobuf:"bytes,7,opt,name=url,proto3" json:"url"`
-	OpenMethod     int32                  `protobuf:"varint,8,opt,name=openMethod,proto3" json:"openMethod"`
-	CategoryID     string                 `protobuf:"bytes,9,opt,name=categoryID,proto3" json:"categoryID"`
-	SortOrder      int32                  `protobuf:"varint,10,opt,name=sortOrder,proto3" json:"sortOrder"`
-	DefaultInstall bool                   `protobuf:"varint,11,opt,name=defaultInstall,proto3" json:"defaultInstall"` // 仅平台内置应用有效
-	Config         string                 `protobuf:"bytes,12,opt,name=config,proto3" json:"config"`
-	DeveloperID    string                 `protobuf:"bytes,13,opt,name=developerID,proto3" json:"developerID"` // ISV应用传入
+	TenantID       string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"` // 企业自建时从context获取；平台内置时为空
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Icon           string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description    string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	AppSource      int32                  `protobuf:"varint,5,opt,name=appSource,proto3" json:"appSource,omitempty"`
+	AppType        int32                  `protobuf:"varint,6,opt,name=appType,proto3" json:"appType,omitempty"`
+	Url            string                 `protobuf:"bytes,7,opt,name=url,proto3" json:"url,omitempty"`
+	OpenMethod     int32                  `protobuf:"varint,8,opt,name=openMethod,proto3" json:"openMethod,omitempty"`
+	CategoryID     string                 `protobuf:"bytes,9,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	SortOrder      int32                  `protobuf:"varint,10,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	DefaultInstall bool                   `protobuf:"varint,11,opt,name=defaultInstall,proto3" json:"defaultInstall,omitempty"` // 仅平台内置应用有效
+	Config         string                 `protobuf:"bytes,12,opt,name=config,proto3" json:"config,omitempty"`
+	DeveloperID    string                 `protobuf:"bytes,13,opt,name=developerID,proto3" json:"developerID,omitempty"` // ISV应用传入
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2519,8 +2519,8 @@ func (x *CreateAppReq) GetDeveloperID() string {
 
 type CreateAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	AppKey        string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	AppKey        string                 `protobuf:"bytes,2,opt,name=appKey,proto3" json:"appKey,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2571,17 +2571,17 @@ func (x *CreateAppResp) GetAppKey() string {
 
 type UpdateAppReq struct {
 	state          protoimpl.MessageState  `protogen:"open.v1"`
-	AppID          string                  `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	Name           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Icon           *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon"`
-	Description    *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=description,proto3" json:"description"`
-	AppType        *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=appType,proto3" json:"appType"`
-	Url            *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=url,proto3" json:"url"`
-	OpenMethod     *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=openMethod,proto3" json:"openMethod"`
-	CategoryID     *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=categoryID,proto3" json:"categoryID"`
-	SortOrder      *wrapperspb.Int32Value  `protobuf:"bytes,9,opt,name=sortOrder,proto3" json:"sortOrder"`
-	DefaultInstall *wrapperspb.BoolValue   `protobuf:"bytes,10,opt,name=defaultInstall,proto3" json:"defaultInstall"`
-	Config         *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=config,proto3" json:"config"`
+	AppID          string                  `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Name           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Icon           *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description    *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	AppType        *wrapperspb.Int32Value  `protobuf:"bytes,5,opt,name=appType,proto3" json:"appType,omitempty"`
+	Url            *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`
+	OpenMethod     *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=openMethod,proto3" json:"openMethod,omitempty"`
+	CategoryID     *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	SortOrder      *wrapperspb.Int32Value  `protobuf:"bytes,9,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	DefaultInstall *wrapperspb.BoolValue   `protobuf:"bytes,10,opt,name=defaultInstall,proto3" json:"defaultInstall,omitempty"`
+	Config         *wrapperspb.StringValue `protobuf:"bytes,11,opt,name=config,proto3" json:"config,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -2731,7 +2731,7 @@ func (*UpdateAppResp) Descriptor() ([]byte, []int) {
 
 type DeleteAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2811,7 +2811,7 @@ func (*DeleteAppResp) Descriptor() ([]byte, []int) {
 
 type GetAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2855,7 +2855,7 @@ func (x *GetAppReq) GetAppID() string {
 
 type GetAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *AppInfo               `protobuf:"bytes,1,opt,name=app,proto3" json:"app"`
+	App           *AppInfo               `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2899,12 +2899,12 @@ func (x *GetAppResp) GetApp() *AppInfo {
 
 type GetAppListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppSource     int32                    `protobuf:"varint,2,opt,name=appSource,proto3" json:"appSource"` // 按来源筛选,0=全部
-	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status"`       // 按状态筛选,0=全部
-	CategoryID    string                   `protobuf:"bytes,4,opt,name=categoryID,proto3" json:"categoryID"`
-	Keyword       string                   `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppSource     int32                    `protobuf:"varint,2,opt,name=appSource,proto3" json:"appSource,omitempty"` // 按来源筛选,0=全部
+	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`       // 按状态筛选,0=全部
+	CategoryID    string                   `protobuf:"bytes,4,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	Keyword       string                   `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2983,8 +2983,8 @@ func (x *GetAppListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetAppListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3035,8 +3035,8 @@ func (x *GetAppListResp) GetApps() []*AppInfo {
 
 type SetAppStatusReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status"` // AppStatus
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"` // AppStatus
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3123,8 +3123,8 @@ func (*SetAppStatusResp) Descriptor() ([]byte, []int) {
 
 type PushInstallReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	TenantIDs     []string               `protobuf:"bytes,2,rep,name=tenantIDs,proto3" json:"tenantIDs"` // 空=所有租户
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	TenantIDs     []string               `protobuf:"bytes,2,rep,name=tenantIDs,proto3" json:"tenantIDs,omitempty"` // 空=所有租户
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3175,8 +3175,8 @@ func (x *PushInstallReq) GetTenantIDs() []string {
 
 type PushInstallResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	SuccessCount  int64                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`
-	SkipCount     int64                  `protobuf:"varint,2,opt,name=skipCount,proto3" json:"skipCount"`
+	SuccessCount  int64                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount,omitempty"`
+	SkipCount     int64                  `protobuf:"varint,2,opt,name=skipCount,proto3" json:"skipCount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3227,11 +3227,11 @@ func (x *PushInstallResp) GetSkipCount() int64 {
 
 type CreateCategoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	Icon          string                 `protobuf:"bytes,2,opt,name=icon,proto3" json:"icon"`
-	SortOrder     int32                  `protobuf:"varint,3,opt,name=sortOrder,proto3" json:"sortOrder"`
-	ParentID      string                 `protobuf:"bytes,4,opt,name=parentID,proto3" json:"parentID"`
-	TenantID      string                 `protobuf:"bytes,5,opt,name=tenantID,proto3" json:"tenantID"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Icon          string                 `protobuf:"bytes,2,opt,name=icon,proto3" json:"icon,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,3,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	ParentID      string                 `protobuf:"bytes,4,opt,name=parentID,proto3" json:"parentID,omitempty"`
+	TenantID      string                 `protobuf:"bytes,5,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3303,7 +3303,7 @@ func (x *CreateCategoryReq) GetTenantID() string {
 
 type CreateCategoryResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID"`
+	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3347,10 +3347,10 @@ func (x *CreateCategoryResp) GetCategoryID() string {
 
 type UpdateCategoryReq struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	CategoryID    string                  `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID"`
-	Name          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Icon          *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon"`
-	SortOrder     *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=sortOrder,proto3" json:"sortOrder"`
+	CategoryID    string                  `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	Name          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Icon          *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	SortOrder     *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3451,7 +3451,7 @@ func (*UpdateCategoryResp) Descriptor() ([]byte, []int) {
 
 type DeleteCategoryReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID"`
+	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3531,7 +3531,7 @@ func (*DeleteCategoryResp) Descriptor() ([]byte, []int) {
 
 type GetCategoryListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3575,7 +3575,7 @@ func (x *GetCategoryListReq) GetTenantID() string {
 
 type GetCategoryListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Categories    []*CategoryInfo        `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories"`
+	Categories    []*CategoryInfo        `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3619,7 +3619,7 @@ func (x *GetCategoryListResp) GetCategories() []*CategoryInfo {
 
 type SortCategoriesReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*CategorySortItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items"`
+	Items         []*CategorySortItem    `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3663,8 +3663,8 @@ func (x *SortCategoriesReq) GetItems() []*CategorySortItem {
 
 type CategorySortItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID"`
-	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder"`
+	CategoryID    string                 `protobuf:"bytes,1,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3751,15 +3751,15 @@ func (*SortCategoriesResp) Descriptor() ([]byte, []int) {
 
 type CreateBannerReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"` // 为空=平台级
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title"`
-	ImageURL      string                 `protobuf:"bytes,3,opt,name=imageURL,proto3" json:"imageURL"`
-	LinkType      int32                  `protobuf:"varint,4,opt,name=linkType,proto3" json:"linkType"`
-	LinkValue     string                 `protobuf:"bytes,5,opt,name=linkValue,proto3" json:"linkValue"`
-	Position      int32                  `protobuf:"varint,6,opt,name=position,proto3" json:"position"`
-	SortOrder     int32                  `protobuf:"varint,7,opt,name=sortOrder,proto3" json:"sortOrder"`
-	StartTime     int64                  `protobuf:"varint,8,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       int64                  `protobuf:"varint,9,opt,name=endTime,proto3" json:"endTime"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"` // 为空=平台级
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	ImageURL      string                 `protobuf:"bytes,3,opt,name=imageURL,proto3" json:"imageURL,omitempty"`
+	LinkType      int32                  `protobuf:"varint,4,opt,name=linkType,proto3" json:"linkType,omitempty"`
+	LinkValue     string                 `protobuf:"bytes,5,opt,name=linkValue,proto3" json:"linkValue,omitempty"`
+	Position      int32                  `protobuf:"varint,6,opt,name=position,proto3" json:"position,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,7,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	StartTime     int64                  `protobuf:"varint,8,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       int64                  `protobuf:"varint,9,opt,name=endTime,proto3" json:"endTime,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3859,7 +3859,7 @@ func (x *CreateBannerReq) GetEndTime() int64 {
 
 type CreateBannerResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID"`
+	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3903,16 +3903,16 @@ func (x *CreateBannerResp) GetBannerID() string {
 
 type UpdateBannerReq struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	BannerID      string                  `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID"`
-	Title         *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=title,proto3" json:"title"`
-	ImageURL      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=imageURL,proto3" json:"imageURL"`
-	LinkType      *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=linkType,proto3" json:"linkType"`
-	LinkValue     *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=linkValue,proto3" json:"linkValue"`
-	Position      *wrapperspb.Int32Value  `protobuf:"bytes,6,opt,name=position,proto3" json:"position"`
-	SortOrder     *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=sortOrder,proto3" json:"sortOrder"`
-	StartTime     *wrapperspb.Int64Value  `protobuf:"bytes,8,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       *wrapperspb.Int64Value  `protobuf:"bytes,9,opt,name=endTime,proto3" json:"endTime"`
-	Status        *wrapperspb.Int32Value  `protobuf:"bytes,10,opt,name=status,proto3" json:"status"`
+	BannerID      string                  `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID,omitempty"`
+	Title         *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	ImageURL      *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=imageURL,proto3" json:"imageURL,omitempty"`
+	LinkType      *wrapperspb.Int32Value  `protobuf:"bytes,4,opt,name=linkType,proto3" json:"linkType,omitempty"`
+	LinkValue     *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=linkValue,proto3" json:"linkValue,omitempty"`
+	Position      *wrapperspb.Int32Value  `protobuf:"bytes,6,opt,name=position,proto3" json:"position,omitempty"`
+	SortOrder     *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
+	StartTime     *wrapperspb.Int64Value  `protobuf:"bytes,8,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       *wrapperspb.Int64Value  `protobuf:"bytes,9,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Status        *wrapperspb.Int32Value  `protobuf:"bytes,10,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4055,7 +4055,7 @@ func (*UpdateBannerResp) Descriptor() ([]byte, []int) {
 
 type DeleteBannerReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID"`
+	BannerID      string                 `protobuf:"bytes,1,opt,name=bannerID,proto3" json:"bannerID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4135,10 +4135,10 @@ func (*DeleteBannerResp) Descriptor() ([]byte, []int) {
 
 type GetBannerListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	Position      int32                    `protobuf:"varint,2,opt,name=position,proto3" json:"position"` // 0=全部
-	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status"`     // 0=全部
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	Position      int32                    `protobuf:"varint,2,opt,name=position,proto3" json:"position,omitempty"` // 0=全部
+	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`     // 0=全部
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4203,8 +4203,8 @@ func (x *GetBannerListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetBannerListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Banners       []*BannerInfo          `protobuf:"bytes,2,rep,name=banners,proto3" json:"banners"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Banners       []*BannerInfo          `protobuf:"bytes,2,rep,name=banners,proto3" json:"banners,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4255,8 +4255,8 @@ func (x *GetBannerListResp) GetBanners() []*BannerInfo {
 
 type InstallAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4343,8 +4343,8 @@ func (*InstallAppResp) Descriptor() ([]byte, []int) {
 
 type UninstallAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4431,10 +4431,10 @@ func (*UninstallAppResp) Descriptor() ([]byte, []int) {
 
 type GetInstalledAppsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppSource     int32                    `protobuf:"varint,2,opt,name=appSource,proto3" json:"appSource"`
-	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppSource     int32                    `protobuf:"varint,2,opt,name=appSource,proto3" json:"appSource,omitempty"`
+	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4499,8 +4499,8 @@ func (x *GetInstalledAppsReq) GetPagination() *sdkws.RequestPagination {
 
 type GetInstalledAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4551,11 +4551,11 @@ func (x *GetInstalledAppsResp) GetApps() []*AppInfo {
 
 type GetMarketAppsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"` // 用于标记已安装状态
-	CategoryID    string                   `protobuf:"bytes,2,opt,name=categoryID,proto3" json:"categoryID"`
-	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword"`
-	SortBy        string                   `protobuf:"bytes,4,opt,name=sortBy,proto3" json:"sortBy"` // popular/latest/rating
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,5,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"` // 用于标记已安装状态
+	CategoryID    string                   `protobuf:"bytes,2,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	SortBy        string                   `protobuf:"bytes,4,opt,name=sortBy,proto3" json:"sortBy,omitempty"` // popular/latest/rating
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,5,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4627,8 +4627,8 @@ func (x *GetMarketAppsReq) GetPagination() *sdkws.RequestPagination {
 
 type GetMarketAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4679,9 +4679,9 @@ func (x *GetMarketAppsResp) GetApps() []*AppInfo {
 
 type SearchMarketReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	Keyword       string                   `protobuf:"bytes,2,opt,name=keyword,proto3" json:"keyword"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	Keyword       string                   `protobuf:"bytes,2,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4739,8 +4739,8 @@ func (x *SearchMarketReq) GetPagination() *sdkws.RequestPagination {
 
 type SearchMarketResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4791,8 +4791,8 @@ func (x *SearchMarketResp) GetApps() []*AppInfo {
 
 type GetRecommendReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4843,8 +4843,8 @@ func (x *GetRecommendReq) GetPagination() *sdkws.RequestPagination {
 
 type GetRecommendResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Recommended   []*AppInfo             `protobuf:"bytes,1,rep,name=recommended,proto3" json:"recommended"`
-	Popular       []*AppInfo             `protobuf:"bytes,2,rep,name=popular,proto3" json:"popular"`
+	Recommended   []*AppInfo             `protobuf:"bytes,1,rep,name=recommended,proto3" json:"recommended,omitempty"`
+	Popular       []*AppInfo             `protobuf:"bytes,2,rep,name=popular,proto3" json:"popular,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4895,10 +4895,10 @@ func (x *GetRecommendResp) GetPopular() []*AppInfo {
 
 type SetAppScopeReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	TenantID       string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID          string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	VisibilityType int32                  `protobuf:"varint,3,opt,name=visibilityType,proto3" json:"visibilityType"` // VisibilityType
-	Scopes         []*AppScopeInfo        `protobuf:"bytes,4,rep,name=scopes,proto3" json:"scopes"`
+	TenantID       string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID          string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	VisibilityType int32                  `protobuf:"varint,3,opt,name=visibilityType,proto3" json:"visibilityType,omitempty"` // VisibilityType
+	Scopes         []*AppScopeInfo        `protobuf:"bytes,4,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -4999,8 +4999,8 @@ func (*SetAppScopeResp) Descriptor() ([]byte, []int) {
 
 type GetAppScopeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5051,8 +5051,8 @@ func (x *GetAppScopeReq) GetAppID() string {
 
 type GetAppScopeResp struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	VisibilityType int32                  `protobuf:"varint,1,opt,name=visibilityType,proto3" json:"visibilityType"`
-	Scopes         []*AppScopeInfo        `protobuf:"bytes,2,rep,name=scopes,proto3" json:"scopes"`
+	VisibilityType int32                  `protobuf:"varint,1,opt,name=visibilityType,proto3" json:"visibilityType,omitempty"`
+	Scopes         []*AppScopeInfo        `protobuf:"bytes,2,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -5103,9 +5103,9 @@ func (x *GetAppScopeResp) GetScopes() []*AppScopeInfo {
 
 type AddUserAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	AppIDs        []string               `protobuf:"bytes,3,rep,name=appIDs,proto3" json:"appIDs"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppIDs        []string               `protobuf:"bytes,3,rep,name=appIDs,proto3" json:"appIDs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5199,9 +5199,9 @@ func (*AddUserAppsResp) Descriptor() ([]byte, []int) {
 
 type RemoveUserAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	AppIDs        []string               `protobuf:"bytes,3,rep,name=appIDs,proto3" json:"appIDs"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppIDs        []string               `protobuf:"bytes,3,rep,name=appIDs,proto3" json:"appIDs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5295,9 +5295,9 @@ func (*RemoveUserAppsResp) Descriptor() ([]byte, []int) {
 
 type SortUserAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	Items         []*UserAppSortItem     `protobuf:"bytes,3,rep,name=items,proto3" json:"items"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	Items         []*UserAppSortItem     `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5355,8 +5355,8 @@ func (x *SortUserAppsReq) GetItems() []*UserAppSortItem {
 
 type UserAppSortItem struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	SortOrder     int32                  `protobuf:"varint,2,opt,name=sortOrder,proto3" json:"sortOrder,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5443,10 +5443,10 @@ func (*SortUserAppsResp) Descriptor() ([]byte, []int) {
 
 type PinUserAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID"`
-	Pinned        bool                   `protobuf:"varint,4,opt,name=pinned,proto3" json:"pinned"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
+	Pinned        bool                   `protobuf:"varint,4,opt,name=pinned,proto3" json:"pinned,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5545,17 +5545,121 @@ func (*PinUserAppResp) Descriptor() ([]byte, []int) {
 	return file_workbench_workbench_proto_rawDescGZIP(), []int{72}
 }
 
+type HideUserAppReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
+	Hidden        bool                   `protobuf:"varint,4,opt,name=hidden,proto3" json:"hidden,omitempty"` // true=隐藏, false=取消隐藏
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HideUserAppReq) Reset() {
+	*x = HideUserAppReq{}
+	mi := &file_workbench_workbench_proto_msgTypes[73]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HideUserAppReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HideUserAppReq) ProtoMessage() {}
+
+func (x *HideUserAppReq) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[73]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HideUserAppReq.ProtoReflect.Descriptor instead.
+func (*HideUserAppReq) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{73}
+}
+
+func (x *HideUserAppReq) GetTenantID() string {
+	if x != nil {
+		return x.TenantID
+	}
+	return ""
+}
+
+func (x *HideUserAppReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *HideUserAppReq) GetAppID() string {
+	if x != nil {
+		return x.AppID
+	}
+	return ""
+}
+
+func (x *HideUserAppReq) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
+}
+
+type HideUserAppResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HideUserAppResp) Reset() {
+	*x = HideUserAppResp{}
+	mi := &file_workbench_workbench_proto_msgTypes[74]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HideUserAppResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HideUserAppResp) ProtoMessage() {}
+
+func (x *HideUserAppResp) ProtoReflect() protoreflect.Message {
+	mi := &file_workbench_workbench_proto_msgTypes[74]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HideUserAppResp.ProtoReflect.Descriptor instead.
+func (*HideUserAppResp) Descriptor() ([]byte, []int) {
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{74}
+}
+
 type GetUserAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserAppsReq) Reset() {
 	*x = GetUserAppsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[73]
+	mi := &file_workbench_workbench_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5567,7 +5671,7 @@ func (x *GetUserAppsReq) String() string {
 func (*GetUserAppsReq) ProtoMessage() {}
 
 func (x *GetUserAppsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[73]
+	mi := &file_workbench_workbench_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5580,7 +5684,7 @@ func (x *GetUserAppsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserAppsReq.ProtoReflect.Descriptor instead.
 func (*GetUserAppsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{73}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *GetUserAppsReq) GetTenantID() string {
@@ -5599,14 +5703,14 @@ func (x *GetUserAppsReq) GetUserID() string {
 
 type GetUserAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*AppInfo             `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps"`
+	Apps          []*AppInfo             `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserAppsResp) Reset() {
 	*x = GetUserAppsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[74]
+	mi := &file_workbench_workbench_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5618,7 +5722,7 @@ func (x *GetUserAppsResp) String() string {
 func (*GetUserAppsResp) ProtoMessage() {}
 
 func (x *GetUserAppsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[74]
+	mi := &file_workbench_workbench_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5631,7 +5735,7 @@ func (x *GetUserAppsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserAppsResp.ProtoReflect.Descriptor instead.
 func (*GetUserAppsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{74}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *GetUserAppsResp) GetApps() []*AppInfo {
@@ -5643,15 +5747,15 @@ func (x *GetUserAppsResp) GetApps() []*AppInfo {
 
 type GetAvailableAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAvailableAppsReq) Reset() {
 	*x = GetAvailableAppsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[75]
+	mi := &file_workbench_workbench_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5663,7 +5767,7 @@ func (x *GetAvailableAppsReq) String() string {
 func (*GetAvailableAppsReq) ProtoMessage() {}
 
 func (x *GetAvailableAppsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[75]
+	mi := &file_workbench_workbench_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5676,7 +5780,7 @@ func (x *GetAvailableAppsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAvailableAppsReq.ProtoReflect.Descriptor instead.
 func (*GetAvailableAppsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{75}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *GetAvailableAppsReq) GetTenantID() string {
@@ -5695,14 +5799,14 @@ func (x *GetAvailableAppsReq) GetUserID() string {
 
 type GetAvailableAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Apps          []*AppInfo             `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps"`
+	Apps          []*AppInfo             `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAvailableAppsResp) Reset() {
 	*x = GetAvailableAppsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[76]
+	mi := &file_workbench_workbench_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5714,7 +5818,7 @@ func (x *GetAvailableAppsResp) String() string {
 func (*GetAvailableAppsResp) ProtoMessage() {}
 
 func (x *GetAvailableAppsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[76]
+	mi := &file_workbench_workbench_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5727,7 +5831,7 @@ func (x *GetAvailableAppsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAvailableAppsResp.ProtoReflect.Descriptor instead.
 func (*GetAvailableAppsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{76}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *GetAvailableAppsResp) GetApps() []*AppInfo {
@@ -5739,15 +5843,15 @@ func (x *GetAvailableAppsResp) GetApps() []*AppInfo {
 
 type GetWorkbenchAppsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkbenchAppsReq) Reset() {
 	*x = GetWorkbenchAppsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[77]
+	mi := &file_workbench_workbench_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5759,7 +5863,7 @@ func (x *GetWorkbenchAppsReq) String() string {
 func (*GetWorkbenchAppsReq) ProtoMessage() {}
 
 func (x *GetWorkbenchAppsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[77]
+	mi := &file_workbench_workbench_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5772,7 +5876,7 @@ func (x *GetWorkbenchAppsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkbenchAppsReq.ProtoReflect.Descriptor instead.
 func (*GetWorkbenchAppsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{77}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{79}
 }
 
 func (x *GetWorkbenchAppsReq) GetTenantID() string {
@@ -5791,15 +5895,15 @@ func (x *GetWorkbenchAppsReq) GetUserID() string {
 
 type GetWorkbenchAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Categories    []*CategoryInfo        `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Categories    []*CategoryInfo        `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWorkbenchAppsResp) Reset() {
 	*x = GetWorkbenchAppsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[78]
+	mi := &file_workbench_workbench_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5811,7 +5915,7 @@ func (x *GetWorkbenchAppsResp) String() string {
 func (*GetWorkbenchAppsResp) ProtoMessage() {}
 
 func (x *GetWorkbenchAppsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[78]
+	mi := &file_workbench_workbench_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5824,7 +5928,7 @@ func (x *GetWorkbenchAppsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWorkbenchAppsResp.ProtoReflect.Descriptor instead.
 func (*GetWorkbenchAppsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{78}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *GetWorkbenchAppsResp) GetCategories() []*CategoryInfo {
@@ -5843,21 +5947,21 @@ func (x *GetWorkbenchAppsResp) GetApps() []*AppInfo {
 
 type CreateMsgTemplateReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	AppID          string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	TemplateKey    string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey"`
-	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
-	TitlePattern   string                 `protobuf:"bytes,4,opt,name=titlePattern,proto3" json:"titlePattern"`
-	ContentPattern string                 `protobuf:"bytes,5,opt,name=contentPattern,proto3" json:"contentPattern"`
-	HasActions     bool                   `protobuf:"varint,6,opt,name=hasActions,proto3" json:"hasActions"`
-	ActionConfig   string                 `protobuf:"bytes,7,opt,name=actionConfig,proto3" json:"actionConfig"` // JSON
-	CardJSON       string                 `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON"`
+	AppID          string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	TemplateKey    string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey,omitempty"`
+	Name           string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	TitlePattern   string                 `protobuf:"bytes,4,opt,name=titlePattern,proto3" json:"titlePattern,omitempty"`
+	ContentPattern string                 `protobuf:"bytes,5,opt,name=contentPattern,proto3" json:"contentPattern,omitempty"`
+	HasActions     bool                   `protobuf:"varint,6,opt,name=hasActions,proto3" json:"hasActions,omitempty"`
+	ActionConfig   string                 `protobuf:"bytes,7,opt,name=actionConfig,proto3" json:"actionConfig,omitempty"` // JSON
+	CardJSON       string                 `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateMsgTemplateReq) Reset() {
 	*x = CreateMsgTemplateReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[79]
+	mi := &file_workbench_workbench_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5869,7 +5973,7 @@ func (x *CreateMsgTemplateReq) String() string {
 func (*CreateMsgTemplateReq) ProtoMessage() {}
 
 func (x *CreateMsgTemplateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[79]
+	mi := &file_workbench_workbench_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5882,7 +5986,7 @@ func (x *CreateMsgTemplateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMsgTemplateReq.ProtoReflect.Descriptor instead.
 func (*CreateMsgTemplateReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{79}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{81}
 }
 
 func (x *CreateMsgTemplateReq) GetAppID() string {
@@ -5943,14 +6047,14 @@ func (x *CreateMsgTemplateReq) GetCardJSON() string {
 
 type CreateMsgTemplateResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
+	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateMsgTemplateResp) Reset() {
 	*x = CreateMsgTemplateResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[80]
+	mi := &file_workbench_workbench_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5962,7 +6066,7 @@ func (x *CreateMsgTemplateResp) String() string {
 func (*CreateMsgTemplateResp) ProtoMessage() {}
 
 func (x *CreateMsgTemplateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[80]
+	mi := &file_workbench_workbench_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5975,7 +6079,7 @@ func (x *CreateMsgTemplateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMsgTemplateResp.ProtoReflect.Descriptor instead.
 func (*CreateMsgTemplateResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{80}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *CreateMsgTemplateResp) GetTemplateID() string {
@@ -5987,21 +6091,21 @@ func (x *CreateMsgTemplateResp) GetTemplateID() string {
 
 type UpdateMsgTemplateReq struct {
 	state          protoimpl.MessageState  `protogen:"open.v1"`
-	TemplateID     string                  `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
-	Name           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	TitlePattern   *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=titlePattern,proto3" json:"titlePattern"`
-	ContentPattern *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=contentPattern,proto3" json:"contentPattern"`
-	HasActions     *wrapperspb.BoolValue   `protobuf:"bytes,5,opt,name=hasActions,proto3" json:"hasActions"`
-	ActionConfig   *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=actionConfig,proto3" json:"actionConfig"`
-	Status         *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=status,proto3" json:"status"`
-	CardJSON       *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON"`
+	TemplateID     string                  `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID,omitempty"`
+	Name           *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	TitlePattern   *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=titlePattern,proto3" json:"titlePattern,omitempty"`
+	ContentPattern *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=contentPattern,proto3" json:"contentPattern,omitempty"`
+	HasActions     *wrapperspb.BoolValue   `protobuf:"bytes,5,opt,name=hasActions,proto3" json:"hasActions,omitempty"`
+	ActionConfig   *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=actionConfig,proto3" json:"actionConfig,omitempty"`
+	Status         *wrapperspb.Int32Value  `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
+	CardJSON       *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UpdateMsgTemplateReq) Reset() {
 	*x = UpdateMsgTemplateReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[81]
+	mi := &file_workbench_workbench_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6013,7 +6117,7 @@ func (x *UpdateMsgTemplateReq) String() string {
 func (*UpdateMsgTemplateReq) ProtoMessage() {}
 
 func (x *UpdateMsgTemplateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[81]
+	mi := &file_workbench_workbench_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6026,7 +6130,7 @@ func (x *UpdateMsgTemplateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMsgTemplateReq.ProtoReflect.Descriptor instead.
 func (*UpdateMsgTemplateReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{81}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *UpdateMsgTemplateReq) GetTemplateID() string {
@@ -6093,7 +6197,7 @@ type UpdateMsgTemplateResp struct {
 
 func (x *UpdateMsgTemplateResp) Reset() {
 	*x = UpdateMsgTemplateResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[82]
+	mi := &file_workbench_workbench_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6105,7 +6209,7 @@ func (x *UpdateMsgTemplateResp) String() string {
 func (*UpdateMsgTemplateResp) ProtoMessage() {}
 
 func (x *UpdateMsgTemplateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[82]
+	mi := &file_workbench_workbench_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6118,19 +6222,19 @@ func (x *UpdateMsgTemplateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMsgTemplateResp.ProtoReflect.Descriptor instead.
 func (*UpdateMsgTemplateResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{82}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{84}
 }
 
 type DeleteMsgTemplateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
+	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteMsgTemplateReq) Reset() {
 	*x = DeleteMsgTemplateReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[83]
+	mi := &file_workbench_workbench_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6142,7 +6246,7 @@ func (x *DeleteMsgTemplateReq) String() string {
 func (*DeleteMsgTemplateReq) ProtoMessage() {}
 
 func (x *DeleteMsgTemplateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[83]
+	mi := &file_workbench_workbench_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6155,7 +6259,7 @@ func (x *DeleteMsgTemplateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMsgTemplateReq.ProtoReflect.Descriptor instead.
 func (*DeleteMsgTemplateReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{83}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{85}
 }
 
 func (x *DeleteMsgTemplateReq) GetTemplateID() string {
@@ -6173,7 +6277,7 @@ type DeleteMsgTemplateResp struct {
 
 func (x *DeleteMsgTemplateResp) Reset() {
 	*x = DeleteMsgTemplateResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[84]
+	mi := &file_workbench_workbench_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6185,7 +6289,7 @@ func (x *DeleteMsgTemplateResp) String() string {
 func (*DeleteMsgTemplateResp) ProtoMessage() {}
 
 func (x *DeleteMsgTemplateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[84]
+	mi := &file_workbench_workbench_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6198,20 +6302,20 @@ func (x *DeleteMsgTemplateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMsgTemplateResp.ProtoReflect.Descriptor instead.
 func (*DeleteMsgTemplateResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{84}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{86}
 }
 
 type GetMsgTemplateListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	AppID         string                   `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
+	AppID         string                   `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMsgTemplateListReq) Reset() {
 	*x = GetMsgTemplateListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[85]
+	mi := &file_workbench_workbench_proto_msgTypes[87]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6223,7 +6327,7 @@ func (x *GetMsgTemplateListReq) String() string {
 func (*GetMsgTemplateListReq) ProtoMessage() {}
 
 func (x *GetMsgTemplateListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[85]
+	mi := &file_workbench_workbench_proto_msgTypes[87]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6236,7 +6340,7 @@ func (x *GetMsgTemplateListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMsgTemplateListReq.ProtoReflect.Descriptor instead.
 func (*GetMsgTemplateListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{85}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{87}
 }
 
 func (x *GetMsgTemplateListReq) GetAppID() string {
@@ -6255,15 +6359,15 @@ func (x *GetMsgTemplateListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetMsgTemplateListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Templates     []*MsgTemplateInfo     `protobuf:"bytes,2,rep,name=templates,proto3" json:"templates"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Templates     []*MsgTemplateInfo     `protobuf:"bytes,2,rep,name=templates,proto3" json:"templates,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMsgTemplateListResp) Reset() {
 	*x = GetMsgTemplateListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[86]
+	mi := &file_workbench_workbench_proto_msgTypes[88]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6275,7 +6379,7 @@ func (x *GetMsgTemplateListResp) String() string {
 func (*GetMsgTemplateListResp) ProtoMessage() {}
 
 func (x *GetMsgTemplateListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[86]
+	mi := &file_workbench_workbench_proto_msgTypes[88]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6288,7 +6392,7 @@ func (x *GetMsgTemplateListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMsgTemplateListResp.ProtoReflect.Descriptor instead.
 func (*GetMsgTemplateListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{86}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *GetMsgTemplateListResp) GetTotal() int64 {
@@ -6307,15 +6411,15 @@ func (x *GetMsgTemplateListResp) GetTemplates() []*MsgTemplateInfo {
 
 type PreviewMsgTemplateReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID"`
-	MockData      map[string]string      `protobuf:"bytes,2,rep,name=mockData,proto3" json:"mockData" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	TemplateID    string                 `protobuf:"bytes,1,opt,name=templateID,proto3" json:"templateID,omitempty"`
+	MockData      map[string]string      `protobuf:"bytes,2,rep,name=mockData,proto3" json:"mockData,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PreviewMsgTemplateReq) Reset() {
 	*x = PreviewMsgTemplateReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[87]
+	mi := &file_workbench_workbench_proto_msgTypes[89]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6327,7 +6431,7 @@ func (x *PreviewMsgTemplateReq) String() string {
 func (*PreviewMsgTemplateReq) ProtoMessage() {}
 
 func (x *PreviewMsgTemplateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[87]
+	mi := &file_workbench_workbench_proto_msgTypes[89]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6340,7 +6444,7 @@ func (x *PreviewMsgTemplateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreviewMsgTemplateReq.ProtoReflect.Descriptor instead.
 func (*PreviewMsgTemplateReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{87}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{89}
 }
 
 func (x *PreviewMsgTemplateReq) GetTemplateID() string {
@@ -6359,17 +6463,17 @@ func (x *PreviewMsgTemplateReq) GetMockData() map[string]string {
 
 type PreviewMsgTemplateResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title"`
-	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content"`
-	ActionConfig  string                 `protobuf:"bytes,3,opt,name=actionConfig,proto3" json:"actionConfig"`
-	CardJSON      string                 `protobuf:"bytes,4,opt,name=cardJSON,proto3" json:"cardJSON"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	ActionConfig  string                 `protobuf:"bytes,3,opt,name=actionConfig,proto3" json:"actionConfig,omitempty"`
+	CardJSON      string                 `protobuf:"bytes,4,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PreviewMsgTemplateResp) Reset() {
 	*x = PreviewMsgTemplateResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[88]
+	mi := &file_workbench_workbench_proto_msgTypes[90]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6381,7 +6485,7 @@ func (x *PreviewMsgTemplateResp) String() string {
 func (*PreviewMsgTemplateResp) ProtoMessage() {}
 
 func (x *PreviewMsgTemplateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[88]
+	mi := &file_workbench_workbench_proto_msgTypes[90]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6394,7 +6498,7 @@ func (x *PreviewMsgTemplateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PreviewMsgTemplateResp.ProtoReflect.Descriptor instead.
 func (*PreviewMsgTemplateResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{88}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *PreviewMsgTemplateResp) GetTitle() string {
@@ -6427,21 +6531,21 @@ func (x *PreviewMsgTemplateResp) GetCardJSON() string {
 
 type SendNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	TemplateKey   string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey"`
-	ToUserID      string                 `protobuf:"bytes,3,opt,name=toUserID,proto3" json:"toUserID"`
-	Data          map[string]string      `protobuf:"bytes,4,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"`
-	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID"`
-	Extra         string                 `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra"`
-	DetailJSON    string                 `protobuf:"bytes,8,opt,name=detailJSON,proto3" json:"detailJSON"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	TemplateKey   string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey,omitempty"`
+	ToUserID      string                 `protobuf:"bytes,3,opt,name=toUserID,proto3" json:"toUserID,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,4,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
+	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID,omitempty"`
+	Extra         string                 `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra,omitempty"`
+	DetailJSON    string                 `protobuf:"bytes,8,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendNotifyReq) Reset() {
 	*x = SendNotifyReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[89]
+	mi := &file_workbench_workbench_proto_msgTypes[91]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6453,7 +6557,7 @@ func (x *SendNotifyReq) String() string {
 func (*SendNotifyReq) ProtoMessage() {}
 
 func (x *SendNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[89]
+	mi := &file_workbench_workbench_proto_msgTypes[91]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6466,7 +6570,7 @@ func (x *SendNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendNotifyReq.ProtoReflect.Descriptor instead.
 func (*SendNotifyReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{89}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{91}
 }
 
 func (x *SendNotifyReq) GetAppID() string {
@@ -6527,15 +6631,15 @@ func (x *SendNotifyReq) GetDetailJSON() string {
 
 type SendNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	MsgID         string                 `protobuf:"bytes,2,opt,name=msgID,proto3" json:"msgID"`
+	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	MsgID         string                 `protobuf:"bytes,2,opt,name=msgID,proto3" json:"msgID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SendNotifyResp) Reset() {
 	*x = SendNotifyResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[90]
+	mi := &file_workbench_workbench_proto_msgTypes[92]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6547,7 +6651,7 @@ func (x *SendNotifyResp) String() string {
 func (*SendNotifyResp) ProtoMessage() {}
 
 func (x *SendNotifyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[90]
+	mi := &file_workbench_workbench_proto_msgTypes[92]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6560,7 +6664,7 @@ func (x *SendNotifyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendNotifyResp.ProtoReflect.Descriptor instead.
 func (*SendNotifyResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{90}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *SendNotifyResp) GetNotifyID() string {
@@ -6579,20 +6683,20 @@ func (x *SendNotifyResp) GetMsgID() string {
 
 type BatchSendNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	TemplateKey   string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey"`
-	ToUserIDs     []string               `protobuf:"bytes,3,rep,name=toUserIDs,proto3" json:"toUserIDs"`
-	Data          map[string]string      `protobuf:"bytes,4,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url"`
-	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID"`
-	DetailJSON    string                 `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	TemplateKey   string                 `protobuf:"bytes,2,opt,name=templateKey,proto3" json:"templateKey,omitempty"`
+	ToUserIDs     []string               `protobuf:"bytes,3,rep,name=toUserIDs,proto3" json:"toUserIDs,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,4,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
+	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID,omitempty"`
+	DetailJSON    string                 `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatchSendNotifyReq) Reset() {
 	*x = BatchSendNotifyReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[91]
+	mi := &file_workbench_workbench_proto_msgTypes[93]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6604,7 +6708,7 @@ func (x *BatchSendNotifyReq) String() string {
 func (*BatchSendNotifyReq) ProtoMessage() {}
 
 func (x *BatchSendNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[91]
+	mi := &file_workbench_workbench_proto_msgTypes[93]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6617,7 +6721,7 @@ func (x *BatchSendNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchSendNotifyReq.ProtoReflect.Descriptor instead.
 func (*BatchSendNotifyReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{91}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *BatchSendNotifyReq) GetAppID() string {
@@ -6671,15 +6775,15 @@ func (x *BatchSendNotifyReq) GetDetailJSON() string {
 
 type BatchSendNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	BatchID       string                 `protobuf:"bytes,1,opt,name=batchID,proto3" json:"batchID"`
-	Results       []*NotifySendResult    `protobuf:"bytes,2,rep,name=results,proto3" json:"results"`
+	BatchID       string                 `protobuf:"bytes,1,opt,name=batchID,proto3" json:"batchID,omitempty"`
+	Results       []*NotifySendResult    `protobuf:"bytes,2,rep,name=results,proto3" json:"results,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatchSendNotifyResp) Reset() {
 	*x = BatchSendNotifyResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[92]
+	mi := &file_workbench_workbench_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6691,7 +6795,7 @@ func (x *BatchSendNotifyResp) String() string {
 func (*BatchSendNotifyResp) ProtoMessage() {}
 
 func (x *BatchSendNotifyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[92]
+	mi := &file_workbench_workbench_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6704,7 +6808,7 @@ func (x *BatchSendNotifyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchSendNotifyResp.ProtoReflect.Descriptor instead.
 func (*BatchSendNotifyResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{92}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *BatchSendNotifyResp) GetBatchID() string {
@@ -6723,20 +6827,20 @@ func (x *BatchSendNotifyResp) GetResults() []*NotifySendResult {
 
 type UpdateNotifyReq struct {
 	state            protoimpl.MessageState  `protogen:"open.v1"`
-	NotifyID         string                  `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	BizID            string                  `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID"` // Deprecated for update: notifyID is required.
-	Data             map[string]string       `protobuf:"bytes,3,rep,name=data,proto3" json:"data" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	StatusText       string                  `protobuf:"bytes,4,opt,name=statusText,proto3" json:"statusText"`
-	ExpectedRevision int64                   `protobuf:"varint,5,opt,name=expectedRevision,proto3" json:"expectedRevision"`
-	CardJSON         *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=cardJSON,proto3" json:"cardJSON"`
-	DetailJSON       *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON"`
+	NotifyID         string                  `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	BizID            string                  `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID,omitempty"` // Deprecated for update: notifyID is required.
+	Data             map[string]string       `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	StatusText       string                  `protobuf:"bytes,4,opt,name=statusText,proto3" json:"statusText,omitempty"`
+	ExpectedRevision int64                   `protobuf:"varint,5,opt,name=expectedRevision,proto3" json:"expectedRevision,omitempty"`
+	CardJSON         *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
+	DetailJSON       *wrapperspb.StringValue `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *UpdateNotifyReq) Reset() {
 	*x = UpdateNotifyReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[93]
+	mi := &file_workbench_workbench_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6748,7 +6852,7 @@ func (x *UpdateNotifyReq) String() string {
 func (*UpdateNotifyReq) ProtoMessage() {}
 
 func (x *UpdateNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[93]
+	mi := &file_workbench_workbench_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6761,7 +6865,7 @@ func (x *UpdateNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateNotifyReq.ProtoReflect.Descriptor instead.
 func (*UpdateNotifyReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{93}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *UpdateNotifyReq) GetNotifyID() string {
@@ -6815,14 +6919,14 @@ func (x *UpdateNotifyReq) GetDetailJSON() *wrapperspb.StringValue {
 
 type UpdateNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Revision      int64                  `protobuf:"varint,1,opt,name=revision,proto3" json:"revision"`
+	Revision      int64                  `protobuf:"varint,1,opt,name=revision,proto3" json:"revision,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateNotifyResp) Reset() {
 	*x = UpdateNotifyResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[94]
+	mi := &file_workbench_workbench_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6834,7 +6938,7 @@ func (x *UpdateNotifyResp) String() string {
 func (*UpdateNotifyResp) ProtoMessage() {}
 
 func (x *UpdateNotifyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[94]
+	mi := &file_workbench_workbench_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6847,7 +6951,7 @@ func (x *UpdateNotifyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateNotifyResp.ProtoReflect.Descriptor instead.
 func (*UpdateNotifyResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{94}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *UpdateNotifyResp) GetRevision() int64 {
@@ -6859,15 +6963,15 @@ func (x *UpdateNotifyResp) GetRevision() int64 {
 
 type RevokeNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	BizID         string                 `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID"`
+	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	BizID         string                 `protobuf:"bytes,2,opt,name=bizID,proto3" json:"bizID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RevokeNotifyReq) Reset() {
 	*x = RevokeNotifyReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[95]
+	mi := &file_workbench_workbench_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6879,7 +6983,7 @@ func (x *RevokeNotifyReq) String() string {
 func (*RevokeNotifyReq) ProtoMessage() {}
 
 func (x *RevokeNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[95]
+	mi := &file_workbench_workbench_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6892,7 +6996,7 @@ func (x *RevokeNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeNotifyReq.ProtoReflect.Descriptor instead.
 func (*RevokeNotifyReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{95}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *RevokeNotifyReq) GetNotifyID() string {
@@ -6917,7 +7021,7 @@ type RevokeNotifyResp struct {
 
 func (x *RevokeNotifyResp) Reset() {
 	*x = RevokeNotifyResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[96]
+	mi := &file_workbench_workbench_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6929,7 +7033,7 @@ func (x *RevokeNotifyResp) String() string {
 func (*RevokeNotifyResp) ProtoMessage() {}
 
 func (x *RevokeNotifyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[96]
+	mi := &file_workbench_workbench_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6942,20 +7046,20 @@ func (x *RevokeNotifyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeNotifyResp.ProtoReflect.Descriptor instead.
 func (*RevokeNotifyResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{96}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{98}
 }
 
 type QueryNotifyReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyIDs     []string               `protobuf:"bytes,1,rep,name=notifyIDs,proto3" json:"notifyIDs"`
-	BizIDs        []string               `protobuf:"bytes,2,rep,name=bizIDs,proto3" json:"bizIDs"`
+	NotifyIDs     []string               `protobuf:"bytes,1,rep,name=notifyIDs,proto3" json:"notifyIDs,omitempty"`
+	BizIDs        []string               `protobuf:"bytes,2,rep,name=bizIDs,proto3" json:"bizIDs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *QueryNotifyReq) Reset() {
 	*x = QueryNotifyReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[97]
+	mi := &file_workbench_workbench_proto_msgTypes[99]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6967,7 +7071,7 @@ func (x *QueryNotifyReq) String() string {
 func (*QueryNotifyReq) ProtoMessage() {}
 
 func (x *QueryNotifyReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[97]
+	mi := &file_workbench_workbench_proto_msgTypes[99]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6980,7 +7084,7 @@ func (x *QueryNotifyReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryNotifyReq.ProtoReflect.Descriptor instead.
 func (*QueryNotifyReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{97}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *QueryNotifyReq) GetNotifyIDs() []string {
@@ -6999,14 +7103,14 @@ func (x *QueryNotifyReq) GetBizIDs() []string {
 
 type QueryNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Logs          []*NotifyLogInfo       `protobuf:"bytes,1,rep,name=logs,proto3" json:"logs"`
+	Logs          []*NotifyLogInfo       `protobuf:"bytes,1,rep,name=logs,proto3" json:"logs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *QueryNotifyResp) Reset() {
 	*x = QueryNotifyResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[98]
+	mi := &file_workbench_workbench_proto_msgTypes[100]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7018,7 +7122,7 @@ func (x *QueryNotifyResp) String() string {
 func (*QueryNotifyResp) ProtoMessage() {}
 
 func (x *QueryNotifyResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[98]
+	mi := &file_workbench_workbench_proto_msgTypes[100]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7031,7 +7135,7 @@ func (x *QueryNotifyResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryNotifyResp.ProtoReflect.Descriptor instead.
 func (*QueryNotifyResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{98}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{100}
 }
 
 func (x *QueryNotifyResp) GetLogs() []*NotifyLogInfo {
@@ -7043,21 +7147,21 @@ func (x *QueryNotifyResp) GetLogs() []*NotifyLogInfo {
 
 type GetNotifyListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                   `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	ToUserID      string                   `protobuf:"bytes,3,opt,name=toUserID,proto3" json:"toUserID"`
-	Status        int32                    `protobuf:"varint,4,opt,name=status,proto3" json:"status"`
-	StartTime     int64                    `protobuf:"varint,5,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       int64                    `protobuf:"varint,6,opt,name=endTime,proto3" json:"endTime"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,7,opt,name=pagination,proto3" json:"pagination"`
-	SelfOnly      bool                     `protobuf:"varint,8,opt,name=selfOnly,proto3" json:"selfOnly"` // Bound to the current IM user when true
+	TenantID      string                   `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                   `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	ToUserID      string                   `protobuf:"bytes,3,opt,name=toUserID,proto3" json:"toUserID,omitempty"`
+	Status        int32                    `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	StartTime     int64                    `protobuf:"varint,5,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       int64                    `protobuf:"varint,6,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,7,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	SelfOnly      bool                     `protobuf:"varint,8,opt,name=selfOnly,proto3" json:"selfOnly,omitempty"` // Bound to the current IM user when true
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyListReq) Reset() {
 	*x = GetNotifyListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[99]
+	mi := &file_workbench_workbench_proto_msgTypes[101]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7069,7 +7173,7 @@ func (x *GetNotifyListReq) String() string {
 func (*GetNotifyListReq) ProtoMessage() {}
 
 func (x *GetNotifyListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[99]
+	mi := &file_workbench_workbench_proto_msgTypes[101]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7082,7 +7186,7 @@ func (x *GetNotifyListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyListReq.ProtoReflect.Descriptor instead.
 func (*GetNotifyListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{99}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{101}
 }
 
 func (x *GetNotifyListReq) GetTenantID() string {
@@ -7143,15 +7247,15 @@ func (x *GetNotifyListReq) GetSelfOnly() bool {
 
 type GetNotifyListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Logs          []*NotifyLogInfo       `protobuf:"bytes,2,rep,name=logs,proto3" json:"logs"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Logs          []*NotifyLogInfo       `protobuf:"bytes,2,rep,name=logs,proto3" json:"logs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyListResp) Reset() {
 	*x = GetNotifyListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[100]
+	mi := &file_workbench_workbench_proto_msgTypes[102]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7163,7 +7267,7 @@ func (x *GetNotifyListResp) String() string {
 func (*GetNotifyListResp) ProtoMessage() {}
 
 func (x *GetNotifyListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[100]
+	mi := &file_workbench_workbench_proto_msgTypes[102]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7176,7 +7280,7 @@ func (x *GetNotifyListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyListResp.ProtoReflect.Descriptor instead.
 func (*GetNotifyListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{100}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{102}
 }
 
 func (x *GetNotifyListResp) GetTotal() int64 {
@@ -7195,17 +7299,17 @@ func (x *GetNotifyListResp) GetLogs() []*NotifyLogInfo {
 
 type GetNotifyStatsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	StartTime     int64                  `protobuf:"varint,3,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       int64                  `protobuf:"varint,4,opt,name=endTime,proto3" json:"endTime"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	StartTime     int64                  `protobuf:"varint,3,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       int64                  `protobuf:"varint,4,opt,name=endTime,proto3" json:"endTime,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyStatsReq) Reset() {
 	*x = GetNotifyStatsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[101]
+	mi := &file_workbench_workbench_proto_msgTypes[103]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7217,7 +7321,7 @@ func (x *GetNotifyStatsReq) String() string {
 func (*GetNotifyStatsReq) ProtoMessage() {}
 
 func (x *GetNotifyStatsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[101]
+	mi := &file_workbench_workbench_proto_msgTypes[103]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7230,7 +7334,7 @@ func (x *GetNotifyStatsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyStatsReq.ProtoReflect.Descriptor instead.
 func (*GetNotifyStatsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{101}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{103}
 }
 
 func (x *GetNotifyStatsReq) GetTenantID() string {
@@ -7263,16 +7367,16 @@ func (x *GetNotifyStatsReq) GetEndTime() int64 {
 
 type GetNotifyStatsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TotalSent     int64                  `protobuf:"varint,1,opt,name=totalSent,proto3" json:"totalSent"`
-	TotalRead     int64                  `protobuf:"varint,2,opt,name=totalRead,proto3" json:"totalRead"`
-	ReadRate      float64                `protobuf:"fixed64,3,opt,name=readRate,proto3" json:"readRate"`
+	TotalSent     int64                  `protobuf:"varint,1,opt,name=totalSent,proto3" json:"totalSent,omitempty"`
+	TotalRead     int64                  `protobuf:"varint,2,opt,name=totalRead,proto3" json:"totalRead,omitempty"`
+	ReadRate      float64                `protobuf:"fixed64,3,opt,name=readRate,proto3" json:"readRate,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyStatsResp) Reset() {
 	*x = GetNotifyStatsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[102]
+	mi := &file_workbench_workbench_proto_msgTypes[104]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7284,7 +7388,7 @@ func (x *GetNotifyStatsResp) String() string {
 func (*GetNotifyStatsResp) ProtoMessage() {}
 
 func (x *GetNotifyStatsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[102]
+	mi := &file_workbench_workbench_proto_msgTypes[104]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7297,7 +7401,7 @@ func (x *GetNotifyStatsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyStatsResp.ProtoReflect.Descriptor instead.
 func (*GetNotifyStatsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{102}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{104}
 }
 
 func (x *GetNotifyStatsResp) GetTotalSent() int64 {
@@ -7323,14 +7427,14 @@ func (x *GetNotifyStatsResp) GetReadRate() float64 {
 
 type CreateCredentialReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateCredentialReq) Reset() {
 	*x = CreateCredentialReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[103]
+	mi := &file_workbench_workbench_proto_msgTypes[105]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7342,7 +7446,7 @@ func (x *CreateCredentialReq) String() string {
 func (*CreateCredentialReq) ProtoMessage() {}
 
 func (x *CreateCredentialReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[103]
+	mi := &file_workbench_workbench_proto_msgTypes[105]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7355,7 +7459,7 @@ func (x *CreateCredentialReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCredentialReq.ProtoReflect.Descriptor instead.
 func (*CreateCredentialReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{103}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{105}
 }
 
 func (x *CreateCredentialReq) GetAppID() string {
@@ -7367,15 +7471,15 @@ func (x *CreateCredentialReq) GetAppID() string {
 
 type CreateCredentialResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey"`
-	AppSecret     string                 `protobuf:"bytes,2,opt,name=appSecret,proto3" json:"appSecret"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	AppSecret     string                 `protobuf:"bytes,2,opt,name=appSecret,proto3" json:"appSecret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateCredentialResp) Reset() {
 	*x = CreateCredentialResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[104]
+	mi := &file_workbench_workbench_proto_msgTypes[106]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7387,7 +7491,7 @@ func (x *CreateCredentialResp) String() string {
 func (*CreateCredentialResp) ProtoMessage() {}
 
 func (x *CreateCredentialResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[104]
+	mi := &file_workbench_workbench_proto_msgTypes[106]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7400,7 +7504,7 @@ func (x *CreateCredentialResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCredentialResp.ProtoReflect.Descriptor instead.
 func (*CreateCredentialResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{104}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *CreateCredentialResp) GetAppKey() string {
@@ -7419,14 +7523,14 @@ func (x *CreateCredentialResp) GetAppSecret() string {
 
 type ResetSecretReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ResetSecretReq) Reset() {
 	*x = ResetSecretReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[105]
+	mi := &file_workbench_workbench_proto_msgTypes[107]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7438,7 +7542,7 @@ func (x *ResetSecretReq) String() string {
 func (*ResetSecretReq) ProtoMessage() {}
 
 func (x *ResetSecretReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[105]
+	mi := &file_workbench_workbench_proto_msgTypes[107]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7451,7 +7555,7 @@ func (x *ResetSecretReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetSecretReq.ProtoReflect.Descriptor instead.
 func (*ResetSecretReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{105}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{107}
 }
 
 func (x *ResetSecretReq) GetAppID() string {
@@ -7463,14 +7567,14 @@ func (x *ResetSecretReq) GetAppID() string {
 
 type ResetSecretResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppSecret     string                 `protobuf:"bytes,1,opt,name=appSecret,proto3" json:"appSecret"`
+	AppSecret     string                 `protobuf:"bytes,1,opt,name=appSecret,proto3" json:"appSecret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ResetSecretResp) Reset() {
 	*x = ResetSecretResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[106]
+	mi := &file_workbench_workbench_proto_msgTypes[108]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7482,7 +7586,7 @@ func (x *ResetSecretResp) String() string {
 func (*ResetSecretResp) ProtoMessage() {}
 
 func (x *ResetSecretResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[106]
+	mi := &file_workbench_workbench_proto_msgTypes[108]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7495,7 +7599,7 @@ func (x *ResetSecretResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResetSecretResp.ProtoReflect.Descriptor instead.
 func (*ResetSecretResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{106}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{108}
 }
 
 func (x *ResetSecretResp) GetAppSecret() string {
@@ -7507,14 +7611,14 @@ func (x *ResetSecretResp) GetAppSecret() string {
 
 type GetCredentialReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetCredentialReq) Reset() {
 	*x = GetCredentialReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[107]
+	mi := &file_workbench_workbench_proto_msgTypes[109]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7526,7 +7630,7 @@ func (x *GetCredentialReq) String() string {
 func (*GetCredentialReq) ProtoMessage() {}
 
 func (x *GetCredentialReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[107]
+	mi := &file_workbench_workbench_proto_msgTypes[109]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7539,7 +7643,7 @@ func (x *GetCredentialReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCredentialReq.ProtoReflect.Descriptor instead.
 func (*GetCredentialReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{107}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{109}
 }
 
 func (x *GetCredentialReq) GetAppID() string {
@@ -7551,14 +7655,14 @@ func (x *GetCredentialReq) GetAppID() string {
 
 type GetCredentialResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Credential    *AppCredentialInfo     `protobuf:"bytes,1,opt,name=credential,proto3" json:"credential"`
+	Credential    *AppCredentialInfo     `protobuf:"bytes,1,opt,name=credential,proto3" json:"credential,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetCredentialResp) Reset() {
 	*x = GetCredentialResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[108]
+	mi := &file_workbench_workbench_proto_msgTypes[110]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7570,7 +7674,7 @@ func (x *GetCredentialResp) String() string {
 func (*GetCredentialResp) ProtoMessage() {}
 
 func (x *GetCredentialResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[108]
+	mi := &file_workbench_workbench_proto_msgTypes[110]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7583,7 +7687,7 @@ func (x *GetCredentialResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCredentialResp.ProtoReflect.Descriptor instead.
 func (*GetCredentialResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{108}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{110}
 }
 
 func (x *GetCredentialResp) GetCredential() *AppCredentialInfo {
@@ -7595,15 +7699,15 @@ func (x *GetCredentialResp) GetCredential() *AppCredentialInfo {
 
 type SetIPWhitelistReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	IpList        []string               `protobuf:"bytes,2,rep,name=ipList,proto3" json:"ipList"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	IpList        []string               `protobuf:"bytes,2,rep,name=ipList,proto3" json:"ipList,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SetIPWhitelistReq) Reset() {
 	*x = SetIPWhitelistReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[109]
+	mi := &file_workbench_workbench_proto_msgTypes[111]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7615,7 +7719,7 @@ func (x *SetIPWhitelistReq) String() string {
 func (*SetIPWhitelistReq) ProtoMessage() {}
 
 func (x *SetIPWhitelistReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[109]
+	mi := &file_workbench_workbench_proto_msgTypes[111]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7628,7 +7732,7 @@ func (x *SetIPWhitelistReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetIPWhitelistReq.ProtoReflect.Descriptor instead.
 func (*SetIPWhitelistReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{109}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{111}
 }
 
 func (x *SetIPWhitelistReq) GetAppID() string {
@@ -7653,7 +7757,7 @@ type SetIPWhitelistResp struct {
 
 func (x *SetIPWhitelistResp) Reset() {
 	*x = SetIPWhitelistResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[110]
+	mi := &file_workbench_workbench_proto_msgTypes[112]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7665,7 +7769,7 @@ func (x *SetIPWhitelistResp) String() string {
 func (*SetIPWhitelistResp) ProtoMessage() {}
 
 func (x *SetIPWhitelistResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[110]
+	mi := &file_workbench_workbench_proto_msgTypes[112]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7678,20 +7782,20 @@ func (x *SetIPWhitelistResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetIPWhitelistResp.ProtoReflect.Descriptor instead.
 func (*SetIPWhitelistResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{110}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{112}
 }
 
 type GetAccessTokenReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppKey        string                 `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey"`
-	AppSecret     string                 `protobuf:"bytes,2,opt,name=appSecret,proto3" json:"appSecret"`
+	AppKey        string                 `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	AppSecret     string                 `protobuf:"bytes,2,opt,name=appSecret,proto3" json:"appSecret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAccessTokenReq) Reset() {
 	*x = GetAccessTokenReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[111]
+	mi := &file_workbench_workbench_proto_msgTypes[113]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7703,7 +7807,7 @@ func (x *GetAccessTokenReq) String() string {
 func (*GetAccessTokenReq) ProtoMessage() {}
 
 func (x *GetAccessTokenReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[111]
+	mi := &file_workbench_workbench_proto_msgTypes[113]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7716,7 +7820,7 @@ func (x *GetAccessTokenReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccessTokenReq.ProtoReflect.Descriptor instead.
 func (*GetAccessTokenReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{111}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{113}
 }
 
 func (x *GetAccessTokenReq) GetAppKey() string {
@@ -7735,15 +7839,15 @@ func (x *GetAccessTokenReq) GetAppSecret() string {
 
 type GetAccessTokenResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken"`
-	ExpiresIn     int64                  `protobuf:"varint,2,opt,name=expiresIn,proto3" json:"expiresIn"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	ExpiresIn     int64                  `protobuf:"varint,2,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAccessTokenResp) Reset() {
 	*x = GetAccessTokenResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[112]
+	mi := &file_workbench_workbench_proto_msgTypes[114]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7755,7 +7859,7 @@ func (x *GetAccessTokenResp) String() string {
 func (*GetAccessTokenResp) ProtoMessage() {}
 
 func (x *GetAccessTokenResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[112]
+	mi := &file_workbench_workbench_proto_msgTypes[114]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7768,7 +7872,7 @@ func (x *GetAccessTokenResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccessTokenResp.ProtoReflect.Descriptor instead.
 func (*GetAccessTokenResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{112}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{114}
 }
 
 func (x *GetAccessTokenResp) GetAccessToken() string {
@@ -7787,16 +7891,16 @@ func (x *GetAccessTokenResp) GetExpiresIn() int64 {
 
 type AuthorizeAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	Scopes        []string               `protobuf:"bytes,3,rep,name=scopes,proto3" json:"scopes"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	Scopes        []string               `protobuf:"bytes,3,rep,name=scopes,proto3" json:"scopes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AuthorizeAppReq) Reset() {
 	*x = AuthorizeAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[113]
+	mi := &file_workbench_workbench_proto_msgTypes[115]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7808,7 +7912,7 @@ func (x *AuthorizeAppReq) String() string {
 func (*AuthorizeAppReq) ProtoMessage() {}
 
 func (x *AuthorizeAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[113]
+	mi := &file_workbench_workbench_proto_msgTypes[115]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7821,7 +7925,7 @@ func (x *AuthorizeAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthorizeAppReq.ProtoReflect.Descriptor instead.
 func (*AuthorizeAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{113}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{115}
 }
 
 func (x *AuthorizeAppReq) GetTenantID() string {
@@ -7853,7 +7957,7 @@ type AuthorizeAppResp struct {
 
 func (x *AuthorizeAppResp) Reset() {
 	*x = AuthorizeAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[114]
+	mi := &file_workbench_workbench_proto_msgTypes[116]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7865,7 +7969,7 @@ func (x *AuthorizeAppResp) String() string {
 func (*AuthorizeAppResp) ProtoMessage() {}
 
 func (x *AuthorizeAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[114]
+	mi := &file_workbench_workbench_proto_msgTypes[116]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7878,20 +7982,20 @@ func (x *AuthorizeAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthorizeAppResp.ProtoReflect.Descriptor instead.
 func (*AuthorizeAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{114}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{116}
 }
 
 type RevokeAuthReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RevokeAuthReq) Reset() {
 	*x = RevokeAuthReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[115]
+	mi := &file_workbench_workbench_proto_msgTypes[117]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7903,7 +8007,7 @@ func (x *RevokeAuthReq) String() string {
 func (*RevokeAuthReq) ProtoMessage() {}
 
 func (x *RevokeAuthReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[115]
+	mi := &file_workbench_workbench_proto_msgTypes[117]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7916,7 +8020,7 @@ func (x *RevokeAuthReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeAuthReq.ProtoReflect.Descriptor instead.
 func (*RevokeAuthReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{115}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{117}
 }
 
 func (x *RevokeAuthReq) GetTenantID() string {
@@ -7941,7 +8045,7 @@ type RevokeAuthResp struct {
 
 func (x *RevokeAuthResp) Reset() {
 	*x = RevokeAuthResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[116]
+	mi := &file_workbench_workbench_proto_msgTypes[118]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7953,7 +8057,7 @@ func (x *RevokeAuthResp) String() string {
 func (*RevokeAuthResp) ProtoMessage() {}
 
 func (x *RevokeAuthResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[116]
+	mi := &file_workbench_workbench_proto_msgTypes[118]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7966,20 +8070,20 @@ func (x *RevokeAuthResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeAuthResp.ProtoReflect.Descriptor instead.
 func (*RevokeAuthResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{116}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{118}
 }
 
 type GetAuthDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAuthDetailReq) Reset() {
 	*x = GetAuthDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[117]
+	mi := &file_workbench_workbench_proto_msgTypes[119]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7991,7 +8095,7 @@ func (x *GetAuthDetailReq) String() string {
 func (*GetAuthDetailReq) ProtoMessage() {}
 
 func (x *GetAuthDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[117]
+	mi := &file_workbench_workbench_proto_msgTypes[119]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8004,7 +8108,7 @@ func (x *GetAuthDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAuthDetailReq.ProtoReflect.Descriptor instead.
 func (*GetAuthDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{117}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{119}
 }
 
 func (x *GetAuthDetailReq) GetTenantID() string {
@@ -8023,14 +8127,14 @@ func (x *GetAuthDetailReq) GetAppID() string {
 
 type GetAuthDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Auth          *OAuthAuthInfo         `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth"`
+	Auth          *OAuthAuthInfo         `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetAuthDetailResp) Reset() {
 	*x = GetAuthDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[118]
+	mi := &file_workbench_workbench_proto_msgTypes[120]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8042,7 +8146,7 @@ func (x *GetAuthDetailResp) String() string {
 func (*GetAuthDetailResp) ProtoMessage() {}
 
 func (x *GetAuthDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[118]
+	mi := &file_workbench_workbench_proto_msgTypes[120]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8055,7 +8159,7 @@ func (x *GetAuthDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAuthDetailResp.ProtoReflect.Descriptor instead.
 func (*GetAuthDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{118}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{120}
 }
 
 func (x *GetAuthDetailResp) GetAuth() *OAuthAuthInfo {
@@ -8067,15 +8171,15 @@ func (x *GetAuthDetailResp) GetAuth() *OAuthAuthInfo {
 
 type CreateTicketReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateTicketReq) Reset() {
 	*x = CreateTicketReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[119]
+	mi := &file_workbench_workbench_proto_msgTypes[121]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8087,7 +8191,7 @@ func (x *CreateTicketReq) String() string {
 func (*CreateTicketReq) ProtoMessage() {}
 
 func (x *CreateTicketReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[119]
+	mi := &file_workbench_workbench_proto_msgTypes[121]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8100,7 +8204,7 @@ func (x *CreateTicketReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTicketReq.ProtoReflect.Descriptor instead.
 func (*CreateTicketReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{119}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{121}
 }
 
 func (x *CreateTicketReq) GetAppID() string {
@@ -8119,15 +8223,15 @@ func (x *CreateTicketReq) GetUserID() string {
 
 type CreateTicketResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket"`
-	ExpiresIn     int64                  `protobuf:"varint,2,opt,name=expiresIn,proto3" json:"expiresIn"`
+	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	ExpiresIn     int64                  `protobuf:"varint,2,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateTicketResp) Reset() {
 	*x = CreateTicketResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[120]
+	mi := &file_workbench_workbench_proto_msgTypes[122]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8139,7 +8243,7 @@ func (x *CreateTicketResp) String() string {
 func (*CreateTicketResp) ProtoMessage() {}
 
 func (x *CreateTicketResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[120]
+	mi := &file_workbench_workbench_proto_msgTypes[122]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8152,7 +8256,7 @@ func (x *CreateTicketResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTicketResp.ProtoReflect.Descriptor instead.
 func (*CreateTicketResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{120}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{122}
 }
 
 func (x *CreateTicketResp) GetTicket() string {
@@ -8171,17 +8275,17 @@ func (x *CreateTicketResp) GetExpiresIn() int64 {
 
 type GetUserByTicketReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	RedirectURI   string                 `protobuf:"bytes,3,opt,name=redirectURI,proto3" json:"redirectURI"`
-	CodeVerifier  string                 `protobuf:"bytes,4,opt,name=codeVerifier,proto3" json:"codeVerifier"`
+	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	RedirectURI   string                 `protobuf:"bytes,3,opt,name=redirectURI,proto3" json:"redirectURI,omitempty"`
+	CodeVerifier  string                 `protobuf:"bytes,4,opt,name=codeVerifier,proto3" json:"codeVerifier,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserByTicketReq) Reset() {
 	*x = GetUserByTicketReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[121]
+	mi := &file_workbench_workbench_proto_msgTypes[123]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8193,7 +8297,7 @@ func (x *GetUserByTicketReq) String() string {
 func (*GetUserByTicketReq) ProtoMessage() {}
 
 func (x *GetUserByTicketReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[121]
+	mi := &file_workbench_workbench_proto_msgTypes[123]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8206,7 +8310,7 @@ func (x *GetUserByTicketReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByTicketReq.ProtoReflect.Descriptor instead.
 func (*GetUserByTicketReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{121}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{123}
 }
 
 func (x *GetUserByTicketReq) GetTicket() string {
@@ -8239,19 +8343,19 @@ func (x *GetUserByTicketReq) GetCodeVerifier() string {
 
 type GetUserByTicketResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname"`
-	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL"`
-	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone"`
-	TenantID      string                 `protobuf:"bytes,5,opt,name=tenantID,proto3" json:"tenantID"`
-	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL,omitempty"`
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	TenantID      string                 `protobuf:"bytes,5,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetUserByTicketResp) Reset() {
 	*x = GetUserByTicketResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[122]
+	mi := &file_workbench_workbench_proto_msgTypes[124]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8263,7 +8367,7 @@ func (x *GetUserByTicketResp) String() string {
 func (*GetUserByTicketResp) ProtoMessage() {}
 
 func (x *GetUserByTicketResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[122]
+	mi := &file_workbench_workbench_proto_msgTypes[124]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8276,7 +8380,7 @@ func (x *GetUserByTicketResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByTicketResp.ProtoReflect.Descriptor instead.
 func (*GetUserByTicketResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{122}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{124}
 }
 
 func (x *GetUserByTicketResp) GetUserID() string {
@@ -8323,22 +8427,22 @@ func (x *GetUserByTicketResp) GetEmail() string {
 
 type RegisterDeveloperReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name"`
-	Type           int32                  `protobuf:"varint,2,opt,name=type,proto3" json:"type"` // 1个人/2企业
-	ContactEmail   string                 `protobuf:"bytes,3,opt,name=contactEmail,proto3" json:"contactEmail"`
-	Password       string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password"`
-	CompanyName    string                 `protobuf:"bytes,5,opt,name=companyName,proto3" json:"companyName"`
-	LicenseURL     string                 `protobuf:"bytes,6,opt,name=licenseURL,proto3" json:"licenseURL"`
-	Description    string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description"`
-	LinkedUserID   string                 `protobuf:"bytes,8,opt,name=linkedUserID,proto3" json:"linkedUserID"` // 关联IM用户(企业开发者)
-	LinkedTenantID string                 `protobuf:"bytes,9,opt,name=linkedTenantID,proto3" json:"linkedTenantID"`
+	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Type           int32                  `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"` // 1个人/2企业
+	ContactEmail   string                 `protobuf:"bytes,3,opt,name=contactEmail,proto3" json:"contactEmail,omitempty"`
+	Password       string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	CompanyName    string                 `protobuf:"bytes,5,opt,name=companyName,proto3" json:"companyName,omitempty"`
+	LicenseURL     string                 `protobuf:"bytes,6,opt,name=licenseURL,proto3" json:"licenseURL,omitempty"`
+	Description    string                 `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	LinkedUserID   string                 `protobuf:"bytes,8,opt,name=linkedUserID,proto3" json:"linkedUserID,omitempty"` // 关联IM用户(企业开发者)
+	LinkedTenantID string                 `protobuf:"bytes,9,opt,name=linkedTenantID,proto3" json:"linkedTenantID,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *RegisterDeveloperReq) Reset() {
 	*x = RegisterDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[123]
+	mi := &file_workbench_workbench_proto_msgTypes[125]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8350,7 +8454,7 @@ func (x *RegisterDeveloperReq) String() string {
 func (*RegisterDeveloperReq) ProtoMessage() {}
 
 func (x *RegisterDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[123]
+	mi := &file_workbench_workbench_proto_msgTypes[125]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8363,7 +8467,7 @@ func (x *RegisterDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterDeveloperReq.ProtoReflect.Descriptor instead.
 func (*RegisterDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{123}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{125}
 }
 
 func (x *RegisterDeveloperReq) GetName() string {
@@ -8431,14 +8535,14 @@ func (x *RegisterDeveloperReq) GetLinkedTenantID() string {
 
 type RegisterDeveloperResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
+	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RegisterDeveloperResp) Reset() {
 	*x = RegisterDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[124]
+	mi := &file_workbench_workbench_proto_msgTypes[126]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8450,7 +8554,7 @@ func (x *RegisterDeveloperResp) String() string {
 func (*RegisterDeveloperResp) ProtoMessage() {}
 
 func (x *RegisterDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[124]
+	mi := &file_workbench_workbench_proto_msgTypes[126]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8463,7 +8567,7 @@ func (x *RegisterDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterDeveloperResp.ProtoReflect.Descriptor instead.
 func (*RegisterDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{124}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{126}
 }
 
 func (x *RegisterDeveloperResp) GetDeveloperID() string {
@@ -8475,15 +8579,15 @@ func (x *RegisterDeveloperResp) GetDeveloperID() string {
 
 type LoginDeveloperReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LoginDeveloperReq) Reset() {
 	*x = LoginDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[125]
+	mi := &file_workbench_workbench_proto_msgTypes[127]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8495,7 +8599,7 @@ func (x *LoginDeveloperReq) String() string {
 func (*LoginDeveloperReq) ProtoMessage() {}
 
 func (x *LoginDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[125]
+	mi := &file_workbench_workbench_proto_msgTypes[127]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8508,7 +8612,7 @@ func (x *LoginDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginDeveloperReq.ProtoReflect.Descriptor instead.
 func (*LoginDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{125}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{127}
 }
 
 func (x *LoginDeveloperReq) GetEmail() string {
@@ -8527,15 +8631,15 @@ func (x *LoginDeveloperReq) GetPassword() string {
 
 type LoginDeveloperResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token"`
-	Developer     *DeveloperInfo         `protobuf:"bytes,2,opt,name=developer,proto3" json:"developer"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Developer     *DeveloperInfo         `protobuf:"bytes,2,opt,name=developer,proto3" json:"developer,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LoginDeveloperResp) Reset() {
 	*x = LoginDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[126]
+	mi := &file_workbench_workbench_proto_msgTypes[128]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8547,7 +8651,7 @@ func (x *LoginDeveloperResp) String() string {
 func (*LoginDeveloperResp) ProtoMessage() {}
 
 func (x *LoginDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[126]
+	mi := &file_workbench_workbench_proto_msgTypes[128]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8560,7 +8664,7 @@ func (x *LoginDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginDeveloperResp.ProtoReflect.Descriptor instead.
 func (*LoginDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{126}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{128}
 }
 
 func (x *LoginDeveloperResp) GetToken() string {
@@ -8579,18 +8683,18 @@ func (x *LoginDeveloperResp) GetDeveloper() *DeveloperInfo {
 
 type UpdateDeveloperReq struct {
 	state         protoimpl.MessageState  `protogen:"open.v1"`
-	DeveloperID   string                  `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
-	Name          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	ContactEmail  *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=contactEmail,proto3" json:"contactEmail"`
-	ContactPhone  *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=contactPhone,proto3" json:"contactPhone"`
-	Description   *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=description,proto3" json:"description"`
+	DeveloperID   string                  `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	Name          *wrapperspb.StringValue `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ContactEmail  *wrapperspb.StringValue `protobuf:"bytes,3,opt,name=contactEmail,proto3" json:"contactEmail,omitempty"`
+	ContactPhone  *wrapperspb.StringValue `protobuf:"bytes,4,opt,name=contactPhone,proto3" json:"contactPhone,omitempty"`
+	Description   *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateDeveloperReq) Reset() {
 	*x = UpdateDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[127]
+	mi := &file_workbench_workbench_proto_msgTypes[129]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8602,7 +8706,7 @@ func (x *UpdateDeveloperReq) String() string {
 func (*UpdateDeveloperReq) ProtoMessage() {}
 
 func (x *UpdateDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[127]
+	mi := &file_workbench_workbench_proto_msgTypes[129]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8615,7 +8719,7 @@ func (x *UpdateDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeveloperReq.ProtoReflect.Descriptor instead.
 func (*UpdateDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{127}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{129}
 }
 
 func (x *UpdateDeveloperReq) GetDeveloperID() string {
@@ -8661,7 +8765,7 @@ type UpdateDeveloperResp struct {
 
 func (x *UpdateDeveloperResp) Reset() {
 	*x = UpdateDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[128]
+	mi := &file_workbench_workbench_proto_msgTypes[130]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8673,7 +8777,7 @@ func (x *UpdateDeveloperResp) String() string {
 func (*UpdateDeveloperResp) ProtoMessage() {}
 
 func (x *UpdateDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[128]
+	mi := &file_workbench_workbench_proto_msgTypes[130]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8686,22 +8790,22 @@ func (x *UpdateDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeveloperResp.ProtoReflect.Descriptor instead.
 func (*UpdateDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{128}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{130}
 }
 
 type GetDeveloperListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Status        int32                    `protobuf:"varint,1,opt,name=status,proto3" json:"status"`
-	Type          int32                    `protobuf:"varint,2,opt,name=type,proto3" json:"type"`
-	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`
+	Status        int32                    `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Type          int32                    `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"`
+	Keyword       string                   `protobuf:"bytes,3,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetDeveloperListReq) Reset() {
 	*x = GetDeveloperListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[129]
+	mi := &file_workbench_workbench_proto_msgTypes[131]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8713,7 +8817,7 @@ func (x *GetDeveloperListReq) String() string {
 func (*GetDeveloperListReq) ProtoMessage() {}
 
 func (x *GetDeveloperListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[129]
+	mi := &file_workbench_workbench_proto_msgTypes[131]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8726,7 +8830,7 @@ func (x *GetDeveloperListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperListReq.ProtoReflect.Descriptor instead.
 func (*GetDeveloperListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{129}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{131}
 }
 
 func (x *GetDeveloperListReq) GetStatus() int32 {
@@ -8759,15 +8863,15 @@ func (x *GetDeveloperListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetDeveloperListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Developers    []*DeveloperInfo       `protobuf:"bytes,2,rep,name=developers,proto3" json:"developers"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Developers    []*DeveloperInfo       `protobuf:"bytes,2,rep,name=developers,proto3" json:"developers,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetDeveloperListResp) Reset() {
 	*x = GetDeveloperListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[130]
+	mi := &file_workbench_workbench_proto_msgTypes[132]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8779,7 +8883,7 @@ func (x *GetDeveloperListResp) String() string {
 func (*GetDeveloperListResp) ProtoMessage() {}
 
 func (x *GetDeveloperListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[130]
+	mi := &file_workbench_workbench_proto_msgTypes[132]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8792,7 +8896,7 @@ func (x *GetDeveloperListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperListResp.ProtoReflect.Descriptor instead.
 func (*GetDeveloperListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{130}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{132}
 }
 
 func (x *GetDeveloperListResp) GetTotal() int64 {
@@ -8811,16 +8915,16 @@ func (x *GetDeveloperListResp) GetDevelopers() []*DeveloperInfo {
 
 type ReviewDeveloperReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
-	Action        int32                  `protobuf:"varint,2,opt,name=action,proto3" json:"action"` // ReviewAction
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note"`
+	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	Action        int32                  `protobuf:"varint,2,opt,name=action,proto3" json:"action,omitempty"` // ReviewAction
+	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ReviewDeveloperReq) Reset() {
 	*x = ReviewDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[131]
+	mi := &file_workbench_workbench_proto_msgTypes[133]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8832,7 +8936,7 @@ func (x *ReviewDeveloperReq) String() string {
 func (*ReviewDeveloperReq) ProtoMessage() {}
 
 func (x *ReviewDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[131]
+	mi := &file_workbench_workbench_proto_msgTypes[133]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8845,7 +8949,7 @@ func (x *ReviewDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewDeveloperReq.ProtoReflect.Descriptor instead.
 func (*ReviewDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{131}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{133}
 }
 
 func (x *ReviewDeveloperReq) GetDeveloperID() string {
@@ -8877,7 +8981,7 @@ type ReviewDeveloperResp struct {
 
 func (x *ReviewDeveloperResp) Reset() {
 	*x = ReviewDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[132]
+	mi := &file_workbench_workbench_proto_msgTypes[134]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8889,7 +8993,7 @@ func (x *ReviewDeveloperResp) String() string {
 func (*ReviewDeveloperResp) ProtoMessage() {}
 
 func (x *ReviewDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[132]
+	mi := &file_workbench_workbench_proto_msgTypes[134]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8902,19 +9006,19 @@ func (x *ReviewDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewDeveloperResp.ProtoReflect.Descriptor instead.
 func (*ReviewDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{132}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{134}
 }
 
 type DisableDeveloperReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
+	DeveloperID   string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DisableDeveloperReq) Reset() {
 	*x = DisableDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[133]
+	mi := &file_workbench_workbench_proto_msgTypes[135]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8926,7 +9030,7 @@ func (x *DisableDeveloperReq) String() string {
 func (*DisableDeveloperReq) ProtoMessage() {}
 
 func (x *DisableDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[133]
+	mi := &file_workbench_workbench_proto_msgTypes[135]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8939,7 +9043,7 @@ func (x *DisableDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableDeveloperReq.ProtoReflect.Descriptor instead.
 func (*DisableDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{133}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{135}
 }
 
 func (x *DisableDeveloperReq) GetDeveloperID() string {
@@ -8957,7 +9061,7 @@ type DisableDeveloperResp struct {
 
 func (x *DisableDeveloperResp) Reset() {
 	*x = DisableDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[134]
+	mi := &file_workbench_workbench_proto_msgTypes[136]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8969,7 +9073,7 @@ func (x *DisableDeveloperResp) String() string {
 func (*DisableDeveloperResp) ProtoMessage() {}
 
 func (x *DisableDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[134]
+	mi := &file_workbench_workbench_proto_msgTypes[136]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8982,28 +9086,28 @@ func (x *DisableDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableDeveloperResp.ProtoReflect.Descriptor instead.
 func (*DisableDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{134}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{136}
 }
 
 type CreateDeveloperAppReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	DeveloperID      string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
-	Name             string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	Icon             string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon"`
-	Description      string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description"`
-	AppType          int32                  `protobuf:"varint,5,opt,name=appType,proto3" json:"appType"`
-	Url              string                 `protobuf:"bytes,6,opt,name=url,proto3" json:"url"`
-	OpenMethod       int32                  `protobuf:"varint,7,opt,name=openMethod,proto3" json:"openMethod"`
-	CategoryID       string                 `protobuf:"bytes,8,opt,name=categoryID,proto3" json:"categoryID"`
-	Screenshots      []string               `protobuf:"bytes,9,rep,name=screenshots,proto3" json:"screenshots"`
-	PrivacyPolicyURL string                 `protobuf:"bytes,10,opt,name=privacyPolicyURL,proto3" json:"privacyPolicyURL"`
+	DeveloperID      string                 `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	Name             string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Icon             string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	Description      string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	AppType          int32                  `protobuf:"varint,5,opt,name=appType,proto3" json:"appType,omitempty"`
+	Url              string                 `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`
+	OpenMethod       int32                  `protobuf:"varint,7,opt,name=openMethod,proto3" json:"openMethod,omitempty"`
+	CategoryID       string                 `protobuf:"bytes,8,opt,name=categoryID,proto3" json:"categoryID,omitempty"`
+	Screenshots      []string               `protobuf:"bytes,9,rep,name=screenshots,proto3" json:"screenshots,omitempty"`
+	PrivacyPolicyURL string                 `protobuf:"bytes,10,opt,name=privacyPolicyURL,proto3" json:"privacyPolicyURL,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *CreateDeveloperAppReq) Reset() {
 	*x = CreateDeveloperAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[135]
+	mi := &file_workbench_workbench_proto_msgTypes[137]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9015,7 +9119,7 @@ func (x *CreateDeveloperAppReq) String() string {
 func (*CreateDeveloperAppReq) ProtoMessage() {}
 
 func (x *CreateDeveloperAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[135]
+	mi := &file_workbench_workbench_proto_msgTypes[137]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9028,7 +9132,7 @@ func (x *CreateDeveloperAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeveloperAppReq.ProtoReflect.Descriptor instead.
 func (*CreateDeveloperAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{135}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{137}
 }
 
 func (x *CreateDeveloperAppReq) GetDeveloperID() string {
@@ -9103,14 +9207,14 @@ func (x *CreateDeveloperAppReq) GetPrivacyPolicyURL() string {
 
 type CreateDeveloperAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateDeveloperAppResp) Reset() {
 	*x = CreateDeveloperAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[136]
+	mi := &file_workbench_workbench_proto_msgTypes[138]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9122,7 +9226,7 @@ func (x *CreateDeveloperAppResp) String() string {
 func (*CreateDeveloperAppResp) ProtoMessage() {}
 
 func (x *CreateDeveloperAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[136]
+	mi := &file_workbench_workbench_proto_msgTypes[138]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9135,7 +9239,7 @@ func (x *CreateDeveloperAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeveloperAppResp.ProtoReflect.Descriptor instead.
 func (*CreateDeveloperAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{136}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{138}
 }
 
 func (x *CreateDeveloperAppResp) GetAppID() string {
@@ -9147,16 +9251,16 @@ func (x *CreateDeveloperAppResp) GetAppID() string {
 
 type SubmitAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version"`
-	Changelog     string                 `protobuf:"bytes,3,opt,name=changelog,proto3" json:"changelog"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
+	Changelog     string                 `protobuf:"bytes,3,opt,name=changelog,proto3" json:"changelog,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SubmitAppReq) Reset() {
 	*x = SubmitAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[137]
+	mi := &file_workbench_workbench_proto_msgTypes[139]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9168,7 +9272,7 @@ func (x *SubmitAppReq) String() string {
 func (*SubmitAppReq) ProtoMessage() {}
 
 func (x *SubmitAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[137]
+	mi := &file_workbench_workbench_proto_msgTypes[139]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9181,7 +9285,7 @@ func (x *SubmitAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitAppReq.ProtoReflect.Descriptor instead.
 func (*SubmitAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{137}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{139}
 }
 
 func (x *SubmitAppReq) GetAppID() string {
@@ -9207,14 +9311,14 @@ func (x *SubmitAppReq) GetChangelog() string {
 
 type SubmitAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID"`
+	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SubmitAppResp) Reset() {
 	*x = SubmitAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[138]
+	mi := &file_workbench_workbench_proto_msgTypes[140]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9226,7 +9330,7 @@ func (x *SubmitAppResp) String() string {
 func (*SubmitAppResp) ProtoMessage() {}
 
 func (x *SubmitAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[138]
+	mi := &file_workbench_workbench_proto_msgTypes[140]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9239,7 +9343,7 @@ func (x *SubmitAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitAppResp.ProtoReflect.Descriptor instead.
 func (*SubmitAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{138}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{140}
 }
 
 func (x *SubmitAppResp) GetReviewID() string {
@@ -9251,14 +9355,14 @@ func (x *SubmitAppResp) GetReviewID() string {
 
 type WithdrawSubmitReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *WithdrawSubmitReq) Reset() {
 	*x = WithdrawSubmitReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[139]
+	mi := &file_workbench_workbench_proto_msgTypes[141]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9270,7 +9374,7 @@ func (x *WithdrawSubmitReq) String() string {
 func (*WithdrawSubmitReq) ProtoMessage() {}
 
 func (x *WithdrawSubmitReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[139]
+	mi := &file_workbench_workbench_proto_msgTypes[141]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9283,7 +9387,7 @@ func (x *WithdrawSubmitReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawSubmitReq.ProtoReflect.Descriptor instead.
 func (*WithdrawSubmitReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{139}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{141}
 }
 
 func (x *WithdrawSubmitReq) GetAppID() string {
@@ -9301,7 +9405,7 @@ type WithdrawSubmitResp struct {
 
 func (x *WithdrawSubmitResp) Reset() {
 	*x = WithdrawSubmitResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[140]
+	mi := &file_workbench_workbench_proto_msgTypes[142]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9313,7 +9417,7 @@ func (x *WithdrawSubmitResp) String() string {
 func (*WithdrawSubmitResp) ProtoMessage() {}
 
 func (x *WithdrawSubmitResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[140]
+	mi := &file_workbench_workbench_proto_msgTypes[142]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9326,20 +9430,20 @@ func (x *WithdrawSubmitResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawSubmitResp.ProtoReflect.Descriptor instead.
 func (*WithdrawSubmitResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{140}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{142}
 }
 
 type GetDeveloperAppsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	DeveloperID   string                   `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination"`
+	DeveloperID   string                   `protobuf:"bytes,1,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetDeveloperAppsReq) Reset() {
 	*x = GetDeveloperAppsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[141]
+	mi := &file_workbench_workbench_proto_msgTypes[143]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9351,7 +9455,7 @@ func (x *GetDeveloperAppsReq) String() string {
 func (*GetDeveloperAppsReq) ProtoMessage() {}
 
 func (x *GetDeveloperAppsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[141]
+	mi := &file_workbench_workbench_proto_msgTypes[143]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9364,7 +9468,7 @@ func (x *GetDeveloperAppsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperAppsReq.ProtoReflect.Descriptor instead.
 func (*GetDeveloperAppsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{141}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{143}
 }
 
 func (x *GetDeveloperAppsReq) GetDeveloperID() string {
@@ -9383,15 +9487,15 @@ func (x *GetDeveloperAppsReq) GetPagination() *sdkws.RequestPagination {
 
 type GetDeveloperAppsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,2,rep,name=apps,proto3" json:"apps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetDeveloperAppsResp) Reset() {
 	*x = GetDeveloperAppsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[142]
+	mi := &file_workbench_workbench_proto_msgTypes[144]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9403,7 +9507,7 @@ func (x *GetDeveloperAppsResp) String() string {
 func (*GetDeveloperAppsResp) ProtoMessage() {}
 
 func (x *GetDeveloperAppsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[142]
+	mi := &file_workbench_workbench_proto_msgTypes[144]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9416,7 +9520,7 @@ func (x *GetDeveloperAppsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperAppsResp.ProtoReflect.Descriptor instead.
 func (*GetDeveloperAppsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{142}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{144}
 }
 
 func (x *GetDeveloperAppsResp) GetTotal() int64 {
@@ -9435,14 +9539,14 @@ func (x *GetDeveloperAppsResp) GetApps() []*AppInfo {
 
 type GetPendingReviewsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetPendingReviewsReq) Reset() {
 	*x = GetPendingReviewsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[143]
+	mi := &file_workbench_workbench_proto_msgTypes[145]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9454,7 +9558,7 @@ func (x *GetPendingReviewsReq) String() string {
 func (*GetPendingReviewsReq) ProtoMessage() {}
 
 func (x *GetPendingReviewsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[143]
+	mi := &file_workbench_workbench_proto_msgTypes[145]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9467,7 +9571,7 @@ func (x *GetPendingReviewsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPendingReviewsReq.ProtoReflect.Descriptor instead.
 func (*GetPendingReviewsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{143}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{145}
 }
 
 func (x *GetPendingReviewsReq) GetPagination() *sdkws.RequestPagination {
@@ -9479,15 +9583,15 @@ func (x *GetPendingReviewsReq) GetPagination() *sdkws.RequestPagination {
 
 type GetPendingReviewsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Reviews       []*AppReviewInfo       `protobuf:"bytes,2,rep,name=reviews,proto3" json:"reviews"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Reviews       []*AppReviewInfo       `protobuf:"bytes,2,rep,name=reviews,proto3" json:"reviews,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetPendingReviewsResp) Reset() {
 	*x = GetPendingReviewsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[144]
+	mi := &file_workbench_workbench_proto_msgTypes[146]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9499,7 +9603,7 @@ func (x *GetPendingReviewsResp) String() string {
 func (*GetPendingReviewsResp) ProtoMessage() {}
 
 func (x *GetPendingReviewsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[144]
+	mi := &file_workbench_workbench_proto_msgTypes[146]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9512,7 +9616,7 @@ func (x *GetPendingReviewsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPendingReviewsResp.ProtoReflect.Descriptor instead.
 func (*GetPendingReviewsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{144}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{146}
 }
 
 func (x *GetPendingReviewsResp) GetTotal() int64 {
@@ -9531,14 +9635,14 @@ func (x *GetPendingReviewsResp) GetReviews() []*AppReviewInfo {
 
 type GetReviewDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID"`
+	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetReviewDetailReq) Reset() {
 	*x = GetReviewDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[145]
+	mi := &file_workbench_workbench_proto_msgTypes[147]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9550,7 +9654,7 @@ func (x *GetReviewDetailReq) String() string {
 func (*GetReviewDetailReq) ProtoMessage() {}
 
 func (x *GetReviewDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[145]
+	mi := &file_workbench_workbench_proto_msgTypes[147]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9563,7 +9667,7 @@ func (x *GetReviewDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewDetailReq.ProtoReflect.Descriptor instead.
 func (*GetReviewDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{145}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{147}
 }
 
 func (x *GetReviewDetailReq) GetReviewID() string {
@@ -9575,16 +9679,16 @@ func (x *GetReviewDetailReq) GetReviewID() string {
 
 type GetReviewDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Review        *AppReviewInfo         `protobuf:"bytes,1,opt,name=review,proto3" json:"review"`
-	App           *AppInfo               `protobuf:"bytes,2,opt,name=app,proto3" json:"app"`
-	Developer     *DeveloperInfo         `protobuf:"bytes,3,opt,name=developer,proto3" json:"developer"`
+	Review        *AppReviewInfo         `protobuf:"bytes,1,opt,name=review,proto3" json:"review,omitempty"`
+	App           *AppInfo               `protobuf:"bytes,2,opt,name=app,proto3" json:"app,omitempty"`
+	Developer     *DeveloperInfo         `protobuf:"bytes,3,opt,name=developer,proto3" json:"developer,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetReviewDetailResp) Reset() {
 	*x = GetReviewDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[146]
+	mi := &file_workbench_workbench_proto_msgTypes[148]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9596,7 +9700,7 @@ func (x *GetReviewDetailResp) String() string {
 func (*GetReviewDetailResp) ProtoMessage() {}
 
 func (x *GetReviewDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[146]
+	mi := &file_workbench_workbench_proto_msgTypes[148]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9609,7 +9713,7 @@ func (x *GetReviewDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewDetailResp.ProtoReflect.Descriptor instead.
 func (*GetReviewDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{146}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{148}
 }
 
 func (x *GetReviewDetailResp) GetReview() *AppReviewInfo {
@@ -9635,16 +9739,16 @@ func (x *GetReviewDetailResp) GetDeveloper() *DeveloperInfo {
 
 type ReviewActionReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID"`
-	Action        int32                  `protobuf:"varint,2,opt,name=action,proto3" json:"action"` // ReviewAction
-	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note"`
+	ReviewID      string                 `protobuf:"bytes,1,opt,name=reviewID,proto3" json:"reviewID,omitempty"`
+	Action        int32                  `protobuf:"varint,2,opt,name=action,proto3" json:"action,omitempty"` // ReviewAction
+	Note          string                 `protobuf:"bytes,3,opt,name=note,proto3" json:"note,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ReviewActionReq) Reset() {
 	*x = ReviewActionReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[147]
+	mi := &file_workbench_workbench_proto_msgTypes[149]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9656,7 +9760,7 @@ func (x *ReviewActionReq) String() string {
 func (*ReviewActionReq) ProtoMessage() {}
 
 func (x *ReviewActionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[147]
+	mi := &file_workbench_workbench_proto_msgTypes[149]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9669,7 +9773,7 @@ func (x *ReviewActionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewActionReq.ProtoReflect.Descriptor instead.
 func (*ReviewActionReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{147}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{149}
 }
 
 func (x *ReviewActionReq) GetReviewID() string {
@@ -9701,7 +9805,7 @@ type ReviewActionResp struct {
 
 func (x *ReviewActionResp) Reset() {
 	*x = ReviewActionResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[148]
+	mi := &file_workbench_workbench_proto_msgTypes[150]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9713,7 +9817,7 @@ func (x *ReviewActionResp) String() string {
 func (*ReviewActionResp) ProtoMessage() {}
 
 func (x *ReviewActionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[148]
+	mi := &file_workbench_workbench_proto_msgTypes[150]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9726,20 +9830,20 @@ func (x *ReviewActionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewActionResp.ProtoReflect.Descriptor instead.
 func (*ReviewActionResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{148}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{150}
 }
 
 type ForceOfflineReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	Reason        string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ForceOfflineReq) Reset() {
 	*x = ForceOfflineReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[149]
+	mi := &file_workbench_workbench_proto_msgTypes[151]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9751,7 +9855,7 @@ func (x *ForceOfflineReq) String() string {
 func (*ForceOfflineReq) ProtoMessage() {}
 
 func (x *ForceOfflineReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[149]
+	mi := &file_workbench_workbench_proto_msgTypes[151]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9764,7 +9868,7 @@ func (x *ForceOfflineReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceOfflineReq.ProtoReflect.Descriptor instead.
 func (*ForceOfflineReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{149}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{151}
 }
 
 func (x *ForceOfflineReq) GetAppID() string {
@@ -9789,7 +9893,7 @@ type ForceOfflineResp struct {
 
 func (x *ForceOfflineResp) Reset() {
 	*x = ForceOfflineResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[150]
+	mi := &file_workbench_workbench_proto_msgTypes[152]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9801,7 +9905,7 @@ func (x *ForceOfflineResp) String() string {
 func (*ForceOfflineResp) ProtoMessage() {}
 
 func (x *ForceOfflineResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[150]
+	mi := &file_workbench_workbench_proto_msgTypes[152]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9814,22 +9918,22 @@ func (x *ForceOfflineResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceOfflineResp.ProtoReflect.Descriptor instead.
 func (*ForceOfflineResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{150}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{152}
 }
 
 type SetWebhookReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	CallbackURL   string                 `protobuf:"bytes,2,opt,name=callbackURL,proto3" json:"callbackURL"`
-	Events        []string               `protobuf:"bytes,3,rep,name=events,proto3" json:"events"`
-	Secret        string                 `protobuf:"bytes,4,opt,name=secret,proto3" json:"secret"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	CallbackURL   string                 `protobuf:"bytes,2,opt,name=callbackURL,proto3" json:"callbackURL,omitempty"`
+	Events        []string               `protobuf:"bytes,3,rep,name=events,proto3" json:"events,omitempty"`
+	Secret        string                 `protobuf:"bytes,4,opt,name=secret,proto3" json:"secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SetWebhookReq) Reset() {
 	*x = SetWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[151]
+	mi := &file_workbench_workbench_proto_msgTypes[153]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9841,7 +9945,7 @@ func (x *SetWebhookReq) String() string {
 func (*SetWebhookReq) ProtoMessage() {}
 
 func (x *SetWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[151]
+	mi := &file_workbench_workbench_proto_msgTypes[153]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9854,7 +9958,7 @@ func (x *SetWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWebhookReq.ProtoReflect.Descriptor instead.
 func (*SetWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{151}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{153}
 }
 
 func (x *SetWebhookReq) GetAppID() string {
@@ -9887,14 +9991,14 @@ func (x *SetWebhookReq) GetSecret() string {
 
 type SetWebhookResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	WebhookID     string                 `protobuf:"bytes,1,opt,name=webhookID,proto3" json:"webhookID"`
+	WebhookID     string                 `protobuf:"bytes,1,opt,name=webhookID,proto3" json:"webhookID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SetWebhookResp) Reset() {
 	*x = SetWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[152]
+	mi := &file_workbench_workbench_proto_msgTypes[154]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9906,7 +10010,7 @@ func (x *SetWebhookResp) String() string {
 func (*SetWebhookResp) ProtoMessage() {}
 
 func (x *SetWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[152]
+	mi := &file_workbench_workbench_proto_msgTypes[154]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9919,7 +10023,7 @@ func (x *SetWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWebhookResp.ProtoReflect.Descriptor instead.
 func (*SetWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{152}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{154}
 }
 
 func (x *SetWebhookResp) GetWebhookID() string {
@@ -9931,14 +10035,14 @@ func (x *SetWebhookResp) GetWebhookID() string {
 
 type GetWebhookReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWebhookReq) Reset() {
 	*x = GetWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[153]
+	mi := &file_workbench_workbench_proto_msgTypes[155]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9950,7 +10054,7 @@ func (x *GetWebhookReq) String() string {
 func (*GetWebhookReq) ProtoMessage() {}
 
 func (x *GetWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[153]
+	mi := &file_workbench_workbench_proto_msgTypes[155]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9963,7 +10067,7 @@ func (x *GetWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookReq.ProtoReflect.Descriptor instead.
 func (*GetWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{153}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{155}
 }
 
 func (x *GetWebhookReq) GetAppID() string {
@@ -9975,14 +10079,14 @@ func (x *GetWebhookReq) GetAppID() string {
 
 type GetWebhookResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Webhook       *WebhookInfo           `protobuf:"bytes,1,opt,name=webhook,proto3" json:"webhook"`
+	Webhook       *WebhookInfo           `protobuf:"bytes,1,opt,name=webhook,proto3" json:"webhook,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWebhookResp) Reset() {
 	*x = GetWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[154]
+	mi := &file_workbench_workbench_proto_msgTypes[156]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9994,7 +10098,7 @@ func (x *GetWebhookResp) String() string {
 func (*GetWebhookResp) ProtoMessage() {}
 
 func (x *GetWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[154]
+	mi := &file_workbench_workbench_proto_msgTypes[156]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10007,7 +10111,7 @@ func (x *GetWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookResp.ProtoReflect.Descriptor instead.
 func (*GetWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{154}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{156}
 }
 
 func (x *GetWebhookResp) GetWebhook() *WebhookInfo {
@@ -10019,17 +10123,17 @@ func (x *GetWebhookResp) GetWebhook() *WebhookInfo {
 
 type GetWebhookLogsReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	AppID         string                   `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	EventType     string                   `protobuf:"bytes,2,opt,name=eventType,proto3" json:"eventType"`
-	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination"`
+	AppID         string                   `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	EventType     string                   `protobuf:"bytes,2,opt,name=eventType,proto3" json:"eventType,omitempty"`
+	Status        int32                    `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWebhookLogsReq) Reset() {
 	*x = GetWebhookLogsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[155]
+	mi := &file_workbench_workbench_proto_msgTypes[157]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10041,7 +10145,7 @@ func (x *GetWebhookLogsReq) String() string {
 func (*GetWebhookLogsReq) ProtoMessage() {}
 
 func (x *GetWebhookLogsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[155]
+	mi := &file_workbench_workbench_proto_msgTypes[157]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10054,7 +10158,7 @@ func (x *GetWebhookLogsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookLogsReq.ProtoReflect.Descriptor instead.
 func (*GetWebhookLogsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{155}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{157}
 }
 
 func (x *GetWebhookLogsReq) GetAppID() string {
@@ -10087,15 +10191,15 @@ func (x *GetWebhookLogsReq) GetPagination() *sdkws.RequestPagination {
 
 type GetWebhookLogsResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Logs          []*WebhookLogInfo      `protobuf:"bytes,2,rep,name=logs,proto3" json:"logs"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Logs          []*WebhookLogInfo      `protobuf:"bytes,2,rep,name=logs,proto3" json:"logs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetWebhookLogsResp) Reset() {
 	*x = GetWebhookLogsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[156]
+	mi := &file_workbench_workbench_proto_msgTypes[158]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10107,7 +10211,7 @@ func (x *GetWebhookLogsResp) String() string {
 func (*GetWebhookLogsResp) ProtoMessage() {}
 
 func (x *GetWebhookLogsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[156]
+	mi := &file_workbench_workbench_proto_msgTypes[158]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10120,7 +10224,7 @@ func (x *GetWebhookLogsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookLogsResp.ProtoReflect.Descriptor instead.
 func (*GetWebhookLogsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{156}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{158}
 }
 
 func (x *GetWebhookLogsResp) GetTotal() int64 {
@@ -10139,14 +10243,14 @@ func (x *GetWebhookLogsResp) GetLogs() []*WebhookLogInfo {
 
 type RetryWebhookReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LogID         string                 `protobuf:"bytes,1,opt,name=logID,proto3" json:"logID"`
+	LogID         string                 `protobuf:"bytes,1,opt,name=logID,proto3" json:"logID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RetryWebhookReq) Reset() {
 	*x = RetryWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[157]
+	mi := &file_workbench_workbench_proto_msgTypes[159]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10158,7 +10262,7 @@ func (x *RetryWebhookReq) String() string {
 func (*RetryWebhookReq) ProtoMessage() {}
 
 func (x *RetryWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[157]
+	mi := &file_workbench_workbench_proto_msgTypes[159]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10171,7 +10275,7 @@ func (x *RetryWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryWebhookReq.ProtoReflect.Descriptor instead.
 func (*RetryWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{157}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{159}
 }
 
 func (x *RetryWebhookReq) GetLogID() string {
@@ -10189,7 +10293,7 @@ type RetryWebhookResp struct {
 
 func (x *RetryWebhookResp) Reset() {
 	*x = RetryWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[158]
+	mi := &file_workbench_workbench_proto_msgTypes[160]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10201,7 +10305,7 @@ func (x *RetryWebhookResp) String() string {
 func (*RetryWebhookResp) ProtoMessage() {}
 
 func (x *RetryWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[158]
+	mi := &file_workbench_workbench_proto_msgTypes[160]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10214,20 +10318,20 @@ func (x *RetryWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryWebhookResp.ProtoReflect.Descriptor instead.
 func (*RetryWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{158}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{160}
 }
 
 type GetMarketAppDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID"`
-	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID"` // 用于标记已安装状态
+	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
+	TenantID      string                 `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID,omitempty"` // 用于标记已安装状态
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMarketAppDetailReq) Reset() {
 	*x = GetMarketAppDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[159]
+	mi := &file_workbench_workbench_proto_msgTypes[161]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10239,7 +10343,7 @@ func (x *GetMarketAppDetailReq) String() string {
 func (*GetMarketAppDetailReq) ProtoMessage() {}
 
 func (x *GetMarketAppDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[159]
+	mi := &file_workbench_workbench_proto_msgTypes[161]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10252,7 +10356,7 @@ func (x *GetMarketAppDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMarketAppDetailReq.ProtoReflect.Descriptor instead.
 func (*GetMarketAppDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{159}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{161}
 }
 
 func (x *GetMarketAppDetailReq) GetAppID() string {
@@ -10271,16 +10375,16 @@ func (x *GetMarketAppDetailReq) GetTenantID() string {
 
 type GetMarketAppDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	App           *AppInfo               `protobuf:"bytes,1,opt,name=app,proto3" json:"app"`
-	Developer     *DeveloperInfo         `protobuf:"bytes,2,opt,name=developer,proto3" json:"developer"`
-	Versions      []*AppVersionInfo      `protobuf:"bytes,3,rep,name=versions,proto3" json:"versions"`
+	App           *AppInfo               `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	Developer     *DeveloperInfo         `protobuf:"bytes,2,opt,name=developer,proto3" json:"developer,omitempty"`
+	Versions      []*AppVersionInfo      `protobuf:"bytes,3,rep,name=versions,proto3" json:"versions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetMarketAppDetailResp) Reset() {
 	*x = GetMarketAppDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[160]
+	mi := &file_workbench_workbench_proto_msgTypes[162]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10292,7 +10396,7 @@ func (x *GetMarketAppDetailResp) String() string {
 func (*GetMarketAppDetailResp) ProtoMessage() {}
 
 func (x *GetMarketAppDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[160]
+	mi := &file_workbench_workbench_proto_msgTypes[162]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10305,7 +10409,7 @@ func (x *GetMarketAppDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMarketAppDetailResp.ProtoReflect.Descriptor instead.
 func (*GetMarketAppDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{160}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{162}
 }
 
 func (x *GetMarketAppDetailResp) GetApp() *AppInfo {
@@ -10331,15 +10435,15 @@ func (x *GetMarketAppDetailResp) GetVersions() []*AppVersionInfo {
 
 type BatchInstallAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	AppIDs        []string               `protobuf:"bytes,2,rep,name=appIDs,proto3" json:"appIDs"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	AppIDs        []string               `protobuf:"bytes,2,rep,name=appIDs,proto3" json:"appIDs,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatchInstallAppReq) Reset() {
 	*x = BatchInstallAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[161]
+	mi := &file_workbench_workbench_proto_msgTypes[163]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10351,7 +10455,7 @@ func (x *BatchInstallAppReq) String() string {
 func (*BatchInstallAppReq) ProtoMessage() {}
 
 func (x *BatchInstallAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[161]
+	mi := &file_workbench_workbench_proto_msgTypes[163]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10364,7 +10468,7 @@ func (x *BatchInstallAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchInstallAppReq.ProtoReflect.Descriptor instead.
 func (*BatchInstallAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{161}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{163}
 }
 
 func (x *BatchInstallAppReq) GetTenantID() string {
@@ -10383,15 +10487,15 @@ func (x *BatchInstallAppReq) GetAppIDs() []string {
 
 type BatchInstallAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	SuccessCount  int64                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount"`
-	FailCount     int64                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount"`
+	SuccessCount  int64                  `protobuf:"varint,1,opt,name=successCount,proto3" json:"successCount,omitempty"`
+	FailCount     int64                  `protobuf:"varint,2,opt,name=failCount,proto3" json:"failCount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *BatchInstallAppResp) Reset() {
 	*x = BatchInstallAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[162]
+	mi := &file_workbench_workbench_proto_msgTypes[164]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10403,7 +10507,7 @@ func (x *BatchInstallAppResp) String() string {
 func (*BatchInstallAppResp) ProtoMessage() {}
 
 func (x *BatchInstallAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[162]
+	mi := &file_workbench_workbench_proto_msgTypes[164]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10416,7 +10520,7 @@ func (x *BatchInstallAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchInstallAppResp.ProtoReflect.Descriptor instead.
 func (*BatchInstallAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{162}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{164}
 }
 
 func (x *BatchInstallAppResp) GetSuccessCount() int64 {
@@ -10435,15 +10539,15 @@ func (x *BatchInstallAppResp) GetFailCount() int64 {
 
 type GetNotifyDetailReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	MarkRead      bool                   `protobuf:"varint,2,opt,name=markRead,proto3" json:"markRead"` // Recipient only; idempotent read acknowledgement
+	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	MarkRead      bool                   `protobuf:"varint,2,opt,name=markRead,proto3" json:"markRead,omitempty"` // Recipient only; idempotent read acknowledgement
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyDetailReq) Reset() {
 	*x = GetNotifyDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[163]
+	mi := &file_workbench_workbench_proto_msgTypes[165]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10455,7 +10559,7 @@ func (x *GetNotifyDetailReq) String() string {
 func (*GetNotifyDetailReq) ProtoMessage() {}
 
 func (x *GetNotifyDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[163]
+	mi := &file_workbench_workbench_proto_msgTypes[165]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10468,7 +10572,7 @@ func (x *GetNotifyDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyDetailReq.ProtoReflect.Descriptor instead.
 func (*GetNotifyDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{163}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{165}
 }
 
 func (x *GetNotifyDetailReq) GetNotifyID() string {
@@ -10487,14 +10591,14 @@ func (x *GetNotifyDetailReq) GetMarkRead() bool {
 
 type GetNotifyDetailResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Log           *NotifyLogInfo         `protobuf:"bytes,1,opt,name=log,proto3" json:"log"`
+	Log           *NotifyLogInfo         `protobuf:"bytes,1,opt,name=log,proto3" json:"log,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetNotifyDetailResp) Reset() {
 	*x = GetNotifyDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[164]
+	mi := &file_workbench_workbench_proto_msgTypes[166]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10506,7 +10610,7 @@ func (x *GetNotifyDetailResp) String() string {
 func (*GetNotifyDetailResp) ProtoMessage() {}
 
 func (x *GetNotifyDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[164]
+	mi := &file_workbench_workbench_proto_msgTypes[166]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10519,7 +10623,7 @@ func (x *GetNotifyDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyDetailResp.ProtoReflect.Descriptor instead.
 func (*GetNotifyDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{164}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{166}
 }
 
 func (x *GetNotifyDetailResp) GetLog() *NotifyLogInfo {
@@ -10531,19 +10635,19 @@ func (x *GetNotifyDetailResp) GetLog() *NotifyLogInfo {
 
 type GetReviewListReq struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	ReviewStatus  int32                    `protobuf:"varint,1,opt,name=reviewStatus,proto3" json:"reviewStatus"` // 0=全部
-	AppID         string                   `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID"`
-	DeveloperID   string                   `protobuf:"bytes,3,opt,name=developerID,proto3" json:"developerID"`
-	StartTime     int64                    `protobuf:"varint,4,opt,name=startTime,proto3" json:"startTime"`
-	EndTime       int64                    `protobuf:"varint,5,opt,name=endTime,proto3" json:"endTime"`
-	Pagination    *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination"`
+	ReviewStatus  int32                    `protobuf:"varint,1,opt,name=reviewStatus,proto3" json:"reviewStatus,omitempty"` // 0=全部
+	AppID         string                   `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
+	DeveloperID   string                   `protobuf:"bytes,3,opt,name=developerID,proto3" json:"developerID,omitempty"`
+	StartTime     int64                    `protobuf:"varint,4,opt,name=startTime,proto3" json:"startTime,omitempty"`
+	EndTime       int64                    `protobuf:"varint,5,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	Pagination    *sdkws.RequestPagination `protobuf:"bytes,6,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetReviewListReq) Reset() {
 	*x = GetReviewListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[165]
+	mi := &file_workbench_workbench_proto_msgTypes[167]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10555,7 +10659,7 @@ func (x *GetReviewListReq) String() string {
 func (*GetReviewListReq) ProtoMessage() {}
 
 func (x *GetReviewListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[165]
+	mi := &file_workbench_workbench_proto_msgTypes[167]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10568,7 +10672,7 @@ func (x *GetReviewListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewListReq.ProtoReflect.Descriptor instead.
 func (*GetReviewListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{165}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{167}
 }
 
 func (x *GetReviewListReq) GetReviewStatus() int32 {
@@ -10615,15 +10719,15 @@ func (x *GetReviewListReq) GetPagination() *sdkws.RequestPagination {
 
 type GetReviewListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total"`
-	Reviews       []*AppReviewInfo       `protobuf:"bytes,2,rep,name=reviews,proto3" json:"reviews"`
+	Total         int64                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Reviews       []*AppReviewInfo       `protobuf:"bytes,2,rep,name=reviews,proto3" json:"reviews,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetReviewListResp) Reset() {
 	*x = GetReviewListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[166]
+	mi := &file_workbench_workbench_proto_msgTypes[168]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10635,7 +10739,7 @@ func (x *GetReviewListResp) String() string {
 func (*GetReviewListResp) ProtoMessage() {}
 
 func (x *GetReviewListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[166]
+	mi := &file_workbench_workbench_proto_msgTypes[168]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10648,7 +10752,7 @@ func (x *GetReviewListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewListResp.ProtoReflect.Descriptor instead.
 func (*GetReviewListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{166}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{168}
 }
 
 func (x *GetReviewListResp) GetTotal() int64 {
@@ -10673,7 +10777,7 @@ type GetPlatformStatsReq struct {
 
 func (x *GetPlatformStatsReq) Reset() {
 	*x = GetPlatformStatsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[167]
+	mi := &file_workbench_workbench_proto_msgTypes[169]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10685,7 +10789,7 @@ func (x *GetPlatformStatsReq) String() string {
 func (*GetPlatformStatsReq) ProtoMessage() {}
 
 func (x *GetPlatformStatsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[167]
+	mi := &file_workbench_workbench_proto_msgTypes[169]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10698,22 +10802,22 @@ func (x *GetPlatformStatsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlatformStatsReq.ProtoReflect.Descriptor instead.
 func (*GetPlatformStatsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{167}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{169}
 }
 
 type GetPlatformStatsResp struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	TotalApps          int64                  `protobuf:"varint,1,opt,name=totalApps,proto3" json:"totalApps"`
-	TotalInstalls      int64                  `protobuf:"varint,2,opt,name=totalInstalls,proto3" json:"totalInstalls"`
-	TotalDevelopers    int64                  `protobuf:"varint,3,opt,name=totalDevelopers,proto3" json:"totalDevelopers"`
-	TotalNotifications int64                  `protobuf:"varint,4,opt,name=totalNotifications,proto3" json:"totalNotifications"`
+	TotalApps          int64                  `protobuf:"varint,1,opt,name=totalApps,proto3" json:"totalApps,omitempty"`
+	TotalInstalls      int64                  `protobuf:"varint,2,opt,name=totalInstalls,proto3" json:"totalInstalls,omitempty"`
+	TotalDevelopers    int64                  `protobuf:"varint,3,opt,name=totalDevelopers,proto3" json:"totalDevelopers,omitempty"`
+	TotalNotifications int64                  `protobuf:"varint,4,opt,name=totalNotifications,proto3" json:"totalNotifications,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
 func (x *GetPlatformStatsResp) Reset() {
 	*x = GetPlatformStatsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[168]
+	mi := &file_workbench_workbench_proto_msgTypes[170]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10725,7 +10829,7 @@ func (x *GetPlatformStatsResp) String() string {
 func (*GetPlatformStatsResp) ProtoMessage() {}
 
 func (x *GetPlatformStatsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[168]
+	mi := &file_workbench_workbench_proto_msgTypes[170]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10738,7 +10842,7 @@ func (x *GetPlatformStatsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlatformStatsResp.ProtoReflect.Descriptor instead.
 func (*GetPlatformStatsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{168}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{170}
 }
 
 func (x *GetPlatformStatsResp) GetTotalApps() int64 {
@@ -10771,14 +10875,14 @@ func (x *GetPlatformStatsResp) GetTotalNotifications() int64 {
 
 type GetTenantStatsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetTenantStatsReq) Reset() {
 	*x = GetTenantStatsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[169]
+	mi := &file_workbench_workbench_proto_msgTypes[171]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10790,7 +10894,7 @@ func (x *GetTenantStatsReq) String() string {
 func (*GetTenantStatsReq) ProtoMessage() {}
 
 func (x *GetTenantStatsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[169]
+	mi := &file_workbench_workbench_proto_msgTypes[171]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10803,7 +10907,7 @@ func (x *GetTenantStatsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenantStatsReq.ProtoReflect.Descriptor instead.
 func (*GetTenantStatsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{169}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{171}
 }
 
 func (x *GetTenantStatsReq) GetTenantID() string {
@@ -10815,16 +10919,16 @@ func (x *GetTenantStatsReq) GetTenantID() string {
 
 type GetTenantStatsResp struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
-	InstalledApps      int64                  `protobuf:"varint,1,opt,name=installedApps,proto3" json:"installedApps"`
-	TotalNotifications int64                  `protobuf:"varint,2,opt,name=totalNotifications,proto3" json:"totalNotifications"`
-	ActiveUsers        int64                  `protobuf:"varint,3,opt,name=activeUsers,proto3" json:"activeUsers"`
+	InstalledApps      int64                  `protobuf:"varint,1,opt,name=installedApps,proto3" json:"installedApps,omitempty"`
+	TotalNotifications int64                  `protobuf:"varint,2,opt,name=totalNotifications,proto3" json:"totalNotifications,omitempty"`
+	ActiveUsers        int64                  `protobuf:"varint,3,opt,name=activeUsers,proto3" json:"activeUsers,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
 
 func (x *GetTenantStatsResp) Reset() {
 	*x = GetTenantStatsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[170]
+	mi := &file_workbench_workbench_proto_msgTypes[172]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10836,7 +10940,7 @@ func (x *GetTenantStatsResp) String() string {
 func (*GetTenantStatsResp) ProtoMessage() {}
 
 func (x *GetTenantStatsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[170]
+	mi := &file_workbench_workbench_proto_msgTypes[172]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10849,7 +10953,7 @@ func (x *GetTenantStatsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenantStatsResp.ProtoReflect.Descriptor instead.
 func (*GetTenantStatsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{170}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{172}
 }
 
 func (x *GetTenantStatsResp) GetInstalledApps() int64 {
@@ -10875,16 +10979,16 @@ func (x *GetTenantStatsResp) GetActiveUsers() int64 {
 
 type GetHomeReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	DataVersion   string                 `protobuf:"bytes,3,opt,name=dataVersion,proto3" json:"dataVersion"` // 客户端缓存版本号
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	DataVersion   string                 `protobuf:"bytes,3,opt,name=dataVersion,proto3" json:"dataVersion,omitempty"` // 客户端缓存版本号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHomeReq) Reset() {
 	*x = GetHomeReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[171]
+	mi := &file_workbench_workbench_proto_msgTypes[173]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10896,7 +11000,7 @@ func (x *GetHomeReq) String() string {
 func (*GetHomeReq) ProtoMessage() {}
 
 func (x *GetHomeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[171]
+	mi := &file_workbench_workbench_proto_msgTypes[173]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10909,7 +11013,7 @@ func (x *GetHomeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHomeReq.ProtoReflect.Descriptor instead.
 func (*GetHomeReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{171}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{173}
 }
 
 func (x *GetHomeReq) GetTenantID() string {
@@ -10935,18 +11039,20 @@ func (x *GetHomeReq) GetDataVersion() string {
 
 type GetHomeResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Banners       []*BannerInfo          `protobuf:"bytes,1,rep,name=banners,proto3" json:"banners"`
-	Categories    []*CategoryInfo        `protobuf:"bytes,2,rep,name=categories,proto3" json:"categories"`
-	Apps          []*AppInfo             `protobuf:"bytes,3,rep,name=apps,proto3" json:"apps"`
-	DataVersion   string                 `protobuf:"bytes,4,opt,name=dataVersion,proto3" json:"dataVersion"`
-	NotModified   bool                   `protobuf:"varint,5,opt,name=notModified,proto3" json:"notModified"` // true=数据未变化,客户端用缓存
+	Banners       []*BannerInfo          `protobuf:"bytes,1,rep,name=banners,proto3" json:"banners,omitempty"`
+	Categories    []*CategoryInfo        `protobuf:"bytes,2,rep,name=categories,proto3" json:"categories,omitempty"`
+	Apps          []*AppInfo             `protobuf:"bytes,3,rep,name=apps,proto3" json:"apps,omitempty"` // 普通（未隐藏未置顶）
+	DataVersion   string                 `protobuf:"bytes,4,opt,name=dataVersion,proto3" json:"dataVersion,omitempty"`
+	NotModified   bool                   `protobuf:"varint,5,opt,name=notModified,proto3" json:"notModified,omitempty"` // true=数据未变化,客户端用缓存
+	PinnedApps    []*AppInfo             `protobuf:"bytes,6,rep,name=pinnedApps,proto3" json:"pinnedApps,omitempty"`    // 常用（置顶）
+	HiddenApps    []*AppInfo             `protobuf:"bytes,7,rep,name=hiddenApps,proto3" json:"hiddenApps,omitempty"`    // 隐藏
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetHomeResp) Reset() {
 	*x = GetHomeResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[172]
+	mi := &file_workbench_workbench_proto_msgTypes[174]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10958,7 +11064,7 @@ func (x *GetHomeResp) String() string {
 func (*GetHomeResp) ProtoMessage() {}
 
 func (x *GetHomeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[172]
+	mi := &file_workbench_workbench_proto_msgTypes[174]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10971,7 +11077,7 @@ func (x *GetHomeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHomeResp.ProtoReflect.Descriptor instead.
 func (*GetHomeResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{172}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{174}
 }
 
 func (x *GetHomeResp) GetBanners() []*BannerInfo {
@@ -11009,18 +11115,32 @@ func (x *GetHomeResp) GetNotModified() bool {
 	return false
 }
 
+func (x *GetHomeResp) GetPinnedApps() []*AppInfo {
+	if x != nil {
+		return x.PinnedApps
+	}
+	return nil
+}
+
+func (x *GetHomeResp) GetHiddenApps() []*AppInfo {
+	if x != nil {
+		return x.HiddenApps
+	}
+	return nil
+}
+
 type ClickAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID"`
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ClickAppReq) Reset() {
 	*x = ClickAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[173]
+	mi := &file_workbench_workbench_proto_msgTypes[175]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11032,7 +11152,7 @@ func (x *ClickAppReq) String() string {
 func (*ClickAppReq) ProtoMessage() {}
 
 func (x *ClickAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[173]
+	mi := &file_workbench_workbench_proto_msgTypes[175]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11045,7 +11165,7 @@ func (x *ClickAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClickAppReq.ProtoReflect.Descriptor instead.
 func (*ClickAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{173}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{175}
 }
 
 func (x *ClickAppReq) GetTenantID() string {
@@ -11077,7 +11197,7 @@ type ClickAppResp struct {
 
 func (x *ClickAppResp) Reset() {
 	*x = ClickAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[174]
+	mi := &file_workbench_workbench_proto_msgTypes[176]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11089,7 +11209,7 @@ func (x *ClickAppResp) String() string {
 func (*ClickAppResp) ProtoMessage() {}
 
 func (x *ClickAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[174]
+	mi := &file_workbench_workbench_proto_msgTypes[176]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11102,24 +11222,24 @@ func (x *ClickAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClickAppResp.ProtoReflect.Descriptor instead.
 func (*ClickAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{174}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{176}
 }
 
 type LaunchAppReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
-	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID"`
-	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state"`
-	RedirectURI   string                 `protobuf:"bytes,5,opt,name=redirectURI,proto3" json:"redirectURI"`
-	CodeChallenge string                 `protobuf:"bytes,6,opt,name=codeChallenge,proto3" json:"codeChallenge"` // PKCE S256
+	TenantID      string                 `protobuf:"bytes,1,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
+	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
+	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	RedirectURI   string                 `protobuf:"bytes,5,opt,name=redirectURI,proto3" json:"redirectURI,omitempty"`
+	CodeChallenge string                 `protobuf:"bytes,6,opt,name=codeChallenge,proto3" json:"codeChallenge,omitempty"` // PKCE S256
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LaunchAppReq) Reset() {
 	*x = LaunchAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[175]
+	mi := &file_workbench_workbench_proto_msgTypes[177]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11131,7 +11251,7 @@ func (x *LaunchAppReq) String() string {
 func (*LaunchAppReq) ProtoMessage() {}
 
 func (x *LaunchAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[175]
+	mi := &file_workbench_workbench_proto_msgTypes[177]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11144,7 +11264,7 @@ func (x *LaunchAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LaunchAppReq.ProtoReflect.Descriptor instead.
 func (*LaunchAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{175}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{177}
 }
 
 func (x *LaunchAppReq) GetTenantID() string {
@@ -11191,18 +11311,18 @@ func (x *LaunchAppReq) GetCodeChallenge() string {
 
 type LaunchAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LaunchURL     string                 `protobuf:"bytes,1,opt,name=launchURL,proto3" json:"launchURL"`    // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
-	OpenMethod    int32                  `protobuf:"varint,2,opt,name=openMethod,proto3" json:"openMethod"` // OpenMethod
-	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn"`   // ticket 剩余有效秒数；非 SSO 应用为 0
-	SsoEnabled    bool                   `protobuf:"varint,4,opt,name=ssoEnabled,proto3" json:"ssoEnabled"` // 该应用是否启用了 SSO 免登
-	AuthMode      string                 `protobuf:"bytes,5,opt,name=authMode,proto3" json:"authMode"`      // none, legacy_ticket, im_code, federation
+	LaunchURL     string                 `protobuf:"bytes,1,opt,name=launchURL,proto3" json:"launchURL,omitempty"`    // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
+	OpenMethod    int32                  `protobuf:"varint,2,opt,name=openMethod,proto3" json:"openMethod,omitempty"` // OpenMethod
+	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`   // ticket 剩余有效秒数；非 SSO 应用为 0
+	SsoEnabled    bool                   `protobuf:"varint,4,opt,name=ssoEnabled,proto3" json:"ssoEnabled,omitempty"` // 该应用是否启用了 SSO 免登
+	AuthMode      string                 `protobuf:"bytes,5,opt,name=authMode,proto3" json:"authMode,omitempty"`      // none, legacy_ticket, im_code, federation
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LaunchAppResp) Reset() {
 	*x = LaunchAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[176]
+	mi := &file_workbench_workbench_proto_msgTypes[178]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11214,7 +11334,7 @@ func (x *LaunchAppResp) String() string {
 func (*LaunchAppResp) ProtoMessage() {}
 
 func (x *LaunchAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[176]
+	mi := &file_workbench_workbench_proto_msgTypes[178]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11227,7 +11347,7 @@ func (x *LaunchAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LaunchAppResp.ProtoReflect.Descriptor instead.
 func (*LaunchAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{176}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{178}
 }
 
 func (x *LaunchAppResp) GetLaunchURL() string {
@@ -11267,17 +11387,17 @@ func (x *LaunchAppResp) GetAuthMode() string {
 
 type NotifySendResult struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ToUserID      string                 `protobuf:"bytes,1,opt,name=toUserID,proto3" json:"toUserID"`
-	NotifyID      string                 `protobuf:"bytes,2,opt,name=notifyID,proto3" json:"notifyID"`
-	MsgID         string                 `protobuf:"bytes,3,opt,name=msgID,proto3" json:"msgID"`
-	Error         string                 `protobuf:"bytes,4,opt,name=error,proto3" json:"error"`
+	ToUserID      string                 `protobuf:"bytes,1,opt,name=toUserID,proto3" json:"toUserID,omitempty"`
+	NotifyID      string                 `protobuf:"bytes,2,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	MsgID         string                 `protobuf:"bytes,3,opt,name=msgID,proto3" json:"msgID,omitempty"`
+	Error         string                 `protobuf:"bytes,4,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *NotifySendResult) Reset() {
 	*x = NotifySendResult{}
-	mi := &file_workbench_workbench_proto_msgTypes[177]
+	mi := &file_workbench_workbench_proto_msgTypes[179]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11289,7 +11409,7 @@ func (x *NotifySendResult) String() string {
 func (*NotifySendResult) ProtoMessage() {}
 
 func (x *NotifySendResult) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[177]
+	mi := &file_workbench_workbench_proto_msgTypes[179]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11302,7 +11422,7 @@ func (x *NotifySendResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifySendResult.ProtoReflect.Descriptor instead.
 func (*NotifySendResult) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{177}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{179}
 }
 
 func (x *NotifySendResult) GetToUserID() string {
@@ -11335,19 +11455,19 @@ func (x *NotifySendResult) GetError() string {
 
 type CardActionReq struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	NotifyID         string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID"`
-	ActionType       string                 `protobuf:"bytes,2,opt,name=actionType,proto3" json:"actionType"` // button_click / vote_submit / select_submit
-	ActionKey        string                 `protobuf:"bytes,3,opt,name=actionKey,proto3" json:"actionKey"`
-	ActionValue      string                 `protobuf:"bytes,4,opt,name=actionValue,proto3" json:"actionValue"`
-	TaskID           string                 `protobuf:"bytes,5,opt,name=taskID,proto3" json:"taskID"`
-	ExpectedRevision int64                  `protobuf:"varint,6,opt,name=expectedRevision,proto3" json:"expectedRevision"` // Required current notification revision
+	NotifyID         string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
+	ActionType       string                 `protobuf:"bytes,2,opt,name=actionType,proto3" json:"actionType,omitempty"` // button_click / vote_submit / select_submit
+	ActionKey        string                 `protobuf:"bytes,3,opt,name=actionKey,proto3" json:"actionKey,omitempty"`
+	ActionValue      string                 `protobuf:"bytes,4,opt,name=actionValue,proto3" json:"actionValue,omitempty"`
+	TaskID           string                 `protobuf:"bytes,5,opt,name=taskID,proto3" json:"taskID,omitempty"`
+	ExpectedRevision int64                  `protobuf:"varint,6,opt,name=expectedRevision,proto3" json:"expectedRevision,omitempty"` // Required current notification revision
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *CardActionReq) Reset() {
 	*x = CardActionReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[178]
+	mi := &file_workbench_workbench_proto_msgTypes[180]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11359,7 +11479,7 @@ func (x *CardActionReq) String() string {
 func (*CardActionReq) ProtoMessage() {}
 
 func (x *CardActionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[178]
+	mi := &file_workbench_workbench_proto_msgTypes[180]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11372,7 +11492,7 @@ func (x *CardActionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardActionReq.ProtoReflect.Descriptor instead.
 func (*CardActionReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{178}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{180}
 }
 
 func (x *CardActionReq) GetNotifyID() string {
@@ -11419,17 +11539,17 @@ func (x *CardActionReq) GetExpectedRevision() int64 {
 
 type CardActionResp struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	CardUpdated      bool                   `protobuf:"varint,1,opt,name=cardUpdated,proto3" json:"cardUpdated"`
-	EventID          string                 `protobuf:"bytes,2,opt,name=eventID,proto3" json:"eventID"`
-	Revision         int64                  `protobuf:"varint,3,opt,name=revision,proto3" json:"revision"`
-	SubmissionStatus string                 `protobuf:"bytes,4,opt,name=submissionStatus,proto3" json:"submissionStatus"` // accepted, not business completion
+	CardUpdated      bool                   `protobuf:"varint,1,opt,name=cardUpdated,proto3" json:"cardUpdated,omitempty"`
+	EventID          string                 `protobuf:"bytes,2,opt,name=eventID,proto3" json:"eventID,omitempty"`
+	Revision         int64                  `protobuf:"varint,3,opt,name=revision,proto3" json:"revision,omitempty"`
+	SubmissionStatus string                 `protobuf:"bytes,4,opt,name=submissionStatus,proto3" json:"submissionStatus,omitempty"` // accepted, not business completion
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *CardActionResp) Reset() {
 	*x = CardActionResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[179]
+	mi := &file_workbench_workbench_proto_msgTypes[181]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11441,7 +11561,7 @@ func (x *CardActionResp) String() string {
 func (*CardActionResp) ProtoMessage() {}
 
 func (x *CardActionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[179]
+	mi := &file_workbench_workbench_proto_msgTypes[181]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11454,7 +11574,7 @@ func (x *CardActionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardActionResp.ProtoReflect.Descriptor instead.
 func (*CardActionResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{179}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{181}
 }
 
 func (x *CardActionResp) GetCardUpdated() bool {
@@ -11487,18 +11607,18 @@ func (x *CardActionResp) GetSubmissionStatus() string {
 
 type SetWorkbenchDataReq struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	Agentid         string                 `protobuf:"bytes,1,opt,name=agentid,proto3" json:"agentid"`
-	Type            string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type"` // keydata / image / list / webview
-	Data            string                 `protobuf:"bytes,3,opt,name=data,proto3" json:"data"` // JSON
-	ReplaceUserData bool                   `protobuf:"varint,4,opt,name=replaceUserData,proto3" json:"replaceUserData"`
-	UserID          string                 `protobuf:"bytes,5,opt,name=userID,proto3" json:"userID"`
+	Agentid         string                 `protobuf:"bytes,1,opt,name=agentid,proto3" json:"agentid,omitempty"`
+	Type            string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // keydata / image / list / webview
+	Data            string                 `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"` // JSON
+	ReplaceUserData bool                   `protobuf:"varint,4,opt,name=replaceUserData,proto3" json:"replaceUserData,omitempty"`
+	UserID          string                 `protobuf:"bytes,5,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *SetWorkbenchDataReq) Reset() {
 	*x = SetWorkbenchDataReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[180]
+	mi := &file_workbench_workbench_proto_msgTypes[182]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11510,7 +11630,7 @@ func (x *SetWorkbenchDataReq) String() string {
 func (*SetWorkbenchDataReq) ProtoMessage() {}
 
 func (x *SetWorkbenchDataReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[180]
+	mi := &file_workbench_workbench_proto_msgTypes[182]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11523,7 +11643,7 @@ func (x *SetWorkbenchDataReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWorkbenchDataReq.ProtoReflect.Descriptor instead.
 func (*SetWorkbenchDataReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{180}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{182}
 }
 
 func (x *SetWorkbenchDataReq) GetAgentid() string {
@@ -11569,7 +11689,7 @@ type SetWorkbenchDataResp struct {
 
 func (x *SetWorkbenchDataResp) Reset() {
 	*x = SetWorkbenchDataResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[181]
+	mi := &file_workbench_workbench_proto_msgTypes[183]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11581,7 +11701,7 @@ func (x *SetWorkbenchDataResp) String() string {
 func (*SetWorkbenchDataResp) ProtoMessage() {}
 
 func (x *SetWorkbenchDataResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[181]
+	mi := &file_workbench_workbench_proto_msgTypes[183]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11594,7 +11714,7 @@ func (x *SetWorkbenchDataResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWorkbenchDataResp.ProtoReflect.Descriptor instead.
 func (*SetWorkbenchDataResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{181}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{183}
 }
 
 var File_workbench_workbench_proto protoreflect.FileDescriptor
@@ -12057,7 +12177,13 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
 	"\x05appID\x18\x03 \x01(\tR\x05appID\x12\x16\n" +
 	"\x06pinned\x18\x04 \x01(\bR\x06pinned\"\x10\n" +
-	"\x0ePinUserAppResp\"D\n" +
+	"\x0ePinUserAppResp\"r\n" +
+	"\x0eHideUserAppReq\x12\x1a\n" +
+	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
+	"\x05appID\x18\x03 \x01(\tR\x05appID\x12\x16\n" +
+	"\x06hidden\x18\x04 \x01(\bR\x06hidden\"\x11\n" +
+	"\x0fHideUserAppResp\"D\n" +
 	"\x0eGetUserAppsReq\x12\x1a\n" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"@\n" +
@@ -12444,7 +12570,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"GetHomeReq\x12\x1a\n" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12 \n" +
-	"\vdataVersion\x18\x03 \x01(\tR\vdataVersion\"\xf8\x01\n" +
+	"\vdataVersion\x18\x03 \x01(\tR\vdataVersion\"\xee\x02\n" +
 	"\vGetHomeResp\x126\n" +
 	"\abanners\x18\x01 \x03(\v2\x1c.openim.workbench.BannerInfoR\abanners\x12>\n" +
 	"\n" +
@@ -12452,7 +12578,13 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"categories\x12-\n" +
 	"\x04apps\x18\x03 \x03(\v2\x19.openim.workbench.AppInfoR\x04apps\x12 \n" +
 	"\vdataVersion\x18\x04 \x01(\tR\vdataVersion\x12 \n" +
-	"\vnotModified\x18\x05 \x01(\bR\vnotModified\"W\n" +
+	"\vnotModified\x18\x05 \x01(\bR\vnotModified\x129\n" +
+	"\n" +
+	"pinnedApps\x18\x06 \x03(\v2\x19.openim.workbench.AppInfoR\n" +
+	"pinnedApps\x129\n" +
+	"\n" +
+	"hiddenApps\x18\a \x03(\v2\x19.openim.workbench.AppInfoR\n" +
+	"hiddenApps\"W\n" +
 	"\vClickAppReq\x12\x1a\n" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
@@ -12549,7 +12681,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\fReviewAction\x12\x1d\n" +
 	"\x19REVIEW_ACTION_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15REVIEW_ACTION_APPROVE\x10\x01\x12\x18\n" +
-	"\x14REVIEW_ACTION_REJECT\x10\x022\x81\x1a\n" +
+	"\x14REVIEW_ACTION_REJECT\x10\x022\xd5\x1a\n" +
 	"\tWorkbench\x12L\n" +
 	"\tcreateApp\x12\x1e.openim.workbench.CreateAppReq\x1a\x1f.openim.workbench.CreateAppResp\x12L\n" +
 	"\tupdateApp\x12\x1e.openim.workbench.UpdateAppReq\x1a\x1f.openim.workbench.UpdateAppResp\x12L\n" +
@@ -12582,6 +12714,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\fsortUserApps\x12!.openim.workbench.SortUserAppsReq\x1a\".openim.workbench.SortUserAppsResp\x12O\n" +
 	"\n" +
 	"pinUserApp\x12\x1f.openim.workbench.PinUserAppReq\x1a .openim.workbench.PinUserAppResp\x12R\n" +
+	"\vhideUserApp\x12 .openim.workbench.HideUserAppReq\x1a!.openim.workbench.HideUserAppResp\x12R\n" +
 	"\vgetUserApps\x12 .openim.workbench.GetUserAppsReq\x1a!.openim.workbench.GetUserAppsResp\x12a\n" +
 	"\x10getAvailableApps\x12%.openim.workbench.GetAvailableAppsReq\x1a&.openim.workbench.GetAvailableAppsResp\x12a\n" +
 	"\x10getWorkbenchApps\x12%.openim.workbench.GetWorkbenchAppsReq\x1a&.openim.workbench.GetWorkbenchAppsResp\x12g\n" +
@@ -12606,7 +12739,7 @@ func file_workbench_workbench_proto_rawDescGZIP() []byte {
 }
 
 var file_workbench_workbench_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 186)
+var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 188)
 var file_workbench_workbench_proto_goTypes = []any{
 	(AppSource)(0),                  // 0: openim.workbench.AppSource
 	(AppType)(0),                    // 1: openim.workbench.AppType
@@ -12690,163 +12823,165 @@ var file_workbench_workbench_proto_goTypes = []any{
 	(*SortUserAppsResp)(nil),        // 79: openim.workbench.SortUserAppsResp
 	(*PinUserAppReq)(nil),           // 80: openim.workbench.PinUserAppReq
 	(*PinUserAppResp)(nil),          // 81: openim.workbench.PinUserAppResp
-	(*GetUserAppsReq)(nil),          // 82: openim.workbench.GetUserAppsReq
-	(*GetUserAppsResp)(nil),         // 83: openim.workbench.GetUserAppsResp
-	(*GetAvailableAppsReq)(nil),     // 84: openim.workbench.GetAvailableAppsReq
-	(*GetAvailableAppsResp)(nil),    // 85: openim.workbench.GetAvailableAppsResp
-	(*GetWorkbenchAppsReq)(nil),     // 86: openim.workbench.GetWorkbenchAppsReq
-	(*GetWorkbenchAppsResp)(nil),    // 87: openim.workbench.GetWorkbenchAppsResp
-	(*CreateMsgTemplateReq)(nil),    // 88: openim.workbench.CreateMsgTemplateReq
-	(*CreateMsgTemplateResp)(nil),   // 89: openim.workbench.CreateMsgTemplateResp
-	(*UpdateMsgTemplateReq)(nil),    // 90: openim.workbench.UpdateMsgTemplateReq
-	(*UpdateMsgTemplateResp)(nil),   // 91: openim.workbench.UpdateMsgTemplateResp
-	(*DeleteMsgTemplateReq)(nil),    // 92: openim.workbench.DeleteMsgTemplateReq
-	(*DeleteMsgTemplateResp)(nil),   // 93: openim.workbench.DeleteMsgTemplateResp
-	(*GetMsgTemplateListReq)(nil),   // 94: openim.workbench.GetMsgTemplateListReq
-	(*GetMsgTemplateListResp)(nil),  // 95: openim.workbench.GetMsgTemplateListResp
-	(*PreviewMsgTemplateReq)(nil),   // 96: openim.workbench.PreviewMsgTemplateReq
-	(*PreviewMsgTemplateResp)(nil),  // 97: openim.workbench.PreviewMsgTemplateResp
-	(*SendNotifyReq)(nil),           // 98: openim.workbench.SendNotifyReq
-	(*SendNotifyResp)(nil),          // 99: openim.workbench.SendNotifyResp
-	(*BatchSendNotifyReq)(nil),      // 100: openim.workbench.BatchSendNotifyReq
-	(*BatchSendNotifyResp)(nil),     // 101: openim.workbench.BatchSendNotifyResp
-	(*UpdateNotifyReq)(nil),         // 102: openim.workbench.UpdateNotifyReq
-	(*UpdateNotifyResp)(nil),        // 103: openim.workbench.UpdateNotifyResp
-	(*RevokeNotifyReq)(nil),         // 104: openim.workbench.RevokeNotifyReq
-	(*RevokeNotifyResp)(nil),        // 105: openim.workbench.RevokeNotifyResp
-	(*QueryNotifyReq)(nil),          // 106: openim.workbench.QueryNotifyReq
-	(*QueryNotifyResp)(nil),         // 107: openim.workbench.QueryNotifyResp
-	(*GetNotifyListReq)(nil),        // 108: openim.workbench.GetNotifyListReq
-	(*GetNotifyListResp)(nil),       // 109: openim.workbench.GetNotifyListResp
-	(*GetNotifyStatsReq)(nil),       // 110: openim.workbench.GetNotifyStatsReq
-	(*GetNotifyStatsResp)(nil),      // 111: openim.workbench.GetNotifyStatsResp
-	(*CreateCredentialReq)(nil),     // 112: openim.workbench.CreateCredentialReq
-	(*CreateCredentialResp)(nil),    // 113: openim.workbench.CreateCredentialResp
-	(*ResetSecretReq)(nil),          // 114: openim.workbench.ResetSecretReq
-	(*ResetSecretResp)(nil),         // 115: openim.workbench.ResetSecretResp
-	(*GetCredentialReq)(nil),        // 116: openim.workbench.GetCredentialReq
-	(*GetCredentialResp)(nil),       // 117: openim.workbench.GetCredentialResp
-	(*SetIPWhitelistReq)(nil),       // 118: openim.workbench.SetIPWhitelistReq
-	(*SetIPWhitelistResp)(nil),      // 119: openim.workbench.SetIPWhitelistResp
-	(*GetAccessTokenReq)(nil),       // 120: openim.workbench.GetAccessTokenReq
-	(*GetAccessTokenResp)(nil),      // 121: openim.workbench.GetAccessTokenResp
-	(*AuthorizeAppReq)(nil),         // 122: openim.workbench.AuthorizeAppReq
-	(*AuthorizeAppResp)(nil),        // 123: openim.workbench.AuthorizeAppResp
-	(*RevokeAuthReq)(nil),           // 124: openim.workbench.RevokeAuthReq
-	(*RevokeAuthResp)(nil),          // 125: openim.workbench.RevokeAuthResp
-	(*GetAuthDetailReq)(nil),        // 126: openim.workbench.GetAuthDetailReq
-	(*GetAuthDetailResp)(nil),       // 127: openim.workbench.GetAuthDetailResp
-	(*CreateTicketReq)(nil),         // 128: openim.workbench.CreateTicketReq
-	(*CreateTicketResp)(nil),        // 129: openim.workbench.CreateTicketResp
-	(*GetUserByTicketReq)(nil),      // 130: openim.workbench.GetUserByTicketReq
-	(*GetUserByTicketResp)(nil),     // 131: openim.workbench.GetUserByTicketResp
-	(*RegisterDeveloperReq)(nil),    // 132: openim.workbench.RegisterDeveloperReq
-	(*RegisterDeveloperResp)(nil),   // 133: openim.workbench.RegisterDeveloperResp
-	(*LoginDeveloperReq)(nil),       // 134: openim.workbench.LoginDeveloperReq
-	(*LoginDeveloperResp)(nil),      // 135: openim.workbench.LoginDeveloperResp
-	(*UpdateDeveloperReq)(nil),      // 136: openim.workbench.UpdateDeveloperReq
-	(*UpdateDeveloperResp)(nil),     // 137: openim.workbench.UpdateDeveloperResp
-	(*GetDeveloperListReq)(nil),     // 138: openim.workbench.GetDeveloperListReq
-	(*GetDeveloperListResp)(nil),    // 139: openim.workbench.GetDeveloperListResp
-	(*ReviewDeveloperReq)(nil),      // 140: openim.workbench.ReviewDeveloperReq
-	(*ReviewDeveloperResp)(nil),     // 141: openim.workbench.ReviewDeveloperResp
-	(*DisableDeveloperReq)(nil),     // 142: openim.workbench.DisableDeveloperReq
-	(*DisableDeveloperResp)(nil),    // 143: openim.workbench.DisableDeveloperResp
-	(*CreateDeveloperAppReq)(nil),   // 144: openim.workbench.CreateDeveloperAppReq
-	(*CreateDeveloperAppResp)(nil),  // 145: openim.workbench.CreateDeveloperAppResp
-	(*SubmitAppReq)(nil),            // 146: openim.workbench.SubmitAppReq
-	(*SubmitAppResp)(nil),           // 147: openim.workbench.SubmitAppResp
-	(*WithdrawSubmitReq)(nil),       // 148: openim.workbench.WithdrawSubmitReq
-	(*WithdrawSubmitResp)(nil),      // 149: openim.workbench.WithdrawSubmitResp
-	(*GetDeveloperAppsReq)(nil),     // 150: openim.workbench.GetDeveloperAppsReq
-	(*GetDeveloperAppsResp)(nil),    // 151: openim.workbench.GetDeveloperAppsResp
-	(*GetPendingReviewsReq)(nil),    // 152: openim.workbench.GetPendingReviewsReq
-	(*GetPendingReviewsResp)(nil),   // 153: openim.workbench.GetPendingReviewsResp
-	(*GetReviewDetailReq)(nil),      // 154: openim.workbench.GetReviewDetailReq
-	(*GetReviewDetailResp)(nil),     // 155: openim.workbench.GetReviewDetailResp
-	(*ReviewActionReq)(nil),         // 156: openim.workbench.ReviewActionReq
-	(*ReviewActionResp)(nil),        // 157: openim.workbench.ReviewActionResp
-	(*ForceOfflineReq)(nil),         // 158: openim.workbench.ForceOfflineReq
-	(*ForceOfflineResp)(nil),        // 159: openim.workbench.ForceOfflineResp
-	(*SetWebhookReq)(nil),           // 160: openim.workbench.SetWebhookReq
-	(*SetWebhookResp)(nil),          // 161: openim.workbench.SetWebhookResp
-	(*GetWebhookReq)(nil),           // 162: openim.workbench.GetWebhookReq
-	(*GetWebhookResp)(nil),          // 163: openim.workbench.GetWebhookResp
-	(*GetWebhookLogsReq)(nil),       // 164: openim.workbench.GetWebhookLogsReq
-	(*GetWebhookLogsResp)(nil),      // 165: openim.workbench.GetWebhookLogsResp
-	(*RetryWebhookReq)(nil),         // 166: openim.workbench.RetryWebhookReq
-	(*RetryWebhookResp)(nil),        // 167: openim.workbench.RetryWebhookResp
-	(*GetMarketAppDetailReq)(nil),   // 168: openim.workbench.GetMarketAppDetailReq
-	(*GetMarketAppDetailResp)(nil),  // 169: openim.workbench.GetMarketAppDetailResp
-	(*BatchInstallAppReq)(nil),      // 170: openim.workbench.BatchInstallAppReq
-	(*BatchInstallAppResp)(nil),     // 171: openim.workbench.BatchInstallAppResp
-	(*GetNotifyDetailReq)(nil),      // 172: openim.workbench.GetNotifyDetailReq
-	(*GetNotifyDetailResp)(nil),     // 173: openim.workbench.GetNotifyDetailResp
-	(*GetReviewListReq)(nil),        // 174: openim.workbench.GetReviewListReq
-	(*GetReviewListResp)(nil),       // 175: openim.workbench.GetReviewListResp
-	(*GetPlatformStatsReq)(nil),     // 176: openim.workbench.GetPlatformStatsReq
-	(*GetPlatformStatsResp)(nil),    // 177: openim.workbench.GetPlatformStatsResp
-	(*GetTenantStatsReq)(nil),       // 178: openim.workbench.GetTenantStatsReq
-	(*GetTenantStatsResp)(nil),      // 179: openim.workbench.GetTenantStatsResp
-	(*GetHomeReq)(nil),              // 180: openim.workbench.GetHomeReq
-	(*GetHomeResp)(nil),             // 181: openim.workbench.GetHomeResp
-	(*ClickAppReq)(nil),             // 182: openim.workbench.ClickAppReq
-	(*ClickAppResp)(nil),            // 183: openim.workbench.ClickAppResp
-	(*LaunchAppReq)(nil),            // 184: openim.workbench.LaunchAppReq
-	(*LaunchAppResp)(nil),           // 185: openim.workbench.LaunchAppResp
-	(*NotifySendResult)(nil),        // 186: openim.workbench.NotifySendResult
-	(*CardActionReq)(nil),           // 187: openim.workbench.CardActionReq
-	(*CardActionResp)(nil),          // 188: openim.workbench.CardActionResp
-	(*SetWorkbenchDataReq)(nil),     // 189: openim.workbench.SetWorkbenchDataReq
-	(*SetWorkbenchDataResp)(nil),    // 190: openim.workbench.SetWorkbenchDataResp
-	nil,                             // 191: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	nil,                             // 192: openim.workbench.SendNotifyReq.DataEntry
-	nil,                             // 193: openim.workbench.BatchSendNotifyReq.DataEntry
-	nil,                             // 194: openim.workbench.UpdateNotifyReq.DataEntry
-	(*wrapperspb.StringValue)(nil),  // 195: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),   // 196: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),    // 197: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil), // 198: openim.sdkws.RequestPagination
-	(*wrapperspb.Int64Value)(nil),   // 199: openim.protobuf.Int64Value
+	(*HideUserAppReq)(nil),          // 82: openim.workbench.HideUserAppReq
+	(*HideUserAppResp)(nil),         // 83: openim.workbench.HideUserAppResp
+	(*GetUserAppsReq)(nil),          // 84: openim.workbench.GetUserAppsReq
+	(*GetUserAppsResp)(nil),         // 85: openim.workbench.GetUserAppsResp
+	(*GetAvailableAppsReq)(nil),     // 86: openim.workbench.GetAvailableAppsReq
+	(*GetAvailableAppsResp)(nil),    // 87: openim.workbench.GetAvailableAppsResp
+	(*GetWorkbenchAppsReq)(nil),     // 88: openim.workbench.GetWorkbenchAppsReq
+	(*GetWorkbenchAppsResp)(nil),    // 89: openim.workbench.GetWorkbenchAppsResp
+	(*CreateMsgTemplateReq)(nil),    // 90: openim.workbench.CreateMsgTemplateReq
+	(*CreateMsgTemplateResp)(nil),   // 91: openim.workbench.CreateMsgTemplateResp
+	(*UpdateMsgTemplateReq)(nil),    // 92: openim.workbench.UpdateMsgTemplateReq
+	(*UpdateMsgTemplateResp)(nil),   // 93: openim.workbench.UpdateMsgTemplateResp
+	(*DeleteMsgTemplateReq)(nil),    // 94: openim.workbench.DeleteMsgTemplateReq
+	(*DeleteMsgTemplateResp)(nil),   // 95: openim.workbench.DeleteMsgTemplateResp
+	(*GetMsgTemplateListReq)(nil),   // 96: openim.workbench.GetMsgTemplateListReq
+	(*GetMsgTemplateListResp)(nil),  // 97: openim.workbench.GetMsgTemplateListResp
+	(*PreviewMsgTemplateReq)(nil),   // 98: openim.workbench.PreviewMsgTemplateReq
+	(*PreviewMsgTemplateResp)(nil),  // 99: openim.workbench.PreviewMsgTemplateResp
+	(*SendNotifyReq)(nil),           // 100: openim.workbench.SendNotifyReq
+	(*SendNotifyResp)(nil),          // 101: openim.workbench.SendNotifyResp
+	(*BatchSendNotifyReq)(nil),      // 102: openim.workbench.BatchSendNotifyReq
+	(*BatchSendNotifyResp)(nil),     // 103: openim.workbench.BatchSendNotifyResp
+	(*UpdateNotifyReq)(nil),         // 104: openim.workbench.UpdateNotifyReq
+	(*UpdateNotifyResp)(nil),        // 105: openim.workbench.UpdateNotifyResp
+	(*RevokeNotifyReq)(nil),         // 106: openim.workbench.RevokeNotifyReq
+	(*RevokeNotifyResp)(nil),        // 107: openim.workbench.RevokeNotifyResp
+	(*QueryNotifyReq)(nil),          // 108: openim.workbench.QueryNotifyReq
+	(*QueryNotifyResp)(nil),         // 109: openim.workbench.QueryNotifyResp
+	(*GetNotifyListReq)(nil),        // 110: openim.workbench.GetNotifyListReq
+	(*GetNotifyListResp)(nil),       // 111: openim.workbench.GetNotifyListResp
+	(*GetNotifyStatsReq)(nil),       // 112: openim.workbench.GetNotifyStatsReq
+	(*GetNotifyStatsResp)(nil),      // 113: openim.workbench.GetNotifyStatsResp
+	(*CreateCredentialReq)(nil),     // 114: openim.workbench.CreateCredentialReq
+	(*CreateCredentialResp)(nil),    // 115: openim.workbench.CreateCredentialResp
+	(*ResetSecretReq)(nil),          // 116: openim.workbench.ResetSecretReq
+	(*ResetSecretResp)(nil),         // 117: openim.workbench.ResetSecretResp
+	(*GetCredentialReq)(nil),        // 118: openim.workbench.GetCredentialReq
+	(*GetCredentialResp)(nil),       // 119: openim.workbench.GetCredentialResp
+	(*SetIPWhitelistReq)(nil),       // 120: openim.workbench.SetIPWhitelistReq
+	(*SetIPWhitelistResp)(nil),      // 121: openim.workbench.SetIPWhitelistResp
+	(*GetAccessTokenReq)(nil),       // 122: openim.workbench.GetAccessTokenReq
+	(*GetAccessTokenResp)(nil),      // 123: openim.workbench.GetAccessTokenResp
+	(*AuthorizeAppReq)(nil),         // 124: openim.workbench.AuthorizeAppReq
+	(*AuthorizeAppResp)(nil),        // 125: openim.workbench.AuthorizeAppResp
+	(*RevokeAuthReq)(nil),           // 126: openim.workbench.RevokeAuthReq
+	(*RevokeAuthResp)(nil),          // 127: openim.workbench.RevokeAuthResp
+	(*GetAuthDetailReq)(nil),        // 128: openim.workbench.GetAuthDetailReq
+	(*GetAuthDetailResp)(nil),       // 129: openim.workbench.GetAuthDetailResp
+	(*CreateTicketReq)(nil),         // 130: openim.workbench.CreateTicketReq
+	(*CreateTicketResp)(nil),        // 131: openim.workbench.CreateTicketResp
+	(*GetUserByTicketReq)(nil),      // 132: openim.workbench.GetUserByTicketReq
+	(*GetUserByTicketResp)(nil),     // 133: openim.workbench.GetUserByTicketResp
+	(*RegisterDeveloperReq)(nil),    // 134: openim.workbench.RegisterDeveloperReq
+	(*RegisterDeveloperResp)(nil),   // 135: openim.workbench.RegisterDeveloperResp
+	(*LoginDeveloperReq)(nil),       // 136: openim.workbench.LoginDeveloperReq
+	(*LoginDeveloperResp)(nil),      // 137: openim.workbench.LoginDeveloperResp
+	(*UpdateDeveloperReq)(nil),      // 138: openim.workbench.UpdateDeveloperReq
+	(*UpdateDeveloperResp)(nil),     // 139: openim.workbench.UpdateDeveloperResp
+	(*GetDeveloperListReq)(nil),     // 140: openim.workbench.GetDeveloperListReq
+	(*GetDeveloperListResp)(nil),    // 141: openim.workbench.GetDeveloperListResp
+	(*ReviewDeveloperReq)(nil),      // 142: openim.workbench.ReviewDeveloperReq
+	(*ReviewDeveloperResp)(nil),     // 143: openim.workbench.ReviewDeveloperResp
+	(*DisableDeveloperReq)(nil),     // 144: openim.workbench.DisableDeveloperReq
+	(*DisableDeveloperResp)(nil),    // 145: openim.workbench.DisableDeveloperResp
+	(*CreateDeveloperAppReq)(nil),   // 146: openim.workbench.CreateDeveloperAppReq
+	(*CreateDeveloperAppResp)(nil),  // 147: openim.workbench.CreateDeveloperAppResp
+	(*SubmitAppReq)(nil),            // 148: openim.workbench.SubmitAppReq
+	(*SubmitAppResp)(nil),           // 149: openim.workbench.SubmitAppResp
+	(*WithdrawSubmitReq)(nil),       // 150: openim.workbench.WithdrawSubmitReq
+	(*WithdrawSubmitResp)(nil),      // 151: openim.workbench.WithdrawSubmitResp
+	(*GetDeveloperAppsReq)(nil),     // 152: openim.workbench.GetDeveloperAppsReq
+	(*GetDeveloperAppsResp)(nil),    // 153: openim.workbench.GetDeveloperAppsResp
+	(*GetPendingReviewsReq)(nil),    // 154: openim.workbench.GetPendingReviewsReq
+	(*GetPendingReviewsResp)(nil),   // 155: openim.workbench.GetPendingReviewsResp
+	(*GetReviewDetailReq)(nil),      // 156: openim.workbench.GetReviewDetailReq
+	(*GetReviewDetailResp)(nil),     // 157: openim.workbench.GetReviewDetailResp
+	(*ReviewActionReq)(nil),         // 158: openim.workbench.ReviewActionReq
+	(*ReviewActionResp)(nil),        // 159: openim.workbench.ReviewActionResp
+	(*ForceOfflineReq)(nil),         // 160: openim.workbench.ForceOfflineReq
+	(*ForceOfflineResp)(nil),        // 161: openim.workbench.ForceOfflineResp
+	(*SetWebhookReq)(nil),           // 162: openim.workbench.SetWebhookReq
+	(*SetWebhookResp)(nil),          // 163: openim.workbench.SetWebhookResp
+	(*GetWebhookReq)(nil),           // 164: openim.workbench.GetWebhookReq
+	(*GetWebhookResp)(nil),          // 165: openim.workbench.GetWebhookResp
+	(*GetWebhookLogsReq)(nil),       // 166: openim.workbench.GetWebhookLogsReq
+	(*GetWebhookLogsResp)(nil),      // 167: openim.workbench.GetWebhookLogsResp
+	(*RetryWebhookReq)(nil),         // 168: openim.workbench.RetryWebhookReq
+	(*RetryWebhookResp)(nil),        // 169: openim.workbench.RetryWebhookResp
+	(*GetMarketAppDetailReq)(nil),   // 170: openim.workbench.GetMarketAppDetailReq
+	(*GetMarketAppDetailResp)(nil),  // 171: openim.workbench.GetMarketAppDetailResp
+	(*BatchInstallAppReq)(nil),      // 172: openim.workbench.BatchInstallAppReq
+	(*BatchInstallAppResp)(nil),     // 173: openim.workbench.BatchInstallAppResp
+	(*GetNotifyDetailReq)(nil),      // 174: openim.workbench.GetNotifyDetailReq
+	(*GetNotifyDetailResp)(nil),     // 175: openim.workbench.GetNotifyDetailResp
+	(*GetReviewListReq)(nil),        // 176: openim.workbench.GetReviewListReq
+	(*GetReviewListResp)(nil),       // 177: openim.workbench.GetReviewListResp
+	(*GetPlatformStatsReq)(nil),     // 178: openim.workbench.GetPlatformStatsReq
+	(*GetPlatformStatsResp)(nil),    // 179: openim.workbench.GetPlatformStatsResp
+	(*GetTenantStatsReq)(nil),       // 180: openim.workbench.GetTenantStatsReq
+	(*GetTenantStatsResp)(nil),      // 181: openim.workbench.GetTenantStatsResp
+	(*GetHomeReq)(nil),              // 182: openim.workbench.GetHomeReq
+	(*GetHomeResp)(nil),             // 183: openim.workbench.GetHomeResp
+	(*ClickAppReq)(nil),             // 184: openim.workbench.ClickAppReq
+	(*ClickAppResp)(nil),            // 185: openim.workbench.ClickAppResp
+	(*LaunchAppReq)(nil),            // 186: openim.workbench.LaunchAppReq
+	(*LaunchAppResp)(nil),           // 187: openim.workbench.LaunchAppResp
+	(*NotifySendResult)(nil),        // 188: openim.workbench.NotifySendResult
+	(*CardActionReq)(nil),           // 189: openim.workbench.CardActionReq
+	(*CardActionResp)(nil),          // 190: openim.workbench.CardActionResp
+	(*SetWorkbenchDataReq)(nil),     // 191: openim.workbench.SetWorkbenchDataReq
+	(*SetWorkbenchDataResp)(nil),    // 192: openim.workbench.SetWorkbenchDataResp
+	nil,                             // 193: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	nil,                             // 194: openim.workbench.SendNotifyReq.DataEntry
+	nil,                             // 195: openim.workbench.BatchSendNotifyReq.DataEntry
+	nil,                             // 196: openim.workbench.UpdateNotifyReq.DataEntry
+	(*wrapperspb.StringValue)(nil),  // 197: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),   // 198: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),    // 199: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil), // 200: openim.sdkws.RequestPagination
+	(*wrapperspb.Int64Value)(nil),   // 201: openim.protobuf.Int64Value
 }
 var file_workbench_workbench_proto_depIdxs = []int32{
 	11,  // 0: openim.workbench.CategoryInfo.children:type_name -> openim.workbench.CategoryInfo
-	195, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
-	195, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
-	195, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
-	196, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
-	195, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
-	196, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
-	195, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
-	196, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	197, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
-	195, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
+	197, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
+	197, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
+	197, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
+	198, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
+	197, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
+	198, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
+	197, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
+	198, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	199, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
+	197, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
 	9,   // 11: openim.workbench.GetAppResp.app:type_name -> openim.workbench.AppInfo
-	198, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 13: openim.workbench.GetAppListResp.apps:type_name -> openim.workbench.AppInfo
-	195, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
-	195, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
-	196, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	197, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
+	197, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
+	198, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
 	11,  // 17: openim.workbench.GetCategoryListResp.categories:type_name -> openim.workbench.CategoryInfo
 	47,  // 18: openim.workbench.SortCategoriesReq.items:type_name -> openim.workbench.CategorySortItem
-	195, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
-	195, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
-	196, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
-	195, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
-	196, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
-	196, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	199, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
-	199, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
-	196, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
-	198, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	197, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
+	197, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
+	198, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
+	197, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
+	198, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
+	198, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	201, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
+	201, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
+	198, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
+	200, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	12,  // 29: openim.workbench.GetBannerListResp.banners:type_name -> openim.workbench.BannerInfo
-	198, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 31: openim.workbench.GetInstalledAppsResp.apps:type_name -> openim.workbench.AppInfo
-	198, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 33: openim.workbench.GetMarketAppsResp.apps:type_name -> openim.workbench.AppInfo
-	198, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 35: openim.workbench.SearchMarketResp.apps:type_name -> openim.workbench.AppInfo
-	198, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 37: openim.workbench.GetRecommendResp.recommended:type_name -> openim.workbench.AppInfo
 	9,   // 38: openim.workbench.GetRecommendResp.popular:type_name -> openim.workbench.AppInfo
 	14,  // 39: openim.workbench.SetAppScopeReq.scopes:type_name -> openim.workbench.AppScopeInfo
@@ -12856,134 +12991,138 @@ var file_workbench_workbench_proto_depIdxs = []int32{
 	9,   // 43: openim.workbench.GetAvailableAppsResp.apps:type_name -> openim.workbench.AppInfo
 	11,  // 44: openim.workbench.GetWorkbenchAppsResp.categories:type_name -> openim.workbench.CategoryInfo
 	9,   // 45: openim.workbench.GetWorkbenchAppsResp.apps:type_name -> openim.workbench.AppInfo
-	195, // 46: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
-	195, // 47: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
-	195, // 48: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
-	197, // 49: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
-	195, // 50: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
-	196, // 51: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
-	195, // 52: openim.workbench.UpdateMsgTemplateReq.cardJSON:type_name -> openim.protobuf.StringValue
-	198, // 53: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	197, // 46: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
+	197, // 47: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
+	197, // 48: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
+	199, // 49: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
+	197, // 50: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
+	198, // 51: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
+	197, // 52: openim.workbench.UpdateMsgTemplateReq.cardJSON:type_name -> openim.protobuf.StringValue
+	200, // 53: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	18,  // 54: openim.workbench.GetMsgTemplateListResp.templates:type_name -> openim.workbench.MsgTemplateInfo
-	191, // 55: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	192, // 56: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
-	193, // 57: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
-	186, // 58: openim.workbench.BatchSendNotifyResp.results:type_name -> openim.workbench.NotifySendResult
-	194, // 59: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
-	195, // 60: openim.workbench.UpdateNotifyReq.cardJSON:type_name -> openim.protobuf.StringValue
-	195, // 61: openim.workbench.UpdateNotifyReq.detailJSON:type_name -> openim.protobuf.StringValue
+	193, // 55: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	194, // 56: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
+	195, // 57: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
+	188, // 58: openim.workbench.BatchSendNotifyResp.results:type_name -> openim.workbench.NotifySendResult
+	196, // 59: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
+	197, // 60: openim.workbench.UpdateNotifyReq.cardJSON:type_name -> openim.protobuf.StringValue
+	197, // 61: openim.workbench.UpdateNotifyReq.detailJSON:type_name -> openim.protobuf.StringValue
 	19,  // 62: openim.workbench.QueryNotifyResp.logs:type_name -> openim.workbench.NotifyLogInfo
-	198, // 63: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 63: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	19,  // 64: openim.workbench.GetNotifyListResp.logs:type_name -> openim.workbench.NotifyLogInfo
 	16,  // 65: openim.workbench.GetCredentialResp.credential:type_name -> openim.workbench.AppCredentialInfo
 	17,  // 66: openim.workbench.GetAuthDetailResp.auth:type_name -> openim.workbench.OAuthAuthInfo
 	20,  // 67: openim.workbench.LoginDeveloperResp.developer:type_name -> openim.workbench.DeveloperInfo
-	195, // 68: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
-	195, // 69: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
-	195, // 70: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
-	195, // 71: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
-	198, // 72: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	197, // 68: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
+	197, // 69: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
+	197, // 70: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
+	197, // 71: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
+	200, // 72: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	20,  // 73: openim.workbench.GetDeveloperListResp.developers:type_name -> openim.workbench.DeveloperInfo
-	198, // 74: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 74: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 75: openim.workbench.GetDeveloperAppsResp.apps:type_name -> openim.workbench.AppInfo
-	198, // 76: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 76: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	21,  // 77: openim.workbench.GetPendingReviewsResp.reviews:type_name -> openim.workbench.AppReviewInfo
 	21,  // 78: openim.workbench.GetReviewDetailResp.review:type_name -> openim.workbench.AppReviewInfo
 	9,   // 79: openim.workbench.GetReviewDetailResp.app:type_name -> openim.workbench.AppInfo
 	20,  // 80: openim.workbench.GetReviewDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
 	22,  // 81: openim.workbench.GetWebhookResp.webhook:type_name -> openim.workbench.WebhookInfo
-	198, // 82: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 82: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	23,  // 83: openim.workbench.GetWebhookLogsResp.logs:type_name -> openim.workbench.WebhookLogInfo
 	9,   // 84: openim.workbench.GetMarketAppDetailResp.app:type_name -> openim.workbench.AppInfo
 	20,  // 85: openim.workbench.GetMarketAppDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
 	10,  // 86: openim.workbench.GetMarketAppDetailResp.versions:type_name -> openim.workbench.AppVersionInfo
 	19,  // 87: openim.workbench.GetNotifyDetailResp.log:type_name -> openim.workbench.NotifyLogInfo
-	198, // 88: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	200, // 88: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	21,  // 89: openim.workbench.GetReviewListResp.reviews:type_name -> openim.workbench.AppReviewInfo
 	12,  // 90: openim.workbench.GetHomeResp.banners:type_name -> openim.workbench.BannerInfo
 	11,  // 91: openim.workbench.GetHomeResp.categories:type_name -> openim.workbench.CategoryInfo
 	9,   // 92: openim.workbench.GetHomeResp.apps:type_name -> openim.workbench.AppInfo
-	24,  // 93: openim.workbench.Workbench.createApp:input_type -> openim.workbench.CreateAppReq
-	26,  // 94: openim.workbench.Workbench.updateApp:input_type -> openim.workbench.UpdateAppReq
-	28,  // 95: openim.workbench.Workbench.deleteApp:input_type -> openim.workbench.DeleteAppReq
-	30,  // 96: openim.workbench.Workbench.getApp:input_type -> openim.workbench.GetAppReq
-	32,  // 97: openim.workbench.Workbench.getAppList:input_type -> openim.workbench.GetAppListReq
-	34,  // 98: openim.workbench.Workbench.setAppStatus:input_type -> openim.workbench.SetAppStatusReq
-	36,  // 99: openim.workbench.Workbench.pushInstall:input_type -> openim.workbench.PushInstallReq
-	38,  // 100: openim.workbench.Workbench.createCategory:input_type -> openim.workbench.CreateCategoryReq
-	40,  // 101: openim.workbench.Workbench.updateCategory:input_type -> openim.workbench.UpdateCategoryReq
-	42,  // 102: openim.workbench.Workbench.deleteCategory:input_type -> openim.workbench.DeleteCategoryReq
-	44,  // 103: openim.workbench.Workbench.getCategoryList:input_type -> openim.workbench.GetCategoryListReq
-	46,  // 104: openim.workbench.Workbench.sortCategories:input_type -> openim.workbench.SortCategoriesReq
-	49,  // 105: openim.workbench.Workbench.createBanner:input_type -> openim.workbench.CreateBannerReq
-	51,  // 106: openim.workbench.Workbench.updateBanner:input_type -> openim.workbench.UpdateBannerReq
-	53,  // 107: openim.workbench.Workbench.deleteBanner:input_type -> openim.workbench.DeleteBannerReq
-	55,  // 108: openim.workbench.Workbench.getBannerList:input_type -> openim.workbench.GetBannerListReq
-	57,  // 109: openim.workbench.Workbench.installApp:input_type -> openim.workbench.InstallAppReq
-	59,  // 110: openim.workbench.Workbench.uninstallApp:input_type -> openim.workbench.UninstallAppReq
-	61,  // 111: openim.workbench.Workbench.getInstalledApps:input_type -> openim.workbench.GetInstalledAppsReq
-	63,  // 112: openim.workbench.Workbench.getMarketApps:input_type -> openim.workbench.GetMarketAppsReq
-	65,  // 113: openim.workbench.Workbench.searchMarket:input_type -> openim.workbench.SearchMarketReq
-	67,  // 114: openim.workbench.Workbench.getRecommend:input_type -> openim.workbench.GetRecommendReq
-	69,  // 115: openim.workbench.Workbench.setAppScope:input_type -> openim.workbench.SetAppScopeReq
-	71,  // 116: openim.workbench.Workbench.getAppScope:input_type -> openim.workbench.GetAppScopeReq
-	73,  // 117: openim.workbench.Workbench.addUserApps:input_type -> openim.workbench.AddUserAppsReq
-	75,  // 118: openim.workbench.Workbench.removeUserApps:input_type -> openim.workbench.RemoveUserAppsReq
-	77,  // 119: openim.workbench.Workbench.sortUserApps:input_type -> openim.workbench.SortUserAppsReq
-	80,  // 120: openim.workbench.Workbench.pinUserApp:input_type -> openim.workbench.PinUserAppReq
-	82,  // 121: openim.workbench.Workbench.getUserApps:input_type -> openim.workbench.GetUserAppsReq
-	84,  // 122: openim.workbench.Workbench.getAvailableApps:input_type -> openim.workbench.GetAvailableAppsReq
-	86,  // 123: openim.workbench.Workbench.getWorkbenchApps:input_type -> openim.workbench.GetWorkbenchAppsReq
-	168, // 124: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
-	170, // 125: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
-	176, // 126: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
-	178, // 127: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
-	180, // 128: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
-	182, // 129: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
-	184, // 130: openim.workbench.Workbench.launchApp:input_type -> openim.workbench.LaunchAppReq
-	25,  // 131: openim.workbench.Workbench.createApp:output_type -> openim.workbench.CreateAppResp
-	27,  // 132: openim.workbench.Workbench.updateApp:output_type -> openim.workbench.UpdateAppResp
-	29,  // 133: openim.workbench.Workbench.deleteApp:output_type -> openim.workbench.DeleteAppResp
-	31,  // 134: openim.workbench.Workbench.getApp:output_type -> openim.workbench.GetAppResp
-	33,  // 135: openim.workbench.Workbench.getAppList:output_type -> openim.workbench.GetAppListResp
-	35,  // 136: openim.workbench.Workbench.setAppStatus:output_type -> openim.workbench.SetAppStatusResp
-	37,  // 137: openim.workbench.Workbench.pushInstall:output_type -> openim.workbench.PushInstallResp
-	39,  // 138: openim.workbench.Workbench.createCategory:output_type -> openim.workbench.CreateCategoryResp
-	41,  // 139: openim.workbench.Workbench.updateCategory:output_type -> openim.workbench.UpdateCategoryResp
-	43,  // 140: openim.workbench.Workbench.deleteCategory:output_type -> openim.workbench.DeleteCategoryResp
-	45,  // 141: openim.workbench.Workbench.getCategoryList:output_type -> openim.workbench.GetCategoryListResp
-	48,  // 142: openim.workbench.Workbench.sortCategories:output_type -> openim.workbench.SortCategoriesResp
-	50,  // 143: openim.workbench.Workbench.createBanner:output_type -> openim.workbench.CreateBannerResp
-	52,  // 144: openim.workbench.Workbench.updateBanner:output_type -> openim.workbench.UpdateBannerResp
-	54,  // 145: openim.workbench.Workbench.deleteBanner:output_type -> openim.workbench.DeleteBannerResp
-	56,  // 146: openim.workbench.Workbench.getBannerList:output_type -> openim.workbench.GetBannerListResp
-	58,  // 147: openim.workbench.Workbench.installApp:output_type -> openim.workbench.InstallAppResp
-	60,  // 148: openim.workbench.Workbench.uninstallApp:output_type -> openim.workbench.UninstallAppResp
-	62,  // 149: openim.workbench.Workbench.getInstalledApps:output_type -> openim.workbench.GetInstalledAppsResp
-	64,  // 150: openim.workbench.Workbench.getMarketApps:output_type -> openim.workbench.GetMarketAppsResp
-	66,  // 151: openim.workbench.Workbench.searchMarket:output_type -> openim.workbench.SearchMarketResp
-	68,  // 152: openim.workbench.Workbench.getRecommend:output_type -> openim.workbench.GetRecommendResp
-	70,  // 153: openim.workbench.Workbench.setAppScope:output_type -> openim.workbench.SetAppScopeResp
-	72,  // 154: openim.workbench.Workbench.getAppScope:output_type -> openim.workbench.GetAppScopeResp
-	74,  // 155: openim.workbench.Workbench.addUserApps:output_type -> openim.workbench.AddUserAppsResp
-	76,  // 156: openim.workbench.Workbench.removeUserApps:output_type -> openim.workbench.RemoveUserAppsResp
-	79,  // 157: openim.workbench.Workbench.sortUserApps:output_type -> openim.workbench.SortUserAppsResp
-	81,  // 158: openim.workbench.Workbench.pinUserApp:output_type -> openim.workbench.PinUserAppResp
-	83,  // 159: openim.workbench.Workbench.getUserApps:output_type -> openim.workbench.GetUserAppsResp
-	85,  // 160: openim.workbench.Workbench.getAvailableApps:output_type -> openim.workbench.GetAvailableAppsResp
-	87,  // 161: openim.workbench.Workbench.getWorkbenchApps:output_type -> openim.workbench.GetWorkbenchAppsResp
-	169, // 162: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
-	171, // 163: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
-	177, // 164: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
-	179, // 165: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
-	181, // 166: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
-	183, // 167: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
-	185, // 168: openim.workbench.Workbench.launchApp:output_type -> openim.workbench.LaunchAppResp
-	131, // [131:169] is the sub-list for method output_type
-	93,  // [93:131] is the sub-list for method input_type
-	93,  // [93:93] is the sub-list for extension type_name
-	93,  // [93:93] is the sub-list for extension extendee
-	0,   // [0:93] is the sub-list for field type_name
+	9,   // 93: openim.workbench.GetHomeResp.pinnedApps:type_name -> openim.workbench.AppInfo
+	9,   // 94: openim.workbench.GetHomeResp.hiddenApps:type_name -> openim.workbench.AppInfo
+	24,  // 95: openim.workbench.Workbench.createApp:input_type -> openim.workbench.CreateAppReq
+	26,  // 96: openim.workbench.Workbench.updateApp:input_type -> openim.workbench.UpdateAppReq
+	28,  // 97: openim.workbench.Workbench.deleteApp:input_type -> openim.workbench.DeleteAppReq
+	30,  // 98: openim.workbench.Workbench.getApp:input_type -> openim.workbench.GetAppReq
+	32,  // 99: openim.workbench.Workbench.getAppList:input_type -> openim.workbench.GetAppListReq
+	34,  // 100: openim.workbench.Workbench.setAppStatus:input_type -> openim.workbench.SetAppStatusReq
+	36,  // 101: openim.workbench.Workbench.pushInstall:input_type -> openim.workbench.PushInstallReq
+	38,  // 102: openim.workbench.Workbench.createCategory:input_type -> openim.workbench.CreateCategoryReq
+	40,  // 103: openim.workbench.Workbench.updateCategory:input_type -> openim.workbench.UpdateCategoryReq
+	42,  // 104: openim.workbench.Workbench.deleteCategory:input_type -> openim.workbench.DeleteCategoryReq
+	44,  // 105: openim.workbench.Workbench.getCategoryList:input_type -> openim.workbench.GetCategoryListReq
+	46,  // 106: openim.workbench.Workbench.sortCategories:input_type -> openim.workbench.SortCategoriesReq
+	49,  // 107: openim.workbench.Workbench.createBanner:input_type -> openim.workbench.CreateBannerReq
+	51,  // 108: openim.workbench.Workbench.updateBanner:input_type -> openim.workbench.UpdateBannerReq
+	53,  // 109: openim.workbench.Workbench.deleteBanner:input_type -> openim.workbench.DeleteBannerReq
+	55,  // 110: openim.workbench.Workbench.getBannerList:input_type -> openim.workbench.GetBannerListReq
+	57,  // 111: openim.workbench.Workbench.installApp:input_type -> openim.workbench.InstallAppReq
+	59,  // 112: openim.workbench.Workbench.uninstallApp:input_type -> openim.workbench.UninstallAppReq
+	61,  // 113: openim.workbench.Workbench.getInstalledApps:input_type -> openim.workbench.GetInstalledAppsReq
+	63,  // 114: openim.workbench.Workbench.getMarketApps:input_type -> openim.workbench.GetMarketAppsReq
+	65,  // 115: openim.workbench.Workbench.searchMarket:input_type -> openim.workbench.SearchMarketReq
+	67,  // 116: openim.workbench.Workbench.getRecommend:input_type -> openim.workbench.GetRecommendReq
+	69,  // 117: openim.workbench.Workbench.setAppScope:input_type -> openim.workbench.SetAppScopeReq
+	71,  // 118: openim.workbench.Workbench.getAppScope:input_type -> openim.workbench.GetAppScopeReq
+	73,  // 119: openim.workbench.Workbench.addUserApps:input_type -> openim.workbench.AddUserAppsReq
+	75,  // 120: openim.workbench.Workbench.removeUserApps:input_type -> openim.workbench.RemoveUserAppsReq
+	77,  // 121: openim.workbench.Workbench.sortUserApps:input_type -> openim.workbench.SortUserAppsReq
+	80,  // 122: openim.workbench.Workbench.pinUserApp:input_type -> openim.workbench.PinUserAppReq
+	82,  // 123: openim.workbench.Workbench.hideUserApp:input_type -> openim.workbench.HideUserAppReq
+	84,  // 124: openim.workbench.Workbench.getUserApps:input_type -> openim.workbench.GetUserAppsReq
+	86,  // 125: openim.workbench.Workbench.getAvailableApps:input_type -> openim.workbench.GetAvailableAppsReq
+	88,  // 126: openim.workbench.Workbench.getWorkbenchApps:input_type -> openim.workbench.GetWorkbenchAppsReq
+	170, // 127: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
+	172, // 128: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
+	178, // 129: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
+	180, // 130: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
+	182, // 131: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
+	184, // 132: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
+	186, // 133: openim.workbench.Workbench.launchApp:input_type -> openim.workbench.LaunchAppReq
+	25,  // 134: openim.workbench.Workbench.createApp:output_type -> openim.workbench.CreateAppResp
+	27,  // 135: openim.workbench.Workbench.updateApp:output_type -> openim.workbench.UpdateAppResp
+	29,  // 136: openim.workbench.Workbench.deleteApp:output_type -> openim.workbench.DeleteAppResp
+	31,  // 137: openim.workbench.Workbench.getApp:output_type -> openim.workbench.GetAppResp
+	33,  // 138: openim.workbench.Workbench.getAppList:output_type -> openim.workbench.GetAppListResp
+	35,  // 139: openim.workbench.Workbench.setAppStatus:output_type -> openim.workbench.SetAppStatusResp
+	37,  // 140: openim.workbench.Workbench.pushInstall:output_type -> openim.workbench.PushInstallResp
+	39,  // 141: openim.workbench.Workbench.createCategory:output_type -> openim.workbench.CreateCategoryResp
+	41,  // 142: openim.workbench.Workbench.updateCategory:output_type -> openim.workbench.UpdateCategoryResp
+	43,  // 143: openim.workbench.Workbench.deleteCategory:output_type -> openim.workbench.DeleteCategoryResp
+	45,  // 144: openim.workbench.Workbench.getCategoryList:output_type -> openim.workbench.GetCategoryListResp
+	48,  // 145: openim.workbench.Workbench.sortCategories:output_type -> openim.workbench.SortCategoriesResp
+	50,  // 146: openim.workbench.Workbench.createBanner:output_type -> openim.workbench.CreateBannerResp
+	52,  // 147: openim.workbench.Workbench.updateBanner:output_type -> openim.workbench.UpdateBannerResp
+	54,  // 148: openim.workbench.Workbench.deleteBanner:output_type -> openim.workbench.DeleteBannerResp
+	56,  // 149: openim.workbench.Workbench.getBannerList:output_type -> openim.workbench.GetBannerListResp
+	58,  // 150: openim.workbench.Workbench.installApp:output_type -> openim.workbench.InstallAppResp
+	60,  // 151: openim.workbench.Workbench.uninstallApp:output_type -> openim.workbench.UninstallAppResp
+	62,  // 152: openim.workbench.Workbench.getInstalledApps:output_type -> openim.workbench.GetInstalledAppsResp
+	64,  // 153: openim.workbench.Workbench.getMarketApps:output_type -> openim.workbench.GetMarketAppsResp
+	66,  // 154: openim.workbench.Workbench.searchMarket:output_type -> openim.workbench.SearchMarketResp
+	68,  // 155: openim.workbench.Workbench.getRecommend:output_type -> openim.workbench.GetRecommendResp
+	70,  // 156: openim.workbench.Workbench.setAppScope:output_type -> openim.workbench.SetAppScopeResp
+	72,  // 157: openim.workbench.Workbench.getAppScope:output_type -> openim.workbench.GetAppScopeResp
+	74,  // 158: openim.workbench.Workbench.addUserApps:output_type -> openim.workbench.AddUserAppsResp
+	76,  // 159: openim.workbench.Workbench.removeUserApps:output_type -> openim.workbench.RemoveUserAppsResp
+	79,  // 160: openim.workbench.Workbench.sortUserApps:output_type -> openim.workbench.SortUserAppsResp
+	81,  // 161: openim.workbench.Workbench.pinUserApp:output_type -> openim.workbench.PinUserAppResp
+	83,  // 162: openim.workbench.Workbench.hideUserApp:output_type -> openim.workbench.HideUserAppResp
+	85,  // 163: openim.workbench.Workbench.getUserApps:output_type -> openim.workbench.GetUserAppsResp
+	87,  // 164: openim.workbench.Workbench.getAvailableApps:output_type -> openim.workbench.GetAvailableAppsResp
+	89,  // 165: openim.workbench.Workbench.getWorkbenchApps:output_type -> openim.workbench.GetWorkbenchAppsResp
+	171, // 166: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
+	173, // 167: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
+	179, // 168: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
+	181, // 169: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
+	183, // 170: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
+	185, // 171: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
+	187, // 172: openim.workbench.Workbench.launchApp:output_type -> openim.workbench.LaunchAppResp
+	134, // [134:173] is the sub-list for method output_type
+	95,  // [95:134] is the sub-list for method input_type
+	95,  // [95:95] is the sub-list for extension type_name
+	95,  // [95:95] is the sub-list for extension extendee
+	0,   // [0:95] is the sub-list for field type_name
 }
 
 func init() { file_workbench_workbench_proto_init() }
@@ -12997,7 +13136,7 @@ func file_workbench_workbench_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workbench_workbench_proto_rawDesc), len(file_workbench_workbench_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   186,
+			NumMessages:   188,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
