@@ -1064,3 +1064,10 @@ message ConversationFoldNotificationTips {
   int64 timestamp = 9;                  // 时间戳（创建/更新/删除/移入/移出时间）
 }
 
+//////////////////////workbench/////////////////////
+message WorkbenchUserAppChangedTips {
+  string userID = 1;
+  string appID = 2;
+  string action = 3;  // "add" | "remove" | "pin" | "unpin" | "hide" | "unhide" | "sort"
+}
+

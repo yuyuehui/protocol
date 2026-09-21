@@ -203,6 +203,11 @@ const (
 	CallTimeoutNotification    = 1905 // 通话超时通知
 	CallNotificationEnd        = 1910 // 通话通知类型结束
 
+	// 工作台通知类型
+	WorkbenchNotificationBegin          = 1920 // 工作台通知类型开始
+	WorkbenchUserAppChangedNotification = 1921 // 用户应用变更通知（添加/移除/置顶/隐藏等）
+	WorkbenchNotificationEnd            = 1999 // 工作台通知类型结束
+
 	NotificationEnd = 5000 // 通知类型结束标记
 
 	// 消息状态
