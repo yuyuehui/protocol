@@ -591,6 +591,7 @@ message PinnedMessage {
   int64 pinnedAt = 4;
   openim.sdkws.MsgData message = 5; // Absent when no longer accessible; never a snapshot.
   bool unavailable = 6;
+  string pinnedByNickname = 7; // 置顶操作者昵称快照
 }
 message GetPinnedMessageListResp {
   repeated PinnedMessage pinnedMsgs = 1;
