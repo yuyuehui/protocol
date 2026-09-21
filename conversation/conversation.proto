@@ -329,6 +329,15 @@ message MarkConversationAsUnreadReq {
 
 message MarkConversationAsUnreadResp {}
 
+// 按已读水位同步会话未读摘要的请求
+message SyncUnreadCountByHasReadSeqReq {
+  string userID = 1;
+  string conversationID = 2;
+  int64 hasReadSeq = 3;  // 推进后的已读水位
+}
+
+message SyncUnreadCountByHasReadSeqResp {}
+
 message ClearUserConversationMsgReq {
   int64 timestamp = 1;
   int32 limit = 2;
@@ -482,6 +491,8 @@ service conversation {
   rpc GetPinnedConversationIDs(GetPinnedConversationIDsReq) returns (GetPinnedConversationIDsResp);
   rpc MarkConversation(MarkConversationReq) returns (MarkConversationResp);
   rpc MarkConversationAsUnread(MarkConversationAsUnreadReq) returns (MarkConversationAsUnreadResp);
+  // 按已读水位同步会话未读摘要（内部 RPC，不对外 SDK 暴露）
+  rpc SyncUnreadCountByHasReadSeq(SyncUnreadCountByHasReadSeqReq) returns (SyncUnreadCountByHasReadSeqResp);
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
