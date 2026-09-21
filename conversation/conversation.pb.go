@@ -3235,8 +3235,10 @@ type SyncUnreadCountByHasReadSeqReq struct {
 	UserID         string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID"`
 	ConversationID string                 `protobuf:"bytes,2,opt,name=conversationID,proto3" json:"conversationID"`
 	HasReadSeq     int64                  `protobuf:"varint,3,opt,name=hasReadSeq,proto3" json:"hasReadSeq"` // 推进后的已读水位
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 权威未读数（调用方按实际未读消息行数统计）；缺省时按 maxSeq - hasReadSeq 估算兜底
+	UnreadCount   *int64 `protobuf:"varint,4,opt,name=unreadCount,proto3,oneof" json:"unreadCount"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SyncUnreadCountByHasReadSeqReq) Reset() {
@@ -3286,6 +3288,13 @@ func (x *SyncUnreadCountByHasReadSeqReq) GetConversationID() string {
 func (x *SyncUnreadCountByHasReadSeqReq) GetHasReadSeq() int64 {
 	if x != nil {
 		return x.HasReadSeq
+	}
+	return 0
+}
+
+func (x *SyncUnreadCountByHasReadSeqReq) GetUnreadCount() int64 {
+	if x != nil && x.UnreadCount != nil {
+		return *x.UnreadCount
 	}
 	return 0
 }
@@ -6085,13 +6094,15 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12 \n" +
 	"\vunreadCount\x18\x03 \x01(\x05R\vunreadCount\"\x1e\n" +
-	"\x1cMarkConversationAsUnreadResp\"\x80\x01\n" +
+	"\x1cMarkConversationAsUnreadResp\"\xb7\x01\n" +
 	"\x1eSyncUnreadCountByHasReadSeqReq\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12\x1e\n" +
 	"\n" +
 	"hasReadSeq\x18\x03 \x01(\x03R\n" +
-	"hasReadSeq\"!\n" +
+	"hasReadSeq\x12%\n" +
+	"\vunreadCount\x18\x04 \x01(\x03H\x00R\vunreadCount\x88\x01\x01B\x0e\n" +
+	"\f_unreadCount\"!\n" +
 	"\x1fSyncUnreadCountByHasReadSeqResp\"Q\n" +
 	"\x1bClearUserConversationMsgReq\x12\x1c\n" +
 	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\x12\x14\n" +
@@ -6600,6 +6611,7 @@ func file_conversation_conversation_proto_init() {
 	if File_conversation_conversation_proto != nil {
 		return
 	}
+	file_conversation_conversation_proto_msgTypes[54].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
