@@ -5989,15 +5989,16 @@ func (x *GetPinnedMessageListReq) GetCount() int32 {
 }
 
 type PinnedMessage struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	ConversationID string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"`
-	Seq            int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`
-	PinnedBy       string                 `protobuf:"bytes,3,opt,name=pinnedBy,proto3" json:"pinnedBy"`
-	PinnedAt       int64                  `protobuf:"varint,4,opt,name=pinnedAt,proto3" json:"pinnedAt"`
-	Message        *sdkws.MsgData         `protobuf:"bytes,5,opt,name=message,proto3" json:"message"` // Absent when no longer accessible; never a snapshot.
-	Unavailable    bool                   `protobuf:"varint,6,opt,name=unavailable,proto3" json:"unavailable"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	ConversationID   string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"`
+	Seq              int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`
+	PinnedBy         string                 `protobuf:"bytes,3,opt,name=pinnedBy,proto3" json:"pinnedBy"`
+	PinnedAt         int64                  `protobuf:"varint,4,opt,name=pinnedAt,proto3" json:"pinnedAt"`
+	Message          *sdkws.MsgData         `protobuf:"bytes,5,opt,name=message,proto3" json:"message"` // Absent when no longer accessible; never a snapshot.
+	Unavailable      bool                   `protobuf:"varint,6,opt,name=unavailable,proto3" json:"unavailable"`
+	PinnedByNickname string                 `protobuf:"bytes,7,opt,name=pinnedByNickname,proto3" json:"pinnedByNickname"` // 置顶操作者昵称快照
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *PinnedMessage) Reset() {
@@ -6070,6 +6071,13 @@ func (x *PinnedMessage) GetUnavailable() bool {
 		return x.Unavailable
 	}
 	return false
+}
+
+func (x *PinnedMessage) GetPinnedByNickname() string {
+	if x != nil {
+		return x.PinnedByNickname
+	}
+	return ""
 }
 
 type GetPinnedMessageListResp struct {
@@ -8365,14 +8373,15 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\x17GetPinnedMessageListReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x16\n" +
 	"\x06offset\x18\x02 \x01(\x05R\x06offset\x12\x14\n" +
-	"\x05count\x18\x03 \x01(\x05R\x05count\"\xd4\x01\n" +
+	"\x05count\x18\x03 \x01(\x05R\x05count\"\x80\x02\n" +
 	"\rPinnedMessage\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12\x10\n" +
 	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12\x1a\n" +
 	"\bpinnedBy\x18\x03 \x01(\tR\bpinnedBy\x12\x1a\n" +
 	"\bpinnedAt\x18\x04 \x01(\x03R\bpinnedAt\x12/\n" +
 	"\amessage\x18\x05 \x01(\v2\x15.openim.sdkws.MsgDataR\amessage\x12 \n" +
-	"\vunavailable\x18\x06 \x01(\bR\vunavailable\"k\n" +
+	"\vunavailable\x18\x06 \x01(\bR\vunavailable\x12*\n" +
+	"\x10pinnedByNickname\x18\a \x01(\tR\x10pinnedByNickname\"k\n" +
 	"\x18GetPinnedMessageListResp\x129\n" +
 	"\n" +
 	"pinnedMsgs\x18\x01 \x03(\v2\x19.openim.msg.PinnedMessageR\n" +
