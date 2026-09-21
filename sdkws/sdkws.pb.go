@@ -7601,8 +7601,11 @@ type MarkAsReadTips struct {
 	ConversationID   string                 `protobuf:"bytes,2,opt,name=conversationID,proto3" json:"conversationID"`
 	Seqs             []int64                `protobuf:"varint,3,rep,packed,name=seqs,proto3" json:"seqs"`
 	HasReadSeq       int64                  `protobuf:"varint,4,opt,name=hasReadSeq,proto3" json:"hasReadSeq"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	// 显式标识本次通知是“部分水位推进”（true）还是“整会话已读/精确消息集合”（false）。
+	// 仅 SetConversationHasReadSeq 水位入口置 true，SDK 据此避免把整会话已读误判成部分水位。
+	IsPartialWatermark bool `protobuf:"varint,5,opt,name=isPartialWatermark,proto3" json:"isPartialWatermark"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *MarkAsReadTips) Reset() {
@@ -7661,6 +7664,13 @@ func (x *MarkAsReadTips) GetHasReadSeq() int64 {
 		return x.HasReadSeq
 	}
 	return 0
+}
+
+func (x *MarkAsReadTips) GetIsPartialWatermark() bool {
+	if x != nil {
+		return x.IsPartialWatermark
+	}
+	return false
 }
 
 // 群消息已读成员信息
@@ -10155,14 +10165,15 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0eDeleteMsgsTips\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12\x12\n" +
-	"\x04seqs\x18\x03 \x03(\x03R\x04seqs\"\x98\x01\n" +
+	"\x04seqs\x18\x03 \x03(\x03R\x04seqs\"\xc8\x01\n" +
 	"\x0eMarkAsReadTips\x12*\n" +
 	"\x10markAsReadUserID\x18\x01 \x01(\tR\x10markAsReadUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12\x12\n" +
 	"\x04seqs\x18\x03 \x03(\x03R\x04seqs\x12\x1e\n" +
 	"\n" +
 	"hasReadSeq\x18\x04 \x01(\x03R\n" +
-	"hasReadSeq\"\xb2\x01\n" +
+	"hasReadSeq\x12.\n" +
+	"\x12isPartialWatermark\x18\x05 \x01(\bR\x12isPartialWatermark\"\xb2\x01\n" +
 	"\x10GroupMsgReadUser\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +

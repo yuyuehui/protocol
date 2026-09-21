@@ -893,6 +893,9 @@ message MarkAsReadTips {
   string conversationID = 2;
   repeated int64 seqs = 3;
   int64 hasReadSeq = 4;
+  // 显式标识本次通知是“部分水位推进”（true）还是“整会话已读/精确消息集合”（false）。
+  // 仅 SetConversationHasReadSeq 水位入口置 true，SDK 据此避免把整会话已读误判成部分水位。
+  bool isPartialWatermark = 5;
 }
 
 // 群消息已读成员信息
