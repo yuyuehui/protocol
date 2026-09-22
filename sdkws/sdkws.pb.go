@@ -7017,7 +7017,8 @@ type GroupMessagePinTips struct {
 	GroupID          string                 `protobuf:"bytes,3,opt,name=groupID,proto3" json:"groupID"`
 	ConversationID   string                 `protobuf:"bytes,4,opt,name=conversationID,proto3" json:"conversationID"`
 	Seq              int64                  `protobuf:"varint,5,opt,name=seq,proto3" json:"seq"`
-	Action           string                 `protobuf:"bytes,6,opt,name=action,proto3" json:"action"` // pin / unpin
+	ServerMsgID      string                 `protobuf:"bytes,10,opt,name=serverMsgID,proto3" json:"serverMsgID"` // Authoritative cross-device message identifier.
+	Action           string                 `protobuf:"bytes,6,opt,name=action,proto3" json:"action"`            // pin / unpin
 	OperationTime    int64                  `protobuf:"varint,7,opt,name=operationTime,proto3" json:"operationTime"`
 	Text             string                 `protobuf:"bytes,8,opt,name=text,proto3" json:"text"`       // Human-readable fallback for notification consumers.
 	Message          *MsgData               `protobuf:"bytes,9,opt,name=message,proto3" json:"message"` // Full original message body; nil when source unavailable (e.g. unpin after delete).
@@ -7088,6 +7089,13 @@ func (x *GroupMessagePinTips) GetSeq() int64 {
 		return x.Seq
 	}
 	return 0
+}
+
+func (x *GroupMessagePinTips) GetServerMsgID() string {
+	if x != nil {
+		return x.ServerMsgID
+	}
+	return ""
 }
 
 func (x *GroupMessagePinTips) GetAction() string {
@@ -10115,13 +10123,15 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\n" +
 	"hasReadSeq\x18\x03 \x01(\x03R\n" +
 	"hasReadSeq\x12(\n" +
-	"\x0funreadCountTime\x18\x04 \x01(\x03R\x0funreadCountTime\"\xc0\x02\n" +
+	"\x0funreadCountTime\x18\x04 \x01(\x03R\x0funreadCountTime\"\xe2\x02\n" +
 	"\x13GroupMessagePinTips\x12&\n" +
 	"\x0eoperatorUserID\x18\x01 \x01(\tR\x0eoperatorUserID\x12*\n" +
 	"\x10operatorNickname\x18\x02 \x01(\tR\x10operatorNickname\x12\x18\n" +
 	"\agroupID\x18\x03 \x01(\tR\agroupID\x12&\n" +
 	"\x0econversationID\x18\x04 \x01(\tR\x0econversationID\x12\x10\n" +
-	"\x03seq\x18\x05 \x01(\x03R\x03seq\x12\x16\n" +
+	"\x03seq\x18\x05 \x01(\x03R\x03seq\x12 \n" +
+	"\vserverMsgID\x18\n" +
+	" \x01(\tR\vserverMsgID\x12\x16\n" +
 	"\x06action\x18\x06 \x01(\tR\x06action\x12$\n" +
 	"\roperationTime\x18\a \x01(\x03R\roperationTime\x12\x12\n" +
 	"\x04text\x18\b \x01(\tR\x04text\x12/\n" +

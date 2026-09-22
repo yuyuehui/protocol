@@ -832,6 +832,7 @@ message GroupMessagePinTips {
   string groupID = 3;
   string conversationID = 4;
   int64 seq = 5;
+  string serverMsgID = 10; // Authoritative cross-device message identifier.
   string action = 6; // pin / unpin
   int64 operationTime = 7;
   string text = 8; // Human-readable fallback for notification consumers.
