@@ -334,8 +334,8 @@ message SyncUnreadCountByHasReadSeqReq {
   string userID = 1;
   string conversationID = 2;
   int64 hasReadSeq = 3;  // 推进后的已读水位
-  // 权威未读数（调用方按实际未读消息行数统计）；缺省时按 maxSeq - hasReadSeq 估算兜底
-  optional int64 unreadCount = 4;
+  reserved 4;
+  reserved "unreadCount";
 }
 
 message SyncUnreadCountByHasReadSeqResp {}
