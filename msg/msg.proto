@@ -157,6 +157,8 @@ message SetConversationHasReadSeqReq {
   string userID = 2;
   int64 hasReadSeq = 3;
   bool noNotification = 4;
+  // 客户端本地实际未读行数（权威摘要值）；缺省时服务端按 maxSeq - hasReadSeq 估算兜底
+  optional int64 unreadCount = 5;
 }
 
 message SetConversationHasReadSeqResp {}
