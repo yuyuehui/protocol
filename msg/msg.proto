@@ -577,9 +577,17 @@ message GetGroupMessageReaderListResp {
 }
 
 // Group-shared message references. Identity comes exclusively from RPC context.
-message PinMessageReq { string groupID = 1; int64 seq = 2; }
+message PinMessageReq {
+  string groupID = 1;
+  int64 seq = 2; // Backward-compatible local/index identifier.
+  string serverMsgID = 3; // Authoritative cross-device message identifier.
+}
 message PinMessageResp { bool changed = 1; }
-message UnpinMessageReq { string groupID = 1; int64 seq = 2; }
+message UnpinMessageReq {
+  string groupID = 1;
+  int64 seq = 2; // Backward-compatible local/index identifier.
+  string serverMsgID = 3; // Authoritative cross-device message identifier.
+}
 message UnpinMessageResp { bool changed = 1; }
 message GetPinnedMessageListReq {
   string groupID = 1;

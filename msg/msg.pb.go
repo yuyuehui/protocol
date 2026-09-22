@@ -5739,7 +5739,8 @@ func (x *GetGroupMessageReaderListResp) GetUnreadList() []*GroupMsgReadUser {
 type PinMessageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
-	Seq           int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`
+	Seq           int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`                // Backward-compatible local/index identifier.
+	ServerMsgID   string                 `protobuf:"bytes,3,opt,name=serverMsgID,proto3" json:"serverMsgID"` // Authoritative cross-device message identifier.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5786,6 +5787,13 @@ func (x *PinMessageReq) GetSeq() int64 {
 		return x.Seq
 	}
 	return 0
+}
+
+func (x *PinMessageReq) GetServerMsgID() string {
+	if x != nil {
+		return x.ServerMsgID
+	}
+	return ""
 }
 
 type PinMessageResp struct {
@@ -5835,7 +5843,8 @@ func (x *PinMessageResp) GetChanged() bool {
 type UnpinMessageReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
-	Seq           int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`
+	Seq           int64                  `protobuf:"varint,2,opt,name=seq,proto3" json:"seq"`                // Backward-compatible local/index identifier.
+	ServerMsgID   string                 `protobuf:"bytes,3,opt,name=serverMsgID,proto3" json:"serverMsgID"` // Authoritative cross-device message identifier.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5882,6 +5891,13 @@ func (x *UnpinMessageReq) GetSeq() int64 {
 		return x.Seq
 	}
 	return 0
+}
+
+func (x *UnpinMessageReq) GetServerMsgID() string {
+	if x != nil {
+		return x.ServerMsgID
+	}
+	return ""
 }
 
 type UnpinMessageResp struct {
@@ -8359,15 +8375,17 @@ const file_msg_msg_proto_rawDesc = "" +
 	"\vhasReadList\x18\x04 \x03(\v2\x1c.openim.msg.GroupMsgReadUserR\vhasReadList\x12<\n" +
 	"\n" +
 	"unreadList\x18\x05 \x03(\v2\x1c.openim.msg.GroupMsgReadUserR\n" +
-	"unreadList\";\n" +
+	"unreadList\"]\n" +
 	"\rPinMessageReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x10\n" +
-	"\x03seq\x18\x02 \x01(\x03R\x03seq\"*\n" +
+	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12 \n" +
+	"\vserverMsgID\x18\x03 \x01(\tR\vserverMsgID\"*\n" +
 	"\x0ePinMessageResp\x12\x18\n" +
-	"\achanged\x18\x01 \x01(\bR\achanged\"=\n" +
+	"\achanged\x18\x01 \x01(\bR\achanged\"_\n" +
 	"\x0fUnpinMessageReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x10\n" +
-	"\x03seq\x18\x02 \x01(\x03R\x03seq\",\n" +
+	"\x03seq\x18\x02 \x01(\x03R\x03seq\x12 \n" +
+	"\vserverMsgID\x18\x03 \x01(\tR\vserverMsgID\",\n" +
 	"\x10UnpinMessageResp\x12\x18\n" +
 	"\achanged\x18\x01 \x01(\bR\achanged\"a\n" +
 	"\x17GetPinnedMessageListReq\x12\x18\n" +
