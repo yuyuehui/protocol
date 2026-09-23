@@ -59,6 +59,7 @@ const (
 	Conversation_MarkConversation_FullMethodName                        = "/openim.conversation.conversation/MarkConversation"
 	Conversation_MarkConversationAsUnread_FullMethodName                = "/openim.conversation.conversation/MarkConversationAsUnread"
 	Conversation_SyncUnreadCountByHasReadSeq_FullMethodName             = "/openim.conversation.conversation/SyncUnreadCountByHasReadSeq"
+	Conversation_SetConversationSeenSeq_FullMethodName                  = "/openim.conversation.conversation/SetConversationSeenSeq"
 	Conversation_ClearUserConversationMsg_FullMethodName                = "/openim.conversation.conversation/ClearUserConversationMsg"
 	Conversation_UpdateConversationsByUser_FullMethodName               = "/openim.conversation.conversation/UpdateConversationsByUser"
 	Conversation_DeleteConversations_FullMethodName                     = "/openim.conversation.conversation/DeleteConversations"
@@ -114,6 +115,7 @@ type ConversationClient interface {
 	MarkConversationAsUnread(ctx context.Context, in *MarkConversationAsUnreadReq, opts ...grpc.CallOption) (*MarkConversationAsUnreadResp, error)
 	// 按已读水位同步会话未读摘要（内部 RPC，不对外 SDK 暴露）
 	SyncUnreadCountByHasReadSeq(ctx context.Context, in *SyncUnreadCountByHasReadSeqReq, opts ...grpc.CallOption) (*SyncUnreadCountByHasReadSeqResp, error)
+	SetConversationSeenSeq(ctx context.Context, in *SetConversationSeenSeqReq, opts ...grpc.CallOption) (*SetConversationSeenSeqResp, error)
 	ClearUserConversationMsg(ctx context.Context, in *ClearUserConversationMsgReq, opts ...grpc.CallOption) (*ClearUserConversationMsgResp, error)
 	UpdateConversationsByUser(ctx context.Context, in *UpdateConversationsByUserReq, opts ...grpc.CallOption) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(ctx context.Context, in *DeleteConversationsReq, opts ...grpc.CallOption) (*DeleteConversationsResp, error)
@@ -407,6 +409,16 @@ func (c *conversationClient) SyncUnreadCountByHasReadSeq(ctx context.Context, in
 	return out, nil
 }
 
+func (c *conversationClient) SetConversationSeenSeq(ctx context.Context, in *SetConversationSeenSeqReq, opts ...grpc.CallOption) (*SetConversationSeenSeqResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetConversationSeenSeqResp)
+	err := c.cc.Invoke(ctx, Conversation_SetConversationSeenSeq_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *conversationClient) ClearUserConversationMsg(ctx context.Context, in *ClearUserConversationMsgReq, opts ...grpc.CallOption) (*ClearUserConversationMsgResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ClearUserConversationMsgResp)
@@ -658,6 +670,7 @@ type ConversationServer interface {
 	MarkConversationAsUnread(context.Context, *MarkConversationAsUnreadReq) (*MarkConversationAsUnreadResp, error)
 	// 按已读水位同步会话未读摘要（内部 RPC，不对外 SDK 暴露）
 	SyncUnreadCountByHasReadSeq(context.Context, *SyncUnreadCountByHasReadSeqReq) (*SyncUnreadCountByHasReadSeqResp, error)
+	SetConversationSeenSeq(context.Context, *SetConversationSeenSeqReq) (*SetConversationSeenSeqResp, error)
 	ClearUserConversationMsg(context.Context, *ClearUserConversationMsgReq) (*ClearUserConversationMsgResp, error)
 	UpdateConversationsByUser(context.Context, *UpdateConversationsByUserReq) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(context.Context, *DeleteConversationsReq) (*DeleteConversationsResp, error)
@@ -768,6 +781,9 @@ func (UnimplementedConversationServer) MarkConversationAsUnread(context.Context,
 }
 func (UnimplementedConversationServer) SyncUnreadCountByHasReadSeq(context.Context, *SyncUnreadCountByHasReadSeqReq) (*SyncUnreadCountByHasReadSeqResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SyncUnreadCountByHasReadSeq not implemented")
+}
+func (UnimplementedConversationServer) SetConversationSeenSeq(context.Context, *SetConversationSeenSeqReq) (*SetConversationSeenSeqResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetConversationSeenSeq not implemented")
 }
 func (UnimplementedConversationServer) ClearUserConversationMsg(context.Context, *ClearUserConversationMsgReq) (*ClearUserConversationMsgResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClearUserConversationMsg not implemented")
@@ -1324,6 +1340,24 @@ func _Conversation_SyncUnreadCountByHasReadSeq_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Conversation_SetConversationSeenSeq_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetConversationSeenSeqReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConversationServer).SetConversationSeenSeq(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Conversation_SetConversationSeenSeq_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConversationServer).SetConversationSeenSeq(ctx, req.(*SetConversationSeenSeqReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Conversation_ClearUserConversationMsg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ClearUserConversationMsgReq)
 	if err := dec(in); err != nil {
@@ -1830,6 +1864,10 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SyncUnreadCountByHasReadSeq",
 			Handler:    _Conversation_SyncUnreadCountByHasReadSeq_Handler,
+		},
+		{
+			MethodName: "SetConversationSeenSeq",
+			Handler:    _Conversation_SetConversationSeenSeq_Handler,
 		},
 		{
 			MethodName: "ClearUserConversationMsg",

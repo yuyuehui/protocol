@@ -44,6 +44,7 @@ message Conversation {
   string parentConversationID = 21;  // 父折叠会话ID，非空表示该会话被折叠（父会话conversationType=5）
   bool isSystemDefault = 22;  // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
   bool isHidden = 23;  // 是否隐藏（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
+  int64 seenSeq = 24;  // 用户已看过的最大序列号；服务端保持 hasReadSeq <= seenSeq <= maxSeq，且不回退
 }
 
 message ConversationReq {
@@ -495,6 +496,7 @@ service conversation {
   rpc MarkConversationAsUnread(MarkConversationAsUnreadReq) returns (MarkConversationAsUnreadResp);
   // 按已读水位同步会话未读摘要（内部 RPC，不对外 SDK 暴露）
   rpc SyncUnreadCountByHasReadSeq(SyncUnreadCountByHasReadSeqReq) returns (SyncUnreadCountByHasReadSeqResp);
+  rpc SetConversationSeenSeq(SetConversationSeenSeqReq) returns (SetConversationSeenSeqResp);
   rpc ClearUserConversationMsg(ClearUserConversationMsgReq) returns (ClearUserConversationMsgResp);
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
@@ -625,4 +627,16 @@ message ClearFoldReq {
 
 message ClearFoldResp {
   int32 clearedCount = 1;             // 清空的子会话数量
+}
+
+// 更新用户的会话已看水位。服务端保持其单调递增，且位于 [hasReadSeq, maxSeq]。
+message SetConversationSeenSeqReq {
+  string userID = 1;
+  string conversationID = 2;
+  int64 seenSeq = 3;
+}
+
+message SetConversationSeenSeqResp {
+  int64 seenSeq = 1;      // 服务端实际保存的已看水位（可能不同于请求值）
+  int64 unreadCount = 2;  // 更新后的实际未读数
 }
