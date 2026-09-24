@@ -16,10 +16,6 @@ service OpenPlatform {
   rpc revokeAuth(openim.workbench.RevokeAuthReq) returns (openim.workbench.RevokeAuthResp);
   rpc getAuthDetail(openim.workbench.GetAuthDetailReq) returns (openim.workbench.GetAuthDetailResp);
 
-  // ---- SSO ----
-  rpc createTicket(openim.workbench.CreateTicketReq) returns (openim.workbench.CreateTicketResp);
-  rpc getUserByTicket(openim.workbench.GetUserByTicketReq) returns (openim.workbench.GetUserByTicketResp);
-
   // ---- Notification ----
   rpc createMsgTemplate(openim.workbench.CreateMsgTemplateReq) returns (openim.workbench.CreateMsgTemplateResp);
   rpc updateMsgTemplate(openim.workbench.UpdateMsgTemplateReq) returns (openim.workbench.UpdateMsgTemplateResp);

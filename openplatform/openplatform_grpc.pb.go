@@ -28,8 +28,6 @@ const (
 	OpenPlatform_AuthorizeApp_FullMethodName       = "/openim.openplatform.OpenPlatform/authorizeApp"
 	OpenPlatform_RevokeAuth_FullMethodName         = "/openim.openplatform.OpenPlatform/revokeAuth"
 	OpenPlatform_GetAuthDetail_FullMethodName      = "/openim.openplatform.OpenPlatform/getAuthDetail"
-	OpenPlatform_CreateTicket_FullMethodName       = "/openim.openplatform.OpenPlatform/createTicket"
-	OpenPlatform_GetUserByTicket_FullMethodName    = "/openim.openplatform.OpenPlatform/getUserByTicket"
 	OpenPlatform_CreateMsgTemplate_FullMethodName  = "/openim.openplatform.OpenPlatform/createMsgTemplate"
 	OpenPlatform_UpdateMsgTemplate_FullMethodName  = "/openim.openplatform.OpenPlatform/updateMsgTemplate"
 	OpenPlatform_DeleteMsgTemplate_FullMethodName  = "/openim.openplatform.OpenPlatform/deleteMsgTemplate"
@@ -81,9 +79,6 @@ type OpenPlatformClient interface {
 	AuthorizeApp(ctx context.Context, in *workbench.AuthorizeAppReq, opts ...grpc.CallOption) (*workbench.AuthorizeAppResp, error)
 	RevokeAuth(ctx context.Context, in *workbench.RevokeAuthReq, opts ...grpc.CallOption) (*workbench.RevokeAuthResp, error)
 	GetAuthDetail(ctx context.Context, in *workbench.GetAuthDetailReq, opts ...grpc.CallOption) (*workbench.GetAuthDetailResp, error)
-	// ---- SSO ----
-	CreateTicket(ctx context.Context, in *workbench.CreateTicketReq, opts ...grpc.CallOption) (*workbench.CreateTicketResp, error)
-	GetUserByTicket(ctx context.Context, in *workbench.GetUserByTicketReq, opts ...grpc.CallOption) (*workbench.GetUserByTicketResp, error)
 	// ---- Notification ----
 	CreateMsgTemplate(ctx context.Context, in *workbench.CreateMsgTemplateReq, opts ...grpc.CallOption) (*workbench.CreateMsgTemplateResp, error)
 	UpdateMsgTemplate(ctx context.Context, in *workbench.UpdateMsgTemplateReq, opts ...grpc.CallOption) (*workbench.UpdateMsgTemplateResp, error)
@@ -213,26 +208,6 @@ func (c *openPlatformClient) GetAuthDetail(ctx context.Context, in *workbench.Ge
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(workbench.GetAuthDetailResp)
 	err := c.cc.Invoke(ctx, OpenPlatform_GetAuthDetail_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *openPlatformClient) CreateTicket(ctx context.Context, in *workbench.CreateTicketReq, opts ...grpc.CallOption) (*workbench.CreateTicketResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(workbench.CreateTicketResp)
-	err := c.cc.Invoke(ctx, OpenPlatform_CreateTicket_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *openPlatformClient) GetUserByTicket(ctx context.Context, in *workbench.GetUserByTicketReq, opts ...grpc.CallOption) (*workbench.GetUserByTicketResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(workbench.GetUserByTicketResp)
-	err := c.cc.Invoke(ctx, OpenPlatform_GetUserByTicket_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -612,9 +587,6 @@ type OpenPlatformServer interface {
 	AuthorizeApp(context.Context, *workbench.AuthorizeAppReq) (*workbench.AuthorizeAppResp, error)
 	RevokeAuth(context.Context, *workbench.RevokeAuthReq) (*workbench.RevokeAuthResp, error)
 	GetAuthDetail(context.Context, *workbench.GetAuthDetailReq) (*workbench.GetAuthDetailResp, error)
-	// ---- SSO ----
-	CreateTicket(context.Context, *workbench.CreateTicketReq) (*workbench.CreateTicketResp, error)
-	GetUserByTicket(context.Context, *workbench.GetUserByTicketReq) (*workbench.GetUserByTicketResp, error)
 	// ---- Notification ----
 	CreateMsgTemplate(context.Context, *workbench.CreateMsgTemplateReq) (*workbench.CreateMsgTemplateResp, error)
 	UpdateMsgTemplate(context.Context, *workbench.UpdateMsgTemplateReq) (*workbench.UpdateMsgTemplateResp, error)
@@ -693,12 +665,6 @@ func (UnimplementedOpenPlatformServer) RevokeAuth(context.Context, *workbench.Re
 }
 func (UnimplementedOpenPlatformServer) GetAuthDetail(context.Context, *workbench.GetAuthDetailReq) (*workbench.GetAuthDetailResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAuthDetail not implemented")
-}
-func (UnimplementedOpenPlatformServer) CreateTicket(context.Context, *workbench.CreateTicketReq) (*workbench.CreateTicketResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreateTicket not implemented")
-}
-func (UnimplementedOpenPlatformServer) GetUserByTicket(context.Context, *workbench.GetUserByTicketReq) (*workbench.GetUserByTicketResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserByTicket not implemented")
 }
 func (UnimplementedOpenPlatformServer) CreateMsgTemplate(context.Context, *workbench.CreateMsgTemplateReq) (*workbench.CreateMsgTemplateResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateMsgTemplate not implemented")
@@ -969,42 +935,6 @@ func _OpenPlatform_GetAuthDetail_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OpenPlatformServer).GetAuthDetail(ctx, req.(*workbench.GetAuthDetailReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OpenPlatform_CreateTicket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(workbench.CreateTicketReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OpenPlatformServer).CreateTicket(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OpenPlatform_CreateTicket_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OpenPlatformServer).CreateTicket(ctx, req.(*workbench.CreateTicketReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OpenPlatform_GetUserByTicket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(workbench.GetUserByTicketReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OpenPlatformServer).GetUserByTicket(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: OpenPlatform_GetUserByTicket_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OpenPlatformServer).GetUserByTicket(ctx, req.(*workbench.GetUserByTicketReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1695,14 +1625,6 @@ var OpenPlatform_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getAuthDetail",
 			Handler:    _OpenPlatform_GetAuthDetail_Handler,
-		},
-		{
-			MethodName: "createTicket",
-			Handler:    _OpenPlatform_CreateTicket_Handler,
-		},
-		{
-			MethodName: "getUserByTicket",
-			Handler:    _OpenPlatform_GetUserByTicket_Handler,
 		},
 		{
 			MethodName: "createMsgTemplate",

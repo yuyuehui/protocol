@@ -6539,6 +6539,9 @@ type SendNotifyReq struct {
 	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID,omitempty"`
 	Extra         string                 `protobuf:"bytes,7,opt,name=extra,proto3" json:"extra,omitempty"`
 	DetailJSON    string                 `protobuf:"bytes,8,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
+	Title         string                 `protobuf:"bytes,9,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,10,opt,name=content,proto3" json:"content,omitempty"`
+	CardJSON      string                 `protobuf:"bytes,11,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6629,6 +6632,27 @@ func (x *SendNotifyReq) GetDetailJSON() string {
 	return ""
 }
 
+func (x *SendNotifyReq) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SendNotifyReq) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *SendNotifyReq) GetCardJSON() string {
+	if x != nil {
+		return x.CardJSON
+	}
+	return ""
+}
+
 type SendNotifyResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NotifyID      string                 `protobuf:"bytes,1,opt,name=notifyID,proto3" json:"notifyID,omitempty"`
@@ -6690,6 +6714,9 @@ type BatchSendNotifyReq struct {
 	Url           string                 `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
 	BizID         string                 `protobuf:"bytes,6,opt,name=bizID,proto3" json:"bizID,omitempty"`
 	DetailJSON    string                 `protobuf:"bytes,7,opt,name=detailJSON,proto3" json:"detailJSON,omitempty"`
+	Title         string                 `protobuf:"bytes,8,opt,name=title,proto3" json:"title,omitempty"`
+	Content       string                 `protobuf:"bytes,9,opt,name=content,proto3" json:"content,omitempty"`
+	CardJSON      string                 `protobuf:"bytes,10,opt,name=cardJSON,proto3" json:"cardJSON,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6769,6 +6796,27 @@ func (x *BatchSendNotifyReq) GetBizID() string {
 func (x *BatchSendNotifyReq) GetDetailJSON() string {
 	if x != nil {
 		return x.DetailJSON
+	}
+	return ""
+}
+
+func (x *BatchSendNotifyReq) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *BatchSendNotifyReq) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *BatchSendNotifyReq) GetCardJSON() string {
+	if x != nil {
+		return x.CardJSON
 	}
 	return ""
 }
@@ -8169,262 +8217,6 @@ func (x *GetAuthDetailResp) GetAuth() *OAuthAuthInfo {
 	return nil
 }
 
-type CreateTicketReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AppID         string                 `protobuf:"bytes,1,opt,name=appID,proto3" json:"appID,omitempty"`
-	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateTicketReq) Reset() {
-	*x = CreateTicketReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[121]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateTicketReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateTicketReq) ProtoMessage() {}
-
-func (x *CreateTicketReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[121]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateTicketReq.ProtoReflect.Descriptor instead.
-func (*CreateTicketReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{121}
-}
-
-func (x *CreateTicketReq) GetAppID() string {
-	if x != nil {
-		return x.AppID
-	}
-	return ""
-}
-
-func (x *CreateTicketReq) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-type CreateTicketResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket,omitempty"`
-	ExpiresIn     int64                  `protobuf:"varint,2,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateTicketResp) Reset() {
-	*x = CreateTicketResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[122]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateTicketResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateTicketResp) ProtoMessage() {}
-
-func (x *CreateTicketResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[122]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateTicketResp.ProtoReflect.Descriptor instead.
-func (*CreateTicketResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{122}
-}
-
-func (x *CreateTicketResp) GetTicket() string {
-	if x != nil {
-		return x.Ticket
-	}
-	return ""
-}
-
-func (x *CreateTicketResp) GetExpiresIn() int64 {
-	if x != nil {
-		return x.ExpiresIn
-	}
-	return 0
-}
-
-type GetUserByTicketReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ticket        string                 `protobuf:"bytes,1,opt,name=ticket,proto3" json:"ticket,omitempty"`
-	AppID         string                 `protobuf:"bytes,2,opt,name=appID,proto3" json:"appID,omitempty"`
-	RedirectURI   string                 `protobuf:"bytes,3,opt,name=redirectURI,proto3" json:"redirectURI,omitempty"`
-	CodeVerifier  string                 `protobuf:"bytes,4,opt,name=codeVerifier,proto3" json:"codeVerifier,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUserByTicketReq) Reset() {
-	*x = GetUserByTicketReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[123]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUserByTicketReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUserByTicketReq) ProtoMessage() {}
-
-func (x *GetUserByTicketReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[123]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUserByTicketReq.ProtoReflect.Descriptor instead.
-func (*GetUserByTicketReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{123}
-}
-
-func (x *GetUserByTicketReq) GetTicket() string {
-	if x != nil {
-		return x.Ticket
-	}
-	return ""
-}
-
-func (x *GetUserByTicketReq) GetAppID() string {
-	if x != nil {
-		return x.AppID
-	}
-	return ""
-}
-
-func (x *GetUserByTicketReq) GetRedirectURI() string {
-	if x != nil {
-		return x.RedirectURI
-	}
-	return ""
-}
-
-func (x *GetUserByTicketReq) GetCodeVerifier() string {
-	if x != nil {
-		return x.CodeVerifier
-	}
-	return ""
-}
-
-type GetUserByTicketResp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	FaceURL       string                 `protobuf:"bytes,3,opt,name=faceURL,proto3" json:"faceURL,omitempty"`
-	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
-	TenantID      string                 `protobuf:"bytes,5,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
-	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetUserByTicketResp) Reset() {
-	*x = GetUserByTicketResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[124]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetUserByTicketResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetUserByTicketResp) ProtoMessage() {}
-
-func (x *GetUserByTicketResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[124]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetUserByTicketResp.ProtoReflect.Descriptor instead.
-func (*GetUserByTicketResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{124}
-}
-
-func (x *GetUserByTicketResp) GetUserID() string {
-	if x != nil {
-		return x.UserID
-	}
-	return ""
-}
-
-func (x *GetUserByTicketResp) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
-func (x *GetUserByTicketResp) GetFaceURL() string {
-	if x != nil {
-		return x.FaceURL
-	}
-	return ""
-}
-
-func (x *GetUserByTicketResp) GetPhone() string {
-	if x != nil {
-		return x.Phone
-	}
-	return ""
-}
-
-func (x *GetUserByTicketResp) GetTenantID() string {
-	if x != nil {
-		return x.TenantID
-	}
-	return ""
-}
-
-func (x *GetUserByTicketResp) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
 type RegisterDeveloperReq struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -8442,7 +8234,7 @@ type RegisterDeveloperReq struct {
 
 func (x *RegisterDeveloperReq) Reset() {
 	*x = RegisterDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[125]
+	mi := &file_workbench_workbench_proto_msgTypes[121]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8454,7 +8246,7 @@ func (x *RegisterDeveloperReq) String() string {
 func (*RegisterDeveloperReq) ProtoMessage() {}
 
 func (x *RegisterDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[125]
+	mi := &file_workbench_workbench_proto_msgTypes[121]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8467,7 +8259,7 @@ func (x *RegisterDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterDeveloperReq.ProtoReflect.Descriptor instead.
 func (*RegisterDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{125}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{121}
 }
 
 func (x *RegisterDeveloperReq) GetName() string {
@@ -8542,7 +8334,7 @@ type RegisterDeveloperResp struct {
 
 func (x *RegisterDeveloperResp) Reset() {
 	*x = RegisterDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[126]
+	mi := &file_workbench_workbench_proto_msgTypes[122]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8554,7 +8346,7 @@ func (x *RegisterDeveloperResp) String() string {
 func (*RegisterDeveloperResp) ProtoMessage() {}
 
 func (x *RegisterDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[126]
+	mi := &file_workbench_workbench_proto_msgTypes[122]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8567,7 +8359,7 @@ func (x *RegisterDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterDeveloperResp.ProtoReflect.Descriptor instead.
 func (*RegisterDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{126}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{122}
 }
 
 func (x *RegisterDeveloperResp) GetDeveloperID() string {
@@ -8587,7 +8379,7 @@ type LoginDeveloperReq struct {
 
 func (x *LoginDeveloperReq) Reset() {
 	*x = LoginDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[127]
+	mi := &file_workbench_workbench_proto_msgTypes[123]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8599,7 +8391,7 @@ func (x *LoginDeveloperReq) String() string {
 func (*LoginDeveloperReq) ProtoMessage() {}
 
 func (x *LoginDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[127]
+	mi := &file_workbench_workbench_proto_msgTypes[123]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8612,7 +8404,7 @@ func (x *LoginDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginDeveloperReq.ProtoReflect.Descriptor instead.
 func (*LoginDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{127}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{123}
 }
 
 func (x *LoginDeveloperReq) GetEmail() string {
@@ -8639,7 +8431,7 @@ type LoginDeveloperResp struct {
 
 func (x *LoginDeveloperResp) Reset() {
 	*x = LoginDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[128]
+	mi := &file_workbench_workbench_proto_msgTypes[124]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8651,7 +8443,7 @@ func (x *LoginDeveloperResp) String() string {
 func (*LoginDeveloperResp) ProtoMessage() {}
 
 func (x *LoginDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[128]
+	mi := &file_workbench_workbench_proto_msgTypes[124]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8664,7 +8456,7 @@ func (x *LoginDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginDeveloperResp.ProtoReflect.Descriptor instead.
 func (*LoginDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{128}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{124}
 }
 
 func (x *LoginDeveloperResp) GetToken() string {
@@ -8694,7 +8486,7 @@ type UpdateDeveloperReq struct {
 
 func (x *UpdateDeveloperReq) Reset() {
 	*x = UpdateDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[129]
+	mi := &file_workbench_workbench_proto_msgTypes[125]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8706,7 +8498,7 @@ func (x *UpdateDeveloperReq) String() string {
 func (*UpdateDeveloperReq) ProtoMessage() {}
 
 func (x *UpdateDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[129]
+	mi := &file_workbench_workbench_proto_msgTypes[125]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8719,7 +8511,7 @@ func (x *UpdateDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeveloperReq.ProtoReflect.Descriptor instead.
 func (*UpdateDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{129}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{125}
 }
 
 func (x *UpdateDeveloperReq) GetDeveloperID() string {
@@ -8765,7 +8557,7 @@ type UpdateDeveloperResp struct {
 
 func (x *UpdateDeveloperResp) Reset() {
 	*x = UpdateDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[130]
+	mi := &file_workbench_workbench_proto_msgTypes[126]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8777,7 +8569,7 @@ func (x *UpdateDeveloperResp) String() string {
 func (*UpdateDeveloperResp) ProtoMessage() {}
 
 func (x *UpdateDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[130]
+	mi := &file_workbench_workbench_proto_msgTypes[126]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8790,7 +8582,7 @@ func (x *UpdateDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDeveloperResp.ProtoReflect.Descriptor instead.
 func (*UpdateDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{130}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{126}
 }
 
 type GetDeveloperListReq struct {
@@ -8805,7 +8597,7 @@ type GetDeveloperListReq struct {
 
 func (x *GetDeveloperListReq) Reset() {
 	*x = GetDeveloperListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[131]
+	mi := &file_workbench_workbench_proto_msgTypes[127]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8817,7 +8609,7 @@ func (x *GetDeveloperListReq) String() string {
 func (*GetDeveloperListReq) ProtoMessage() {}
 
 func (x *GetDeveloperListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[131]
+	mi := &file_workbench_workbench_proto_msgTypes[127]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8830,7 +8622,7 @@ func (x *GetDeveloperListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperListReq.ProtoReflect.Descriptor instead.
 func (*GetDeveloperListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{131}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{127}
 }
 
 func (x *GetDeveloperListReq) GetStatus() int32 {
@@ -8871,7 +8663,7 @@ type GetDeveloperListResp struct {
 
 func (x *GetDeveloperListResp) Reset() {
 	*x = GetDeveloperListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[132]
+	mi := &file_workbench_workbench_proto_msgTypes[128]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8883,7 +8675,7 @@ func (x *GetDeveloperListResp) String() string {
 func (*GetDeveloperListResp) ProtoMessage() {}
 
 func (x *GetDeveloperListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[132]
+	mi := &file_workbench_workbench_proto_msgTypes[128]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8896,7 +8688,7 @@ func (x *GetDeveloperListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperListResp.ProtoReflect.Descriptor instead.
 func (*GetDeveloperListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{132}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{128}
 }
 
 func (x *GetDeveloperListResp) GetTotal() int64 {
@@ -8924,7 +8716,7 @@ type ReviewDeveloperReq struct {
 
 func (x *ReviewDeveloperReq) Reset() {
 	*x = ReviewDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[133]
+	mi := &file_workbench_workbench_proto_msgTypes[129]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8936,7 +8728,7 @@ func (x *ReviewDeveloperReq) String() string {
 func (*ReviewDeveloperReq) ProtoMessage() {}
 
 func (x *ReviewDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[133]
+	mi := &file_workbench_workbench_proto_msgTypes[129]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8949,7 +8741,7 @@ func (x *ReviewDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewDeveloperReq.ProtoReflect.Descriptor instead.
 func (*ReviewDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{133}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{129}
 }
 
 func (x *ReviewDeveloperReq) GetDeveloperID() string {
@@ -8981,7 +8773,7 @@ type ReviewDeveloperResp struct {
 
 func (x *ReviewDeveloperResp) Reset() {
 	*x = ReviewDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[134]
+	mi := &file_workbench_workbench_proto_msgTypes[130]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -8993,7 +8785,7 @@ func (x *ReviewDeveloperResp) String() string {
 func (*ReviewDeveloperResp) ProtoMessage() {}
 
 func (x *ReviewDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[134]
+	mi := &file_workbench_workbench_proto_msgTypes[130]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9006,7 +8798,7 @@ func (x *ReviewDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewDeveloperResp.ProtoReflect.Descriptor instead.
 func (*ReviewDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{134}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{130}
 }
 
 type DisableDeveloperReq struct {
@@ -9018,7 +8810,7 @@ type DisableDeveloperReq struct {
 
 func (x *DisableDeveloperReq) Reset() {
 	*x = DisableDeveloperReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[135]
+	mi := &file_workbench_workbench_proto_msgTypes[131]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9030,7 +8822,7 @@ func (x *DisableDeveloperReq) String() string {
 func (*DisableDeveloperReq) ProtoMessage() {}
 
 func (x *DisableDeveloperReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[135]
+	mi := &file_workbench_workbench_proto_msgTypes[131]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9043,7 +8835,7 @@ func (x *DisableDeveloperReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableDeveloperReq.ProtoReflect.Descriptor instead.
 func (*DisableDeveloperReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{135}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{131}
 }
 
 func (x *DisableDeveloperReq) GetDeveloperID() string {
@@ -9061,7 +8853,7 @@ type DisableDeveloperResp struct {
 
 func (x *DisableDeveloperResp) Reset() {
 	*x = DisableDeveloperResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[136]
+	mi := &file_workbench_workbench_proto_msgTypes[132]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9073,7 +8865,7 @@ func (x *DisableDeveloperResp) String() string {
 func (*DisableDeveloperResp) ProtoMessage() {}
 
 func (x *DisableDeveloperResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[136]
+	mi := &file_workbench_workbench_proto_msgTypes[132]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9086,7 +8878,7 @@ func (x *DisableDeveloperResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DisableDeveloperResp.ProtoReflect.Descriptor instead.
 func (*DisableDeveloperResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{136}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{132}
 }
 
 type CreateDeveloperAppReq struct {
@@ -9107,7 +8899,7 @@ type CreateDeveloperAppReq struct {
 
 func (x *CreateDeveloperAppReq) Reset() {
 	*x = CreateDeveloperAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[137]
+	mi := &file_workbench_workbench_proto_msgTypes[133]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9119,7 +8911,7 @@ func (x *CreateDeveloperAppReq) String() string {
 func (*CreateDeveloperAppReq) ProtoMessage() {}
 
 func (x *CreateDeveloperAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[137]
+	mi := &file_workbench_workbench_proto_msgTypes[133]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9132,7 +8924,7 @@ func (x *CreateDeveloperAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeveloperAppReq.ProtoReflect.Descriptor instead.
 func (*CreateDeveloperAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{137}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{133}
 }
 
 func (x *CreateDeveloperAppReq) GetDeveloperID() string {
@@ -9214,7 +9006,7 @@ type CreateDeveloperAppResp struct {
 
 func (x *CreateDeveloperAppResp) Reset() {
 	*x = CreateDeveloperAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[138]
+	mi := &file_workbench_workbench_proto_msgTypes[134]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9226,7 +9018,7 @@ func (x *CreateDeveloperAppResp) String() string {
 func (*CreateDeveloperAppResp) ProtoMessage() {}
 
 func (x *CreateDeveloperAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[138]
+	mi := &file_workbench_workbench_proto_msgTypes[134]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9239,7 +9031,7 @@ func (x *CreateDeveloperAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDeveloperAppResp.ProtoReflect.Descriptor instead.
 func (*CreateDeveloperAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{138}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{134}
 }
 
 func (x *CreateDeveloperAppResp) GetAppID() string {
@@ -9260,7 +9052,7 @@ type SubmitAppReq struct {
 
 func (x *SubmitAppReq) Reset() {
 	*x = SubmitAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[139]
+	mi := &file_workbench_workbench_proto_msgTypes[135]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9272,7 +9064,7 @@ func (x *SubmitAppReq) String() string {
 func (*SubmitAppReq) ProtoMessage() {}
 
 func (x *SubmitAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[139]
+	mi := &file_workbench_workbench_proto_msgTypes[135]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9285,7 +9077,7 @@ func (x *SubmitAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitAppReq.ProtoReflect.Descriptor instead.
 func (*SubmitAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{139}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{135}
 }
 
 func (x *SubmitAppReq) GetAppID() string {
@@ -9318,7 +9110,7 @@ type SubmitAppResp struct {
 
 func (x *SubmitAppResp) Reset() {
 	*x = SubmitAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[140]
+	mi := &file_workbench_workbench_proto_msgTypes[136]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9330,7 +9122,7 @@ func (x *SubmitAppResp) String() string {
 func (*SubmitAppResp) ProtoMessage() {}
 
 func (x *SubmitAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[140]
+	mi := &file_workbench_workbench_proto_msgTypes[136]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9343,7 +9135,7 @@ func (x *SubmitAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitAppResp.ProtoReflect.Descriptor instead.
 func (*SubmitAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{140}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{136}
 }
 
 func (x *SubmitAppResp) GetReviewID() string {
@@ -9362,7 +9154,7 @@ type WithdrawSubmitReq struct {
 
 func (x *WithdrawSubmitReq) Reset() {
 	*x = WithdrawSubmitReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[141]
+	mi := &file_workbench_workbench_proto_msgTypes[137]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9374,7 +9166,7 @@ func (x *WithdrawSubmitReq) String() string {
 func (*WithdrawSubmitReq) ProtoMessage() {}
 
 func (x *WithdrawSubmitReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[141]
+	mi := &file_workbench_workbench_proto_msgTypes[137]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9387,7 +9179,7 @@ func (x *WithdrawSubmitReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawSubmitReq.ProtoReflect.Descriptor instead.
 func (*WithdrawSubmitReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{141}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{137}
 }
 
 func (x *WithdrawSubmitReq) GetAppID() string {
@@ -9405,7 +9197,7 @@ type WithdrawSubmitResp struct {
 
 func (x *WithdrawSubmitResp) Reset() {
 	*x = WithdrawSubmitResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[142]
+	mi := &file_workbench_workbench_proto_msgTypes[138]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9417,7 +9209,7 @@ func (x *WithdrawSubmitResp) String() string {
 func (*WithdrawSubmitResp) ProtoMessage() {}
 
 func (x *WithdrawSubmitResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[142]
+	mi := &file_workbench_workbench_proto_msgTypes[138]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9430,7 +9222,7 @@ func (x *WithdrawSubmitResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawSubmitResp.ProtoReflect.Descriptor instead.
 func (*WithdrawSubmitResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{142}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{138}
 }
 
 type GetDeveloperAppsReq struct {
@@ -9443,7 +9235,7 @@ type GetDeveloperAppsReq struct {
 
 func (x *GetDeveloperAppsReq) Reset() {
 	*x = GetDeveloperAppsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[143]
+	mi := &file_workbench_workbench_proto_msgTypes[139]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9455,7 +9247,7 @@ func (x *GetDeveloperAppsReq) String() string {
 func (*GetDeveloperAppsReq) ProtoMessage() {}
 
 func (x *GetDeveloperAppsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[143]
+	mi := &file_workbench_workbench_proto_msgTypes[139]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9468,7 +9260,7 @@ func (x *GetDeveloperAppsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperAppsReq.ProtoReflect.Descriptor instead.
 func (*GetDeveloperAppsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{143}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{139}
 }
 
 func (x *GetDeveloperAppsReq) GetDeveloperID() string {
@@ -9495,7 +9287,7 @@ type GetDeveloperAppsResp struct {
 
 func (x *GetDeveloperAppsResp) Reset() {
 	*x = GetDeveloperAppsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[144]
+	mi := &file_workbench_workbench_proto_msgTypes[140]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9507,7 +9299,7 @@ func (x *GetDeveloperAppsResp) String() string {
 func (*GetDeveloperAppsResp) ProtoMessage() {}
 
 func (x *GetDeveloperAppsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[144]
+	mi := &file_workbench_workbench_proto_msgTypes[140]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9520,7 +9312,7 @@ func (x *GetDeveloperAppsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeveloperAppsResp.ProtoReflect.Descriptor instead.
 func (*GetDeveloperAppsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{144}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{140}
 }
 
 func (x *GetDeveloperAppsResp) GetTotal() int64 {
@@ -9546,7 +9338,7 @@ type GetPendingReviewsReq struct {
 
 func (x *GetPendingReviewsReq) Reset() {
 	*x = GetPendingReviewsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[145]
+	mi := &file_workbench_workbench_proto_msgTypes[141]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9558,7 +9350,7 @@ func (x *GetPendingReviewsReq) String() string {
 func (*GetPendingReviewsReq) ProtoMessage() {}
 
 func (x *GetPendingReviewsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[145]
+	mi := &file_workbench_workbench_proto_msgTypes[141]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9571,7 +9363,7 @@ func (x *GetPendingReviewsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPendingReviewsReq.ProtoReflect.Descriptor instead.
 func (*GetPendingReviewsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{145}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{141}
 }
 
 func (x *GetPendingReviewsReq) GetPagination() *sdkws.RequestPagination {
@@ -9591,7 +9383,7 @@ type GetPendingReviewsResp struct {
 
 func (x *GetPendingReviewsResp) Reset() {
 	*x = GetPendingReviewsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[146]
+	mi := &file_workbench_workbench_proto_msgTypes[142]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9603,7 +9395,7 @@ func (x *GetPendingReviewsResp) String() string {
 func (*GetPendingReviewsResp) ProtoMessage() {}
 
 func (x *GetPendingReviewsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[146]
+	mi := &file_workbench_workbench_proto_msgTypes[142]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9616,7 +9408,7 @@ func (x *GetPendingReviewsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPendingReviewsResp.ProtoReflect.Descriptor instead.
 func (*GetPendingReviewsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{146}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{142}
 }
 
 func (x *GetPendingReviewsResp) GetTotal() int64 {
@@ -9642,7 +9434,7 @@ type GetReviewDetailReq struct {
 
 func (x *GetReviewDetailReq) Reset() {
 	*x = GetReviewDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[147]
+	mi := &file_workbench_workbench_proto_msgTypes[143]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9654,7 +9446,7 @@ func (x *GetReviewDetailReq) String() string {
 func (*GetReviewDetailReq) ProtoMessage() {}
 
 func (x *GetReviewDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[147]
+	mi := &file_workbench_workbench_proto_msgTypes[143]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9667,7 +9459,7 @@ func (x *GetReviewDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewDetailReq.ProtoReflect.Descriptor instead.
 func (*GetReviewDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{147}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{143}
 }
 
 func (x *GetReviewDetailReq) GetReviewID() string {
@@ -9688,7 +9480,7 @@ type GetReviewDetailResp struct {
 
 func (x *GetReviewDetailResp) Reset() {
 	*x = GetReviewDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[148]
+	mi := &file_workbench_workbench_proto_msgTypes[144]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9700,7 +9492,7 @@ func (x *GetReviewDetailResp) String() string {
 func (*GetReviewDetailResp) ProtoMessage() {}
 
 func (x *GetReviewDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[148]
+	mi := &file_workbench_workbench_proto_msgTypes[144]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9713,7 +9505,7 @@ func (x *GetReviewDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewDetailResp.ProtoReflect.Descriptor instead.
 func (*GetReviewDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{148}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{144}
 }
 
 func (x *GetReviewDetailResp) GetReview() *AppReviewInfo {
@@ -9748,7 +9540,7 @@ type ReviewActionReq struct {
 
 func (x *ReviewActionReq) Reset() {
 	*x = ReviewActionReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[149]
+	mi := &file_workbench_workbench_proto_msgTypes[145]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9760,7 +9552,7 @@ func (x *ReviewActionReq) String() string {
 func (*ReviewActionReq) ProtoMessage() {}
 
 func (x *ReviewActionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[149]
+	mi := &file_workbench_workbench_proto_msgTypes[145]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9773,7 +9565,7 @@ func (x *ReviewActionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewActionReq.ProtoReflect.Descriptor instead.
 func (*ReviewActionReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{149}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{145}
 }
 
 func (x *ReviewActionReq) GetReviewID() string {
@@ -9805,7 +9597,7 @@ type ReviewActionResp struct {
 
 func (x *ReviewActionResp) Reset() {
 	*x = ReviewActionResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[150]
+	mi := &file_workbench_workbench_proto_msgTypes[146]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9817,7 +9609,7 @@ func (x *ReviewActionResp) String() string {
 func (*ReviewActionResp) ProtoMessage() {}
 
 func (x *ReviewActionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[150]
+	mi := &file_workbench_workbench_proto_msgTypes[146]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9830,7 +9622,7 @@ func (x *ReviewActionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewActionResp.ProtoReflect.Descriptor instead.
 func (*ReviewActionResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{150}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{146}
 }
 
 type ForceOfflineReq struct {
@@ -9843,7 +9635,7 @@ type ForceOfflineReq struct {
 
 func (x *ForceOfflineReq) Reset() {
 	*x = ForceOfflineReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[151]
+	mi := &file_workbench_workbench_proto_msgTypes[147]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9855,7 +9647,7 @@ func (x *ForceOfflineReq) String() string {
 func (*ForceOfflineReq) ProtoMessage() {}
 
 func (x *ForceOfflineReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[151]
+	mi := &file_workbench_workbench_proto_msgTypes[147]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9868,7 +9660,7 @@ func (x *ForceOfflineReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceOfflineReq.ProtoReflect.Descriptor instead.
 func (*ForceOfflineReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{151}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{147}
 }
 
 func (x *ForceOfflineReq) GetAppID() string {
@@ -9893,7 +9685,7 @@ type ForceOfflineResp struct {
 
 func (x *ForceOfflineResp) Reset() {
 	*x = ForceOfflineResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[152]
+	mi := &file_workbench_workbench_proto_msgTypes[148]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9905,7 +9697,7 @@ func (x *ForceOfflineResp) String() string {
 func (*ForceOfflineResp) ProtoMessage() {}
 
 func (x *ForceOfflineResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[152]
+	mi := &file_workbench_workbench_proto_msgTypes[148]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9918,7 +9710,7 @@ func (x *ForceOfflineResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ForceOfflineResp.ProtoReflect.Descriptor instead.
 func (*ForceOfflineResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{152}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{148}
 }
 
 type SetWebhookReq struct {
@@ -9933,7 +9725,7 @@ type SetWebhookReq struct {
 
 func (x *SetWebhookReq) Reset() {
 	*x = SetWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[153]
+	mi := &file_workbench_workbench_proto_msgTypes[149]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -9945,7 +9737,7 @@ func (x *SetWebhookReq) String() string {
 func (*SetWebhookReq) ProtoMessage() {}
 
 func (x *SetWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[153]
+	mi := &file_workbench_workbench_proto_msgTypes[149]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -9958,7 +9750,7 @@ func (x *SetWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWebhookReq.ProtoReflect.Descriptor instead.
 func (*SetWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{153}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{149}
 }
 
 func (x *SetWebhookReq) GetAppID() string {
@@ -9998,7 +9790,7 @@ type SetWebhookResp struct {
 
 func (x *SetWebhookResp) Reset() {
 	*x = SetWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[154]
+	mi := &file_workbench_workbench_proto_msgTypes[150]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10010,7 +9802,7 @@ func (x *SetWebhookResp) String() string {
 func (*SetWebhookResp) ProtoMessage() {}
 
 func (x *SetWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[154]
+	mi := &file_workbench_workbench_proto_msgTypes[150]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10023,7 +9815,7 @@ func (x *SetWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWebhookResp.ProtoReflect.Descriptor instead.
 func (*SetWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{154}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{150}
 }
 
 func (x *SetWebhookResp) GetWebhookID() string {
@@ -10042,7 +9834,7 @@ type GetWebhookReq struct {
 
 func (x *GetWebhookReq) Reset() {
 	*x = GetWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[155]
+	mi := &file_workbench_workbench_proto_msgTypes[151]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10054,7 +9846,7 @@ func (x *GetWebhookReq) String() string {
 func (*GetWebhookReq) ProtoMessage() {}
 
 func (x *GetWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[155]
+	mi := &file_workbench_workbench_proto_msgTypes[151]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10067,7 +9859,7 @@ func (x *GetWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookReq.ProtoReflect.Descriptor instead.
 func (*GetWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{155}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{151}
 }
 
 func (x *GetWebhookReq) GetAppID() string {
@@ -10086,7 +9878,7 @@ type GetWebhookResp struct {
 
 func (x *GetWebhookResp) Reset() {
 	*x = GetWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[156]
+	mi := &file_workbench_workbench_proto_msgTypes[152]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10098,7 +9890,7 @@ func (x *GetWebhookResp) String() string {
 func (*GetWebhookResp) ProtoMessage() {}
 
 func (x *GetWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[156]
+	mi := &file_workbench_workbench_proto_msgTypes[152]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10111,7 +9903,7 @@ func (x *GetWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookResp.ProtoReflect.Descriptor instead.
 func (*GetWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{156}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{152}
 }
 
 func (x *GetWebhookResp) GetWebhook() *WebhookInfo {
@@ -10133,7 +9925,7 @@ type GetWebhookLogsReq struct {
 
 func (x *GetWebhookLogsReq) Reset() {
 	*x = GetWebhookLogsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[157]
+	mi := &file_workbench_workbench_proto_msgTypes[153]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10145,7 +9937,7 @@ func (x *GetWebhookLogsReq) String() string {
 func (*GetWebhookLogsReq) ProtoMessage() {}
 
 func (x *GetWebhookLogsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[157]
+	mi := &file_workbench_workbench_proto_msgTypes[153]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10158,7 +9950,7 @@ func (x *GetWebhookLogsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookLogsReq.ProtoReflect.Descriptor instead.
 func (*GetWebhookLogsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{157}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{153}
 }
 
 func (x *GetWebhookLogsReq) GetAppID() string {
@@ -10199,7 +9991,7 @@ type GetWebhookLogsResp struct {
 
 func (x *GetWebhookLogsResp) Reset() {
 	*x = GetWebhookLogsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[158]
+	mi := &file_workbench_workbench_proto_msgTypes[154]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10211,7 +10003,7 @@ func (x *GetWebhookLogsResp) String() string {
 func (*GetWebhookLogsResp) ProtoMessage() {}
 
 func (x *GetWebhookLogsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[158]
+	mi := &file_workbench_workbench_proto_msgTypes[154]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10224,7 +10016,7 @@ func (x *GetWebhookLogsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetWebhookLogsResp.ProtoReflect.Descriptor instead.
 func (*GetWebhookLogsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{158}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{154}
 }
 
 func (x *GetWebhookLogsResp) GetTotal() int64 {
@@ -10250,7 +10042,7 @@ type RetryWebhookReq struct {
 
 func (x *RetryWebhookReq) Reset() {
 	*x = RetryWebhookReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[159]
+	mi := &file_workbench_workbench_proto_msgTypes[155]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10262,7 +10054,7 @@ func (x *RetryWebhookReq) String() string {
 func (*RetryWebhookReq) ProtoMessage() {}
 
 func (x *RetryWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[159]
+	mi := &file_workbench_workbench_proto_msgTypes[155]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10275,7 +10067,7 @@ func (x *RetryWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryWebhookReq.ProtoReflect.Descriptor instead.
 func (*RetryWebhookReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{159}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{155}
 }
 
 func (x *RetryWebhookReq) GetLogID() string {
@@ -10293,7 +10085,7 @@ type RetryWebhookResp struct {
 
 func (x *RetryWebhookResp) Reset() {
 	*x = RetryWebhookResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[160]
+	mi := &file_workbench_workbench_proto_msgTypes[156]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10305,7 +10097,7 @@ func (x *RetryWebhookResp) String() string {
 func (*RetryWebhookResp) ProtoMessage() {}
 
 func (x *RetryWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[160]
+	mi := &file_workbench_workbench_proto_msgTypes[156]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10318,7 +10110,7 @@ func (x *RetryWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryWebhookResp.ProtoReflect.Descriptor instead.
 func (*RetryWebhookResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{160}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{156}
 }
 
 type GetMarketAppDetailReq struct {
@@ -10331,7 +10123,7 @@ type GetMarketAppDetailReq struct {
 
 func (x *GetMarketAppDetailReq) Reset() {
 	*x = GetMarketAppDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[161]
+	mi := &file_workbench_workbench_proto_msgTypes[157]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10343,7 +10135,7 @@ func (x *GetMarketAppDetailReq) String() string {
 func (*GetMarketAppDetailReq) ProtoMessage() {}
 
 func (x *GetMarketAppDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[161]
+	mi := &file_workbench_workbench_proto_msgTypes[157]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10356,7 +10148,7 @@ func (x *GetMarketAppDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMarketAppDetailReq.ProtoReflect.Descriptor instead.
 func (*GetMarketAppDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{161}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{157}
 }
 
 func (x *GetMarketAppDetailReq) GetAppID() string {
@@ -10384,7 +10176,7 @@ type GetMarketAppDetailResp struct {
 
 func (x *GetMarketAppDetailResp) Reset() {
 	*x = GetMarketAppDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[162]
+	mi := &file_workbench_workbench_proto_msgTypes[158]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10396,7 +10188,7 @@ func (x *GetMarketAppDetailResp) String() string {
 func (*GetMarketAppDetailResp) ProtoMessage() {}
 
 func (x *GetMarketAppDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[162]
+	mi := &file_workbench_workbench_proto_msgTypes[158]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10409,7 +10201,7 @@ func (x *GetMarketAppDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMarketAppDetailResp.ProtoReflect.Descriptor instead.
 func (*GetMarketAppDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{162}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{158}
 }
 
 func (x *GetMarketAppDetailResp) GetApp() *AppInfo {
@@ -10443,7 +10235,7 @@ type BatchInstallAppReq struct {
 
 func (x *BatchInstallAppReq) Reset() {
 	*x = BatchInstallAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[163]
+	mi := &file_workbench_workbench_proto_msgTypes[159]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10455,7 +10247,7 @@ func (x *BatchInstallAppReq) String() string {
 func (*BatchInstallAppReq) ProtoMessage() {}
 
 func (x *BatchInstallAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[163]
+	mi := &file_workbench_workbench_proto_msgTypes[159]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10468,7 +10260,7 @@ func (x *BatchInstallAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchInstallAppReq.ProtoReflect.Descriptor instead.
 func (*BatchInstallAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{163}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{159}
 }
 
 func (x *BatchInstallAppReq) GetTenantID() string {
@@ -10495,7 +10287,7 @@ type BatchInstallAppResp struct {
 
 func (x *BatchInstallAppResp) Reset() {
 	*x = BatchInstallAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[164]
+	mi := &file_workbench_workbench_proto_msgTypes[160]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10507,7 +10299,7 @@ func (x *BatchInstallAppResp) String() string {
 func (*BatchInstallAppResp) ProtoMessage() {}
 
 func (x *BatchInstallAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[164]
+	mi := &file_workbench_workbench_proto_msgTypes[160]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10520,7 +10312,7 @@ func (x *BatchInstallAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BatchInstallAppResp.ProtoReflect.Descriptor instead.
 func (*BatchInstallAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{164}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{160}
 }
 
 func (x *BatchInstallAppResp) GetSuccessCount() int64 {
@@ -10547,7 +10339,7 @@ type GetNotifyDetailReq struct {
 
 func (x *GetNotifyDetailReq) Reset() {
 	*x = GetNotifyDetailReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[165]
+	mi := &file_workbench_workbench_proto_msgTypes[161]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10559,7 +10351,7 @@ func (x *GetNotifyDetailReq) String() string {
 func (*GetNotifyDetailReq) ProtoMessage() {}
 
 func (x *GetNotifyDetailReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[165]
+	mi := &file_workbench_workbench_proto_msgTypes[161]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10572,7 +10364,7 @@ func (x *GetNotifyDetailReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyDetailReq.ProtoReflect.Descriptor instead.
 func (*GetNotifyDetailReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{165}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{161}
 }
 
 func (x *GetNotifyDetailReq) GetNotifyID() string {
@@ -10598,7 +10390,7 @@ type GetNotifyDetailResp struct {
 
 func (x *GetNotifyDetailResp) Reset() {
 	*x = GetNotifyDetailResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[166]
+	mi := &file_workbench_workbench_proto_msgTypes[162]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10610,7 +10402,7 @@ func (x *GetNotifyDetailResp) String() string {
 func (*GetNotifyDetailResp) ProtoMessage() {}
 
 func (x *GetNotifyDetailResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[166]
+	mi := &file_workbench_workbench_proto_msgTypes[162]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10623,7 +10415,7 @@ func (x *GetNotifyDetailResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotifyDetailResp.ProtoReflect.Descriptor instead.
 func (*GetNotifyDetailResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{166}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{162}
 }
 
 func (x *GetNotifyDetailResp) GetLog() *NotifyLogInfo {
@@ -10647,7 +10439,7 @@ type GetReviewListReq struct {
 
 func (x *GetReviewListReq) Reset() {
 	*x = GetReviewListReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[167]
+	mi := &file_workbench_workbench_proto_msgTypes[163]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10659,7 +10451,7 @@ func (x *GetReviewListReq) String() string {
 func (*GetReviewListReq) ProtoMessage() {}
 
 func (x *GetReviewListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[167]
+	mi := &file_workbench_workbench_proto_msgTypes[163]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10672,7 +10464,7 @@ func (x *GetReviewListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewListReq.ProtoReflect.Descriptor instead.
 func (*GetReviewListReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{167}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{163}
 }
 
 func (x *GetReviewListReq) GetReviewStatus() int32 {
@@ -10727,7 +10519,7 @@ type GetReviewListResp struct {
 
 func (x *GetReviewListResp) Reset() {
 	*x = GetReviewListResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[168]
+	mi := &file_workbench_workbench_proto_msgTypes[164]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10739,7 +10531,7 @@ func (x *GetReviewListResp) String() string {
 func (*GetReviewListResp) ProtoMessage() {}
 
 func (x *GetReviewListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[168]
+	mi := &file_workbench_workbench_proto_msgTypes[164]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10752,7 +10544,7 @@ func (x *GetReviewListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetReviewListResp.ProtoReflect.Descriptor instead.
 func (*GetReviewListResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{168}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{164}
 }
 
 func (x *GetReviewListResp) GetTotal() int64 {
@@ -10777,7 +10569,7 @@ type GetPlatformStatsReq struct {
 
 func (x *GetPlatformStatsReq) Reset() {
 	*x = GetPlatformStatsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[169]
+	mi := &file_workbench_workbench_proto_msgTypes[165]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10789,7 +10581,7 @@ func (x *GetPlatformStatsReq) String() string {
 func (*GetPlatformStatsReq) ProtoMessage() {}
 
 func (x *GetPlatformStatsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[169]
+	mi := &file_workbench_workbench_proto_msgTypes[165]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10802,7 +10594,7 @@ func (x *GetPlatformStatsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlatformStatsReq.ProtoReflect.Descriptor instead.
 func (*GetPlatformStatsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{169}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{165}
 }
 
 type GetPlatformStatsResp struct {
@@ -10817,7 +10609,7 @@ type GetPlatformStatsResp struct {
 
 func (x *GetPlatformStatsResp) Reset() {
 	*x = GetPlatformStatsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[170]
+	mi := &file_workbench_workbench_proto_msgTypes[166]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10829,7 +10621,7 @@ func (x *GetPlatformStatsResp) String() string {
 func (*GetPlatformStatsResp) ProtoMessage() {}
 
 func (x *GetPlatformStatsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[170]
+	mi := &file_workbench_workbench_proto_msgTypes[166]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10842,7 +10634,7 @@ func (x *GetPlatformStatsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPlatformStatsResp.ProtoReflect.Descriptor instead.
 func (*GetPlatformStatsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{170}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{166}
 }
 
 func (x *GetPlatformStatsResp) GetTotalApps() int64 {
@@ -10882,7 +10674,7 @@ type GetTenantStatsReq struct {
 
 func (x *GetTenantStatsReq) Reset() {
 	*x = GetTenantStatsReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[171]
+	mi := &file_workbench_workbench_proto_msgTypes[167]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10894,7 +10686,7 @@ func (x *GetTenantStatsReq) String() string {
 func (*GetTenantStatsReq) ProtoMessage() {}
 
 func (x *GetTenantStatsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[171]
+	mi := &file_workbench_workbench_proto_msgTypes[167]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10907,7 +10699,7 @@ func (x *GetTenantStatsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenantStatsReq.ProtoReflect.Descriptor instead.
 func (*GetTenantStatsReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{171}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{167}
 }
 
 func (x *GetTenantStatsReq) GetTenantID() string {
@@ -10928,7 +10720,7 @@ type GetTenantStatsResp struct {
 
 func (x *GetTenantStatsResp) Reset() {
 	*x = GetTenantStatsResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[172]
+	mi := &file_workbench_workbench_proto_msgTypes[168]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -10940,7 +10732,7 @@ func (x *GetTenantStatsResp) String() string {
 func (*GetTenantStatsResp) ProtoMessage() {}
 
 func (x *GetTenantStatsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[172]
+	mi := &file_workbench_workbench_proto_msgTypes[168]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -10953,7 +10745,7 @@ func (x *GetTenantStatsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenantStatsResp.ProtoReflect.Descriptor instead.
 func (*GetTenantStatsResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{172}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{168}
 }
 
 func (x *GetTenantStatsResp) GetInstalledApps() int64 {
@@ -10988,7 +10780,7 @@ type GetHomeReq struct {
 
 func (x *GetHomeReq) Reset() {
 	*x = GetHomeReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[173]
+	mi := &file_workbench_workbench_proto_msgTypes[169]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11000,7 +10792,7 @@ func (x *GetHomeReq) String() string {
 func (*GetHomeReq) ProtoMessage() {}
 
 func (x *GetHomeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[173]
+	mi := &file_workbench_workbench_proto_msgTypes[169]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11013,7 +10805,7 @@ func (x *GetHomeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHomeReq.ProtoReflect.Descriptor instead.
 func (*GetHomeReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{173}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{169}
 }
 
 func (x *GetHomeReq) GetTenantID() string {
@@ -11052,7 +10844,7 @@ type GetHomeResp struct {
 
 func (x *GetHomeResp) Reset() {
 	*x = GetHomeResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[174]
+	mi := &file_workbench_workbench_proto_msgTypes[170]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11064,7 +10856,7 @@ func (x *GetHomeResp) String() string {
 func (*GetHomeResp) ProtoMessage() {}
 
 func (x *GetHomeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[174]
+	mi := &file_workbench_workbench_proto_msgTypes[170]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11077,7 +10869,7 @@ func (x *GetHomeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHomeResp.ProtoReflect.Descriptor instead.
 func (*GetHomeResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{174}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{170}
 }
 
 func (x *GetHomeResp) GetBanners() []*BannerInfo {
@@ -11140,7 +10932,7 @@ type ClickAppReq struct {
 
 func (x *ClickAppReq) Reset() {
 	*x = ClickAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[175]
+	mi := &file_workbench_workbench_proto_msgTypes[171]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11152,7 +10944,7 @@ func (x *ClickAppReq) String() string {
 func (*ClickAppReq) ProtoMessage() {}
 
 func (x *ClickAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[175]
+	mi := &file_workbench_workbench_proto_msgTypes[171]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11165,7 +10957,7 @@ func (x *ClickAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClickAppReq.ProtoReflect.Descriptor instead.
 func (*ClickAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{175}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{171}
 }
 
 func (x *ClickAppReq) GetTenantID() string {
@@ -11197,7 +10989,7 @@ type ClickAppResp struct {
 
 func (x *ClickAppResp) Reset() {
 	*x = ClickAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[176]
+	mi := &file_workbench_workbench_proto_msgTypes[172]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11209,7 +11001,7 @@ func (x *ClickAppResp) String() string {
 func (*ClickAppResp) ProtoMessage() {}
 
 func (x *ClickAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[176]
+	mi := &file_workbench_workbench_proto_msgTypes[172]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11222,7 +11014,7 @@ func (x *ClickAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClickAppResp.ProtoReflect.Descriptor instead.
 func (*ClickAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{176}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{172}
 }
 
 type LaunchAppReq struct {
@@ -11232,14 +11024,13 @@ type LaunchAppReq struct {
 	AppID         string                 `protobuf:"bytes,3,opt,name=appID,proto3" json:"appID,omitempty"`
 	State         string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
 	RedirectURI   string                 `protobuf:"bytes,5,opt,name=redirectURI,proto3" json:"redirectURI,omitempty"`
-	CodeChallenge string                 `protobuf:"bytes,6,opt,name=codeChallenge,proto3" json:"codeChallenge,omitempty"` // PKCE S256
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LaunchAppReq) Reset() {
 	*x = LaunchAppReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[177]
+	mi := &file_workbench_workbench_proto_msgTypes[173]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11251,7 +11042,7 @@ func (x *LaunchAppReq) String() string {
 func (*LaunchAppReq) ProtoMessage() {}
 
 func (x *LaunchAppReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[177]
+	mi := &file_workbench_workbench_proto_msgTypes[173]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11264,7 +11055,7 @@ func (x *LaunchAppReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LaunchAppReq.ProtoReflect.Descriptor instead.
 func (*LaunchAppReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{177}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{173}
 }
 
 func (x *LaunchAppReq) GetTenantID() string {
@@ -11302,27 +11093,20 @@ func (x *LaunchAppReq) GetRedirectURI() string {
 	return ""
 }
 
-func (x *LaunchAppReq) GetCodeChallenge() string {
-	if x != nil {
-		return x.CodeChallenge
-	}
-	return ""
-}
-
 type LaunchAppResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	LaunchURL     string                 `protobuf:"bytes,1,opt,name=launchURL,proto3" json:"launchURL,omitempty"`    // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
+	LaunchURL     string                 `protobuf:"bytes,1,opt,name=launchURL,proto3" json:"launchURL,omitempty"`    // OAuth: redirect_uri?code=...&state=...; 非 SSO: 原始 URL
 	OpenMethod    int32                  `protobuf:"varint,2,opt,name=openMethod,proto3" json:"openMethod,omitempty"` // OpenMethod
-	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`   // ticket 剩余有效秒数；非 SSO 应用为 0
+	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expiresIn,proto3" json:"expiresIn,omitempty"`   // OAuth code 有效秒数；非 SSO 为 0
 	SsoEnabled    bool                   `protobuf:"varint,4,opt,name=ssoEnabled,proto3" json:"ssoEnabled,omitempty"` // 该应用是否启用了 SSO 免登
-	AuthMode      string                 `protobuf:"bytes,5,opt,name=authMode,proto3" json:"authMode,omitempty"`      // none, legacy_ticket, im_code, federation
+	AuthMode      string                 `protobuf:"bytes,5,opt,name=authMode,proto3" json:"authMode,omitempty"`      // oauth, federation, none
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LaunchAppResp) Reset() {
 	*x = LaunchAppResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[178]
+	mi := &file_workbench_workbench_proto_msgTypes[174]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11334,7 +11118,7 @@ func (x *LaunchAppResp) String() string {
 func (*LaunchAppResp) ProtoMessage() {}
 
 func (x *LaunchAppResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[178]
+	mi := &file_workbench_workbench_proto_msgTypes[174]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11347,7 +11131,7 @@ func (x *LaunchAppResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LaunchAppResp.ProtoReflect.Descriptor instead.
 func (*LaunchAppResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{178}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{174}
 }
 
 func (x *LaunchAppResp) GetLaunchURL() string {
@@ -11397,7 +11181,7 @@ type NotifySendResult struct {
 
 func (x *NotifySendResult) Reset() {
 	*x = NotifySendResult{}
-	mi := &file_workbench_workbench_proto_msgTypes[179]
+	mi := &file_workbench_workbench_proto_msgTypes[175]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11409,7 +11193,7 @@ func (x *NotifySendResult) String() string {
 func (*NotifySendResult) ProtoMessage() {}
 
 func (x *NotifySendResult) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[179]
+	mi := &file_workbench_workbench_proto_msgTypes[175]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11422,7 +11206,7 @@ func (x *NotifySendResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifySendResult.ProtoReflect.Descriptor instead.
 func (*NotifySendResult) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{179}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{175}
 }
 
 func (x *NotifySendResult) GetToUserID() string {
@@ -11467,7 +11251,7 @@ type CardActionReq struct {
 
 func (x *CardActionReq) Reset() {
 	*x = CardActionReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[180]
+	mi := &file_workbench_workbench_proto_msgTypes[176]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11479,7 +11263,7 @@ func (x *CardActionReq) String() string {
 func (*CardActionReq) ProtoMessage() {}
 
 func (x *CardActionReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[180]
+	mi := &file_workbench_workbench_proto_msgTypes[176]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11492,7 +11276,7 @@ func (x *CardActionReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardActionReq.ProtoReflect.Descriptor instead.
 func (*CardActionReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{180}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{176}
 }
 
 func (x *CardActionReq) GetNotifyID() string {
@@ -11549,7 +11333,7 @@ type CardActionResp struct {
 
 func (x *CardActionResp) Reset() {
 	*x = CardActionResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[181]
+	mi := &file_workbench_workbench_proto_msgTypes[177]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11561,7 +11345,7 @@ func (x *CardActionResp) String() string {
 func (*CardActionResp) ProtoMessage() {}
 
 func (x *CardActionResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[181]
+	mi := &file_workbench_workbench_proto_msgTypes[177]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11574,7 +11358,7 @@ func (x *CardActionResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardActionResp.ProtoReflect.Descriptor instead.
 func (*CardActionResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{181}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{177}
 }
 
 func (x *CardActionResp) GetCardUpdated() bool {
@@ -11618,7 +11402,7 @@ type SetWorkbenchDataReq struct {
 
 func (x *SetWorkbenchDataReq) Reset() {
 	*x = SetWorkbenchDataReq{}
-	mi := &file_workbench_workbench_proto_msgTypes[182]
+	mi := &file_workbench_workbench_proto_msgTypes[178]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11630,7 +11414,7 @@ func (x *SetWorkbenchDataReq) String() string {
 func (*SetWorkbenchDataReq) ProtoMessage() {}
 
 func (x *SetWorkbenchDataReq) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[182]
+	mi := &file_workbench_workbench_proto_msgTypes[178]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11643,7 +11427,7 @@ func (x *SetWorkbenchDataReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWorkbenchDataReq.ProtoReflect.Descriptor instead.
 func (*SetWorkbenchDataReq) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{182}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{178}
 }
 
 func (x *SetWorkbenchDataReq) GetAgentid() string {
@@ -11689,7 +11473,7 @@ type SetWorkbenchDataResp struct {
 
 func (x *SetWorkbenchDataResp) Reset() {
 	*x = SetWorkbenchDataResp{}
-	mi := &file_workbench_workbench_proto_msgTypes[183]
+	mi := &file_workbench_workbench_proto_msgTypes[179]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -11701,7 +11485,7 @@ func (x *SetWorkbenchDataResp) String() string {
 func (*SetWorkbenchDataResp) ProtoMessage() {}
 
 func (x *SetWorkbenchDataResp) ProtoReflect() protoreflect.Message {
-	mi := &file_workbench_workbench_proto_msgTypes[183]
+	mi := &file_workbench_workbench_proto_msgTypes[179]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -11714,7 +11498,7 @@ func (x *SetWorkbenchDataResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetWorkbenchDataResp.ProtoReflect.Descriptor instead.
 func (*SetWorkbenchDataResp) Descriptor() ([]byte, []int) {
-	return file_workbench_workbench_proto_rawDescGZIP(), []int{183}
+	return file_workbench_workbench_proto_rawDescGZIP(), []int{179}
 }
 
 var File_workbench_workbench_proto protoreflect.FileDescriptor
@@ -12256,7 +12040,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\"\n" +
 	"\factionConfig\x18\x03 \x01(\tR\factionConfig\x12\x1a\n" +
-	"\bcardJSON\x18\x04 \x01(\tR\bcardJSON\"\xb9\x02\n" +
+	"\bcardJSON\x18\x04 \x01(\tR\bcardJSON\"\x85\x03\n" +
 	"\rSendNotifyReq\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12 \n" +
 	"\vtemplateKey\x18\x02 \x01(\tR\vtemplateKey\x12\x1a\n" +
@@ -12267,13 +12051,17 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x05extra\x18\a \x01(\tR\x05extra\x12\x1e\n" +
 	"\n" +
 	"detailJSON\x18\b \x01(\tR\n" +
-	"detailJSON\x1a7\n" +
+	"detailJSON\x12\x14\n" +
+	"\x05title\x18\t \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\n" +
+	" \x01(\tR\acontent\x12\x1a\n" +
+	"\bcardJSON\x18\v \x01(\tR\bcardJSON\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"B\n" +
 	"\x0eSendNotifyResp\x12\x1a\n" +
 	"\bnotifyID\x18\x01 \x01(\tR\bnotifyID\x12\x14\n" +
-	"\x05msgID\x18\x02 \x01(\tR\x05msgID\"\xaf\x02\n" +
+	"\x05msgID\x18\x02 \x01(\tR\x05msgID\"\xfb\x02\n" +
 	"\x12BatchSendNotifyReq\x12\x14\n" +
 	"\x05appID\x18\x01 \x01(\tR\x05appID\x12 \n" +
 	"\vtemplateKey\x18\x02 \x01(\tR\vtemplateKey\x12\x1c\n" +
@@ -12283,7 +12071,11 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\x05bizID\x18\x06 \x01(\tR\x05bizID\x12\x1e\n" +
 	"\n" +
 	"detailJSON\x18\a \x01(\tR\n" +
-	"detailJSON\x1a7\n" +
+	"detailJSON\x12\x14\n" +
+	"\x05title\x18\b \x01(\tR\x05title\x12\x18\n" +
+	"\acontent\x18\t \x01(\tR\acontent\x12\x1a\n" +
+	"\bcardJSON\x18\n" +
+	" \x01(\tR\bcardJSON\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"m\n" +
@@ -12377,25 +12169,7 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x14\n" +
 	"\x05appID\x18\x02 \x01(\tR\x05appID\"H\n" +
 	"\x11GetAuthDetailResp\x123\n" +
-	"\x04auth\x18\x01 \x01(\v2\x1f.openim.workbench.OAuthAuthInfoR\x04auth\"?\n" +
-	"\x0fCreateTicketReq\x12\x14\n" +
-	"\x05appID\x18\x01 \x01(\tR\x05appID\x12\x16\n" +
-	"\x06userID\x18\x02 \x01(\tR\x06userID\"H\n" +
-	"\x10CreateTicketResp\x12\x16\n" +
-	"\x06ticket\x18\x01 \x01(\tR\x06ticket\x12\x1c\n" +
-	"\texpiresIn\x18\x02 \x01(\x03R\texpiresIn\"\x88\x01\n" +
-	"\x12GetUserByTicketReq\x12\x16\n" +
-	"\x06ticket\x18\x01 \x01(\tR\x06ticket\x12\x14\n" +
-	"\x05appID\x18\x02 \x01(\tR\x05appID\x12 \n" +
-	"\vredirectURI\x18\x03 \x01(\tR\vredirectURI\x12\"\n" +
-	"\fcodeVerifier\x18\x04 \x01(\tR\fcodeVerifier\"\xab\x01\n" +
-	"\x13GetUserByTicketResp\x12\x16\n" +
-	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x18\n" +
-	"\afaceURL\x18\x03 \x01(\tR\afaceURL\x12\x14\n" +
-	"\x05phone\x18\x04 \x01(\tR\x05phone\x12\x1a\n" +
-	"\btenantID\x18\x05 \x01(\tR\btenantID\x12\x14\n" +
-	"\x05email\x18\x06 \x01(\tR\x05email\"\xae\x02\n" +
+	"\x04auth\x18\x01 \x01(\v2\x1f.openim.workbench.OAuthAuthInfoR\x04auth\"\xae\x02\n" +
 	"\x14RegisterDeveloperReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
 	"\x04type\x18\x02 \x01(\x05R\x04type\x12\"\n" +
@@ -12589,14 +12363,13 @@ const file_workbench_workbench_proto_rawDesc = "" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
 	"\x05appID\x18\x03 \x01(\tR\x05appID\"\x0e\n" +
-	"\fClickAppResp\"\xb6\x01\n" +
+	"\fClickAppResp\"\x96\x01\n" +
 	"\fLaunchAppReq\x12\x1a\n" +
 	"\btenantID\x18\x01 \x01(\tR\btenantID\x12\x16\n" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x14\n" +
 	"\x05appID\x18\x03 \x01(\tR\x05appID\x12\x14\n" +
 	"\x05state\x18\x04 \x01(\tR\x05state\x12 \n" +
-	"\vredirectURI\x18\x05 \x01(\tR\vredirectURI\x12$\n" +
-	"\rcodeChallenge\x18\x06 \x01(\tR\rcodeChallenge\"\xa7\x01\n" +
+	"\vredirectURI\x18\x05 \x01(\tR\vredirectURIJ\x04\b\x06\x10\a\"\xa7\x01\n" +
 	"\rLaunchAppResp\x12\x1c\n" +
 	"\tlaunchURL\x18\x01 \x01(\tR\tlaunchURL\x12\x1e\n" +
 	"\n" +
@@ -12739,7 +12512,7 @@ func file_workbench_workbench_proto_rawDescGZIP() []byte {
 }
 
 var file_workbench_workbench_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 188)
+var file_workbench_workbench_proto_msgTypes = make([]protoimpl.MessageInfo, 184)
 var file_workbench_workbench_proto_goTypes = []any{
 	(AppSource)(0),                  // 0: openim.workbench.AppSource
 	(AppType)(0),                    // 1: openim.workbench.AppType
@@ -12871,117 +12644,113 @@ var file_workbench_workbench_proto_goTypes = []any{
 	(*RevokeAuthResp)(nil),          // 127: openim.workbench.RevokeAuthResp
 	(*GetAuthDetailReq)(nil),        // 128: openim.workbench.GetAuthDetailReq
 	(*GetAuthDetailResp)(nil),       // 129: openim.workbench.GetAuthDetailResp
-	(*CreateTicketReq)(nil),         // 130: openim.workbench.CreateTicketReq
-	(*CreateTicketResp)(nil),        // 131: openim.workbench.CreateTicketResp
-	(*GetUserByTicketReq)(nil),      // 132: openim.workbench.GetUserByTicketReq
-	(*GetUserByTicketResp)(nil),     // 133: openim.workbench.GetUserByTicketResp
-	(*RegisterDeveloperReq)(nil),    // 134: openim.workbench.RegisterDeveloperReq
-	(*RegisterDeveloperResp)(nil),   // 135: openim.workbench.RegisterDeveloperResp
-	(*LoginDeveloperReq)(nil),       // 136: openim.workbench.LoginDeveloperReq
-	(*LoginDeveloperResp)(nil),      // 137: openim.workbench.LoginDeveloperResp
-	(*UpdateDeveloperReq)(nil),      // 138: openim.workbench.UpdateDeveloperReq
-	(*UpdateDeveloperResp)(nil),     // 139: openim.workbench.UpdateDeveloperResp
-	(*GetDeveloperListReq)(nil),     // 140: openim.workbench.GetDeveloperListReq
-	(*GetDeveloperListResp)(nil),    // 141: openim.workbench.GetDeveloperListResp
-	(*ReviewDeveloperReq)(nil),      // 142: openim.workbench.ReviewDeveloperReq
-	(*ReviewDeveloperResp)(nil),     // 143: openim.workbench.ReviewDeveloperResp
-	(*DisableDeveloperReq)(nil),     // 144: openim.workbench.DisableDeveloperReq
-	(*DisableDeveloperResp)(nil),    // 145: openim.workbench.DisableDeveloperResp
-	(*CreateDeveloperAppReq)(nil),   // 146: openim.workbench.CreateDeveloperAppReq
-	(*CreateDeveloperAppResp)(nil),  // 147: openim.workbench.CreateDeveloperAppResp
-	(*SubmitAppReq)(nil),            // 148: openim.workbench.SubmitAppReq
-	(*SubmitAppResp)(nil),           // 149: openim.workbench.SubmitAppResp
-	(*WithdrawSubmitReq)(nil),       // 150: openim.workbench.WithdrawSubmitReq
-	(*WithdrawSubmitResp)(nil),      // 151: openim.workbench.WithdrawSubmitResp
-	(*GetDeveloperAppsReq)(nil),     // 152: openim.workbench.GetDeveloperAppsReq
-	(*GetDeveloperAppsResp)(nil),    // 153: openim.workbench.GetDeveloperAppsResp
-	(*GetPendingReviewsReq)(nil),    // 154: openim.workbench.GetPendingReviewsReq
-	(*GetPendingReviewsResp)(nil),   // 155: openim.workbench.GetPendingReviewsResp
-	(*GetReviewDetailReq)(nil),      // 156: openim.workbench.GetReviewDetailReq
-	(*GetReviewDetailResp)(nil),     // 157: openim.workbench.GetReviewDetailResp
-	(*ReviewActionReq)(nil),         // 158: openim.workbench.ReviewActionReq
-	(*ReviewActionResp)(nil),        // 159: openim.workbench.ReviewActionResp
-	(*ForceOfflineReq)(nil),         // 160: openim.workbench.ForceOfflineReq
-	(*ForceOfflineResp)(nil),        // 161: openim.workbench.ForceOfflineResp
-	(*SetWebhookReq)(nil),           // 162: openim.workbench.SetWebhookReq
-	(*SetWebhookResp)(nil),          // 163: openim.workbench.SetWebhookResp
-	(*GetWebhookReq)(nil),           // 164: openim.workbench.GetWebhookReq
-	(*GetWebhookResp)(nil),          // 165: openim.workbench.GetWebhookResp
-	(*GetWebhookLogsReq)(nil),       // 166: openim.workbench.GetWebhookLogsReq
-	(*GetWebhookLogsResp)(nil),      // 167: openim.workbench.GetWebhookLogsResp
-	(*RetryWebhookReq)(nil),         // 168: openim.workbench.RetryWebhookReq
-	(*RetryWebhookResp)(nil),        // 169: openim.workbench.RetryWebhookResp
-	(*GetMarketAppDetailReq)(nil),   // 170: openim.workbench.GetMarketAppDetailReq
-	(*GetMarketAppDetailResp)(nil),  // 171: openim.workbench.GetMarketAppDetailResp
-	(*BatchInstallAppReq)(nil),      // 172: openim.workbench.BatchInstallAppReq
-	(*BatchInstallAppResp)(nil),     // 173: openim.workbench.BatchInstallAppResp
-	(*GetNotifyDetailReq)(nil),      // 174: openim.workbench.GetNotifyDetailReq
-	(*GetNotifyDetailResp)(nil),     // 175: openim.workbench.GetNotifyDetailResp
-	(*GetReviewListReq)(nil),        // 176: openim.workbench.GetReviewListReq
-	(*GetReviewListResp)(nil),       // 177: openim.workbench.GetReviewListResp
-	(*GetPlatformStatsReq)(nil),     // 178: openim.workbench.GetPlatformStatsReq
-	(*GetPlatformStatsResp)(nil),    // 179: openim.workbench.GetPlatformStatsResp
-	(*GetTenantStatsReq)(nil),       // 180: openim.workbench.GetTenantStatsReq
-	(*GetTenantStatsResp)(nil),      // 181: openim.workbench.GetTenantStatsResp
-	(*GetHomeReq)(nil),              // 182: openim.workbench.GetHomeReq
-	(*GetHomeResp)(nil),             // 183: openim.workbench.GetHomeResp
-	(*ClickAppReq)(nil),             // 184: openim.workbench.ClickAppReq
-	(*ClickAppResp)(nil),            // 185: openim.workbench.ClickAppResp
-	(*LaunchAppReq)(nil),            // 186: openim.workbench.LaunchAppReq
-	(*LaunchAppResp)(nil),           // 187: openim.workbench.LaunchAppResp
-	(*NotifySendResult)(nil),        // 188: openim.workbench.NotifySendResult
-	(*CardActionReq)(nil),           // 189: openim.workbench.CardActionReq
-	(*CardActionResp)(nil),          // 190: openim.workbench.CardActionResp
-	(*SetWorkbenchDataReq)(nil),     // 191: openim.workbench.SetWorkbenchDataReq
-	(*SetWorkbenchDataResp)(nil),    // 192: openim.workbench.SetWorkbenchDataResp
-	nil,                             // 193: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	nil,                             // 194: openim.workbench.SendNotifyReq.DataEntry
-	nil,                             // 195: openim.workbench.BatchSendNotifyReq.DataEntry
-	nil,                             // 196: openim.workbench.UpdateNotifyReq.DataEntry
-	(*wrapperspb.StringValue)(nil),  // 197: openim.protobuf.StringValue
-	(*wrapperspb.Int32Value)(nil),   // 198: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),    // 199: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil), // 200: openim.sdkws.RequestPagination
-	(*wrapperspb.Int64Value)(nil),   // 201: openim.protobuf.Int64Value
+	(*RegisterDeveloperReq)(nil),    // 130: openim.workbench.RegisterDeveloperReq
+	(*RegisterDeveloperResp)(nil),   // 131: openim.workbench.RegisterDeveloperResp
+	(*LoginDeveloperReq)(nil),       // 132: openim.workbench.LoginDeveloperReq
+	(*LoginDeveloperResp)(nil),      // 133: openim.workbench.LoginDeveloperResp
+	(*UpdateDeveloperReq)(nil),      // 134: openim.workbench.UpdateDeveloperReq
+	(*UpdateDeveloperResp)(nil),     // 135: openim.workbench.UpdateDeveloperResp
+	(*GetDeveloperListReq)(nil),     // 136: openim.workbench.GetDeveloperListReq
+	(*GetDeveloperListResp)(nil),    // 137: openim.workbench.GetDeveloperListResp
+	(*ReviewDeveloperReq)(nil),      // 138: openim.workbench.ReviewDeveloperReq
+	(*ReviewDeveloperResp)(nil),     // 139: openim.workbench.ReviewDeveloperResp
+	(*DisableDeveloperReq)(nil),     // 140: openim.workbench.DisableDeveloperReq
+	(*DisableDeveloperResp)(nil),    // 141: openim.workbench.DisableDeveloperResp
+	(*CreateDeveloperAppReq)(nil),   // 142: openim.workbench.CreateDeveloperAppReq
+	(*CreateDeveloperAppResp)(nil),  // 143: openim.workbench.CreateDeveloperAppResp
+	(*SubmitAppReq)(nil),            // 144: openim.workbench.SubmitAppReq
+	(*SubmitAppResp)(nil),           // 145: openim.workbench.SubmitAppResp
+	(*WithdrawSubmitReq)(nil),       // 146: openim.workbench.WithdrawSubmitReq
+	(*WithdrawSubmitResp)(nil),      // 147: openim.workbench.WithdrawSubmitResp
+	(*GetDeveloperAppsReq)(nil),     // 148: openim.workbench.GetDeveloperAppsReq
+	(*GetDeveloperAppsResp)(nil),    // 149: openim.workbench.GetDeveloperAppsResp
+	(*GetPendingReviewsReq)(nil),    // 150: openim.workbench.GetPendingReviewsReq
+	(*GetPendingReviewsResp)(nil),   // 151: openim.workbench.GetPendingReviewsResp
+	(*GetReviewDetailReq)(nil),      // 152: openim.workbench.GetReviewDetailReq
+	(*GetReviewDetailResp)(nil),     // 153: openim.workbench.GetReviewDetailResp
+	(*ReviewActionReq)(nil),         // 154: openim.workbench.ReviewActionReq
+	(*ReviewActionResp)(nil),        // 155: openim.workbench.ReviewActionResp
+	(*ForceOfflineReq)(nil),         // 156: openim.workbench.ForceOfflineReq
+	(*ForceOfflineResp)(nil),        // 157: openim.workbench.ForceOfflineResp
+	(*SetWebhookReq)(nil),           // 158: openim.workbench.SetWebhookReq
+	(*SetWebhookResp)(nil),          // 159: openim.workbench.SetWebhookResp
+	(*GetWebhookReq)(nil),           // 160: openim.workbench.GetWebhookReq
+	(*GetWebhookResp)(nil),          // 161: openim.workbench.GetWebhookResp
+	(*GetWebhookLogsReq)(nil),       // 162: openim.workbench.GetWebhookLogsReq
+	(*GetWebhookLogsResp)(nil),      // 163: openim.workbench.GetWebhookLogsResp
+	(*RetryWebhookReq)(nil),         // 164: openim.workbench.RetryWebhookReq
+	(*RetryWebhookResp)(nil),        // 165: openim.workbench.RetryWebhookResp
+	(*GetMarketAppDetailReq)(nil),   // 166: openim.workbench.GetMarketAppDetailReq
+	(*GetMarketAppDetailResp)(nil),  // 167: openim.workbench.GetMarketAppDetailResp
+	(*BatchInstallAppReq)(nil),      // 168: openim.workbench.BatchInstallAppReq
+	(*BatchInstallAppResp)(nil),     // 169: openim.workbench.BatchInstallAppResp
+	(*GetNotifyDetailReq)(nil),      // 170: openim.workbench.GetNotifyDetailReq
+	(*GetNotifyDetailResp)(nil),     // 171: openim.workbench.GetNotifyDetailResp
+	(*GetReviewListReq)(nil),        // 172: openim.workbench.GetReviewListReq
+	(*GetReviewListResp)(nil),       // 173: openim.workbench.GetReviewListResp
+	(*GetPlatformStatsReq)(nil),     // 174: openim.workbench.GetPlatformStatsReq
+	(*GetPlatformStatsResp)(nil),    // 175: openim.workbench.GetPlatformStatsResp
+	(*GetTenantStatsReq)(nil),       // 176: openim.workbench.GetTenantStatsReq
+	(*GetTenantStatsResp)(nil),      // 177: openim.workbench.GetTenantStatsResp
+	(*GetHomeReq)(nil),              // 178: openim.workbench.GetHomeReq
+	(*GetHomeResp)(nil),             // 179: openim.workbench.GetHomeResp
+	(*ClickAppReq)(nil),             // 180: openim.workbench.ClickAppReq
+	(*ClickAppResp)(nil),            // 181: openim.workbench.ClickAppResp
+	(*LaunchAppReq)(nil),            // 182: openim.workbench.LaunchAppReq
+	(*LaunchAppResp)(nil),           // 183: openim.workbench.LaunchAppResp
+	(*NotifySendResult)(nil),        // 184: openim.workbench.NotifySendResult
+	(*CardActionReq)(nil),           // 185: openim.workbench.CardActionReq
+	(*CardActionResp)(nil),          // 186: openim.workbench.CardActionResp
+	(*SetWorkbenchDataReq)(nil),     // 187: openim.workbench.SetWorkbenchDataReq
+	(*SetWorkbenchDataResp)(nil),    // 188: openim.workbench.SetWorkbenchDataResp
+	nil,                             // 189: openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	nil,                             // 190: openim.workbench.SendNotifyReq.DataEntry
+	nil,                             // 191: openim.workbench.BatchSendNotifyReq.DataEntry
+	nil,                             // 192: openim.workbench.UpdateNotifyReq.DataEntry
+	(*wrapperspb.StringValue)(nil),  // 193: openim.protobuf.StringValue
+	(*wrapperspb.Int32Value)(nil),   // 194: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),    // 195: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil), // 196: openim.sdkws.RequestPagination
+	(*wrapperspb.Int64Value)(nil),   // 197: openim.protobuf.Int64Value
 }
 var file_workbench_workbench_proto_depIdxs = []int32{
 	11,  // 0: openim.workbench.CategoryInfo.children:type_name -> openim.workbench.CategoryInfo
-	197, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
-	197, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
-	197, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
-	198, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
-	197, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
-	198, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
-	197, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
-	198, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	199, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
-	197, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
+	193, // 1: openim.workbench.UpdateAppReq.name:type_name -> openim.protobuf.StringValue
+	193, // 2: openim.workbench.UpdateAppReq.icon:type_name -> openim.protobuf.StringValue
+	193, // 3: openim.workbench.UpdateAppReq.description:type_name -> openim.protobuf.StringValue
+	194, // 4: openim.workbench.UpdateAppReq.appType:type_name -> openim.protobuf.Int32Value
+	193, // 5: openim.workbench.UpdateAppReq.url:type_name -> openim.protobuf.StringValue
+	194, // 6: openim.workbench.UpdateAppReq.openMethod:type_name -> openim.protobuf.Int32Value
+	193, // 7: openim.workbench.UpdateAppReq.categoryID:type_name -> openim.protobuf.StringValue
+	194, // 8: openim.workbench.UpdateAppReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	195, // 9: openim.workbench.UpdateAppReq.defaultInstall:type_name -> openim.protobuf.BoolValue
+	193, // 10: openim.workbench.UpdateAppReq.config:type_name -> openim.protobuf.StringValue
 	9,   // 11: openim.workbench.GetAppResp.app:type_name -> openim.workbench.AppInfo
-	200, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 12: openim.workbench.GetAppListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 13: openim.workbench.GetAppListResp.apps:type_name -> openim.workbench.AppInfo
-	197, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
-	197, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
-	198, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	193, // 14: openim.workbench.UpdateCategoryReq.name:type_name -> openim.protobuf.StringValue
+	193, // 15: openim.workbench.UpdateCategoryReq.icon:type_name -> openim.protobuf.StringValue
+	194, // 16: openim.workbench.UpdateCategoryReq.sortOrder:type_name -> openim.protobuf.Int32Value
 	11,  // 17: openim.workbench.GetCategoryListResp.categories:type_name -> openim.workbench.CategoryInfo
 	47,  // 18: openim.workbench.SortCategoriesReq.items:type_name -> openim.workbench.CategorySortItem
-	197, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
-	197, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
-	198, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
-	197, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
-	198, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
-	198, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
-	201, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
-	201, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
-	198, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
-	200, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	193, // 19: openim.workbench.UpdateBannerReq.title:type_name -> openim.protobuf.StringValue
+	193, // 20: openim.workbench.UpdateBannerReq.imageURL:type_name -> openim.protobuf.StringValue
+	194, // 21: openim.workbench.UpdateBannerReq.linkType:type_name -> openim.protobuf.Int32Value
+	193, // 22: openim.workbench.UpdateBannerReq.linkValue:type_name -> openim.protobuf.StringValue
+	194, // 23: openim.workbench.UpdateBannerReq.position:type_name -> openim.protobuf.Int32Value
+	194, // 24: openim.workbench.UpdateBannerReq.sortOrder:type_name -> openim.protobuf.Int32Value
+	197, // 25: openim.workbench.UpdateBannerReq.startTime:type_name -> openim.protobuf.Int64Value
+	197, // 26: openim.workbench.UpdateBannerReq.endTime:type_name -> openim.protobuf.Int64Value
+	194, // 27: openim.workbench.UpdateBannerReq.status:type_name -> openim.protobuf.Int32Value
+	196, // 28: openim.workbench.GetBannerListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	12,  // 29: openim.workbench.GetBannerListResp.banners:type_name -> openim.workbench.BannerInfo
-	200, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 30: openim.workbench.GetInstalledAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 31: openim.workbench.GetInstalledAppsResp.apps:type_name -> openim.workbench.AppInfo
-	200, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 32: openim.workbench.GetMarketAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 33: openim.workbench.GetMarketAppsResp.apps:type_name -> openim.workbench.AppInfo
-	200, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 34: openim.workbench.SearchMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 35: openim.workbench.SearchMarketResp.apps:type_name -> openim.workbench.AppInfo
-	200, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 36: openim.workbench.GetRecommendReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 37: openim.workbench.GetRecommendResp.recommended:type_name -> openim.workbench.AppInfo
 	9,   // 38: openim.workbench.GetRecommendResp.popular:type_name -> openim.workbench.AppInfo
 	14,  // 39: openim.workbench.SetAppScopeReq.scopes:type_name -> openim.workbench.AppScopeInfo
@@ -12991,49 +12760,49 @@ var file_workbench_workbench_proto_depIdxs = []int32{
 	9,   // 43: openim.workbench.GetAvailableAppsResp.apps:type_name -> openim.workbench.AppInfo
 	11,  // 44: openim.workbench.GetWorkbenchAppsResp.categories:type_name -> openim.workbench.CategoryInfo
 	9,   // 45: openim.workbench.GetWorkbenchAppsResp.apps:type_name -> openim.workbench.AppInfo
-	197, // 46: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
-	197, // 47: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
-	197, // 48: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
-	199, // 49: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
-	197, // 50: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
-	198, // 51: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
-	197, // 52: openim.workbench.UpdateMsgTemplateReq.cardJSON:type_name -> openim.protobuf.StringValue
-	200, // 53: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	193, // 46: openim.workbench.UpdateMsgTemplateReq.name:type_name -> openim.protobuf.StringValue
+	193, // 47: openim.workbench.UpdateMsgTemplateReq.titlePattern:type_name -> openim.protobuf.StringValue
+	193, // 48: openim.workbench.UpdateMsgTemplateReq.contentPattern:type_name -> openim.protobuf.StringValue
+	195, // 49: openim.workbench.UpdateMsgTemplateReq.hasActions:type_name -> openim.protobuf.BoolValue
+	193, // 50: openim.workbench.UpdateMsgTemplateReq.actionConfig:type_name -> openim.protobuf.StringValue
+	194, // 51: openim.workbench.UpdateMsgTemplateReq.status:type_name -> openim.protobuf.Int32Value
+	193, // 52: openim.workbench.UpdateMsgTemplateReq.cardJSON:type_name -> openim.protobuf.StringValue
+	196, // 53: openim.workbench.GetMsgTemplateListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	18,  // 54: openim.workbench.GetMsgTemplateListResp.templates:type_name -> openim.workbench.MsgTemplateInfo
-	193, // 55: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
-	194, // 56: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
-	195, // 57: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
-	188, // 58: openim.workbench.BatchSendNotifyResp.results:type_name -> openim.workbench.NotifySendResult
-	196, // 59: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
-	197, // 60: openim.workbench.UpdateNotifyReq.cardJSON:type_name -> openim.protobuf.StringValue
-	197, // 61: openim.workbench.UpdateNotifyReq.detailJSON:type_name -> openim.protobuf.StringValue
+	189, // 55: openim.workbench.PreviewMsgTemplateReq.mockData:type_name -> openim.workbench.PreviewMsgTemplateReq.MockDataEntry
+	190, // 56: openim.workbench.SendNotifyReq.data:type_name -> openim.workbench.SendNotifyReq.DataEntry
+	191, // 57: openim.workbench.BatchSendNotifyReq.data:type_name -> openim.workbench.BatchSendNotifyReq.DataEntry
+	184, // 58: openim.workbench.BatchSendNotifyResp.results:type_name -> openim.workbench.NotifySendResult
+	192, // 59: openim.workbench.UpdateNotifyReq.data:type_name -> openim.workbench.UpdateNotifyReq.DataEntry
+	193, // 60: openim.workbench.UpdateNotifyReq.cardJSON:type_name -> openim.protobuf.StringValue
+	193, // 61: openim.workbench.UpdateNotifyReq.detailJSON:type_name -> openim.protobuf.StringValue
 	19,  // 62: openim.workbench.QueryNotifyResp.logs:type_name -> openim.workbench.NotifyLogInfo
-	200, // 63: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 63: openim.workbench.GetNotifyListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	19,  // 64: openim.workbench.GetNotifyListResp.logs:type_name -> openim.workbench.NotifyLogInfo
 	16,  // 65: openim.workbench.GetCredentialResp.credential:type_name -> openim.workbench.AppCredentialInfo
 	17,  // 66: openim.workbench.GetAuthDetailResp.auth:type_name -> openim.workbench.OAuthAuthInfo
 	20,  // 67: openim.workbench.LoginDeveloperResp.developer:type_name -> openim.workbench.DeveloperInfo
-	197, // 68: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
-	197, // 69: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
-	197, // 70: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
-	197, // 71: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
-	200, // 72: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	193, // 68: openim.workbench.UpdateDeveloperReq.name:type_name -> openim.protobuf.StringValue
+	193, // 69: openim.workbench.UpdateDeveloperReq.contactEmail:type_name -> openim.protobuf.StringValue
+	193, // 70: openim.workbench.UpdateDeveloperReq.contactPhone:type_name -> openim.protobuf.StringValue
+	193, // 71: openim.workbench.UpdateDeveloperReq.description:type_name -> openim.protobuf.StringValue
+	196, // 72: openim.workbench.GetDeveloperListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	20,  // 73: openim.workbench.GetDeveloperListResp.developers:type_name -> openim.workbench.DeveloperInfo
-	200, // 74: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 74: openim.workbench.GetDeveloperAppsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	9,   // 75: openim.workbench.GetDeveloperAppsResp.apps:type_name -> openim.workbench.AppInfo
-	200, // 76: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 76: openim.workbench.GetPendingReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	21,  // 77: openim.workbench.GetPendingReviewsResp.reviews:type_name -> openim.workbench.AppReviewInfo
 	21,  // 78: openim.workbench.GetReviewDetailResp.review:type_name -> openim.workbench.AppReviewInfo
 	9,   // 79: openim.workbench.GetReviewDetailResp.app:type_name -> openim.workbench.AppInfo
 	20,  // 80: openim.workbench.GetReviewDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
 	22,  // 81: openim.workbench.GetWebhookResp.webhook:type_name -> openim.workbench.WebhookInfo
-	200, // 82: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 82: openim.workbench.GetWebhookLogsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	23,  // 83: openim.workbench.GetWebhookLogsResp.logs:type_name -> openim.workbench.WebhookLogInfo
 	9,   // 84: openim.workbench.GetMarketAppDetailResp.app:type_name -> openim.workbench.AppInfo
 	20,  // 85: openim.workbench.GetMarketAppDetailResp.developer:type_name -> openim.workbench.DeveloperInfo
 	10,  // 86: openim.workbench.GetMarketAppDetailResp.versions:type_name -> openim.workbench.AppVersionInfo
 	19,  // 87: openim.workbench.GetNotifyDetailResp.log:type_name -> openim.workbench.NotifyLogInfo
-	200, // 88: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	196, // 88: openim.workbench.GetReviewListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	21,  // 89: openim.workbench.GetReviewListResp.reviews:type_name -> openim.workbench.AppReviewInfo
 	12,  // 90: openim.workbench.GetHomeResp.banners:type_name -> openim.workbench.BannerInfo
 	11,  // 91: openim.workbench.GetHomeResp.categories:type_name -> openim.workbench.CategoryInfo
@@ -13072,13 +12841,13 @@ var file_workbench_workbench_proto_depIdxs = []int32{
 	84,  // 124: openim.workbench.Workbench.getUserApps:input_type -> openim.workbench.GetUserAppsReq
 	86,  // 125: openim.workbench.Workbench.getAvailableApps:input_type -> openim.workbench.GetAvailableAppsReq
 	88,  // 126: openim.workbench.Workbench.getWorkbenchApps:input_type -> openim.workbench.GetWorkbenchAppsReq
-	170, // 127: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
-	172, // 128: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
-	178, // 129: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
-	180, // 130: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
-	182, // 131: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
-	184, // 132: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
-	186, // 133: openim.workbench.Workbench.launchApp:input_type -> openim.workbench.LaunchAppReq
+	166, // 127: openim.workbench.Workbench.getMarketAppDetail:input_type -> openim.workbench.GetMarketAppDetailReq
+	168, // 128: openim.workbench.Workbench.batchInstallApp:input_type -> openim.workbench.BatchInstallAppReq
+	174, // 129: openim.workbench.Workbench.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
+	176, // 130: openim.workbench.Workbench.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
+	178, // 131: openim.workbench.Workbench.getHome:input_type -> openim.workbench.GetHomeReq
+	180, // 132: openim.workbench.Workbench.clickApp:input_type -> openim.workbench.ClickAppReq
+	182, // 133: openim.workbench.Workbench.launchApp:input_type -> openim.workbench.LaunchAppReq
 	25,  // 134: openim.workbench.Workbench.createApp:output_type -> openim.workbench.CreateAppResp
 	27,  // 135: openim.workbench.Workbench.updateApp:output_type -> openim.workbench.UpdateAppResp
 	29,  // 136: openim.workbench.Workbench.deleteApp:output_type -> openim.workbench.DeleteAppResp
@@ -13111,13 +12880,13 @@ var file_workbench_workbench_proto_depIdxs = []int32{
 	85,  // 163: openim.workbench.Workbench.getUserApps:output_type -> openim.workbench.GetUserAppsResp
 	87,  // 164: openim.workbench.Workbench.getAvailableApps:output_type -> openim.workbench.GetAvailableAppsResp
 	89,  // 165: openim.workbench.Workbench.getWorkbenchApps:output_type -> openim.workbench.GetWorkbenchAppsResp
-	171, // 166: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
-	173, // 167: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
-	179, // 168: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
-	181, // 169: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
-	183, // 170: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
-	185, // 171: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
-	187, // 172: openim.workbench.Workbench.launchApp:output_type -> openim.workbench.LaunchAppResp
+	167, // 166: openim.workbench.Workbench.getMarketAppDetail:output_type -> openim.workbench.GetMarketAppDetailResp
+	169, // 167: openim.workbench.Workbench.batchInstallApp:output_type -> openim.workbench.BatchInstallAppResp
+	175, // 168: openim.workbench.Workbench.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
+	177, // 169: openim.workbench.Workbench.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
+	179, // 170: openim.workbench.Workbench.getHome:output_type -> openim.workbench.GetHomeResp
+	181, // 171: openim.workbench.Workbench.clickApp:output_type -> openim.workbench.ClickAppResp
+	183, // 172: openim.workbench.Workbench.launchApp:output_type -> openim.workbench.LaunchAppResp
 	134, // [134:173] is the sub-list for method output_type
 	95,  // [95:134] is the sub-list for method input_type
 	95,  // [95:95] is the sub-list for extension type_name
@@ -13136,7 +12905,7 @@ func file_workbench_workbench_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workbench_workbench_proto_rawDesc), len(file_workbench_workbench_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   188,
+			NumMessages:   184,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -660,6 +660,9 @@ message SendNotifyReq {
   string bizID = 6;
   string extra = 7;
   string detailJSON = 8;
+  string title = 9;
+  string content = 10;
+  string cardJSON = 11;
 }
 message SendNotifyResp {
   string notifyID = 1;
@@ -674,6 +677,9 @@ message BatchSendNotifyReq {
   string url = 5;
   string bizID = 6;
   string detailJSON = 7;
+  string title = 8;
+  string content = 9;
+  string cardJSON = 10;
 }
 message BatchSendNotifyResp {
   string batchID = 1;
@@ -792,32 +798,6 @@ message GetAuthDetailReq {
 }
 message GetAuthDetailResp {
   OAuthAuthInfo auth = 1;
-}
-
-// ==================== SSO (P1) ====================
-
-message CreateTicketReq {
-  string appID = 1;
-  string userID = 2;
-}
-message CreateTicketResp {
-  string ticket = 1;
-  int64 expiresIn = 2;
-}
-
-message GetUserByTicketReq {
-  string ticket = 1;
-  string appID = 2;
-  string redirectURI = 3;
-  string codeVerifier = 4;
-}
-message GetUserByTicketResp {
-  string userID = 1;
-  string nickname = 2;
-  string faceURL = 3;
-  string phone = 4;
-  string tenantID = 5;
-  string email = 6;
 }
 
 // ==================== Developer (P1) ====================
@@ -1081,14 +1061,14 @@ message LaunchAppReq {
   string appID = 3;
   string state = 4;
   string redirectURI = 5;
-  string codeChallenge = 6; // PKCE S256
+  reserved 6; // was codeChallenge (PKCE removed)
 }
 message LaunchAppResp {
-  string launchURL = 1;     // 含一次性 ticket 的完整启动地址；非 SSO 应用为原始 URL
+  string launchURL = 1;     // OAuth: redirect_uri?code=...&state=...; 非 SSO: 原始 URL
   int32 openMethod = 2;     // OpenMethod
-  int64 expiresIn = 3;      // ticket 剩余有效秒数；非 SSO 应用为 0
+  int64 expiresIn = 3;      // OAuth code 有效秒数；非 SSO 为 0
   bool ssoEnabled = 4;      // 该应用是否启用了 SSO 免登
-  string authMode = 5; // none, legacy_ticket, im_code, federation
+  string authMode = 5;      // oauth, federation, none
 }
 
 // ==================== Service Definition ====================
