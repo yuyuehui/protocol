@@ -1511,8 +1511,11 @@ type UpdateScheduleReq struct {
 	IsTemporary       *bool                  `protobuf:"varint,22,opt,name=isTemporary,proto3,oneof" json:"isTemporary"`                                  // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
 	UpdateScope       *UpdateScope           `protobuf:"varint,23,opt,name=updateScope,proto3,enum=openim.schedule.UpdateScope,oneof" json:"updateScope"` // 修改范围（可选，仅当日程有重复规则时有效）
 	InstanceStartTime *int64                 `protobuf:"varint,24,opt,name=instanceStartTime,proto3,oneof" json:"instanceStartTime"`                      // 目标实例开始时间（可选，仅当日程有重复规则且按单次/后续范围修改时用于定位实例；不传则回退为 startTime）
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 明确清空的列表字段（可选）：attachmentURLs / attendeeUserIDs / reminders。
+	// repeated 字段经 protobuf 二进制编码后无法区分"未传"和"空数组"，清空必须通过此字段表达；列在此处的字段不能同时传非空值。
+	ClearFields   []string `protobuf:"bytes,25,rep,name=clearFields,proto3" json:"clearFields"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateScheduleReq) Reset() {
@@ -1711,6 +1714,13 @@ func (x *UpdateScheduleReq) GetInstanceStartTime() int64 {
 		return *x.InstanceStartTime
 	}
 	return 0
+}
+
+func (x *UpdateScheduleReq) GetClearFields() []string {
+	if x != nil {
+		return x.ClearFields
+	}
+	return nil
 }
 
 // UpdateScheduleResp 更新日程响应
@@ -4668,7 +4678,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\vserverMsgID\x18\x04 \x01(\tR\vserverMsgID\x12\x1a\n" +
 	"\btargetID\x18\x05 \x01(\tR\btargetID\"c\n" +
 	"\x19CreateScheduleMessageResp\x12F\n" +
-	"\aresults\x18\x01 \x03(\v2,.openim.schedule.CreateScheduleMessageResultR\aresults\"\xa1\n" +
+	"\aresults\x18\x01 \x03(\v2,.openim.schedule.CreateScheduleMessageResultR\aresults\"\xc3\n" +
 	"\n" +
 	"\x11UpdateScheduleReq\x12\x1e\n" +
 	"\n" +
@@ -4702,7 +4712,8 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x0fmeetingSettings\x18\x15 \x01(\v2 .openim.schedule.MeetingSettingsH\x0fR\x0fmeetingSettings\x88\x01\x01\x12%\n" +
 	"\visTemporary\x18\x16 \x01(\bH\x10R\visTemporary\x88\x01\x01\x12C\n" +
 	"\vupdateScope\x18\x17 \x01(\x0e2\x1c.openim.schedule.UpdateScopeH\x11R\vupdateScope\x88\x01\x01\x121\n" +
-	"\x11instanceStartTime\x18\x18 \x01(\x03H\x12R\x11instanceStartTime\x88\x01\x01B\b\n" +
+	"\x11instanceStartTime\x18\x18 \x01(\x03H\x12R\x11instanceStartTime\x88\x01\x01\x12 \n" +
+	"\vclearFields\x18\x19 \x03(\tR\vclearFieldsB\b\n" +
 	"\x06_titleB\f\n" +
 	"\n" +
 	"_startTimeB\n" +
