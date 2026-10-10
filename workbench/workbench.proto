@@ -21,6 +21,7 @@ enum AppType {
   APP_TYPE_EXTERNAL_LINK = 2; // 外部链接
   APP_TYPE_MINI_PROGRAM = 3;  // 小程序
   APP_TYPE_NATIVE = 4;        // 原生模块
+  APP_TYPE_MESSAGE = 5;       // 消息号：只发通知，不在工作台展示、不能打开
 }
 
 enum OpenMethod {
@@ -105,6 +106,7 @@ message AppInfo {
   bool isSelected = 25;      // 当前用户是否已自选
   int32 unreadCount = 26;    // 未读通知数
   string homeData = 27;      // 合并后的自定义主页数据 JSON
+  string ownerAppID = 28;    // 所属应用：非空时本应用是它的下属入口或消息号，免登和发通知都用所属应用的凭证；仅后台返回
 }
 
 message AppVersionInfo {
@@ -228,6 +230,7 @@ message NotifyLogInfo {
   string payloadJSON = 17;
   string detailJSON = 18;
   int64 revision = 19;
+  string callerAppID = 20; // 所属应用以下属应用身份发送时的调用方；应用自己发送时为空
 }
 
 message DeveloperInfo {
@@ -305,6 +308,7 @@ message CreateAppReq {
   bool defaultInstall = 11; // 仅平台内置应用有效
   string config = 12;
   string developerID = 13;  // ISV应用传入
+  string ownerAppID = 14;   // 所属应用，消息号必填
 }
 message CreateAppResp {
   string appID = 1;
@@ -323,6 +327,7 @@ message UpdateAppReq {
   openim.protobuf.Int32Value sortOrder = 9;
   openim.protobuf.BoolValue defaultInstall = 10;
   openim.protobuf.StringValue config = 11;
+  openim.protobuf.StringValue ownerAppID = 12; // 所属应用：不传不修改，传空串清空
 }
 message UpdateAppResp {}
 
@@ -694,9 +699,27 @@ message UpdateNotifyReq {
   int64 expectedRevision = 5;
   openim.protobuf.StringValue cardJSON = 6;
   openim.protobuf.StringValue detailJSON = 7;
+  // Like WeCom update_template_card button.replace_name: closes an interactive
+  // card and shows this text on a disabled button. Exclusive with cardJSON.
+  string replaceName = 8;
 }
 message UpdateNotifyResp {
   int64 revision = 1;
+}
+
+// 按 bizID 改同一业务发给多人的通知，像企微 update_template_card 一次传多个 userids。
+// 每条按当前 revision 改，不用带 expectedRevision；未送达、已撤回的不改。
+message BatchUpdateNotifyReq {
+  string appID = 1;               // 发送时用的应用，不传为令牌的应用
+  string bizID = 2;
+  repeated string toUserIDs = 3;  // 只改这些接收人，最多 1000 个；不传改全部接收人
+  string statusText = 4;
+  openim.protobuf.StringValue cardJSON = 5;
+  openim.protobuf.StringValue detailJSON = 6;
+  string replaceName = 7;         // 同 UpdateNotifyReq.replaceName；已关闭的卡片保持原样
+}
+message BatchUpdateNotifyResp {
+  repeated NotifyUpdateResult results = 1;
 }
 
 message RevokeNotifyReq {
@@ -1139,6 +1162,14 @@ message NotifySendResult {
   string error = 4;
 }
 
+message NotifyUpdateResult {
+  string toUserID = 1;
+  string notifyID = 2;
+  int64 revision = 3;   // 处理后的 revision
+  bool updated = 4;     // 卡片已关闭而没改时为 false
+  string error = 5;
+}
+
 // ==================== Card Action (Interaction Callback) ====================
 
 message CardActionReq {
@@ -1157,6 +1188,19 @@ message CardActionResp {
   int64 revision = 3;
   string submissionStatus = 4; // accepted, not business completion
 
+}
+
+// ==================== Card Link SSO ====================
+
+// 通知接收人打开卡片里的链接。链接与发送方应用的某个回调同源时签 code 免登，否则原样返回。
+message LaunchNotifyLinkReq {
+  string notifyID = 1;
+  string url = 2;           // 链接原文，须与通知内容里的一致
+}
+message LaunchNotifyLinkResp {
+  string launchURL = 1;     // 免登：redirect_uri?code=...&state=...&backurl=...；否则为原链接
+  int64 expiresIn = 2;      // OAuth code 有效秒数；不免登为 0
+  bool ssoEnabled = 3;      // 是否带了免登 code
 }
 
 // ==================== Workbench Home Data ====================

@@ -36,6 +36,7 @@ const (
 	OpenPlatform_SendNotify_FullMethodName         = "/openim.openplatform.OpenPlatform/sendNotify"
 	OpenPlatform_BatchSendNotify_FullMethodName    = "/openim.openplatform.OpenPlatform/batchSendNotify"
 	OpenPlatform_UpdateNotify_FullMethodName       = "/openim.openplatform.OpenPlatform/updateNotify"
+	OpenPlatform_BatchUpdateNotify_FullMethodName  = "/openim.openplatform.OpenPlatform/batchUpdateNotify"
 	OpenPlatform_RevokeNotify_FullMethodName       = "/openim.openplatform.OpenPlatform/revokeNotify"
 	OpenPlatform_QueryNotify_FullMethodName        = "/openim.openplatform.OpenPlatform/queryNotify"
 	OpenPlatform_GetNotifyList_FullMethodName      = "/openim.openplatform.OpenPlatform/getNotifyList"
@@ -63,6 +64,7 @@ const (
 	OpenPlatform_GetWebhookLogs_FullMethodName     = "/openim.openplatform.OpenPlatform/getWebhookLogs"
 	OpenPlatform_RetryWebhook_FullMethodName       = "/openim.openplatform.OpenPlatform/retryWebhook"
 	OpenPlatform_CardAction_FullMethodName         = "/openim.openplatform.OpenPlatform/cardAction"
+	OpenPlatform_LaunchNotifyLink_FullMethodName   = "/openim.openplatform.OpenPlatform/launchNotifyLink"
 	OpenPlatform_SetWorkbenchData_FullMethodName   = "/openim.openplatform.OpenPlatform/setWorkbenchData"
 )
 
@@ -88,6 +90,7 @@ type OpenPlatformClient interface {
 	SendNotify(ctx context.Context, in *workbench.SendNotifyReq, opts ...grpc.CallOption) (*workbench.SendNotifyResp, error)
 	BatchSendNotify(ctx context.Context, in *workbench.BatchSendNotifyReq, opts ...grpc.CallOption) (*workbench.BatchSendNotifyResp, error)
 	UpdateNotify(ctx context.Context, in *workbench.UpdateNotifyReq, opts ...grpc.CallOption) (*workbench.UpdateNotifyResp, error)
+	BatchUpdateNotify(ctx context.Context, in *workbench.BatchUpdateNotifyReq, opts ...grpc.CallOption) (*workbench.BatchUpdateNotifyResp, error)
 	RevokeNotify(ctx context.Context, in *workbench.RevokeNotifyReq, opts ...grpc.CallOption) (*workbench.RevokeNotifyResp, error)
 	QueryNotify(ctx context.Context, in *workbench.QueryNotifyReq, opts ...grpc.CallOption) (*workbench.QueryNotifyResp, error)
 	GetNotifyList(ctx context.Context, in *workbench.GetNotifyListReq, opts ...grpc.CallOption) (*workbench.GetNotifyListResp, error)
@@ -122,6 +125,7 @@ type OpenPlatformClient interface {
 	RetryWebhook(ctx context.Context, in *workbench.RetryWebhookReq, opts ...grpc.CallOption) (*workbench.RetryWebhookResp, error)
 	// ---- Card Action ----
 	CardAction(ctx context.Context, in *workbench.CardActionReq, opts ...grpc.CallOption) (*workbench.CardActionResp, error)
+	LaunchNotifyLink(ctx context.Context, in *workbench.LaunchNotifyLinkReq, opts ...grpc.CallOption) (*workbench.LaunchNotifyLinkResp, error)
 	// ---- Workbench Data ----
 	SetWorkbenchData(ctx context.Context, in *workbench.SetWorkbenchDataReq, opts ...grpc.CallOption) (*workbench.SetWorkbenchDataResp, error)
 }
@@ -288,6 +292,16 @@ func (c *openPlatformClient) UpdateNotify(ctx context.Context, in *workbench.Upd
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(workbench.UpdateNotifyResp)
 	err := c.cc.Invoke(ctx, OpenPlatform_UpdateNotify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *openPlatformClient) BatchUpdateNotify(ctx context.Context, in *workbench.BatchUpdateNotifyReq, opts ...grpc.CallOption) (*workbench.BatchUpdateNotifyResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(workbench.BatchUpdateNotifyResp)
+	err := c.cc.Invoke(ctx, OpenPlatform_BatchUpdateNotify_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -564,6 +578,16 @@ func (c *openPlatformClient) CardAction(ctx context.Context, in *workbench.CardA
 	return out, nil
 }
 
+func (c *openPlatformClient) LaunchNotifyLink(ctx context.Context, in *workbench.LaunchNotifyLinkReq, opts ...grpc.CallOption) (*workbench.LaunchNotifyLinkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(workbench.LaunchNotifyLinkResp)
+	err := c.cc.Invoke(ctx, OpenPlatform_LaunchNotifyLink_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *openPlatformClient) SetWorkbenchData(ctx context.Context, in *workbench.SetWorkbenchDataReq, opts ...grpc.CallOption) (*workbench.SetWorkbenchDataResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(workbench.SetWorkbenchDataResp)
@@ -596,6 +620,7 @@ type OpenPlatformServer interface {
 	SendNotify(context.Context, *workbench.SendNotifyReq) (*workbench.SendNotifyResp, error)
 	BatchSendNotify(context.Context, *workbench.BatchSendNotifyReq) (*workbench.BatchSendNotifyResp, error)
 	UpdateNotify(context.Context, *workbench.UpdateNotifyReq) (*workbench.UpdateNotifyResp, error)
+	BatchUpdateNotify(context.Context, *workbench.BatchUpdateNotifyReq) (*workbench.BatchUpdateNotifyResp, error)
 	RevokeNotify(context.Context, *workbench.RevokeNotifyReq) (*workbench.RevokeNotifyResp, error)
 	QueryNotify(context.Context, *workbench.QueryNotifyReq) (*workbench.QueryNotifyResp, error)
 	GetNotifyList(context.Context, *workbench.GetNotifyListReq) (*workbench.GetNotifyListResp, error)
@@ -630,6 +655,7 @@ type OpenPlatformServer interface {
 	RetryWebhook(context.Context, *workbench.RetryWebhookReq) (*workbench.RetryWebhookResp, error)
 	// ---- Card Action ----
 	CardAction(context.Context, *workbench.CardActionReq) (*workbench.CardActionResp, error)
+	LaunchNotifyLink(context.Context, *workbench.LaunchNotifyLinkReq) (*workbench.LaunchNotifyLinkResp, error)
 	// ---- Workbench Data ----
 	SetWorkbenchData(context.Context, *workbench.SetWorkbenchDataReq) (*workbench.SetWorkbenchDataResp, error)
 	mustEmbedUnimplementedOpenPlatformServer()
@@ -689,6 +715,9 @@ func (UnimplementedOpenPlatformServer) BatchSendNotify(context.Context, *workben
 }
 func (UnimplementedOpenPlatformServer) UpdateNotify(context.Context, *workbench.UpdateNotifyReq) (*workbench.UpdateNotifyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateNotify not implemented")
+}
+func (UnimplementedOpenPlatformServer) BatchUpdateNotify(context.Context, *workbench.BatchUpdateNotifyReq) (*workbench.BatchUpdateNotifyResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchUpdateNotify not implemented")
 }
 func (UnimplementedOpenPlatformServer) RevokeNotify(context.Context, *workbench.RevokeNotifyReq) (*workbench.RevokeNotifyResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RevokeNotify not implemented")
@@ -770,6 +799,9 @@ func (UnimplementedOpenPlatformServer) RetryWebhook(context.Context, *workbench.
 }
 func (UnimplementedOpenPlatformServer) CardAction(context.Context, *workbench.CardActionReq) (*workbench.CardActionResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CardAction not implemented")
+}
+func (UnimplementedOpenPlatformServer) LaunchNotifyLink(context.Context, *workbench.LaunchNotifyLinkReq) (*workbench.LaunchNotifyLinkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method LaunchNotifyLink not implemented")
 }
 func (UnimplementedOpenPlatformServer) SetWorkbenchData(context.Context, *workbench.SetWorkbenchDataReq) (*workbench.SetWorkbenchDataResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetWorkbenchData not implemented")
@@ -1079,6 +1111,24 @@ func _OpenPlatform_UpdateNotify_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OpenPlatformServer).UpdateNotify(ctx, req.(*workbench.UpdateNotifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OpenPlatform_BatchUpdateNotify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(workbench.BatchUpdateNotifyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OpenPlatformServer).BatchUpdateNotify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OpenPlatform_BatchUpdateNotify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OpenPlatformServer).BatchUpdateNotify(ctx, req.(*workbench.BatchUpdateNotifyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1569,6 +1619,24 @@ func _OpenPlatform_CardAction_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OpenPlatform_LaunchNotifyLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(workbench.LaunchNotifyLinkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OpenPlatformServer).LaunchNotifyLink(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OpenPlatform_LaunchNotifyLink_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OpenPlatformServer).LaunchNotifyLink(ctx, req.(*workbench.LaunchNotifyLinkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _OpenPlatform_SetWorkbenchData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(workbench.SetWorkbenchDataReq)
 	if err := dec(in); err != nil {
@@ -1657,6 +1725,10 @@ var OpenPlatform_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "updateNotify",
 			Handler:    _OpenPlatform_UpdateNotify_Handler,
+		},
+		{
+			MethodName: "batchUpdateNotify",
+			Handler:    _OpenPlatform_BatchUpdateNotify_Handler,
 		},
 		{
 			MethodName: "revokeNotify",
@@ -1765,6 +1837,10 @@ var OpenPlatform_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "cardAction",
 			Handler:    _OpenPlatform_CardAction_Handler,
+		},
+		{
+			MethodName: "launchNotifyLink",
+			Handler:    _OpenPlatform_LaunchNotifyLink_Handler,
 		},
 		{
 			MethodName: "setWorkbenchData",

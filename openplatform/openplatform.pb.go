@@ -25,7 +25,7 @@ var File_openplatform_openplatform_proto protoreflect.FileDescriptor
 
 const file_openplatform_openplatform_proto_rawDesc = "" +
 	"\n" +
-	"\x1fopenplatform/openplatform.proto\x12\x13openim.openplatform\x1a\x19workbench/workbench.proto2\x81 \n" +
+	"\x1fopenplatform/openplatform.proto\x12\x13openim.openplatform\x1a\x19workbench/workbench.proto2\xca!\n" +
 	"\fOpenPlatform\x12a\n" +
 	"\x10createCredential\x12%.openim.workbench.CreateCredentialReq\x1a&.openim.workbench.CreateCredentialResp\x12R\n" +
 	"\vresetSecret\x12 .openim.workbench.ResetSecretReq\x1a!.openim.workbench.ResetSecretResp\x12X\n" +
@@ -44,7 +44,8 @@ const file_openplatform_openplatform_proto_rawDesc = "" +
 	"\n" +
 	"sendNotify\x12\x1f.openim.workbench.SendNotifyReq\x1a .openim.workbench.SendNotifyResp\x12^\n" +
 	"\x0fbatchSendNotify\x12$.openim.workbench.BatchSendNotifyReq\x1a%.openim.workbench.BatchSendNotifyResp\x12U\n" +
-	"\fupdateNotify\x12!.openim.workbench.UpdateNotifyReq\x1a\".openim.workbench.UpdateNotifyResp\x12U\n" +
+	"\fupdateNotify\x12!.openim.workbench.UpdateNotifyReq\x1a\".openim.workbench.UpdateNotifyResp\x12d\n" +
+	"\x11batchUpdateNotify\x12&.openim.workbench.BatchUpdateNotifyReq\x1a'.openim.workbench.BatchUpdateNotifyResp\x12U\n" +
 	"\frevokeNotify\x12!.openim.workbench.RevokeNotifyReq\x1a\".openim.workbench.RevokeNotifyResp\x12R\n" +
 	"\vqueryNotify\x12 .openim.workbench.QueryNotifyReq\x1a!.openim.workbench.QueryNotifyResp\x12X\n" +
 	"\rgetNotifyList\x12\".openim.workbench.GetNotifyListReq\x1a#.openim.workbench.GetNotifyListResp\x12[\n" +
@@ -75,6 +76,7 @@ const file_openplatform_openplatform_proto_rawDesc = "" +
 	"\fretryWebhook\x12!.openim.workbench.RetryWebhookReq\x1a\".openim.workbench.RetryWebhookResp\x12O\n" +
 	"\n" +
 	"cardAction\x12\x1f.openim.workbench.CardActionReq\x1a .openim.workbench.CardActionResp\x12a\n" +
+	"\x10launchNotifyLink\x12%.openim.workbench.LaunchNotifyLinkReq\x1a&.openim.workbench.LaunchNotifyLinkResp\x12a\n" +
 	"\x10setWorkbenchData\x12%.openim.workbench.SetWorkbenchDataReq\x1a&.openim.workbench.SetWorkbenchDataRespB,Z*github.com/openimsdk/protocol/openplatformb\x06proto3"
 
 var file_openplatform_openplatform_proto_goTypes = []any{
@@ -94,78 +96,82 @@ var file_openplatform_openplatform_proto_goTypes = []any{
 	(*workbench.SendNotifyReq)(nil),          // 13: openim.workbench.SendNotifyReq
 	(*workbench.BatchSendNotifyReq)(nil),     // 14: openim.workbench.BatchSendNotifyReq
 	(*workbench.UpdateNotifyReq)(nil),        // 15: openim.workbench.UpdateNotifyReq
-	(*workbench.RevokeNotifyReq)(nil),        // 16: openim.workbench.RevokeNotifyReq
-	(*workbench.QueryNotifyReq)(nil),         // 17: openim.workbench.QueryNotifyReq
-	(*workbench.GetNotifyListReq)(nil),       // 18: openim.workbench.GetNotifyListReq
-	(*workbench.GetNotifyStatsReq)(nil),      // 19: openim.workbench.GetNotifyStatsReq
-	(*workbench.RegisterDeveloperReq)(nil),   // 20: openim.workbench.RegisterDeveloperReq
-	(*workbench.LoginDeveloperReq)(nil),      // 21: openim.workbench.LoginDeveloperReq
-	(*workbench.UpdateDeveloperReq)(nil),     // 22: openim.workbench.UpdateDeveloperReq
-	(*workbench.GetDeveloperListReq)(nil),    // 23: openim.workbench.GetDeveloperListReq
-	(*workbench.ReviewDeveloperReq)(nil),     // 24: openim.workbench.ReviewDeveloperReq
-	(*workbench.DisableDeveloperReq)(nil),    // 25: openim.workbench.DisableDeveloperReq
-	(*workbench.CreateDeveloperAppReq)(nil),  // 26: openim.workbench.CreateDeveloperAppReq
-	(*workbench.SubmitAppReq)(nil),           // 27: openim.workbench.SubmitAppReq
-	(*workbench.WithdrawSubmitReq)(nil),      // 28: openim.workbench.WithdrawSubmitReq
-	(*workbench.GetDeveloperAppsReq)(nil),    // 29: openim.workbench.GetDeveloperAppsReq
-	(*workbench.GetPendingReviewsReq)(nil),   // 30: openim.workbench.GetPendingReviewsReq
-	(*workbench.GetReviewDetailReq)(nil),     // 31: openim.workbench.GetReviewDetailReq
-	(*workbench.ReviewActionReq)(nil),        // 32: openim.workbench.ReviewActionReq
-	(*workbench.ForceOfflineReq)(nil),        // 33: openim.workbench.ForceOfflineReq
-	(*workbench.GetNotifyDetailReq)(nil),     // 34: openim.workbench.GetNotifyDetailReq
-	(*workbench.GetReviewListReq)(nil),       // 35: openim.workbench.GetReviewListReq
-	(*workbench.GetPlatformStatsReq)(nil),    // 36: openim.workbench.GetPlatformStatsReq
-	(*workbench.GetTenantStatsReq)(nil),      // 37: openim.workbench.GetTenantStatsReq
-	(*workbench.SetWebhookReq)(nil),          // 38: openim.workbench.SetWebhookReq
-	(*workbench.GetWebhookReq)(nil),          // 39: openim.workbench.GetWebhookReq
-	(*workbench.GetWebhookLogsReq)(nil),      // 40: openim.workbench.GetWebhookLogsReq
-	(*workbench.RetryWebhookReq)(nil),        // 41: openim.workbench.RetryWebhookReq
-	(*workbench.CardActionReq)(nil),          // 42: openim.workbench.CardActionReq
-	(*workbench.SetWorkbenchDataReq)(nil),    // 43: openim.workbench.SetWorkbenchDataReq
-	(*workbench.CreateCredentialResp)(nil),   // 44: openim.workbench.CreateCredentialResp
-	(*workbench.ResetSecretResp)(nil),        // 45: openim.workbench.ResetSecretResp
-	(*workbench.GetCredentialResp)(nil),      // 46: openim.workbench.GetCredentialResp
-	(*workbench.SetIPWhitelistResp)(nil),     // 47: openim.workbench.SetIPWhitelistResp
-	(*workbench.GetAccessTokenResp)(nil),     // 48: openim.workbench.GetAccessTokenResp
-	(*workbench.AuthorizeAppResp)(nil),       // 49: openim.workbench.AuthorizeAppResp
-	(*workbench.RevokeAuthResp)(nil),         // 50: openim.workbench.RevokeAuthResp
-	(*workbench.GetAuthDetailResp)(nil),      // 51: openim.workbench.GetAuthDetailResp
-	(*workbench.CreateMsgTemplateResp)(nil),  // 52: openim.workbench.CreateMsgTemplateResp
-	(*workbench.UpdateMsgTemplateResp)(nil),  // 53: openim.workbench.UpdateMsgTemplateResp
-	(*workbench.DeleteMsgTemplateResp)(nil),  // 54: openim.workbench.DeleteMsgTemplateResp
-	(*workbench.GetMsgTemplateListResp)(nil), // 55: openim.workbench.GetMsgTemplateListResp
-	(*workbench.PreviewMsgTemplateResp)(nil), // 56: openim.workbench.PreviewMsgTemplateResp
-	(*workbench.SendNotifyResp)(nil),         // 57: openim.workbench.SendNotifyResp
-	(*workbench.BatchSendNotifyResp)(nil),    // 58: openim.workbench.BatchSendNotifyResp
-	(*workbench.UpdateNotifyResp)(nil),       // 59: openim.workbench.UpdateNotifyResp
-	(*workbench.RevokeNotifyResp)(nil),       // 60: openim.workbench.RevokeNotifyResp
-	(*workbench.QueryNotifyResp)(nil),        // 61: openim.workbench.QueryNotifyResp
-	(*workbench.GetNotifyListResp)(nil),      // 62: openim.workbench.GetNotifyListResp
-	(*workbench.GetNotifyStatsResp)(nil),     // 63: openim.workbench.GetNotifyStatsResp
-	(*workbench.RegisterDeveloperResp)(nil),  // 64: openim.workbench.RegisterDeveloperResp
-	(*workbench.LoginDeveloperResp)(nil),     // 65: openim.workbench.LoginDeveloperResp
-	(*workbench.UpdateDeveloperResp)(nil),    // 66: openim.workbench.UpdateDeveloperResp
-	(*workbench.GetDeveloperListResp)(nil),   // 67: openim.workbench.GetDeveloperListResp
-	(*workbench.ReviewDeveloperResp)(nil),    // 68: openim.workbench.ReviewDeveloperResp
-	(*workbench.DisableDeveloperResp)(nil),   // 69: openim.workbench.DisableDeveloperResp
-	(*workbench.CreateDeveloperAppResp)(nil), // 70: openim.workbench.CreateDeveloperAppResp
-	(*workbench.SubmitAppResp)(nil),          // 71: openim.workbench.SubmitAppResp
-	(*workbench.WithdrawSubmitResp)(nil),     // 72: openim.workbench.WithdrawSubmitResp
-	(*workbench.GetDeveloperAppsResp)(nil),   // 73: openim.workbench.GetDeveloperAppsResp
-	(*workbench.GetPendingReviewsResp)(nil),  // 74: openim.workbench.GetPendingReviewsResp
-	(*workbench.GetReviewDetailResp)(nil),    // 75: openim.workbench.GetReviewDetailResp
-	(*workbench.ReviewActionResp)(nil),       // 76: openim.workbench.ReviewActionResp
-	(*workbench.ForceOfflineResp)(nil),       // 77: openim.workbench.ForceOfflineResp
-	(*workbench.GetNotifyDetailResp)(nil),    // 78: openim.workbench.GetNotifyDetailResp
-	(*workbench.GetReviewListResp)(nil),      // 79: openim.workbench.GetReviewListResp
-	(*workbench.GetPlatformStatsResp)(nil),   // 80: openim.workbench.GetPlatformStatsResp
-	(*workbench.GetTenantStatsResp)(nil),     // 81: openim.workbench.GetTenantStatsResp
-	(*workbench.SetWebhookResp)(nil),         // 82: openim.workbench.SetWebhookResp
-	(*workbench.GetWebhookResp)(nil),         // 83: openim.workbench.GetWebhookResp
-	(*workbench.GetWebhookLogsResp)(nil),     // 84: openim.workbench.GetWebhookLogsResp
-	(*workbench.RetryWebhookResp)(nil),       // 85: openim.workbench.RetryWebhookResp
-	(*workbench.CardActionResp)(nil),         // 86: openim.workbench.CardActionResp
-	(*workbench.SetWorkbenchDataResp)(nil),   // 87: openim.workbench.SetWorkbenchDataResp
+	(*workbench.BatchUpdateNotifyReq)(nil),   // 16: openim.workbench.BatchUpdateNotifyReq
+	(*workbench.RevokeNotifyReq)(nil),        // 17: openim.workbench.RevokeNotifyReq
+	(*workbench.QueryNotifyReq)(nil),         // 18: openim.workbench.QueryNotifyReq
+	(*workbench.GetNotifyListReq)(nil),       // 19: openim.workbench.GetNotifyListReq
+	(*workbench.GetNotifyStatsReq)(nil),      // 20: openim.workbench.GetNotifyStatsReq
+	(*workbench.RegisterDeveloperReq)(nil),   // 21: openim.workbench.RegisterDeveloperReq
+	(*workbench.LoginDeveloperReq)(nil),      // 22: openim.workbench.LoginDeveloperReq
+	(*workbench.UpdateDeveloperReq)(nil),     // 23: openim.workbench.UpdateDeveloperReq
+	(*workbench.GetDeveloperListReq)(nil),    // 24: openim.workbench.GetDeveloperListReq
+	(*workbench.ReviewDeveloperReq)(nil),     // 25: openim.workbench.ReviewDeveloperReq
+	(*workbench.DisableDeveloperReq)(nil),    // 26: openim.workbench.DisableDeveloperReq
+	(*workbench.CreateDeveloperAppReq)(nil),  // 27: openim.workbench.CreateDeveloperAppReq
+	(*workbench.SubmitAppReq)(nil),           // 28: openim.workbench.SubmitAppReq
+	(*workbench.WithdrawSubmitReq)(nil),      // 29: openim.workbench.WithdrawSubmitReq
+	(*workbench.GetDeveloperAppsReq)(nil),    // 30: openim.workbench.GetDeveloperAppsReq
+	(*workbench.GetPendingReviewsReq)(nil),   // 31: openim.workbench.GetPendingReviewsReq
+	(*workbench.GetReviewDetailReq)(nil),     // 32: openim.workbench.GetReviewDetailReq
+	(*workbench.ReviewActionReq)(nil),        // 33: openim.workbench.ReviewActionReq
+	(*workbench.ForceOfflineReq)(nil),        // 34: openim.workbench.ForceOfflineReq
+	(*workbench.GetNotifyDetailReq)(nil),     // 35: openim.workbench.GetNotifyDetailReq
+	(*workbench.GetReviewListReq)(nil),       // 36: openim.workbench.GetReviewListReq
+	(*workbench.GetPlatformStatsReq)(nil),    // 37: openim.workbench.GetPlatformStatsReq
+	(*workbench.GetTenantStatsReq)(nil),      // 38: openim.workbench.GetTenantStatsReq
+	(*workbench.SetWebhookReq)(nil),          // 39: openim.workbench.SetWebhookReq
+	(*workbench.GetWebhookReq)(nil),          // 40: openim.workbench.GetWebhookReq
+	(*workbench.GetWebhookLogsReq)(nil),      // 41: openim.workbench.GetWebhookLogsReq
+	(*workbench.RetryWebhookReq)(nil),        // 42: openim.workbench.RetryWebhookReq
+	(*workbench.CardActionReq)(nil),          // 43: openim.workbench.CardActionReq
+	(*workbench.LaunchNotifyLinkReq)(nil),    // 44: openim.workbench.LaunchNotifyLinkReq
+	(*workbench.SetWorkbenchDataReq)(nil),    // 45: openim.workbench.SetWorkbenchDataReq
+	(*workbench.CreateCredentialResp)(nil),   // 46: openim.workbench.CreateCredentialResp
+	(*workbench.ResetSecretResp)(nil),        // 47: openim.workbench.ResetSecretResp
+	(*workbench.GetCredentialResp)(nil),      // 48: openim.workbench.GetCredentialResp
+	(*workbench.SetIPWhitelistResp)(nil),     // 49: openim.workbench.SetIPWhitelistResp
+	(*workbench.GetAccessTokenResp)(nil),     // 50: openim.workbench.GetAccessTokenResp
+	(*workbench.AuthorizeAppResp)(nil),       // 51: openim.workbench.AuthorizeAppResp
+	(*workbench.RevokeAuthResp)(nil),         // 52: openim.workbench.RevokeAuthResp
+	(*workbench.GetAuthDetailResp)(nil),      // 53: openim.workbench.GetAuthDetailResp
+	(*workbench.CreateMsgTemplateResp)(nil),  // 54: openim.workbench.CreateMsgTemplateResp
+	(*workbench.UpdateMsgTemplateResp)(nil),  // 55: openim.workbench.UpdateMsgTemplateResp
+	(*workbench.DeleteMsgTemplateResp)(nil),  // 56: openim.workbench.DeleteMsgTemplateResp
+	(*workbench.GetMsgTemplateListResp)(nil), // 57: openim.workbench.GetMsgTemplateListResp
+	(*workbench.PreviewMsgTemplateResp)(nil), // 58: openim.workbench.PreviewMsgTemplateResp
+	(*workbench.SendNotifyResp)(nil),         // 59: openim.workbench.SendNotifyResp
+	(*workbench.BatchSendNotifyResp)(nil),    // 60: openim.workbench.BatchSendNotifyResp
+	(*workbench.UpdateNotifyResp)(nil),       // 61: openim.workbench.UpdateNotifyResp
+	(*workbench.BatchUpdateNotifyResp)(nil),  // 62: openim.workbench.BatchUpdateNotifyResp
+	(*workbench.RevokeNotifyResp)(nil),       // 63: openim.workbench.RevokeNotifyResp
+	(*workbench.QueryNotifyResp)(nil),        // 64: openim.workbench.QueryNotifyResp
+	(*workbench.GetNotifyListResp)(nil),      // 65: openim.workbench.GetNotifyListResp
+	(*workbench.GetNotifyStatsResp)(nil),     // 66: openim.workbench.GetNotifyStatsResp
+	(*workbench.RegisterDeveloperResp)(nil),  // 67: openim.workbench.RegisterDeveloperResp
+	(*workbench.LoginDeveloperResp)(nil),     // 68: openim.workbench.LoginDeveloperResp
+	(*workbench.UpdateDeveloperResp)(nil),    // 69: openim.workbench.UpdateDeveloperResp
+	(*workbench.GetDeveloperListResp)(nil),   // 70: openim.workbench.GetDeveloperListResp
+	(*workbench.ReviewDeveloperResp)(nil),    // 71: openim.workbench.ReviewDeveloperResp
+	(*workbench.DisableDeveloperResp)(nil),   // 72: openim.workbench.DisableDeveloperResp
+	(*workbench.CreateDeveloperAppResp)(nil), // 73: openim.workbench.CreateDeveloperAppResp
+	(*workbench.SubmitAppResp)(nil),          // 74: openim.workbench.SubmitAppResp
+	(*workbench.WithdrawSubmitResp)(nil),     // 75: openim.workbench.WithdrawSubmitResp
+	(*workbench.GetDeveloperAppsResp)(nil),   // 76: openim.workbench.GetDeveloperAppsResp
+	(*workbench.GetPendingReviewsResp)(nil),  // 77: openim.workbench.GetPendingReviewsResp
+	(*workbench.GetReviewDetailResp)(nil),    // 78: openim.workbench.GetReviewDetailResp
+	(*workbench.ReviewActionResp)(nil),       // 79: openim.workbench.ReviewActionResp
+	(*workbench.ForceOfflineResp)(nil),       // 80: openim.workbench.ForceOfflineResp
+	(*workbench.GetNotifyDetailResp)(nil),    // 81: openim.workbench.GetNotifyDetailResp
+	(*workbench.GetReviewListResp)(nil),      // 82: openim.workbench.GetReviewListResp
+	(*workbench.GetPlatformStatsResp)(nil),   // 83: openim.workbench.GetPlatformStatsResp
+	(*workbench.GetTenantStatsResp)(nil),     // 84: openim.workbench.GetTenantStatsResp
+	(*workbench.SetWebhookResp)(nil),         // 85: openim.workbench.SetWebhookResp
+	(*workbench.GetWebhookResp)(nil),         // 86: openim.workbench.GetWebhookResp
+	(*workbench.GetWebhookLogsResp)(nil),     // 87: openim.workbench.GetWebhookLogsResp
+	(*workbench.RetryWebhookResp)(nil),       // 88: openim.workbench.RetryWebhookResp
+	(*workbench.CardActionResp)(nil),         // 89: openim.workbench.CardActionResp
+	(*workbench.LaunchNotifyLinkResp)(nil),   // 90: openim.workbench.LaunchNotifyLinkResp
+	(*workbench.SetWorkbenchDataResp)(nil),   // 91: openim.workbench.SetWorkbenchDataResp
 }
 var file_openplatform_openplatform_proto_depIdxs = []int32{
 	0,  // 0: openim.openplatform.OpenPlatform.createCredential:input_type -> openim.workbench.CreateCredentialReq
@@ -184,80 +190,84 @@ var file_openplatform_openplatform_proto_depIdxs = []int32{
 	13, // 13: openim.openplatform.OpenPlatform.sendNotify:input_type -> openim.workbench.SendNotifyReq
 	14, // 14: openim.openplatform.OpenPlatform.batchSendNotify:input_type -> openim.workbench.BatchSendNotifyReq
 	15, // 15: openim.openplatform.OpenPlatform.updateNotify:input_type -> openim.workbench.UpdateNotifyReq
-	16, // 16: openim.openplatform.OpenPlatform.revokeNotify:input_type -> openim.workbench.RevokeNotifyReq
-	17, // 17: openim.openplatform.OpenPlatform.queryNotify:input_type -> openim.workbench.QueryNotifyReq
-	18, // 18: openim.openplatform.OpenPlatform.getNotifyList:input_type -> openim.workbench.GetNotifyListReq
-	19, // 19: openim.openplatform.OpenPlatform.getNotifyStats:input_type -> openim.workbench.GetNotifyStatsReq
-	20, // 20: openim.openplatform.OpenPlatform.registerDeveloper:input_type -> openim.workbench.RegisterDeveloperReq
-	21, // 21: openim.openplatform.OpenPlatform.loginDeveloper:input_type -> openim.workbench.LoginDeveloperReq
-	22, // 22: openim.openplatform.OpenPlatform.updateDeveloper:input_type -> openim.workbench.UpdateDeveloperReq
-	23, // 23: openim.openplatform.OpenPlatform.getDeveloperList:input_type -> openim.workbench.GetDeveloperListReq
-	24, // 24: openim.openplatform.OpenPlatform.reviewDeveloper:input_type -> openim.workbench.ReviewDeveloperReq
-	25, // 25: openim.openplatform.OpenPlatform.disableDeveloper:input_type -> openim.workbench.DisableDeveloperReq
-	26, // 26: openim.openplatform.OpenPlatform.createDeveloperApp:input_type -> openim.workbench.CreateDeveloperAppReq
-	27, // 27: openim.openplatform.OpenPlatform.submitApp:input_type -> openim.workbench.SubmitAppReq
-	28, // 28: openim.openplatform.OpenPlatform.withdrawSubmit:input_type -> openim.workbench.WithdrawSubmitReq
-	29, // 29: openim.openplatform.OpenPlatform.getDeveloperApps:input_type -> openim.workbench.GetDeveloperAppsReq
-	30, // 30: openim.openplatform.OpenPlatform.getPendingReviews:input_type -> openim.workbench.GetPendingReviewsReq
-	31, // 31: openim.openplatform.OpenPlatform.getReviewDetail:input_type -> openim.workbench.GetReviewDetailReq
-	32, // 32: openim.openplatform.OpenPlatform.reviewAction:input_type -> openim.workbench.ReviewActionReq
-	33, // 33: openim.openplatform.OpenPlatform.forceOffline:input_type -> openim.workbench.ForceOfflineReq
-	34, // 34: openim.openplatform.OpenPlatform.getNotifyDetail:input_type -> openim.workbench.GetNotifyDetailReq
-	35, // 35: openim.openplatform.OpenPlatform.getReviewList:input_type -> openim.workbench.GetReviewListReq
-	36, // 36: openim.openplatform.OpenPlatform.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
-	37, // 37: openim.openplatform.OpenPlatform.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
-	38, // 38: openim.openplatform.OpenPlatform.setWebhook:input_type -> openim.workbench.SetWebhookReq
-	39, // 39: openim.openplatform.OpenPlatform.getWebhook:input_type -> openim.workbench.GetWebhookReq
-	40, // 40: openim.openplatform.OpenPlatform.getWebhookLogs:input_type -> openim.workbench.GetWebhookLogsReq
-	41, // 41: openim.openplatform.OpenPlatform.retryWebhook:input_type -> openim.workbench.RetryWebhookReq
-	42, // 42: openim.openplatform.OpenPlatform.cardAction:input_type -> openim.workbench.CardActionReq
-	43, // 43: openim.openplatform.OpenPlatform.setWorkbenchData:input_type -> openim.workbench.SetWorkbenchDataReq
-	44, // 44: openim.openplatform.OpenPlatform.createCredential:output_type -> openim.workbench.CreateCredentialResp
-	45, // 45: openim.openplatform.OpenPlatform.resetSecret:output_type -> openim.workbench.ResetSecretResp
-	46, // 46: openim.openplatform.OpenPlatform.getCredential:output_type -> openim.workbench.GetCredentialResp
-	47, // 47: openim.openplatform.OpenPlatform.setIPWhitelist:output_type -> openim.workbench.SetIPWhitelistResp
-	48, // 48: openim.openplatform.OpenPlatform.getAccessToken:output_type -> openim.workbench.GetAccessTokenResp
-	49, // 49: openim.openplatform.OpenPlatform.authorizeApp:output_type -> openim.workbench.AuthorizeAppResp
-	50, // 50: openim.openplatform.OpenPlatform.revokeAuth:output_type -> openim.workbench.RevokeAuthResp
-	51, // 51: openim.openplatform.OpenPlatform.getAuthDetail:output_type -> openim.workbench.GetAuthDetailResp
-	52, // 52: openim.openplatform.OpenPlatform.createMsgTemplate:output_type -> openim.workbench.CreateMsgTemplateResp
-	53, // 53: openim.openplatform.OpenPlatform.updateMsgTemplate:output_type -> openim.workbench.UpdateMsgTemplateResp
-	54, // 54: openim.openplatform.OpenPlatform.deleteMsgTemplate:output_type -> openim.workbench.DeleteMsgTemplateResp
-	55, // 55: openim.openplatform.OpenPlatform.getMsgTemplateList:output_type -> openim.workbench.GetMsgTemplateListResp
-	56, // 56: openim.openplatform.OpenPlatform.previewMsgTemplate:output_type -> openim.workbench.PreviewMsgTemplateResp
-	57, // 57: openim.openplatform.OpenPlatform.sendNotify:output_type -> openim.workbench.SendNotifyResp
-	58, // 58: openim.openplatform.OpenPlatform.batchSendNotify:output_type -> openim.workbench.BatchSendNotifyResp
-	59, // 59: openim.openplatform.OpenPlatform.updateNotify:output_type -> openim.workbench.UpdateNotifyResp
-	60, // 60: openim.openplatform.OpenPlatform.revokeNotify:output_type -> openim.workbench.RevokeNotifyResp
-	61, // 61: openim.openplatform.OpenPlatform.queryNotify:output_type -> openim.workbench.QueryNotifyResp
-	62, // 62: openim.openplatform.OpenPlatform.getNotifyList:output_type -> openim.workbench.GetNotifyListResp
-	63, // 63: openim.openplatform.OpenPlatform.getNotifyStats:output_type -> openim.workbench.GetNotifyStatsResp
-	64, // 64: openim.openplatform.OpenPlatform.registerDeveloper:output_type -> openim.workbench.RegisterDeveloperResp
-	65, // 65: openim.openplatform.OpenPlatform.loginDeveloper:output_type -> openim.workbench.LoginDeveloperResp
-	66, // 66: openim.openplatform.OpenPlatform.updateDeveloper:output_type -> openim.workbench.UpdateDeveloperResp
-	67, // 67: openim.openplatform.OpenPlatform.getDeveloperList:output_type -> openim.workbench.GetDeveloperListResp
-	68, // 68: openim.openplatform.OpenPlatform.reviewDeveloper:output_type -> openim.workbench.ReviewDeveloperResp
-	69, // 69: openim.openplatform.OpenPlatform.disableDeveloper:output_type -> openim.workbench.DisableDeveloperResp
-	70, // 70: openim.openplatform.OpenPlatform.createDeveloperApp:output_type -> openim.workbench.CreateDeveloperAppResp
-	71, // 71: openim.openplatform.OpenPlatform.submitApp:output_type -> openim.workbench.SubmitAppResp
-	72, // 72: openim.openplatform.OpenPlatform.withdrawSubmit:output_type -> openim.workbench.WithdrawSubmitResp
-	73, // 73: openim.openplatform.OpenPlatform.getDeveloperApps:output_type -> openim.workbench.GetDeveloperAppsResp
-	74, // 74: openim.openplatform.OpenPlatform.getPendingReviews:output_type -> openim.workbench.GetPendingReviewsResp
-	75, // 75: openim.openplatform.OpenPlatform.getReviewDetail:output_type -> openim.workbench.GetReviewDetailResp
-	76, // 76: openim.openplatform.OpenPlatform.reviewAction:output_type -> openim.workbench.ReviewActionResp
-	77, // 77: openim.openplatform.OpenPlatform.forceOffline:output_type -> openim.workbench.ForceOfflineResp
-	78, // 78: openim.openplatform.OpenPlatform.getNotifyDetail:output_type -> openim.workbench.GetNotifyDetailResp
-	79, // 79: openim.openplatform.OpenPlatform.getReviewList:output_type -> openim.workbench.GetReviewListResp
-	80, // 80: openim.openplatform.OpenPlatform.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
-	81, // 81: openim.openplatform.OpenPlatform.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
-	82, // 82: openim.openplatform.OpenPlatform.setWebhook:output_type -> openim.workbench.SetWebhookResp
-	83, // 83: openim.openplatform.OpenPlatform.getWebhook:output_type -> openim.workbench.GetWebhookResp
-	84, // 84: openim.openplatform.OpenPlatform.getWebhookLogs:output_type -> openim.workbench.GetWebhookLogsResp
-	85, // 85: openim.openplatform.OpenPlatform.retryWebhook:output_type -> openim.workbench.RetryWebhookResp
-	86, // 86: openim.openplatform.OpenPlatform.cardAction:output_type -> openim.workbench.CardActionResp
-	87, // 87: openim.openplatform.OpenPlatform.setWorkbenchData:output_type -> openim.workbench.SetWorkbenchDataResp
-	44, // [44:88] is the sub-list for method output_type
-	0,  // [0:44] is the sub-list for method input_type
+	16, // 16: openim.openplatform.OpenPlatform.batchUpdateNotify:input_type -> openim.workbench.BatchUpdateNotifyReq
+	17, // 17: openim.openplatform.OpenPlatform.revokeNotify:input_type -> openim.workbench.RevokeNotifyReq
+	18, // 18: openim.openplatform.OpenPlatform.queryNotify:input_type -> openim.workbench.QueryNotifyReq
+	19, // 19: openim.openplatform.OpenPlatform.getNotifyList:input_type -> openim.workbench.GetNotifyListReq
+	20, // 20: openim.openplatform.OpenPlatform.getNotifyStats:input_type -> openim.workbench.GetNotifyStatsReq
+	21, // 21: openim.openplatform.OpenPlatform.registerDeveloper:input_type -> openim.workbench.RegisterDeveloperReq
+	22, // 22: openim.openplatform.OpenPlatform.loginDeveloper:input_type -> openim.workbench.LoginDeveloperReq
+	23, // 23: openim.openplatform.OpenPlatform.updateDeveloper:input_type -> openim.workbench.UpdateDeveloperReq
+	24, // 24: openim.openplatform.OpenPlatform.getDeveloperList:input_type -> openim.workbench.GetDeveloperListReq
+	25, // 25: openim.openplatform.OpenPlatform.reviewDeveloper:input_type -> openim.workbench.ReviewDeveloperReq
+	26, // 26: openim.openplatform.OpenPlatform.disableDeveloper:input_type -> openim.workbench.DisableDeveloperReq
+	27, // 27: openim.openplatform.OpenPlatform.createDeveloperApp:input_type -> openim.workbench.CreateDeveloperAppReq
+	28, // 28: openim.openplatform.OpenPlatform.submitApp:input_type -> openim.workbench.SubmitAppReq
+	29, // 29: openim.openplatform.OpenPlatform.withdrawSubmit:input_type -> openim.workbench.WithdrawSubmitReq
+	30, // 30: openim.openplatform.OpenPlatform.getDeveloperApps:input_type -> openim.workbench.GetDeveloperAppsReq
+	31, // 31: openim.openplatform.OpenPlatform.getPendingReviews:input_type -> openim.workbench.GetPendingReviewsReq
+	32, // 32: openim.openplatform.OpenPlatform.getReviewDetail:input_type -> openim.workbench.GetReviewDetailReq
+	33, // 33: openim.openplatform.OpenPlatform.reviewAction:input_type -> openim.workbench.ReviewActionReq
+	34, // 34: openim.openplatform.OpenPlatform.forceOffline:input_type -> openim.workbench.ForceOfflineReq
+	35, // 35: openim.openplatform.OpenPlatform.getNotifyDetail:input_type -> openim.workbench.GetNotifyDetailReq
+	36, // 36: openim.openplatform.OpenPlatform.getReviewList:input_type -> openim.workbench.GetReviewListReq
+	37, // 37: openim.openplatform.OpenPlatform.getPlatformStats:input_type -> openim.workbench.GetPlatformStatsReq
+	38, // 38: openim.openplatform.OpenPlatform.getTenantStats:input_type -> openim.workbench.GetTenantStatsReq
+	39, // 39: openim.openplatform.OpenPlatform.setWebhook:input_type -> openim.workbench.SetWebhookReq
+	40, // 40: openim.openplatform.OpenPlatform.getWebhook:input_type -> openim.workbench.GetWebhookReq
+	41, // 41: openim.openplatform.OpenPlatform.getWebhookLogs:input_type -> openim.workbench.GetWebhookLogsReq
+	42, // 42: openim.openplatform.OpenPlatform.retryWebhook:input_type -> openim.workbench.RetryWebhookReq
+	43, // 43: openim.openplatform.OpenPlatform.cardAction:input_type -> openim.workbench.CardActionReq
+	44, // 44: openim.openplatform.OpenPlatform.launchNotifyLink:input_type -> openim.workbench.LaunchNotifyLinkReq
+	45, // 45: openim.openplatform.OpenPlatform.setWorkbenchData:input_type -> openim.workbench.SetWorkbenchDataReq
+	46, // 46: openim.openplatform.OpenPlatform.createCredential:output_type -> openim.workbench.CreateCredentialResp
+	47, // 47: openim.openplatform.OpenPlatform.resetSecret:output_type -> openim.workbench.ResetSecretResp
+	48, // 48: openim.openplatform.OpenPlatform.getCredential:output_type -> openim.workbench.GetCredentialResp
+	49, // 49: openim.openplatform.OpenPlatform.setIPWhitelist:output_type -> openim.workbench.SetIPWhitelistResp
+	50, // 50: openim.openplatform.OpenPlatform.getAccessToken:output_type -> openim.workbench.GetAccessTokenResp
+	51, // 51: openim.openplatform.OpenPlatform.authorizeApp:output_type -> openim.workbench.AuthorizeAppResp
+	52, // 52: openim.openplatform.OpenPlatform.revokeAuth:output_type -> openim.workbench.RevokeAuthResp
+	53, // 53: openim.openplatform.OpenPlatform.getAuthDetail:output_type -> openim.workbench.GetAuthDetailResp
+	54, // 54: openim.openplatform.OpenPlatform.createMsgTemplate:output_type -> openim.workbench.CreateMsgTemplateResp
+	55, // 55: openim.openplatform.OpenPlatform.updateMsgTemplate:output_type -> openim.workbench.UpdateMsgTemplateResp
+	56, // 56: openim.openplatform.OpenPlatform.deleteMsgTemplate:output_type -> openim.workbench.DeleteMsgTemplateResp
+	57, // 57: openim.openplatform.OpenPlatform.getMsgTemplateList:output_type -> openim.workbench.GetMsgTemplateListResp
+	58, // 58: openim.openplatform.OpenPlatform.previewMsgTemplate:output_type -> openim.workbench.PreviewMsgTemplateResp
+	59, // 59: openim.openplatform.OpenPlatform.sendNotify:output_type -> openim.workbench.SendNotifyResp
+	60, // 60: openim.openplatform.OpenPlatform.batchSendNotify:output_type -> openim.workbench.BatchSendNotifyResp
+	61, // 61: openim.openplatform.OpenPlatform.updateNotify:output_type -> openim.workbench.UpdateNotifyResp
+	62, // 62: openim.openplatform.OpenPlatform.batchUpdateNotify:output_type -> openim.workbench.BatchUpdateNotifyResp
+	63, // 63: openim.openplatform.OpenPlatform.revokeNotify:output_type -> openim.workbench.RevokeNotifyResp
+	64, // 64: openim.openplatform.OpenPlatform.queryNotify:output_type -> openim.workbench.QueryNotifyResp
+	65, // 65: openim.openplatform.OpenPlatform.getNotifyList:output_type -> openim.workbench.GetNotifyListResp
+	66, // 66: openim.openplatform.OpenPlatform.getNotifyStats:output_type -> openim.workbench.GetNotifyStatsResp
+	67, // 67: openim.openplatform.OpenPlatform.registerDeveloper:output_type -> openim.workbench.RegisterDeveloperResp
+	68, // 68: openim.openplatform.OpenPlatform.loginDeveloper:output_type -> openim.workbench.LoginDeveloperResp
+	69, // 69: openim.openplatform.OpenPlatform.updateDeveloper:output_type -> openim.workbench.UpdateDeveloperResp
+	70, // 70: openim.openplatform.OpenPlatform.getDeveloperList:output_type -> openim.workbench.GetDeveloperListResp
+	71, // 71: openim.openplatform.OpenPlatform.reviewDeveloper:output_type -> openim.workbench.ReviewDeveloperResp
+	72, // 72: openim.openplatform.OpenPlatform.disableDeveloper:output_type -> openim.workbench.DisableDeveloperResp
+	73, // 73: openim.openplatform.OpenPlatform.createDeveloperApp:output_type -> openim.workbench.CreateDeveloperAppResp
+	74, // 74: openim.openplatform.OpenPlatform.submitApp:output_type -> openim.workbench.SubmitAppResp
+	75, // 75: openim.openplatform.OpenPlatform.withdrawSubmit:output_type -> openim.workbench.WithdrawSubmitResp
+	76, // 76: openim.openplatform.OpenPlatform.getDeveloperApps:output_type -> openim.workbench.GetDeveloperAppsResp
+	77, // 77: openim.openplatform.OpenPlatform.getPendingReviews:output_type -> openim.workbench.GetPendingReviewsResp
+	78, // 78: openim.openplatform.OpenPlatform.getReviewDetail:output_type -> openim.workbench.GetReviewDetailResp
+	79, // 79: openim.openplatform.OpenPlatform.reviewAction:output_type -> openim.workbench.ReviewActionResp
+	80, // 80: openim.openplatform.OpenPlatform.forceOffline:output_type -> openim.workbench.ForceOfflineResp
+	81, // 81: openim.openplatform.OpenPlatform.getNotifyDetail:output_type -> openim.workbench.GetNotifyDetailResp
+	82, // 82: openim.openplatform.OpenPlatform.getReviewList:output_type -> openim.workbench.GetReviewListResp
+	83, // 83: openim.openplatform.OpenPlatform.getPlatformStats:output_type -> openim.workbench.GetPlatformStatsResp
+	84, // 84: openim.openplatform.OpenPlatform.getTenantStats:output_type -> openim.workbench.GetTenantStatsResp
+	85, // 85: openim.openplatform.OpenPlatform.setWebhook:output_type -> openim.workbench.SetWebhookResp
+	86, // 86: openim.openplatform.OpenPlatform.getWebhook:output_type -> openim.workbench.GetWebhookResp
+	87, // 87: openim.openplatform.OpenPlatform.getWebhookLogs:output_type -> openim.workbench.GetWebhookLogsResp
+	88, // 88: openim.openplatform.OpenPlatform.retryWebhook:output_type -> openim.workbench.RetryWebhookResp
+	89, // 89: openim.openplatform.OpenPlatform.cardAction:output_type -> openim.workbench.CardActionResp
+	90, // 90: openim.openplatform.OpenPlatform.launchNotifyLink:output_type -> openim.workbench.LaunchNotifyLinkResp
+	91, // 91: openim.openplatform.OpenPlatform.setWorkbenchData:output_type -> openim.workbench.SetWorkbenchDataResp
+	46, // [46:92] is the sub-list for method output_type
+	0,  // [0:46] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -25,6 +25,7 @@ service OpenPlatform {
   rpc sendNotify(openim.workbench.SendNotifyReq) returns (openim.workbench.SendNotifyResp);
   rpc batchSendNotify(openim.workbench.BatchSendNotifyReq) returns (openim.workbench.BatchSendNotifyResp);
   rpc updateNotify(openim.workbench.UpdateNotifyReq) returns (openim.workbench.UpdateNotifyResp);
+  rpc batchUpdateNotify(openim.workbench.BatchUpdateNotifyReq) returns (openim.workbench.BatchUpdateNotifyResp);
   rpc revokeNotify(openim.workbench.RevokeNotifyReq) returns (openim.workbench.RevokeNotifyResp);
   rpc queryNotify(openim.workbench.QueryNotifyReq) returns (openim.workbench.QueryNotifyResp);
   rpc getNotifyList(openim.workbench.GetNotifyListReq) returns (openim.workbench.GetNotifyListResp);
@@ -66,6 +67,7 @@ service OpenPlatform {
 
   // ---- Card Action ----
   rpc cardAction(openim.workbench.CardActionReq) returns (openim.workbench.CardActionResp);
+  rpc launchNotifyLink(openim.workbench.LaunchNotifyLinkReq) returns (openim.workbench.LaunchNotifyLinkResp);
 
   // ---- Workbench Data ----
   rpc setWorkbenchData(openim.workbench.SetWorkbenchDataReq) returns (openim.workbench.SetWorkbenchDataResp);
