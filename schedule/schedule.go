@@ -106,6 +106,11 @@ func (x *ScheduleRepeatInfo) Check() error {
 		if x.RepeatDayOfMonth < 1 || x.RepeatDayOfMonth > 31 {
 			return errs.ErrArgs.WrapMsg("repeatDayOfMonth must be between 1 and 31 when repeatType is yearly")
 		}
+		// 按闰年取每月最大天数：允许 2 月 29 日，拒绝 2 月 30/31 日、4 月 31 日等不存在的日期
+		maxDays := [...]int32{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+		if x.RepeatDayOfMonth > maxDays[x.RepeatMonth-1] {
+			return errs.ErrArgs.WrapMsg("repeatDayOfMonth does not exist in repeatMonth when repeatType is yearly")
+		}
 	}
 
 	// 验证结束条件：endDate 和 repeatTimes 不能同时设置
@@ -251,7 +256,72 @@ func (x *UpdateScheduleReq) Check() error {
 			return errs.ErrArgs.WrapMsg("updateScope is invalid")
 		}
 	}
+	return x.checkClearFields()
+}
+
+// UpdateScheduleReq.ClearFields 可用的字段名，与对应 repeated 字段的 JSON 名一致。
+const (
+	ClearFieldAttachmentURLs  = "attachmentURLs"
+	ClearFieldAttendeeUserIDs = "attendeeUserIDs"
+	ClearFieldReminders       = "reminders"
+)
+
+func (x *UpdateScheduleReq) clearableFieldLens() map[string]int {
+	return map[string]int{
+		ClearFieldAttachmentURLs:  len(x.AttachmentURLs),
+		ClearFieldAttendeeUserIDs: len(x.AttendeeUserIDs),
+		ClearFieldReminders:       len(x.Reminders),
+	}
+}
+
+func (x *UpdateScheduleReq) checkClearFields() error {
+	lens := x.clearableFieldLens()
+	for _, field := range x.ClearFields {
+		n, ok := lens[field]
+		if !ok {
+			return errs.ErrArgs.WrapMsg("clearFields contains unknown field", "field", field)
+		}
+		if n > 0 {
+			return errs.ErrArgs.WrapMsg("field is both cleared and set", "field", field)
+		}
+	}
 	return nil
+}
+
+func (x *UpdateScheduleReq) hasClearField(field string) bool {
+	for _, f := range x.ClearFields {
+		if f == field {
+			return true
+		}
+	}
+	return false
+}
+
+// MarkClearFields 把明确传入的空数组（非 nil）记录到 ClearFields。
+// 必须在 JSON 解码之后、protobuf 编码之前调用（SDK 发送前、API 网关转发前），否则清空意图会在 gRPC 传输中丢失。
+func (x *UpdateScheduleReq) MarkClearFields() {
+	mark := func(field string, explicitEmpty bool) {
+		if explicitEmpty && !x.hasClearField(field) {
+			x.ClearFields = append(x.ClearFields, field)
+		}
+	}
+	mark(ClearFieldAttachmentURLs, x.AttachmentURLs != nil && len(x.AttachmentURLs) == 0)
+	mark(ClearFieldAttendeeUserIDs, x.AttendeeUserIDs != nil && len(x.AttendeeUserIDs) == 0)
+	mark(ClearFieldReminders, x.Reminders != nil && len(x.Reminders) == 0)
+}
+
+// ApplyClearFields 在服务端把 ClearFields 还原为非 nil 的空数组，
+// 使"字段 != nil 表示传入、空数组表示清空"的判断在 gRPC 之后依然成立。
+func (x *UpdateScheduleReq) ApplyClearFields() {
+	if x.hasClearField(ClearFieldAttachmentURLs) && x.AttachmentURLs == nil {
+		x.AttachmentURLs = []string{}
+	}
+	if x.hasClearField(ClearFieldAttendeeUserIDs) && x.AttendeeUserIDs == nil {
+		x.AttendeeUserIDs = []string{}
+	}
+	if x.hasClearField(ClearFieldReminders) && x.Reminders == nil {
+		x.Reminders = []int32{}
+	}
 }
 
 // DeleteScheduleReq Check 删除日程请求参数校验
