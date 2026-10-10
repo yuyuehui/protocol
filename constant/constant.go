@@ -204,6 +204,11 @@ const (
 	CallTimeoutNotification    = 1905 // 通话超时通知
 	CallNotificationEnd        = 1910 // 通话通知类型结束
 
+	// 工作台通知类型
+	WorkbenchNotificationBegin          = 1920 // 工作台通知类型开始
+	WorkbenchUserAppChangedNotification = 1921 // 用户应用变更通知（添加/移除/置顶/隐藏等）
+	WorkbenchNotificationEnd            = 1999 // 工作台通知类型结束
+
 	NotificationEnd = 5000 // 通知类型结束标记
 
 	// 消息状态
@@ -221,6 +226,7 @@ const (
 	NotificationChatType = 4 // 通知会话
 	FoldChatType         = 5 // 折叠会话（虚拟会话，用于折叠其他会话）
 	ScheduleChatType     = 6 // 日程会话（只读接收型会话，用于接收日程通知）
+	WorkbenchChatType    = 7 // 工作台会话
 
 	// 日程相关常量
 	NotificationUserID = "oa" // 日程通知接收者ID（固定为 "oa"，实际用户ID）
