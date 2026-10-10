@@ -106,6 +106,11 @@ func (x *ScheduleRepeatInfo) Check() error {
 		if x.RepeatDayOfMonth < 1 || x.RepeatDayOfMonth > 31 {
 			return errs.ErrArgs.WrapMsg("repeatDayOfMonth must be between 1 and 31 when repeatType is yearly")
 		}
+		// 按闰年取每月最大天数：允许 2 月 29 日，拒绝 2 月 30/31 日、4 月 31 日等不存在的日期
+		maxDays := [...]int32{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+		if x.RepeatDayOfMonth > maxDays[x.RepeatMonth-1] {
+			return errs.ErrArgs.WrapMsg("repeatDayOfMonth does not exist in repeatMonth when repeatType is yearly")
+		}
 	}
 
 	// 验证结束条件：endDate 和 repeatTimes 不能同时设置
