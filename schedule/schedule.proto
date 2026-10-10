@@ -137,6 +137,7 @@ message ScheduleInfo {
 
   // 关联信息（计算字段，不存储在数据库中）
   openim.meeting_room.MeetingRoomInfo roomInfo = 29; // 会议室详细信息（roomID 非空时填充）
+  int64 instanceStartTime = 30; // 重复日程实例开始时间（计算字段，不存储：列表按实例展开时等于该实例的 startTime，非重复日程/未展开时为 0；用于后续 update/delete 按实例定位）
 }
 
 // CreateScheduleReq 创建日程请求
@@ -228,6 +229,7 @@ message UpdateScheduleReq {
   optional MeetingSettings meetingSettings = 21; // 会议设置（可选，仅当type为MEETING时有效）
   optional bool isTemporary = 22;              // 是否是临时会议（可选，仅当type为MEETING时有效），临时会议不显示在日程中
   optional UpdateScope updateScope = 23;        // 修改范围（可选，仅当日程有重复规则时有效）
+  optional int64 instanceStartTime = 24;        // 目标实例开始时间（可选，仅当日程有重复规则且按单次/后续范围修改时用于定位实例；不传则回退为 startTime）
 }
 
 // UpdateScheduleResp 更新日程响应
@@ -248,6 +250,7 @@ message DeleteScheduleReq {
   string scheduleID = 1;
   string operatorUserID = 2;
   optional DeleteScope deleteScope = 3;    // 删除范围（可选，仅当日程有重复规则时有效）
+  optional int64 instanceStartTime = 4;    // 目标实例开始时间（可选，仅当日程有重复规则且按单次/后续范围删除时用于定位实例；不传则回退为日程原始开始时间）
 }
 
 // DeleteScheduleResp 删除日程响应
@@ -258,6 +261,7 @@ message DeleteScheduleResp {
 message GetScheduleReq {
   string scheduleID = 1;
   string userID = 2;
+  optional int64 instanceStartTime = 3; // 目标实例开始时间（可选，仅当日程有重复规则时用于查询某个实例的详情；不传则返回系列原始时间）
 }
 
 // GetScheduleResp 查询日程详情响应
