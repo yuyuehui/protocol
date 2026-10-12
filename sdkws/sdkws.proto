@@ -264,6 +264,7 @@ message PinInfo {
   string pinnedBy = 1;          // 执行置顶的用户ID
   int64 pinnedAt = 2;           // 置顶时间（Unix毫秒时间戳）
   string pinnedByNickname = 3;  // 操作者当时的昵称快照
+  string pinID = 4;             // 本次群共享置顶的唯一标识
 }
 
 // 点赞用户信息
@@ -837,6 +838,16 @@ message GroupMessagePinTips {
   int64 operationTime = 7;
   string text = 8; // Human-readable fallback for notification consumers.
   MsgData message = 9; // Full original message body; nil when source unavailable (e.g. unpin after delete).
+  string pinID = 11;
+}
+
+// Self-only personal pin visibility change, delivered to the operator's devices.
+message PinnedMessageVisibilityTips {
+  string groupID = 1;
+  string pinID = 2;
+  bool hidden = 3;
+  int64 revision = 4;
+  int64 operationTime = 5;
 }
 
 message NotificationElem {

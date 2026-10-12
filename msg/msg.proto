@@ -582,13 +582,33 @@ message PinMessageReq {
   int64 seq = 2; // Backward-compatible local/index identifier.
   string serverMsgID = 3; // Authoritative cross-device message identifier.
 }
-message PinMessageResp { bool changed = 1; }
+message PinMessageResp {
+  bool changed = 1;
+  string pinID = 2; // Existing pinID when the message is already pinned.
+}
+// Group-level unpin; only the pinner of this pinID may remove it.
 message UnpinMessageReq {
   string groupID = 1;
   int64 seq = 2; // Backward-compatible local/index identifier.
   string serverMsgID = 3; // Authoritative cross-device message identifier.
+  string pinID = 4;
 }
-message UnpinMessageResp { bool changed = 1; }
+message UnpinMessageResp {
+  bool changed = 1;
+  string pinID = 2;
+}
+// Personal visibility of a shared pin; never changes group state.
+message SetPinnedMessageHiddenReq {
+  string groupID = 1;
+  string pinID = 2;
+  bool hidden = 3;
+}
+message SetPinnedMessageHiddenResp {
+  bool changed = 1;
+  string pinID = 2;
+  bool hidden = 3;
+  int64 revision = 4;
+}
 message GetPinnedMessageListReq {
   string groupID = 1;
   int32 offset = 2;
@@ -602,6 +622,9 @@ message PinnedMessage {
   openim.sdkws.MsgData message = 5; // Absent when no longer accessible; never a snapshot.
   bool unavailable = 6;
   string pinnedByNickname = 7; // 置顶操作者昵称快照
+  string pinID = 8;
+  bool hiddenBySelf = 9;
+  int64 selfStateRevision = 10;
 }
 message GetPinnedMessageListResp {
   repeated PinnedMessage pinnedMsgs = 1;
@@ -887,6 +910,7 @@ service msg {
 	// 消息标记相关接口
   rpc PinMessage(PinMessageReq) returns (PinMessageResp);
   rpc UnpinMessage(UnpinMessageReq) returns (UnpinMessageResp);
+  rpc SetPinnedMessageHidden(SetPinnedMessageHiddenReq) returns (SetPinnedMessageHiddenResp);
   rpc GetPinnedMessageList(GetPinnedMessageListReq) returns (GetPinnedMessageListResp);
   rpc MarkMessage(MarkMsgReq) returns (MarkMsgResp);
   rpc UnmarkMessage(UnmarkMsgReq) returns (UnmarkMsgResp);
