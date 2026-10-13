@@ -138,6 +138,8 @@ message ScheduleInfo {
   // 关联信息（计算字段，不存储在数据库中）
   openim.meeting_room.MeetingRoomInfo roomInfo = 29; // 会议室详细信息（roomID 非空时填充）
   int64 instanceStartTime = 30; // 重复日程实例开始时间（计算字段，不存储：列表按实例展开时等于该实例的 startTime，非重复日程/未展开时为 0；用于后续 update/delete 按实例定位）
+  string meetingID = 31;     // 关联会议ID（计算字段，仅 type=MEETING 时填充，可直接用于入会）
+  string meetingNumber = 32; // 关联会议号（计算字段，同 meetingID）
 }
 
 // CreateScheduleReq 创建日程请求

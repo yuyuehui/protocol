@@ -767,6 +767,8 @@ type ScheduleInfo struct {
 	// 关联信息（计算字段，不存储在数据库中）
 	RoomInfo          *meeting_room.MeetingRoomInfo `protobuf:"bytes,29,opt,name=roomInfo,proto3" json:"roomInfo"`                    // 会议室详细信息（roomID 非空时填充）
 	InstanceStartTime int64                         `protobuf:"varint,30,opt,name=instanceStartTime,proto3" json:"instanceStartTime"` // 重复日程实例开始时间（计算字段，不存储：列表按实例展开时等于该实例的 startTime，非重复日程/未展开时为 0；用于后续 update/delete 按实例定位）
+	MeetingID         string                        `protobuf:"bytes,31,opt,name=meetingID,proto3" json:"meetingID"`                  // 关联会议ID（计算字段，仅 type=MEETING 时填充，可直接用于入会）
+	MeetingNumber     string                        `protobuf:"bytes,32,opt,name=meetingNumber,proto3" json:"meetingNumber"`          // 关联会议号（计算字段，同 meetingID）
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1009,6 +1011,20 @@ func (x *ScheduleInfo) GetInstanceStartTime() int64 {
 		return x.InstanceStartTime
 	}
 	return 0
+}
+
+func (x *ScheduleInfo) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *ScheduleInfo) GetMeetingNumber() string {
+	if x != nil {
+		return x.MeetingNumber
+	}
+	return ""
 }
 
 // CreateScheduleReq 创建日程请求
@@ -4960,7 +4976,7 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\x13callReminderUserIDs\x18\v \x03(\tR\x13callReminderUserIDs\x12?\n" +
 	"\n" +
 	"muteOnJoin\x18\f \x01(\x0e2\x1f.openim.schedule.MuteOnJoinTypeR\n" +
-	"muteOnJoin\"\x89\t\n" +
+	"muteOnJoin\"\xcd\t\n" +
 	"\fScheduleInfo\x12\x1e\n" +
 	"\n" +
 	"scheduleID\x18\x01 \x01(\tR\n" +
@@ -5000,7 +5016,9 @@ const file_schedule_schedule_proto_rawDesc = "" +
 	"\acanEdit\x18\x1b \x01(\bR\acanEdit\x12\x1c\n" +
 	"\tcanDelete\x18\x1c \x01(\bR\tcanDelete\x12@\n" +
 	"\broomInfo\x18\x1d \x01(\v2$.openim.meeting_room.MeetingRoomInfoR\broomInfo\x12,\n" +
-	"\x11instanceStartTime\x18\x1e \x01(\x03R\x11instanceStartTime\"\xc9\x06\n" +
+	"\x11instanceStartTime\x18\x1e \x01(\x03R\x11instanceStartTime\x12\x1c\n" +
+	"\tmeetingID\x18\x1f \x01(\tR\tmeetingID\x12$\n" +
+	"\rmeetingNumber\x18  \x01(\tR\rmeetingNumber\"\xc9\x06\n" +
 	"\x11CreateScheduleReq\x12$\n" +
 	"\rcreatorUserID\x18\x01 \x01(\tR\rcreatorUserID\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1c\n" +
