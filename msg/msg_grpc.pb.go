@@ -41,6 +41,8 @@ const (
 	Msg_GetConversationMaxSeq_FullMethodName            = "/openim.msg.msg/GetConversationMaxSeq"
 	Msg_PullMessageBySeqs_FullMethodName                = "/openim.msg.msg/PullMessageBySeqs"
 	Msg_GetSeqMessage_FullMethodName                    = "/openim.msg.msg/GetSeqMessage"
+	Msg_GetMessageContext_FullMethodName                = "/openim.msg.msg/GetMessageContext"
+	Msg_GetMessagePage_FullMethodName                   = "/openim.msg.msg/GetMessagePage"
 	Msg_SearchMessage_FullMethodName                    = "/openim.msg.msg/SearchMessage"
 	Msg_SendMsg_FullMethodName                          = "/openim.msg.msg/SendMsg"
 	Msg_SendSimpleMsg_FullMethodName                    = "/openim.msg.msg/SendSimpleMsg"
@@ -110,6 +112,10 @@ type MsgClient interface {
 	//拉取历史消息（包括用户的，以及指定群组的）
 	PullMessageBySeqs(ctx context.Context, in *sdkws.PullMessageBySeqsReq, opts ...grpc.CallOption) (*sdkws.PullMessageBySeqsResp, error)
 	GetSeqMessage(ctx context.Context, in *GetSeqMessageReq, opts ...grpc.CallOption) (*GetSeqMessageResp, error)
+	//取目标消息及其前后的消息（消息定位窗口）
+	GetMessageContext(ctx context.Context, in *GetMessageContextReq, opts ...grpc.CallOption) (*GetMessageContextResp, error)
+	//按方向分页读取消息（消息窗口的双向分页）
+	GetMessagePage(ctx context.Context, in *GetMessagePageReq, opts ...grpc.CallOption) (*GetMessagePageResp, error)
 	SearchMessage(ctx context.Context, in *SearchMessageReq, opts ...grpc.CallOption) (*SearchMessageResp, error)
 	//发送消息
 	SendMsg(ctx context.Context, in *SendMsgReq, opts ...grpc.CallOption) (*SendMsgResp, error)
@@ -251,6 +257,26 @@ func (c *msgClient) GetSeqMessage(ctx context.Context, in *GetSeqMessageReq, opt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetSeqMessageResp)
 	err := c.cc.Invoke(ctx, Msg_GetSeqMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) GetMessageContext(ctx context.Context, in *GetMessageContextReq, opts ...grpc.CallOption) (*GetMessageContextResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMessageContextResp)
+	err := c.cc.Invoke(ctx, Msg_GetMessageContext_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) GetMessagePage(ctx context.Context, in *GetMessagePageReq, opts ...grpc.CallOption) (*GetMessagePageResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMessagePageResp)
+	err := c.cc.Invoke(ctx, Msg_GetMessagePage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -783,6 +809,10 @@ type MsgServer interface {
 	//拉取历史消息（包括用户的，以及指定群组的）
 	PullMessageBySeqs(context.Context, *sdkws.PullMessageBySeqsReq) (*sdkws.PullMessageBySeqsResp, error)
 	GetSeqMessage(context.Context, *GetSeqMessageReq) (*GetSeqMessageResp, error)
+	//取目标消息及其前后的消息（消息定位窗口）
+	GetMessageContext(context.Context, *GetMessageContextReq) (*GetMessageContextResp, error)
+	//按方向分页读取消息（消息窗口的双向分页）
+	GetMessagePage(context.Context, *GetMessagePageReq) (*GetMessagePageResp, error)
 	SearchMessage(context.Context, *SearchMessageReq) (*SearchMessageResp, error)
 	//发送消息
 	SendMsg(context.Context, *SendMsgReq) (*SendMsgResp, error)
@@ -880,6 +910,12 @@ func (UnimplementedMsgServer) PullMessageBySeqs(context.Context, *sdkws.PullMess
 }
 func (UnimplementedMsgServer) GetSeqMessage(context.Context, *GetSeqMessageReq) (*GetSeqMessageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSeqMessage not implemented")
+}
+func (UnimplementedMsgServer) GetMessageContext(context.Context, *GetMessageContextReq) (*GetMessageContextResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMessageContext not implemented")
+}
+func (UnimplementedMsgServer) GetMessagePage(context.Context, *GetMessagePageReq) (*GetMessagePageResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMessagePage not implemented")
 }
 func (UnimplementedMsgServer) SearchMessage(context.Context, *SearchMessageReq) (*SearchMessageResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchMessage not implemented")
@@ -1177,6 +1213,42 @@ func _Msg_GetSeqMessage_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).GetSeqMessage(ctx, req.(*GetSeqMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_GetMessageContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageContextReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).GetMessageContext(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_GetMessageContext_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).GetMessageContext(ctx, req.(*GetMessageContextReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_GetMessagePage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessagePageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).GetMessagePage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_GetMessagePage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).GetMessagePage(ctx, req.(*GetMessagePageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2133,6 +2205,14 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSeqMessage",
 			Handler:    _Msg_GetSeqMessage_Handler,
+		},
+		{
+			MethodName: "GetMessageContext",
+			Handler:    _Msg_GetMessageContext_Handler,
+		},
+		{
+			MethodName: "GetMessagePage",
+			Handler:    _Msg_GetMessagePage_Handler,
 		},
 		{
 			MethodName: "SearchMessage",
