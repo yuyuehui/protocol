@@ -51,6 +51,7 @@ const (
 )
 
 var protoModules = []string{
+	"assistant",
 	"auth",
 	"call",
 	"conversation",

@@ -1,0 +1,156 @@
+// Copyright © 2026 OpenIM. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openim.assistant;
+option go_package = "github.com/openimsdk/protocol/assistant";
+
+// 公开消息只保存安全投影，不承载私有草稿、审批参数或执行凭据。
+message AssistantElem {
+  uint32 schemaVersion = 1;
+  string taskID = 2;
+  string runID = 3;
+  string sourceID = 4;
+  uint64 revision = 5;
+  uint64 streamEpoch = 6;
+  uint64 lastStreamSeq = 7;
+  RunStatus status = 8;
+  string phase = 9;
+  string summary = 10;
+  repeated Block blocks = 11;
+}
+
+enum RunStatus {
+  RUN_STATUS_UNSPECIFIED = 0;
+  RUN_STATUS_ACCEPTED = 1;
+  RUN_STATUS_RUNNING = 2;
+  RUN_STATUS_WAITING = 3;
+  RUN_STATUS_STOPPING = 4;
+  RUN_STATUS_COMPLETED = 5;
+  RUN_STATUS_FAILED = 6;
+  RUN_STATUS_STOPPED = 7;
+  RUN_STATUS_UNKNOWN = 8;
+  RUN_STATUS_REVOKED = 9;
+}
+
+message Block {
+  string blockID = 1;
+  oneof content {
+    TextBlock text = 2;
+    ProgressBlock progress = 3;
+    AttachmentBlock attachment = 4;
+    SourcesBlock sources = 5;
+    InteractionRef interaction = 6;
+    ReceiptBlock receipt = 7;
+    NoticeBlock notice = 8;
+  }
+}
+message TextBlock { string text = 1; }
+message ProgressBlock {
+  string phase = 1;
+  string summary = 2;
+}
+message AttachmentBlock {
+  string resourceID = 1;
+  string contentVersion = 2;
+  string name = 3;
+  string mediaType = 4;
+  int64 size = 5;
+  string sha256 = 6;
+}
+message SourceRef {
+  string sourceID = 1;
+  string conversationID = 2;
+  string serverMsgID = 3;
+  int64 seq = 4;
+  string contentVersion = 5;
+  string locator = 6;
+}
+message SourcesBlock { repeated SourceRef sources = 1; }
+
+enum InteractionKind {
+  INTERACTION_KIND_UNSPECIFIED = 0;
+  INTERACTION_KIND_QUESTION = 1;
+  INTERACTION_KIND_EXECUTION_APPROVAL = 2;
+  INTERACTION_KIND_DRAFT_CONFIRMATION = 3;
+}
+// 此引用不赋予操作权；详情与有效操作人由受保护接口返回。
+message InteractionRef {
+  string interactionID = 1;
+  InteractionKind kind = 2;
+  uint64 revision = 3;
+  int64 expiresAt = 4;
+  string summary = 5;
+}
+
+enum DeliveryStatus {
+  DELIVERY_STATUS_UNSPECIFIED = 0;
+  DELIVERY_STATUS_ACCEPTED = 1;
+  DELIVERY_STATUS_STORED = 2;
+  DELIVERY_STATUS_DELIVERED = 3;
+  DELIVERY_STATUS_READ = 4;
+  DELIVERY_STATUS_REJECTED = 5;
+  DELIVERY_STATUS_UNKNOWN = 6;
+}
+message ReceiptBlock {
+  string deliveryID = 1;
+  string clientMsgID = 2;
+  string serverMsgID = 3;
+  DeliveryStatus status = 4;
+}
+message NoticeBlock {
+  string code = 1;
+  string summary = 2;
+}
+
+// 临时增量不分配普通消息 seq；offset 为原文本的 UTF-8 字节长度。
+message AssistantStreamNotification {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string taskID = 3;
+  string runID = 4;
+  uint64 streamEpoch = 5;
+  uint64 baseRevision = 6;
+  uint64 streamSeq = 7;
+  string blockID = 8;
+  uint64 utf8Offset = 9;
+  string textDelta = 10;
+}
+
+// 只有权威快照保存成功后才能发出可靠变更通知。
+message AssistantMessageChangedNotification {
+  string eventID = 1;
+  string conversationID = 2;
+  string serverMsgID = 3;
+  AssistantElem snapshot = 4;
+}
+
+// 不接受请求体提供的操作者身份，必须由入口从可信认证上下文注入。
+message ControlAction {
+  string taskID = 1;
+  string runID = 2;
+  string interactionID = 3;
+  uint64 expectedRevision = 4;
+  string actionID = 5;
+  ControlKind kind = 6;
+}
+enum ControlKind {
+  CONTROL_KIND_UNSPECIFIED = 0;
+  CONTROL_KIND_STOP = 1;
+  CONTROL_KIND_ANSWER = 2;
+  CONTROL_KIND_APPROVE = 3;
+  CONTROL_KIND_REJECT = 4;
+  CONTROL_KIND_CONFIRM_DRAFT = 5;
+  CONTROL_KIND_CANCEL = 6;
+}

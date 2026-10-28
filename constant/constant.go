@@ -61,6 +61,7 @@ const (
 	WorkbenchNotifyMessage         = 212 // 工作台通知消息
 	MeetingInviteCardMessage       = 213 // 群会议邀请卡片消息
 	EmailForwardMessage            = 214 // 邮件转发卡片消息
+	AssistantMessage               = 215 // AI 助手结构化公开消息
 
 	// SysRelated - 系统相关通知类型
 	NotificationBegin = 1000
@@ -176,6 +177,8 @@ const (
 	GroupMessagePinNotification         = 2119 // 群消息置顶/取消置顶通知
 	PinnedMessageVisibilityNotification = 2120 // 群置顶个人隐藏/重新显示（仅本人设备）
 	EmailChangedNotification            = 2118 // 邮箱变更通知（避开语音转文字与消息编辑通知编号）
+	AssistantStreamNotification         = 2121 // AI 临时正文增量，不持久化
+	AssistantMessageChangedNotification = 2122 // AI 可靠快照变更
 	HasReadReceipt                      = 2200 // 已读回执
 
 	// LiveKit会议相关通知 (1800-1899)
