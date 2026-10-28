@@ -4,9 +4,18 @@ import (
 	"net/mail"
 
 	"github.com/openimsdk/tools/errs"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const maxEmailRecipients = 100
+
+func redactedTestEmailAccountString(x *TestEmailAccountReq) string {
+	if x == nil { return protoimpl.X.MessageStringOf(x) }
+	copy := proto.Clone(x).(*TestEmailAccountReq)
+	if copy.AuthPassword != "" { copy.AuthPassword = "[REDACTED]" }
+	return protoimpl.X.MessageStringOf(copy)
+}
 
 func validateEmailAddresses(label string, addresses []*EmailAddress) error {
 	if len(addresses) > maxEmailRecipients {

@@ -2183,7 +2183,7 @@ func (x *TestEmailAccountReq) Reset() {
 }
 
 func (x *TestEmailAccountReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
+	return redactedTestEmailAccountString(x)
 }
 
 func (*TestEmailAccountReq) ProtoMessage() {}
