@@ -182,3 +182,14 @@ im-server 与 im-chat 使用同一个 Redis 库。
 - **公开来源**：SourceRef 要求 `conversationID` 为当前会话、`sourceID == serverMsgID`、`seq ≥ 1`、`locator` 为空、`contentVersion` 为消息 content 的 sha256 hex，最多 20 条且不重复。`/assistant/sources` 对发起人返回 `audience: private`，对其他成员只返回快照中的公开来源并按其可见范围过滤（`audience: public`），附件只给名称与类型。SourceRef 没有附件名称字段，消息内需要显示附件名时须另加协议字段。
 - **上下文分页**：`assistant.context.read` 新增 `limit`（1–100）、`cursor`（上一页返回值）、`since`（毫秒，24 小时内）；返回项含 `contentType` 与 `attachments[{ attachmentID, type, name, mimeType, size }]`，不含 URL。
 - **通用审批**：`execution = { hostApprovalID, hostRunID, operation, parameters, title?, description? }`，operation 匹配 `^[a-z0-9_.:-]{1,64}$`；`schedule.create` 保留严格参数校验，其他操作的 parameters 为 JSON 对象（≤32 KiB）；title（≤200 字）/ description（≤2000 字）只出现在受保护详情与执行端决定中，并绑定进指纹。
+
+## 11. 第二轮修正（2026-10-29）
+
+- **公开文本规则**：`public_text.go` 已补全：中文后紧跟的路径、`/data/` 等更多前缀与 `./`、`../` 相对路径、全角冒号、中文密钥关键词、不带协议的域名、IPv4、JWT。新增两项按代码判断的规则，插件须逐条移植：token 的值长度 ≥ 8 且含字母才算密钥（“Token: 10”不拦）；不含 `_ - .` 的 32 位以上字母数字串，数字占比 ≥ 1/8，或长度 ≥ 40 且含 `+`/`/`，才算密钥或编码数据（长文件名不拦）。
+- **执行设备代次**：im-chat 在 `bot:conn:<botID>` 的连接状态中写入 `hostEpoch`（非数字员工为 0）与 `deviceID`。im-server 在 `assistant.open` 时记录当时连接的 hostEpoch；`assistant.resume` 若当前连接的 hostEpoch 与记录不同，拒绝（reason `host_changed`），旧运行由租约过期转 UNKNOWN。同一设备断线重连（hostEpoch 不变）仍可 resume。
+- **运行租约**：im-server 在 open / resume 时登记运行租约，heartbeat、append、checkpoint 时续期；30 秒无任何活动转 UNKNOWN。插件在整个运行期间每 10 秒发送一次 `assistant.runtime.heartbeat`。
+- **执行端转交停止请求**：新增动作 `assistant.stop.request { taskID, runID, sourceID }`（im-chat 路由到 `/assistant/internal/stop/request`）。sourceID 为用户在会话中发出的停止命令消息；im-server 校验该消息在同一会话、发送者为发起人，然后走与 `/assistant/stop` 相同的流程（STOPPING + 2122 + 控制推送），返回 `{ snapshot }`。插件收到 `/stop` 文本命令时调用它，不再直接写 STOPPED。
+- **交互块不可删除**：快照中出现过的交互块在后续快照中必须保留（状态由服务端推导），缺失返回 `permission`。
+- **握手能力约束**：协议 2 的握手必须带 `X-Bot-Capabilities` 且包含 `inbound.v2`，否则 400 并返回 `X-Supported-Capabilities`。未声明 `assistant` 的连接不能调用 `assistant.*` 动作；未声明 `control.push` 的连接不下发 `assistant.control`。
+- **控制推送时序**：连接在 `connected` 事件入队之前不接收实时控制推送；之后从 pending 列表补发，保证 `connected` 先于任何 `assistant.control` 到达。
+- **来源块**：新协议下每次运行都在 open 后读取 `assistant.sources.read`，至少把触发消息本身作为公开来源写入 SourcesBlock（普通群 @ 提问也生成），`counts.messages` 与之一致。

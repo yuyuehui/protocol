@@ -148,12 +148,12 @@ func TestInteractionState(t *testing.T) {
 }
 
 func TestPublicTextSafety(t *testing.T) {
-	for _, text := range []string{"读取附件", "销售表.xlsx · Sheet1", "查询日程 · 3 条", "Read file report.pdf"} {
+	for _, text := range []string{"读取附件", "销售表.xlsx · Sheet1", "查询日程 · 3 条", "Read file report.pdf", "Token: 10", "tokens: 1200", "token=abc", "QuarterlySalesReportForEastRegionSummary2026.xlsx", "quarterly_sales_report_for_the_east_region_2026_final_v2.xlsx", "版本 1.2.3", "第 3/5 步"} {
 		if UnsafePublicText(text) {
 			t.Fatalf("误判: %s", text)
 		}
 	}
-	for _, text := range []string{"/Users/alice/report.pdf", `C:\work\a.txt`, "~/notes.md", "https://example.com/a", "token=abc", "sk-abcdefghijklmnopqrstuv", "rm -rf build", `\\server\share\a`} {
+	for _, text := range []string{"/Users/alice/report.pdf", `C:\work\a.txt`, "~/notes.md", "https://example.com/a", "token=ghsdfh28sdf8", "sk-abcdefghijklmnopqrstuv", "rm -rf build", `\\server\share\a`, "打开/Users/alice/a.txt", "读取/data/app/config.yml", "./scripts/run.sh", "密码：123", "api key: abc", "访问 example.com 查询", "连接 10.0.0.12:8080", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.sig", "d41d8cd98f00b204e9800998ecf8427e", "执行rm -rf /"} {
 		if !UnsafePublicText(text) {
 			t.Fatalf("漏判: %s", text)
 		}
