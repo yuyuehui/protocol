@@ -42,6 +42,9 @@ enum RunStatus {
   RUN_STATUS_STOPPED = 7;
   RUN_STATUS_UNKNOWN = 8;
   RUN_STATUS_REVOKED = 9;
+  // 未受理：执行端不在线等原因未创建运行。终态，不能流式、交互或重放。
+  // 仅提示消息使用此状态，可不带 taskID / runID，但 sourceID 仍然必填。
+  RUN_STATUS_NOT_ACCEPTED = 10;
 }
 
 message Block {
@@ -57,9 +60,50 @@ message Block {
   }
 }
 message TextBlock { string text = 1; }
+// 公开过程。title / detail / summary 进入群消息，不得包含本机路径、URL、命令行、
+// 工具参数原文、工具结果原文或推理原文；服务端按 UnsafePublicText 拒绝。
 message ProgressBlock {
-  string phase = 1;
-  string summary = 2;
+  string phase = 1;                // 当前阶段机器码
+  string summary = 2;              // 当前一行公开描述，如“正在读取 2 个附件”
+  repeated ProcessStep steps = 3;  // 按开始时间排序的公开步骤，最多 MaxProcessSteps 条
+  ProcessCounts counts = 4;        // 可靠事实计数
+}
+
+enum StepKind {
+  STEP_KIND_UNSPECIFIED = 0;
+  STEP_KIND_THINKING = 1;          // 只表示“正在思考”，不承载推理原文
+  STEP_KIND_TOOL = 2;
+  STEP_KIND_READ_CONTEXT = 3;
+  STEP_KIND_READ_ATTACHMENT = 4;
+  STEP_KIND_GENERATE = 5;
+  STEP_KIND_WAIT_INTERACTION = 6;
+  STEP_KIND_PUBLISH = 7;
+  STEP_KIND_COMPACTION = 8;
+}
+enum StepStatus {
+  STEP_STATUS_UNSPECIFIED = 0;
+  STEP_STATUS_RUNNING = 1;
+  STEP_STATUS_COMPLETED = 2;
+  STEP_STATUS_FAILED = 3;
+  STEP_STATUS_SKIPPED = 4;
+  STEP_STATUS_CANCELLED = 5;
+}
+message ProcessStep {
+  string stepID = 1;       // 同一 run 内稳定；由执行端事件 ID 派生的哈希，最长 64 字节
+  StepKind kind = 2;
+  StepStatus status = 3;
+  string title = 4;        // 业务描述，最多 64 个字符，如“读取附件”“查询日程”
+  string detail = 5;       // 公开结果摘要，最多 200 个字符，如“销售表.xlsx · Sheet1”
+  string groupKey = 6;     // 同类调用归组，如工具名，最长 64 字节
+  int64 startedAt = 7;     // 毫秒时间戳
+  int64 endedAt = 8;       // 0 表示未结束；RUNNING 必须为 0，其余状态必须不早于 startedAt
+  string errorCode = 9;    // 仅 FAILED / CANCELLED 可填的安全错误码，不带原始错误文本
+}
+message ProcessCounts {
+  uint32 messages = 1;
+  uint32 attachments = 2;
+  uint32 tools = 3;
+  uint32 failedSteps = 4;
 }
 message AttachmentBlock {
   string resourceID = 1;
@@ -85,13 +129,36 @@ enum InteractionKind {
   INTERACTION_KIND_EXECUTION_APPROVAL = 2;
   INTERACTION_KIND_DRAFT_CONFIRMATION = 3;
 }
+enum InteractionState {
+  INTERACTION_STATE_UNSPECIFIED = 0;
+  INTERACTION_STATE_PENDING = 1;     // 等待处理
+  INTERACTION_STATE_SUBMITTED = 2;   // 用户已提交，执行端未受理
+  INTERACTION_STATE_ACCEPTED = 3;    // 执行端已受理（ack）
+  INTERACTION_STATE_EXPIRED = 4;     // 到期未处理
+  INTERACTION_STATE_CANCELLED = 5;   // 运行停止或结束导致交互作废，不是用户的取消决定
+}
+// 用户主动取消记为 SUBMITTED / ACCEPTED + OUTCOME_CANCELLED。
+enum InteractionOutcome {
+  INTERACTION_OUTCOME_UNSPECIFIED = 0;
+  INTERACTION_OUTCOME_ANSWERED = 1;
+  INTERACTION_OUTCOME_APPROVED = 2;
+  INTERACTION_OUTCOME_REJECTED = 3;
+  INTERACTION_OUTCOME_CONFIRMED = 4;
+  INTERACTION_OUTCOME_CANCELLED = 5;
+}
 // 此引用不赋予操作权；详情与有效操作人由受保护接口返回。
+// state / outcome / actorUserID / decidedAt 只能由服务端按交互记录写入，执行端不能自行伪造；
+// 不含答案、参数或草稿正文，处理结果文案由客户端按 outcome 本地化。
 message InteractionRef {
   string interactionID = 1;
   InteractionKind kind = 2;
   uint64 revision = 3;
   int64 expiresAt = 4;
   string summary = 5;
+  InteractionState state = 6;
+  InteractionOutcome outcome = 7;
+  string actorUserID = 8;     // 处理人；PENDING / EXPIRED 时为空
+  int64 decidedAt = 9;        // 毫秒；提交、过期或作废的时间，PENDING 时为 0
 }
 
 enum DeliveryStatus {
@@ -114,7 +181,9 @@ message NoticeBlock {
   string summary = 2;
 }
 
-// 临时增量不分配普通消息 seq；offset 为原文本的 UTF-8 字节长度。
+// 临时增量不分配普通消息 seq；文本与进度帧共享同一个 streamSeq 序列。
+// blockID 指向快照里已存在的块：文本帧对应 TextBlock，进度帧对应 ProgressBlock。
+// utf8Offset 为原文本的 UTF-8 字节长度，仅文本帧使用，进度帧必须为 0。
 message AssistantStreamNotification {
   string conversationID = 1;
   string serverMsgID = 2;
@@ -125,7 +194,17 @@ message AssistantStreamNotification {
   uint64 streamSeq = 7;
   string blockID = 8;
   uint64 utf8Offset = 9;
-  string textDelta = 10;
+  oneof delta {
+    string textDelta = 10;
+    ProgressDelta progress = 11;
+  }
+}
+// 空字段表示不变：phase / summary 为空不覆盖，step 按 stepID upsert，counts 非空时整体替换。
+message ProgressDelta {
+  string phase = 1;
+  string summary = 2;
+  ProcessStep step = 3;
+  ProcessCounts counts = 4;
 }
 
 // 只有权威快照保存成功后才能发出可靠变更通知。
