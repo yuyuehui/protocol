@@ -193,3 +193,4 @@ im-server 与 im-chat 使用同一个 Redis 库。
 - **握手能力约束**：协议 2 的握手必须带 `X-Bot-Capabilities` 且包含 `inbound.v2`，否则 400 并返回 `X-Supported-Capabilities`。未声明 `assistant` 的连接不能调用 `assistant.*` 动作；未声明 `control.push` 的连接不下发 `assistant.control`。
 - **控制推送时序**：连接在 `connected` 事件入队之前不接收实时控制推送；之后从 pending 列表补发，保证 `connected` 先于任何 `assistant.control` 到达。
 - **来源块**：新协议下每次运行都在 open 后读取 `assistant.sources.read`，至少把触发消息本身作为公开来源写入 SourcesBlock（普通群 @ 提问也生成），`counts.messages` 与之一致。
+- **插件不再退回文本**：渠道插件去掉 `streaming`、`assistantProtocol` 两个开关（配置字段保留但被忽略，兼容旧配置），回复一律使用 215，握手固定为协议 2。服务端未声明 `assistant` 能力时插件不回复也不运行模型，只记录错误；不再有新消息的文本通道。客户端渲染历史文本消息的能力保留。OpenClaw outbound 适配器（`message.send`，agent 主动发往其他会话）不受影响。
