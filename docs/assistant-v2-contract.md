@@ -135,7 +135,7 @@ im-server 与 im-chat 使用同一个 Redis 库。
   - 同一 `(botID, conversationID)` 60 秒内只发一条；
   - summary 取 im-server 配置 `api.assistant.notices.<code>.zh`，客户端可按 code 本地化（配置同时提供 `en`）；
   - 不创建任务，上线后不补做。
-- 数字员工：只回复所属人的私聊和所属人在群里的 @，其他人不额外回复（im-chat 判断）。
+- 数字员工：所属人的私聊和群 @ 回复 `device_offline`；非所属人回复简短的 `bot_unavailable`（“暂不可用”，不透露执行设备状态，独立的幂等键与 60 秒去重窗口）（im-chat 判断，§12 修订）。
 - 返回 `{ serverMsgID }` 或 `{ deduplicated: true }`。
 
 ## 6. 网关握手 v2（插件 ↔ im-chat）
@@ -194,3 +194,12 @@ im-server 与 im-chat 使用同一个 Redis 库。
 - **控制推送时序**：连接在 `connected` 事件入队之前不接收实时控制推送；之后从 pending 列表补发，保证 `connected` 先于任何 `assistant.control` 到达。
 - **来源块**：新协议下每次运行都在 open 后读取 `assistant.sources.read`，至少把触发消息本身作为公开来源写入 SourcesBlock（普通群 @ 提问也生成），`counts.messages` 与之一致。
 - **插件不再退回文本**：渠道插件去掉 `streaming`、`assistantProtocol` 两个开关（配置字段保留但被忽略，兼容旧配置），回复一律使用 215，握手固定为协议 2。服务端未声明 `assistant` 能力时插件不回复也不运行模型，只记录错误；不再有新消息的文本通道。客户端渲染历史文本消息的能力保留。OpenClaw outbound 适配器（`message.send`，agent 主动发往其他会话）不受影响。
+
+## 12. 第三轮体验修正（2026-10-29）
+
+- **非文本消息下发**：im-chat 不再静默丢弃合并转发、名片、位置、表情、代码、Markdown、高级文本等类型，`message.text` 放一句摘要（例如“[合并转发] 群聊记录”“[位置] 地址”“[名片] 昵称”），原始内容类型保留在 `contentType`。确实无法支持的类型，im-chat 调 `/assistant/internal/system/notice`，code 为 `unsupported_message`（im-server 配置 `notices.unsupported_message.zh/en`），适用范围与离线提示一致（单聊或被 @；数字员工只回复所属人）。
+- **引用失败保留原话**：引用核验失败时保留用户正文，失败说明作为附注，不再整段替换。
+- **可引用 AI 回复与引用消息**：引用目标为 215 时，`replyTo.contentType = 215`，引用摘要取其公开正文（TextBlock）；引用目标为 Quote 时取其自身文字。im-server 的来源核验、公开来源与入站附件登记对这两类引用同样接受（被引用的 215 / Quote 不登记附件，触发消息自身附件照常登记），不再整条拒绝。
+- **群名**：群消息的 `groupName` 按群资料填充。
+- **触发消息撤回即停止**：触发消息被撤回时，im-server 自动把未结束的运行置为 STOPPING（停止人记为系统，交互作废），发 2122 并推送 `assistant.control` stop；执行端照常 `finish(STOPPED)`，超时按 UNKNOWN。
+- **数字员工离线时回复非所属人**：取代 §5 中“其他人不额外回复”。非所属人的消息回复 `bot_unavailable`（im-server 配置 `notices.bot_unavailable.zh/en`）；`unsupported_message` 仍只回复所属人。
