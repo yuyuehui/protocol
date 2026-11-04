@@ -173,6 +173,8 @@ message InviteUserToGroupReq {
   string reason = 2;
   repeated string invitedUserIDs = 3;
   optional bool sendMessage = 4;
+  // 新成员可见的最近聊天记录条数（不含系统通知）；不传沿用服务端 enableHistoryForNewMembers 配置，0 表示不附带
+  optional int32 historyMsgCount = 5;
 }
 message InviteUserToGroupResp {}
 
