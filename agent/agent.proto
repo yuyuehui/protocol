@@ -1,0 +1,1582 @@
+syntax = "proto3";
+package openim.agent;
+
+import "sdkws/sdkws.proto";
+import "wrapperspb/wrapperspb.proto";
+
+option go_package = "github.com/openimsdk/protocol/agent";
+
+// 数字员工管理。用户端接口的当前用户、企业都取自 token，请求里不传。
+
+// ==================== Enums ====================
+
+enum AgentKind {
+  AGENT_KIND_UNSPECIFIED = 0;
+  AGENT_KIND_EMPLOYEE = 1; // 数字员工
+  AGENT_KIND_CLONE = 2;    // 分身（第八批）
+}
+
+enum AgentExecutor {
+  AGENT_EXECUTOR_UNSPECIFIED = 0;
+  AGENT_EXECUTOR_BUILTIN = 1; // 内置执行：角色设定 + 知识 + 模型
+  AGENT_EXECUTOR_SERVICE = 2; // 连接已有服务
+}
+
+// 创建起点
+enum AgentOrigin {
+  AGENT_ORIGIN_UNSPECIFIED = 0;
+  AGENT_ORIGIN_BLANK = 1;    // 空白
+  AGENT_ORIGIN_TEMPLATE = 2; // 模板
+  AGENT_ORIGIN_SERVICE = 3;  // 连接已有服务
+}
+
+enum AgentStatus {
+  AGENT_STATUS_UNSPECIFIED = 0;
+  AGENT_STATUS_NORMAL = 1;
+  AGENT_STATUS_DELETED = 2; // 保留期内能恢复
+  AGENT_STATUS_PURGING = 3; // 清理中，不能恢复
+}
+
+// 生效范围
+enum ReleaseScope {
+  RELEASE_SCOPE_UNSPECIFIED = 0;
+  RELEASE_SCOPE_SELF = 1;     // 本人
+  RELEASE_SCOPE_COMPANY = 2;  // 企业（第三批）
+  RELEASE_SCOPE_PLATFORM = 3; // 平台（第三批）
+}
+
+// 停用层，每层各记各的，所有层都清了才算恢复
+enum DisableLayer {
+  DISABLE_LAYER_UNSPECIFIED = 0;
+  DISABLE_LAYER_OWNER = 1;         // 创建者或维护负责人
+  DISABLE_LAYER_SCOPE_MANAGER = 2; // 范围管理者（第三批）
+  DISABLE_LAYER_PLATFORM = 3;      // 平台
+}
+
+// 发布目标。本人用是「自己使用」这个操作，不是目标
+enum UsageTarget {
+  USAGE_TARGET_UNSPECIFIED = 0;
+  USAGE_TARGET_COMPANY = 1;
+  USAGE_TARGET_PLATFORM = 2;
+}
+
+enum CapabilityType {
+  CAPABILITY_TYPE_UNSPECIFIED = 0;
+  CAPABILITY_TYPE_SERVICE = 1; // 服务
+  CAPABILITY_TYPE_SKILL = 2;
+  CAPABILITY_TYPE_MCP = 3;
+  CAPABILITY_TYPE_API = 4;
+}
+
+// 执行位置
+enum CapabilityLocation {
+  CAPABILITY_LOCATION_UNSPECIFIED = 0;
+  CAPABILITY_LOCATION_CLOUD = 1; // 云端
+  CAPABILITY_LOCATION_LOCAL = 2; // 本机
+}
+
+// 能力引用的状态，取自能力目录
+enum CapabilityState {
+  CAPABILITY_STATE_UNSPECIFIED = 0;
+  CAPABILITY_STATE_NEEDS_CONFIG = 1;      // 待配置：MCP 没选工具，或必填的开放字段没填
+  CAPABILITY_STATE_NEEDS_AUTH = 2;        // 待本人授权
+  CAPABILITY_STATE_UNVERIFIED = 3;        // 未验证
+  CAPABILITY_STATE_READY = 4;             // 就绪
+  CAPABILITY_STATE_CONNECTION_FAILED = 5; // 失权／连接失败
+  CAPABILITY_STATE_DEVICE_OFFLINE = 6;    // 本机离线
+  CAPABILITY_STATE_NOT_FOUND = 7;         // 目录中已找不到
+}
+
+// 知识对象的传播范围
+enum KnowledgeShare {
+  KNOWLEDGE_SHARE_UNSPECIFIED = 0;
+  KNOWLEDGE_SHARE_PERSONS = 1; // 只限指定人
+  KNOWLEDGE_SHARE_COMPANY = 2; // 本企业
+  KNOWLEDGE_SHARE_PUBLIC = 3;  // 公开
+}
+
+// 导入角色指令放到哪个区
+enum ImportZone {
+  IMPORT_ZONE_UNSPECIFIED = 0;
+  IMPORT_ZONE_GOAL = 1;     // 角色与目标
+  IMPORT_ZONE_BOUNDARY = 2; // 职责与边界的说明文字
+  IMPORT_ZONE_RULES = 3;    // 工作规则
+  IMPORT_ZONE_OUTPUT = 4;   // 输出要求
+}
+
+enum ImportMode {
+  IMPORT_MODE_UNSPECIFIED = 0;
+  IMPORT_MODE_REPLACE = 1; // 替换这个区
+  IMPORT_MODE_APPEND = 2;  // 接在原文后面
+}
+
+enum TestMode {
+  TEST_MODE_UNSPECIFIED = 0;
+  TEST_MODE_REAL = 1;
+  TEST_MODE_SIMULATED = 2; // 用了假模型或假知识库
+}
+
+// 系统结果，不是用户判断
+enum TestResult {
+  TEST_RESULT_UNSPECIFIED = 0;
+  TEST_RESULT_RUNNING = 1;
+  TEST_RESULT_COMPLETED = 2;
+  TEST_RESULT_FAILED = 3;
+  TEST_RESULT_UNKNOWN = 4; // 到了总时限，或跑太久没结束
+}
+
+// 用户判断
+enum TestVerdict {
+  TEST_VERDICT_UNSPECIFIED = 0;
+  TEST_VERDICT_MATCH = 1;    // 符合
+  TEST_VERDICT_MISMATCH = 2; // 不符合
+}
+
+// 职责的测试覆盖情况
+enum DutyCoverage {
+  DUTY_COVERAGE_UNSPECIFIED = 0;
+  DUTY_COVERAGE_COVERED = 1;     // 有有效记录：完成、没判不符合、指纹和当前一样
+  DUTY_COVERAGE_UNTESTED = 2;    // 没测过
+  DUTY_COVERAGE_ONLY_FAILED = 3; // 只有失败或未知
+  DUTY_COVERAGE_MISMATCH = 4;    // 判了不符合
+  DUTY_COVERAGE_STALE = 5;       // 只有过期的
+}
+
+// 发布前七项检查
+enum CheckItem {
+  CHECK_ITEM_UNSPECIFIED = 0;
+  CHECK_ITEM_IDENTITY = 1;   // 身份与职责
+  CHECK_ITEM_CAPABILITY = 2; // 能力与依赖
+  CHECK_ITEM_KNOWLEDGE = 3;  // 知识来源
+  CHECK_ITEM_PLATFORM = 4;   // 平台边界
+  CHECK_ITEM_SCOPE = 5;      // 范围与责任
+  CHECK_ITEM_TEST = 6;       // 当前测试
+  CHECK_ITEM_SENSITIVE = 7;  // 敏感内容
+}
+
+enum CheckState {
+  CHECK_STATE_UNSPECIFIED = 0;
+  CHECK_STATE_PASS = 1;
+  CHECK_STATE_BLOCK = 2;
+  CHECK_STATE_HINT = 3;
+  CHECK_STATE_NOT_APPLICABLE = 4; // 不适用，比如目标是企业时的平台边界
+}
+
+enum IssueLevel {
+  ISSUE_LEVEL_UNSPECIFIED = 0;
+  ISSUE_LEVEL_BLOCK = 1; // 阻断
+  ISSUE_LEVEL_HINT = 2;  // 提醒
+}
+
+enum ChatRole {
+  CHAT_ROLE_UNSPECIFIED = 0;
+  CHAT_ROLE_USER = 1;
+  CHAT_ROLE_ASSISTANT = 2;
+}
+
+enum ModelProvider {
+  MODEL_PROVIDER_UNSPECIFIED = 0;
+  MODEL_PROVIDER_OPENAI_COMPATIBLE = 1; // OpenAI 兼容接口
+  MODEL_PROVIDER_MOCK = 2;              // 假模型，配置里 allowMockModel 开了才能用
+}
+
+// 模板分类，只用来分组
+enum TemplateCategory {
+  TEMPLATE_CATEGORY_UNSPECIFIED = 0;
+  TEMPLATE_CATEGORY_PROJECT = 1;    // 项目
+  TEMPLATE_CATEGORY_DEPARTMENT = 2; // 部门
+  TEMPLATE_CATEGORY_POSITION = 3;   // 岗位
+  TEMPLATE_CATEGORY_PROCESS = 4;    // 流程
+}
+
+enum OperatorRole {
+  OPERATOR_ROLE_UNSPECIFIED = 0;
+  OPERATOR_ROLE_USER = 1;     // 前台用户
+  OPERATOR_ROLE_PLATFORM = 2; // 平台（IM 管理员）
+  OPERATOR_ROLE_SYSTEM = 3;   // 系统任务
+  OPERATOR_ROLE_SCOPE_MANAGER = 4; // 范围管理者（后台带的 operatorUserID）
+}
+
+// 审计类别
+enum AuditCategory {
+  AUDIT_CATEGORY_UNSPECIFIED = 0;
+  AUDIT_CATEGORY_CONFIG = 1;  // 配置、提交、审核、生效
+  AUDIT_CATEGORY_ACCESS = 2;  // 开通、范围、授权、维护
+  AUDIT_CATEGORY_EXECUTE = 3; // 确认与执行
+  AUDIT_CATEGORY_CONTROL = 4; // 阻断、停止、恢复
+  AUDIT_CATEGORY_OUTPUT = 5;  // 成果和分享
+}
+
+enum AuditResult {
+  AUDIT_RESULT_UNSPECIFIED = 0;
+  AUDIT_RESULT_RUNNING = 1; // 进行中
+  AUDIT_RESULT_OK = 2;
+  AUDIT_RESULT_DENIED = 3;  // 拒绝
+  AUDIT_RESULT_FAILED = 4;
+  AUDIT_RESULT_UNKNOWN = 5; // 进行中超过 5 分钟，读的时候算出来的
+}
+
+enum GrantType {
+  GRANT_TYPE_UNSPECIFIED = 0;
+  GRANT_TYPE_MAINTAIN = 1; // 维护负责人，发布时指定（第三批）
+  GRANT_TYPE_EDIT = 2;     // 授权编辑者
+}
+
+// 授权里允许的动作，各查各的
+enum GrantAction {
+  GRANT_ACTION_UNSPECIFIED = 0;
+  GRANT_ACTION_EDIT = 1;   // 存草稿、换头像、导入、确认知识、从快照恢复
+  GRANT_ACTION_TEST = 2;   // 测试、标符合／不符合、发布前检查
+  GRANT_ACTION_SUBMIT = 3; // 发布前检查、提交审核（第三批）
+  GRANT_ACTION_GRANT = 4;  // 加减编辑者，只给维护负责人
+}
+
+enum GrantSource {
+  GRANT_SOURCE_UNSPECIFIED = 0;
+  GRANT_SOURCE_CREATOR = 1;    // 创建者授予，只在个人阶段
+  GRANT_SOURCE_MAINTAINER = 2; // 维护负责人授予
+  GRANT_SOURCE_RELEASE = 3;    // 发布时指定：第一次企业生效时写给维护负责人
+}
+
+// 审核单状态
+enum ReviewStatus {
+  REVIEW_STATUS_UNSPECIFIED = 0;
+  REVIEW_STATUS_PENDING = 1;   // 待审核
+  REVIEW_STATUS_APPROVED = 2;  // 已通过，含免审
+  REVIEW_STATUS_RETURNED = 3;  // 已退回
+  REVIEW_STATUS_WITHDRAWN = 4; // 已撤回
+}
+
+// 审核单的生效状态
+enum EffectState {
+  EFFECT_STATE_NONE = 0;    // 未生效
+  EFFECT_STATE_RUNNING = 1; // 生效中
+  EFFECT_STATE_DONE = 2;    // 已生效
+  EFFECT_STATE_FAILED = 3;  // 生效失败，旧版本照常服务
+  EFFECT_STATE_PARTIAL = 4; // 已换上、后续没写完：按已生效显示，重试只补写后续
+}
+
+// 私聊答复的结果
+enum ChatStatus {
+  CHAT_STATUS_UNSPECIFIED = 0;
+  CHAT_STATUS_REPLIED = 1;     // 答复了
+  CHAT_STATUS_REFUSED = 2;     // 拒绝，原因见 refusal
+  CHAT_STATUS_FAILED = 3;      // 失败
+  CHAT_STATUS_IN_PROGRESS = 4; // 同一请求还在跑
+  CHAT_STATUS_UNKNOWN = 5;     // 到了总时限，或跑太久没结束
+}
+
+// 拒绝答复的原因类别
+enum RefusalKind {
+  REFUSAL_KIND_UNSPECIFIED = 0;
+  REFUSAL_KIND_ELIGIBILITY = 1; // 使用资格
+  REFUSAL_KIND_KNOWLEDGE = 2;   // 资料权限
+  REFUSAL_KIND_CONNECTION = 3;  // 个人连接，能力调用做了以后才有
+  REFUSAL_KIND_RATE_LIMIT = 4;  // 限流
+  REFUSAL_KIND_UNAVAILABLE = 5; // 暂时不能答复：执行端未接入、模型不可用
+}
+
+// 版本对比的分组
+enum ChangeGroup {
+  CHANGE_GROUP_UNSPECIFIED = 0;
+  CHANGE_GROUP_IDENTITY = 1;  // 身份承诺
+  CHANGE_GROUP_EXECUTION = 2; // 执行
+  CHANGE_GROUP_KNOWLEDGE = 3; // 知识
+  CHANGE_GROUP_SCOPE = 4;     // 范围
+}
+
+// 一项变更怎么处理
+enum ChangeHandling {
+  CHANGE_HANDLING_UNSPECIFIED = 0;
+  CHANGE_HANDLING_RETEST = 1; // 重测并重审
+  CHANGE_HANDLING_REVIEW = 2; // 重审
+  CHANGE_HANDLING_NARROW = 3; // 收紧，可以立即生效
+  CHANGE_HANDLING_DIRECT = 4; // 直接生效（换处理人），和收紧一起点
+  CHANGE_HANDLING_NONE = 5;   // 不随版本生效（换维护负责人）
+}
+
+// ==================== 配置 ====================
+
+// 职责逐条存
+message AgentDuty {
+  string dutyID = 1;                    // 新加的留空，由服务端分配
+  string text = 2;
+  openim.protobuf.BoolValue main = 3;   // 主要职责，不传就是主要
+}
+
+// 角色设定四区
+message RoleSetting {
+  string goal = 1;               // 角色与目标
+  repeated AgentDuty duties = 2; // 职责
+  string boundary = 3;           // 职责与边界的说明文字
+  string rules = 4;              // 工作规则
+  string output = 5;             // 输出要求
+}
+
+// 连接已有服务
+message ServiceBinding {
+  string serviceID = 1;
+  string version = 2;            // 空表示当前版本，保存时补上
+  map<string, string> fields = 3; // 开放字段
+}
+
+message CapabilityRef {
+  CapabilityType type = 1;
+  string catalogID = 2;
+  string version = 3;             // 空表示当前版本，保存时补上
+  string purpose = 4;             // 用途
+  repeated string tools = 5;      // MCP 允许调用的工具，可以先不选
+  map<string, string> fields = 6; // 开放字段
+}
+
+// 知识引用只存这几项，类型、标题查看时按查看人现查
+message KnowledgeRef {
+  string objectID = 1;
+  string scope = 2;        // 引用范围，知识库给的；空表示整个对象
+  string versionAtRef = 3; // 确认时的版本，服务端填
+  int64 addedAt = 4;       // 服务端填
+}
+
+message MemorySetting {
+  bool longTerm = 1; // 支持长期记忆，内容第六批做
+}
+
+message UsageScope {
+  bool all = 1; // 全企业
+  repeated string userIDs = 2;
+  repeated string departmentIDs = 3;
+}
+
+// 使用与管理，这批只存进草稿
+message UsageSetting {
+  UsageTarget target = 1;
+  UsageScope directScope = 2;  // 直接雇佣范围
+  UsageScope applyScope = 3;   // 允许申请范围
+  string handlerUserID = 4;    // 申请处理人
+  string maintainerUserID = 5; // 维护负责人
+  bool groupUse = 6;           // 允许在群里用
+}
+
+// 导入记录：由导入接口写，存草稿时忽略客户端传的
+message RoleImport {
+  string importID = 1;
+  string objectID = 2;
+  string version = 3;
+  ImportZone zone = 4;
+  ImportMode mode = 5;
+  KnowledgeShare share = 6; // 来源的传播范围
+  int64 at = 7;
+}
+
+// 员工配置：草稿、快照共用。头像不在这里
+message AgentConfig {
+  string name = 1;
+  string intro = 2;
+  repeated string tagIDs = 3;
+  RoleSetting role = 4;
+  string opening = 5;
+  repeated string suggestedQuestions = 6;
+  string modelID = 7;                       // 内置执行用；连接服务的员工为空
+  ServiceBinding service = 8;               // 连接服务的员工才有
+  repeated CapabilityRef capabilities = 9;
+  repeated KnowledgeRef knowledge = 10;
+  MemorySetting memory = 11;
+  UsageSetting usage = 12;
+  repeated RoleImport imports = 13;
+  repeated ImportZone hiddenZones = 14; // 这几个区有当前查看人看不了的导入资料，正文已隐藏。存草稿时原样带回，这几个区保留库里的原文，除非 overwriteZones 里有
+}
+
+// ==================== 员工 ====================
+
+message AgentInfo {
+  string agentID = 1;
+  string companyID = 2;
+  AgentKind kind = 3;
+  AgentExecutor executor = 4;
+  AgentOrigin origin = 5;
+  string templateID = 6;
+  string serviceID = 7;
+  string name = 8;    // 跟草稿走
+  string intro = 9;   // 跟草稿走
+  string avatar = 10;
+  AgentStatus status = 11;
+  string imUserID = 12; // 第五批建
+  string createdBy = 13;
+  int64 createTime = 14;
+  int64 updateTime = 15;
+  int64 deleteTime = 16;
+  int64 purgeTime = 17; // 删除后到这个时间彻底清理
+}
+
+// 当前用户能做什么
+message AgentPermissions {
+  bool view = 1;    // 看配置、测试记录、快照、状态与版本、授权列表
+  bool edit = 2;    // 存草稿、换头像、导入、确认知识、从快照恢复
+  bool test = 3;    // 测试、标符合／不符合；发布前检查有 test 或 submit 就能做
+  bool selfUse = 4; // 自己使用、本人这层的停用恢复
+  bool remove = 5;  // 删除
+  bool restore = 6; // 恢复删除
+  bool submit = 7;  // 发布前检查、提交审核、重试生效
+  bool grant = 8;   // 加减编辑者
+  bool restrict = 9;        // 企业版立即收紧、换处理人：该范围的维护负责人
+  bool companyDisable = 10; // 企业版停用恢复（第 1 层）：该范围的维护负责人
+}
+
+message AgentDraft {
+  AgentConfig config = 1;
+  int64 revision = 2; // 保存时作为 baseRevision 传回
+  string savedBy = 3;
+  int64 savedAt = 4;
+  RestoredFrom restoredFrom = 5; // 从哪个快照恢复的，下次生成快照时带进快照
+}
+
+message CapabilityStatus {
+  CapabilityType type = 1;
+  string catalogID = 2;
+  string name = 3; // 找不到时为空
+  CapabilityState state = 4;
+  string reason = 5;
+}
+
+// 核心是否可用：内置执行看模型，连接服务看服务
+message CoreStatus {
+  bool ready = 1;
+  string reason = 2;
+}
+
+message KnowledgeMeta {
+  string objectID = 1;
+  string scope = 2;
+  bool available = 3;     // 不可用时只有对象 ID
+  string kind = 4;        // 云文档、智能表格、多维表格等
+  string title = 5;
+  string version = 6;
+  KnowledgeShare share = 7;
+}
+
+message DisableMark {
+  DisableLayer layer = 1;
+  string by = 2;
+  string reason = 3;
+  int64 at = 4;
+}
+
+// 某个范围当前生效的快照
+message ReleaseInfo {
+  ReleaseScope scope = 1;
+  string ownerID = 2; // 本人是用户 ID，企业是企业 ID，平台为空
+  string snapshotID = 3;
+  int64 sourceRevision = 4;
+  int64 effectiveAt = 5;
+  string effectiveBy = 6;
+  bool disabled = 7; // 有任何一层停着
+  repeated DisableMark disables = 8;
+  int64 updateTime = 9;
+  repeated UsageLimit limits = 10; // 立即收紧追加的限制，实际在用的配置是快照减去这些
+  string handlerUserID = 11;       // 当前处理人，立即收紧时可以先换
+  string reviewID = 12;            // 当前快照对应的审核单；本人版为空
+}
+
+message ReleaseLog {
+  ReleaseScope scope = 1;
+  string ownerID = 2;
+  string snapshotID = 3;
+  int64 sourceRevision = 4;
+  int64 effectiveAt = 5;
+  string effectiveBy = 6;
+}
+
+message AgentSnapshot {
+  string snapshotID = 1;
+  string agentID = 2;
+  int64 sourceRevision = 3;
+  AgentConfig config = 4;
+  string createdBy = 5;
+  int64 createTime = 6;
+  RestoredFrom restoredFrom = 7;
+}
+
+// 列表项：我建的、授权给我的、后台全部员工
+message AgentListItem {
+  AgentInfo agent = 1;
+  repeated ReleaseInfo releases = 2;
+  bool selfUseCurrent = 3; // 本人生效版就是当前草稿
+  repeated AgentGrant myGrants = 4; // 只有授权给我的列表带：我在这个员工上的授权
+}
+
+// 一条授权：维护负责人或编辑者
+message AgentGrant {
+  string userID = 1;
+  GrantType type = 2;
+  repeated GrantAction actions = 3;
+  GrantSource source = 4;
+  string grantedBy = 5; // 最后一次授予或改动的人
+  int64 createTime = 6;
+  int64 updateTime = 7;
+  bool valid = 8; // 被授权人现在是员工所在企业的在职成员
+}
+
+message CheckIssue {
+  CheckItem item = 1;
+  IssueLevel level = 2;
+  string field = 3; // 对应的字段，前端「去处理」用
+  string code = 4;
+  string message = 5;
+}
+
+message CheckResult {
+  CheckItem item = 1;
+  CheckState state = 2;
+  repeated CheckIssue issues = 3;
+  string note = 4; // 固定说明，比如敏感内容只做了常见格式检查
+}
+
+// ==================== 版本、审核、资格 ====================
+
+message RemovedTool {
+  string catalogID = 1;
+  string tool = 2;
+}
+
+// 立即收紧追加的一条限制。没缩小的那项为空，表示不限
+message UsageLimit {
+  int64 atRevision = 1; // 收紧时草稿的修订号
+  UsageScope direct = 2;
+  UsageScope apply = 3;
+  repeated string removedCapabilities = 4; // 去掉的能力
+  repeated RemovedTool removedTools = 5;   // 去掉的工具
+  bool groupUseOff = 6;                    // 关掉了群使用
+  string by = 7;
+  int64 at = 8;
+}
+
+// 恢复自哪个快照
+message RestoredFrom {
+  string snapshotID = 1;
+  int64 revision = 2;   // 被恢复的快照的修订号
+  int64 atRevision = 3; // 恢复生成的修订号
+  bool modified = 4;    // 恢复后又改过：显示「恢复自修订 X 后修改」
+}
+
+// 某一块改了哪些项目，不带正文
+message ChangeBlock {
+  ChangeGroup group = 1;
+  repeated string fields = 2; // 字段名，如 name、role.goal、usage.directScope
+  int32 knowledgeAdded = 3;
+  int32 knowledgeRemoved = 4;
+  int32 knowledgeChanged = 5; // 同一对象改了范围
+}
+
+// 对比里的一项
+message DiffItem {
+  ChangeGroup group = 1;
+  string field = 2;
+  string label = 3;
+  ChangeHandling handling = 4;
+  string before = 5; // 文本字段给前后全文
+  string after = 6;
+  repeated string added = 7;   // 名单、能力、工具等：加了的
+  repeated string removed = 8; // 减了的
+  bool applied = 9;  // 已经立即生效的收紧
+  bool hidden = 10;  // 查看人看不了来源的导入区：前后值不给，只显示「含无权查看来源的内容」
+  repeated KnowledgeMeta knowledgeAdded = 11;   // 知识按查看人查，看不了的只有对象 ID
+  repeated KnowledgeMeta knowledgeRemoved = 12;
+}
+
+// 快照在某个范围的生效情况
+message VersionEffect {
+  ReleaseScope scope = 1;
+  string ownerID = 2;
+  int64 effectiveAt = 3;
+  string effectiveBy = 4;
+  bool current = 5; // 这个范围现在用的就是它
+}
+
+message ReviewBrief {
+  string reviewID = 1;
+  ReleaseScope targetScope = 2;
+  ReviewStatus status = 3;
+  bool exempt = 4;
+  EffectState effect = 5;
+  int64 createTime = 6;
+}
+
+// 版本列表的一项。版本标识是修订号 + 生成时间
+message VersionItem {
+  string snapshotID = 1;
+  int64 revision = 2;
+  int64 createTime = 3;
+  string createdBy = 4;
+  repeated VersionEffect effects = 5;
+  repeated ReviewBrief reviews = 6; // 对应的审核单，含免审
+  RestoredFrom restoredFrom = 7;
+  repeated ChangeBlock changes = 8; // 和上一个快照比
+  bool first = 9;                   // 首个版本
+}
+
+// 头像更新记录：不需审核，所有版本直接显示新头像
+message AvatarChange {
+  string by = 1;
+  int64 at = 2;
+}
+
+message EffectInfo {
+  EffectState state = 1;
+  string reason = 2;
+  int64 at = 3; // 最近一次开始或结束生效的时间
+}
+
+message ReviewInfo {
+  string reviewID = 1;
+  string agentID = 2;
+  ReleaseScope targetScope = 3; // 企业或平台
+  string targetOwner = 4;       // 企业 ID；平台为空
+  string snapshotID = 5;
+  int64 revision = 6;
+  string submitterID = 7;
+  string note = 8;
+  ReviewStatus status = 9;
+  bool exempt = 10; // 免审通过
+  string decidedBy = 11;
+  int64 decidedAt = 12;
+  string reason = 13; // 退回、撤回的原因
+  EffectInfo effect = 14;
+  bool reviewerMissing = 15; // 待审核，但名单里没有一个现在有效的审核人
+  repeated ChangeBlock summary = 16; // 变更摘要
+  repeated CheckResult checks = 17;  // 提交时的七项检查，列表里不带
+  string previousReviewID = 18;
+  string previousReturnReason = 19; // 上一张单的退回原因
+  int64 createTime = 20;
+  int64 updateTime = 21;
+  bool withdrawable = 22; // 当前用户能撤回
+  bool retryable = 23;    // 当前用户能重试生效
+}
+
+// 审核详情里的有效测试：只给结果和覆盖的职责，不给问答
+message ReviewTest {
+  string runID = 1;
+  TestResult result = 2;
+  TestVerdict verdict = 3;
+  TestMode mode = 4;
+  repeated string dutyIDs = 5;
+  string testerID = 6;
+  int64 startTime = 7;
+}
+
+// 使用资格
+message Eligibility {
+  bool usable = 1;
+  ReleaseScope scope = 2; // 适用的版本
+  string snapshotID = 3;
+  int64 revision = 4;
+  string code = 5; // ok、not_effective、disabled、not_in_scope、need_apply、company_disabled、platform_not_enabled、deleted
+  string message = 6;
+  DisableLayer disabledLayer = 7; // 停用时只说是哪一层，不给原因
+}
+
+// 使用者看到的档案，按适用的版本
+message AgentProfile {
+  string agentID = 1;
+  string name = 2;
+  string intro = 3;
+  string opening = 4;
+  repeated string suggestedQuestions = 5;
+  string avatar = 6;
+}
+
+// 答复参考的资料，按这次实际读到的给
+message ChatSource {
+  int32 index = 1; // 提示词里的编号 [n]
+  string objectID = 2;
+  string title = 3;
+}
+
+message Refusal {
+  RefusalKind kind = 1;
+  string code = 2;
+  string text = 3;
+}
+
+// 提交时收紧先生效的结果
+message NarrowingResult {
+  bool applied = 1;
+  string message = 2;
+}
+
+// ==================== 能力目录 ====================
+
+message CapabilityTool {
+  string name = 1;
+  string description = 2;
+  bool write = 3; // 会写入
+}
+
+message CapabilityField {
+  string key = 1;
+  string label = 2;
+  bool required = 3;
+  string description = 4;
+}
+
+message CapabilityItem {
+  string catalogID = 1;
+  CapabilityType type = 2;
+  string name = 3;
+  string provider = 4;
+  string version = 5;           // 当前版本
+  repeated string versions = 6; // 能选的版本
+  CapabilityLocation location = 7;
+  string description = 8;
+  repeated string dependencies = 9;
+  bool verified = 10;
+  bool perUserAuth = 11; // 要每个使用者各自授权
+  bool writes = 12;      // 会写入
+  repeated CapabilityTool tools = 13;
+  repeated CapabilityField fields = 14;
+  bool companyPrivate = 15; // 本企业私有
+  repeated string duties = 16; // 类型是服务时，服务给的职责
+}
+
+// ==================== 测试 ====================
+
+message ChatMessage {
+  ChatRole role = 1;
+  string content = 2;
+}
+
+// 测试时显示的执行事件，不带资料标题和正文
+message TestEvent {
+  string type = 1; // knowledge / capability / model / guard
+  string text = 2;
+}
+
+message TestRun {
+  string runID = 1;
+  string agentID = 2;
+  string testerID = 3;
+  string requestID = 4;
+  int64 revision = 5;
+  bool stale = 6; // 行为指纹和当前草稿不一样，已过期
+  TestMode mode = 7;
+  string question = 8;
+  int32 historyCount = 9;
+  repeated string dutyIDs = 10;
+  repeated TestEvent events = 11;
+  repeated string sources = 12; // 读到的知识对象 ID
+  string output = 13;
+  string error = 14;
+  TestResult result = 15;
+  TestVerdict verdict = 16;
+  string verdictNote = 17;
+  string markedBy = 18;
+  int64 markedAt = 19;
+  string modelID = 20;
+  int64 latencyMS = 21;
+  int64 startTime = 22;
+  int64 endTime = 23;
+  bool hidden = 24; // 含无权查看的资料：回复和来源都不给
+}
+
+message DutyCoverageInfo {
+  string dutyID = 1;
+  string text = 2;
+  bool main = 3;
+  DutyCoverage coverage = 4;
+}
+
+// ==================== 模型、模板、标签、企业设置 ====================
+
+message ModelOption {
+  string modelID = 1;
+  string name = 2;
+  bool isDefault = 3;
+}
+
+message ModelConfig {
+  string modelID = 1;
+  string name = 2;
+  ModelProvider provider = 3;
+  string baseURL = 4;
+  bool apiKeySet = 5;   // 只返回是否已设置，不返回密钥
+  string modelName = 6; // 调 /chat/completions 时用的模型名
+  bool enabled = 7;
+  bool isDefault = 8;
+  int64 createTime = 9;
+  int64 updateTime = 10;
+}
+
+message AgentTemplate {
+  string templateID = 1;
+  string name = 2;
+  TemplateCategory category = 3;
+  string avatar = 4;
+  string intro = 5;
+  RoleSetting role = 6;
+  string opening = 7;
+  repeated string suggestedQuestions = 8;
+  repeated string tagIDs = 9;
+  repeated CapabilityRef capabilities = 10; // 只能是平台公共的；不带知识引用
+  int32 sort = 11;
+  bool enabled = 12; // 上架
+  int64 createTime = 13;
+  int64 updateTime = 14;
+}
+
+message AgentTag {
+  string tagID = 1;
+  string name = 2;
+  int32 sort = 3;
+  int64 createTime = 4;
+}
+
+message AgentLimits {
+  int32 personalPerUser = 1;   // 每人建的员工数，0 表示不限
+  int32 totalPerCompany = 2;   // 每企业员工数，0 表示不限
+  int32 concurrentPerUser = 3; // 同一人对同一员工的并发测试数，0 表示用默认值
+  int32 repliesPerMinute = 4;  // 同一人对同一员工每分钟测试数，0 表示用默认值
+}
+
+// 谁能建员工
+message CreatorScope {
+  bool all = 1; // 全员
+  repeated string userIDs = 2;
+  repeated string departmentIDs = 3;
+}
+
+message CompanySettingInfo {
+  string companyID = 1;
+  bool enabled = 2;
+  CreatorScope creatorScope = 3;
+  AgentLimits limits = 4;          // 后台填的
+  AgentLimits effectiveLimits = 5; // 实际生效的
+  repeated string modelIDs = 6;    // 允许的模型，空表示所有启用的
+  string updatedBy = 7;
+  int64 updateTime = 8;
+}
+
+message AuditLog {
+  string logID = 1;
+  string companyID = 2;
+  string agentID = 3;
+  string agentName = 4;
+  AuditCategory category = 5;
+  string action = 6;
+  ReleaseScope scope = 7;
+  string snapshotID = 8;
+  int64 revision = 9;
+  string requestID = 10;
+  string operatorID = 11;
+  OperatorRole operatorRole = 12;
+  AuditResult result = 13;
+  string reason = 14; // 原因类别
+  string detail = 15;
+  int64 createTime = 16;
+  int64 updateTime = 17;
+}
+
+// ==================== 用户端 ====================
+
+message GetContextReq {}
+message GetContextResp {
+  string companyID = 1;
+  bool companyEnabled = 2;
+  bool canCreate = 3;
+  int32 createdCount = 4; // 我建的，不含已删除
+  int32 personalLimit = 5; // 0 表示不限
+  int32 companyCount = 6;
+  int32 companyLimit = 7;  // 0 表示不限
+}
+
+message CreateAgentReq {
+  string requestID = 1; // 必填，≤64 字；重复请求拿到的是同一个员工
+  AgentOrigin origin = 2;
+  string templateID = 3;     // 起点是模板时必填
+  string serviceID = 4;      // 起点是服务时必填
+  string serviceVersion = 5; // 空表示当前版本
+}
+message CreateAgentResp {
+  AgentInfo agent = 1;
+  AgentDraft draft = 2;
+}
+
+message GetAgentReq {
+  string agentID = 1;
+}
+message GetAgentResp {
+  AgentInfo agent = 1;
+  AgentPermissions permissions = 2;
+  AgentDraft draft = 3; // 有编辑、测试、提交任一项才给
+  repeated CapabilityStatus capabilities = 4;
+  repeated KnowledgeMeta knowledge = 5; // 按查看人裁剪
+  CoreStatus core = 6;
+  repeated ReleaseInfo releases = 7;
+  bool selfUseCurrent = 8; // 本人生效版就是当前草稿（比配置指纹）
+}
+
+// 我建的
+message ListMyAgentsReq {
+  bool deleted = 1; // true 只列保留期内删掉的
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message ListMyAgentsResp {
+  int64 total = 1;
+  repeated AgentListItem agents = 2;
+}
+
+message SaveDraftReq {
+  string agentID = 1;
+  int64 baseRevision = 2;
+  AgentConfig config = 3;
+  string requestID = 4;                // 可不带；同一请求 ID 重试返回原来的修订号
+  repeated string removeImportIDs = 5; // 导入的内容已经删掉了
+  repeated ImportZone overwriteZones = 6; // 隐藏的区要整区改写时带上，这几个区按传来的存，原有导入记录去掉；不带就保留库里的原文
+}
+message SaveDraftResp {
+  int64 revision = 1;
+  AgentConfig config = 2; // 整理后的配置，含服务端分配的职责 ID
+}
+
+// 从某个快照生成新修订
+message RestoreDraftReq {
+  string agentID = 1;
+  int64 baseRevision = 2;
+  string snapshotID = 3;
+  string requestID = 4;
+}
+message RestoreDraftResp {
+  AgentDraft draft = 1;
+  int32 droppedKnowledge = 2; // 当前人不可用而去掉的知识引用数
+}
+
+message UpdateAvatarReq {
+  string agentID = 1;
+  string avatar = 2;
+}
+message UpdateAvatarResp {}
+
+message DeleteAgentReq {
+  string agentID = 1;
+}
+message DeleteAgentResp {
+  int64 purgeTime = 1;
+}
+
+message RestoreAgentReq {
+  string agentID = 1;
+}
+message RestoreAgentResp {
+  AgentInfo agent = 1;
+  repeated CheckIssue issues = 2; // 本人这层门槛没过，已加停用
+}
+
+message ListCapabilitiesReq {
+  CapabilityType type = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message ListCapabilitiesResp {
+  int64 total = 1;
+  repeated CapabilityItem items = 2;
+}
+
+message KnowledgeQuery {
+  string objectID = 1;
+  string scope = 2;
+}
+message ConfirmKnowledgeReq {
+  string agentID = 1;
+  repeated KnowledgeQuery items = 2;
+}
+message ConfirmKnowledgeResp {
+  repeated KnowledgeMeta items = 1;
+}
+
+message PreviewRoleImportReq {
+  string agentID = 1;
+  string objectID = 2;
+}
+message PreviewRoleImportResp {
+  string objectID = 1;
+  string title = 2;
+  string version = 3;
+  KnowledgeShare share = 4;
+  string text = 5;      // ≤20000 字
+  bool truncated = 6;
+}
+
+message ApplyRoleImportReq {
+  string agentID = 1;
+  int64 baseRevision = 2;
+  string objectID = 3;
+  string version = 4; // 预览时的版本
+  string text = 5;    // 用户改过的正文
+  ImportMode mode = 6;
+  ImportZone zone = 7;
+  string requestID = 8;
+}
+message ApplyRoleImportResp {
+  AgentDraft draft = 1;
+}
+
+message TestAgentReq {
+  string agentID = 1;
+  int64 revision = 2;  // 必须是当前草稿的修订号
+  string requestID = 3; // 必填；断开后用同一个再调，取回原来那条
+  string question = 4;
+  repeated ChatMessage history = 5; // 最近几轮
+  repeated string dutyIDs = 6;      // 这次测哪几条职责，可以不选
+}
+message TestAgentResp {
+  TestRun run = 1;
+}
+
+message ListTestRunsReq {
+  string agentID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message ListTestRunsResp {
+  int64 total = 1;
+  repeated TestRun runs = 2;
+  repeated DutyCoverageInfo duties = 3; // 当前草稿每条职责的覆盖情况
+}
+
+message MarkTestRunReq {
+  string agentID = 1;
+  string runID = 2;
+  TestVerdict verdict = 3;
+  string note = 4;
+}
+message MarkTestRunResp {
+  TestRun run = 1;
+}
+
+message SelfUseReq {
+  string agentID = 1;
+  int64 revision = 2; // 必须是当前草稿的修订号
+}
+message SelfUseResp {
+  bool ok = 1; // 门槛没过时为 false，不生成快照
+  repeated CheckIssue issues = 2;
+  ReleaseInfo release = 3;
+  bool stillDisabled = 4; // 本人这层自己停着：已换快照，仍保持停用
+}
+
+message ListReleasesReq {
+  string agentID = 1;
+  sdkws.RequestPagination pagination = 2; // 生效日志的分页
+}
+message ListReleasesResp {
+  repeated ReleaseInfo releases = 1;
+  int64 logTotal = 2;
+  repeated ReleaseLog logs = 3; // 新的在前
+  bool selfUseCurrent = 4;
+}
+
+message GetSnapshotReq {
+  string agentID = 1;
+  string snapshotID = 2;
+}
+message GetSnapshotResp {
+  AgentSnapshot snapshot = 1;
+}
+
+// 记在第 1 层：本人版由创建者、企业版由维护负责人操作
+message DisableReleaseReq {
+  string agentID = 1;
+  ReleaseScope scope = 2; // 本人或企业
+  string reason = 3; // 必填，≤200 字
+}
+message DisableReleaseResp {
+  string note = 1; // 停的是新的调用，正在进行的答复会跑完
+}
+
+message EnableReleaseReq {
+  string agentID = 1;
+  ReleaseScope scope = 2;
+}
+message EnableReleaseResp {
+  bool cleared = 1;       // 本层的停用已清掉；门槛没过时为 false
+  bool stillDisabled = 2; // 别的层还停着
+  repeated CheckIssue issues = 3;
+}
+
+message SubmitCheckReq {
+  string agentID = 1;
+  int64 revision = 2; // 必须是当前草稿的修订号
+}
+message SubmitCheckResp {
+  bool passed = 1; // 有阻断时为 false
+  repeated CheckResult checks = 2;
+  int64 revision = 3;
+}
+
+// 授权列表：创建者、维护负责人、编辑者
+message ListGrantsReq {
+  string agentID = 1;
+}
+message ListGrantsResp {
+  string creatorID = 1;
+  bool creatorValid = 2;          // 创建者是员工所在企业的在职成员
+  repeated AgentGrant grants = 3; // 维护负责人在前，再按授予时间
+}
+
+// 设编辑者：没有就加，有就覆盖动作
+message SetEditorReq {
+  string agentID = 1;
+  string userID = 2;
+  repeated GrantAction actions = 3; // 编辑、测试、提交，至少一项
+  string reason = 4;                // 必填，≤200 字
+}
+message SetEditorResp {
+  AgentGrant grant = 1;
+  bool changed = 2; // false 表示动作和原来一样，没有改
+}
+
+message RemoveEditorReq {
+  string agentID = 1;
+  string userID = 2;
+  string reason = 3; // 必填，≤200 字
+}
+message RemoveEditorResp {
+  bool removed = 1; // false 表示本来就不是编辑者
+}
+
+// 授权给我的：我在当前企业有授权、状态正常的员工
+message ListGrantedAgentsReq {
+  string keyword = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message ListGrantedAgentsResp {
+  int64 total = 1;
+  repeated AgentListItem agents = 2;
+}
+
+message ListTemplatesReq {
+  TemplateCategory category = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message ListTemplatesResp {
+  int64 total = 1;
+  repeated AgentTemplate templates = 2;
+}
+
+message GetTemplateReq {
+  string templateID = 1;
+}
+message GetTemplateResp {
+  AgentTemplate template = 1;
+}
+
+message ListTagsReq {}
+message ListTagsResp {
+  repeated AgentTag tags = 1;
+}
+
+message ListModelOptionsReq {}
+message ListModelOptionsResp {
+  repeated ModelOption models = 1;
+}
+
+// 当前用户能不能用这个员工、用哪个版本
+message GetEligibilityReq {
+  string agentID = 1;
+}
+message GetEligibilityResp {
+  Eligibility eligibility = 1;
+  AgentProfile profile = 2; // 能用或需要申请时才有
+}
+
+message ListVersionsReq {
+  string agentID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message ListVersionsResp {
+  int64 total = 1;
+  repeated VersionItem versions = 2;       // 新的在前
+  repeated AvatarChange avatarChanges = 3; // 最近 50 次，新的在前
+}
+
+// 草稿或某个快照，和某个范围当前实际在用的配置（生效快照减去当前限制）比
+message DiffVersionReq {
+  string agentID = 1;
+  string snapshotID = 2;  // 空表示比草稿
+  int64 revision = 3;     // 比草稿时必须是当前草稿的修订号
+  ReleaseScope scope = 4; // 企业或平台；不传按配置里的发布目标
+}
+message DiffVersionResp {
+  bool empty = 1; // 这个范围还没有生效版本，不比
+  string message = 2;
+  ReleaseScope scope = 3;
+  string baseSnapshotID = 4;
+  int64 baseRevision = 5;
+  repeated DiffItem items = 6; // 已生效的收紧在前
+  bool needRetest = 7;
+  bool needReview = 8;
+  bool narrowOnly = 9; // 只有收紧和换处理人，可以立即生效
+}
+
+message SubmitReviewReq {
+  string agentID = 1;
+  int64 revision = 2;   // 必须是当前草稿的修订号
+  string requestID = 3; // 必填，≤64 字；重复请求拿到同一张单
+  string note = 4;      // ≤500 字
+}
+message SubmitReviewResp {
+  bool passed = 1; // 检查有阻断时为 false，不建单
+  repeated CheckResult checks = 2;
+  ReviewInfo review = 3;
+  NarrowingResult narrowing = 4; // 收紧先生效的结果；没有收紧时为空
+}
+
+// 只有提交人能撤，单子要还是待审核
+message WithdrawReviewReq {
+  string agentID = 1;
+  string reviewID = 2;
+  string reason = 3; // 可不填，≤200 字
+}
+message WithdrawReviewResp {
+  ReviewInfo review = 1;
+}
+
+message ListReviewsReq {
+  string agentID = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message ListReviewsResp {
+  int64 total = 1;
+  repeated ReviewInfo reviews = 2; // 新的在前
+}
+
+message GetReviewReq {
+  string agentID = 1;
+  string reviewID = 2;
+}
+message GetReviewResp {
+  ReviewInfo review = 1;
+  UsageSetting usage = 2; // 快照里的范围、群使用、维护负责人、处理人
+  repeated CapabilityRef capabilities = 3;
+  ServiceBinding service = 4;
+  string modelID = 5;
+  repeated KnowledgeMeta knowledge = 6; // 按查看人裁剪
+  repeated ReviewTest tests = 7;        // 有效测试：行为指纹和快照一样的
+}
+
+// 重试生效失败、或换上以后没写完的单；不重审
+message RetryReviewReq {
+  string agentID = 1;
+  string reviewID = 2;
+}
+message RetryReviewResp {
+  ReviewInfo review = 1;
+}
+
+// 把草稿里相对实际在用配置的收紧和换处理人立即生效
+message RestrictReleaseReq {
+  string agentID = 1;
+  ReleaseScope scope = 2; // 这批只能是企业
+  int64 revision = 3;     // 必须是当前草稿的修订号
+  string requestID = 4;   // 必填，≤64 字
+}
+message RestrictReleaseResp {
+  bool applied = 1;            // false：没有需要立即生效的收紧
+  repeated DiffItem items = 2; // 这次立即生效的项
+  ReleaseInfo release = 3;
+  string message = 4;
+}
+
+// ==================== 内部（IM 调） ====================
+
+// 私聊答复：调用方要是 IM 管理员，必须带敏感标记
+message ChatReq {
+  string agentID = 1;
+  string userID = 2;         // 提问人，IM 从会话里取
+  string conversationID = 3;
+  string requestID = 4;      // 必填，≤64 字；同一请求重试拿到原来那条
+  string question = 5;       // ≤2000 字
+  bool skipContext = 6;      // 这次不参考前文
+}
+message ChatResp {
+  ChatStatus status = 1;
+  string reply = 2;
+  repeated ChatSource sources = 3;
+  ReleaseScope scope = 4; // 用的版本
+  string snapshotID = 5;
+  int64 revision = 6;
+  int32 unreadable = 7; // 读不到的资料数
+  string notice = 8;
+  TestMode mode = 9;    // 真实或模拟
+  Refusal refusal = 10; // 拒绝时才有
+}
+
+// ==================== 平台（IM 管理员） ====================
+
+message AdminGetCompanySettingReq {
+  string companyID = 1;
+}
+message AdminGetCompanySettingResp {
+  CompanySettingInfo setting = 1;
+}
+
+message AdminSetCompanySettingReq {
+  string companyID = 1;
+  openim.protobuf.BoolValue enabled = 2;
+  CreatorScope creatorScope = 3; // 为空时不改
+  AgentLimits limits = 4;        // 为空时不改
+  repeated string modelIDs = 5;  // 整体替换；不传 modelIDsSet 时不改
+  bool modelIDsSet = 6;
+}
+message AdminSetCompanySettingResp {}
+
+message AdminListCompanySettingsReq {
+  sdkws.RequestPagination pagination = 1;
+}
+message AdminListCompanySettingsResp {
+  int64 total = 1;
+  repeated CompanySettingInfo settings = 2;
+}
+
+message AdminListModelsReq {}
+message AdminListModelsResp {
+  repeated ModelConfig models = 1;
+}
+
+// modelID 为空是新增；apiKey 为空表示不改，clearApiKey 清空
+message AdminSaveModelReq {
+  ModelConfig model = 1;
+  string apiKey = 2;
+  bool clearApiKey = 3;
+}
+message AdminSaveModelResp {
+  string modelID = 1;
+}
+
+message AdminDeleteModelReq {
+  string modelID = 1;
+}
+message AdminDeleteModelResp {}
+
+// 只测对话
+message AdminTestModelReq {
+  string modelID = 1;
+}
+message AdminTestModelResp {
+  bool ok = 1;
+  int64 latencyMS = 2;
+  string error = 3;
+}
+
+// 平台公共的能力，给模板选
+message AdminListCapabilitiesReq {
+  CapabilityType type = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message AdminListCapabilitiesResp {
+  int64 total = 1;
+  repeated CapabilityItem items = 2;
+}
+
+message AdminListTemplatesReq {
+  TemplateCategory category = 1;
+  string keyword = 2;
+  sdkws.RequestPagination pagination = 3;
+}
+message AdminListTemplatesResp {
+  int64 total = 1;
+  repeated AgentTemplate templates = 2;
+}
+
+message AdminSaveTemplateReq {
+  AgentTemplate template = 1;
+}
+message AdminSaveTemplateResp {
+  string templateID = 1;
+}
+
+message AdminDeleteTemplateReq {
+  string templateID = 1;
+}
+message AdminDeleteTemplateResp {}
+
+message AdminListTagsReq {}
+message AdminListTagsResp {
+  repeated AgentTag tags = 1;
+}
+
+message AdminSaveTagReq {
+  AgentTag tag = 1;
+}
+message AdminSaveTagResp {
+  string tagID = 1;
+}
+
+message AdminDeleteTagReq {
+  string tagID = 1;
+}
+message AdminDeleteTagResp {}
+
+message AdminListAgentsReq {
+  string companyID = 1;
+  AgentStatus status = 2;
+  string createdBy = 3;
+  string keyword = 4;
+  sdkws.RequestPagination pagination = 5;
+}
+message AdminListAgentsResp {
+  int64 total = 1;
+  repeated AgentListItem agents = 2;
+}
+
+// 停用记在平台这一层。ownerID 为空时：本人取创建者，企业取员工所属企业
+message AdminDisableAgentReq {
+  string agentID = 1;
+  ReleaseScope scope = 2;
+  string ownerID = 3;
+  string reason = 4; // 必填，≤200 字
+}
+message AdminDisableAgentResp {
+  string note = 1; // 停的是新的调用，正在进行的答复会跑完
+}
+
+message AdminEnableAgentReq {
+  string agentID = 1;
+  ReleaseScope scope = 2;
+  string ownerID = 3;
+}
+message AdminEnableAgentResp {
+  bool cleared = 1;
+  bool stillDisabled = 2;
+  repeated CheckIssue issues = 3;
+}
+
+// 范围管理者那层（第 2 层）。operatorUserID 要是员工所在企业在职的范围管理者；
+// 待确认 1 定了以后换成后台的真实操作人
+message AdminScopeDisableAgentReq {
+  string agentID = 1;
+  ReleaseScope scope = 2; // 这批只能是企业
+  string operatorUserID = 3;
+  string reason = 4; // 必填，≤200 字
+}
+message AdminScopeDisableAgentResp {
+  string note = 1;
+}
+
+message AdminScopeEnableAgentReq {
+  string agentID = 1;
+  ReleaseScope scope = 2;
+  string operatorUserID = 3;
+}
+message AdminScopeEnableAgentResp {
+  bool cleared = 1;
+  bool stillDisabled = 2;
+  repeated CheckIssue issues = 3;
+}
+
+message AdminRestoreAgentReq {
+  string agentID = 1;
+}
+message AdminRestoreAgentResp {
+  AgentInfo agent = 1;
+  repeated CheckIssue issues = 2;
+}
+
+message AuditFilter {
+  string companyID = 1;
+  string agentID = 2;
+  AuditCategory category = 3;
+  string action = 4;
+  AuditResult result = 5;
+  string operatorID = 6;
+  int64 startTime = 7; // 毫秒，含
+  int64 endTime = 8;   // 毫秒，不含
+}
+
+message AdminListAuditsReq {
+  AuditFilter filter = 1;
+  sdkws.RequestPagination pagination = 2;
+}
+message AdminListAuditsResp {
+  int64 total = 1;
+  repeated AuditLog logs = 2;
+}
+
+// 最多 1 万条，表格由前端生成
+message AdminExportAuditsReq {
+  AuditFilter filter = 1;
+}
+message AdminExportAuditsResp {
+  repeated AuditLog logs = 1;
+  bool truncated = 2;
+}
+
+service Agent {
+  // 用户端
+  rpc getContext(GetContextReq) returns (GetContextResp);
+  rpc createAgent(CreateAgentReq) returns (CreateAgentResp);
+  rpc getAgent(GetAgentReq) returns (GetAgentResp);
+  rpc listMyAgents(ListMyAgentsReq) returns (ListMyAgentsResp);
+  rpc saveDraft(SaveDraftReq) returns (SaveDraftResp);
+  rpc restoreDraft(RestoreDraftReq) returns (RestoreDraftResp);
+  rpc updateAvatar(UpdateAvatarReq) returns (UpdateAvatarResp);
+  rpc deleteAgent(DeleteAgentReq) returns (DeleteAgentResp);
+  rpc restoreAgent(RestoreAgentReq) returns (RestoreAgentResp);
+  rpc listCapabilities(ListCapabilitiesReq) returns (ListCapabilitiesResp);
+  rpc confirmKnowledge(ConfirmKnowledgeReq) returns (ConfirmKnowledgeResp);
+  rpc previewRoleImport(PreviewRoleImportReq) returns (PreviewRoleImportResp);
+  rpc applyRoleImport(ApplyRoleImportReq) returns (ApplyRoleImportResp);
+  rpc testAgent(TestAgentReq) returns (TestAgentResp);
+  rpc listTestRuns(ListTestRunsReq) returns (ListTestRunsResp);
+  rpc markTestRun(MarkTestRunReq) returns (MarkTestRunResp);
+  rpc selfUse(SelfUseReq) returns (SelfUseResp);
+  rpc listReleases(ListReleasesReq) returns (ListReleasesResp);
+  rpc getSnapshot(GetSnapshotReq) returns (GetSnapshotResp);
+  rpc disableRelease(DisableReleaseReq) returns (DisableReleaseResp);
+  rpc enableRelease(EnableReleaseReq) returns (EnableReleaseResp);
+  rpc submitCheck(SubmitCheckReq) returns (SubmitCheckResp);
+  rpc listGrants(ListGrantsReq) returns (ListGrantsResp);
+  rpc setEditor(SetEditorReq) returns (SetEditorResp);
+  rpc removeEditor(RemoveEditorReq) returns (RemoveEditorResp);
+  rpc listGrantedAgents(ListGrantedAgentsReq) returns (ListGrantedAgentsResp);
+  rpc listTemplates(ListTemplatesReq) returns (ListTemplatesResp);
+  rpc getTemplate(GetTemplateReq) returns (GetTemplateResp);
+  rpc listTags(ListTagsReq) returns (ListTagsResp);
+  rpc listModelOptions(ListModelOptionsReq) returns (ListModelOptionsResp);
+  rpc getEligibility(GetEligibilityReq) returns (GetEligibilityResp);
+  rpc listVersions(ListVersionsReq) returns (ListVersionsResp);
+  rpc diffVersion(DiffVersionReq) returns (DiffVersionResp);
+  rpc submitReview(SubmitReviewReq) returns (SubmitReviewResp);
+  rpc withdrawReview(WithdrawReviewReq) returns (WithdrawReviewResp);
+  rpc listReviews(ListReviewsReq) returns (ListReviewsResp);
+  rpc getReview(GetReviewReq) returns (GetReviewResp);
+  rpc retryReview(RetryReviewReq) returns (RetryReviewResp);
+  rpc restrictRelease(RestrictReleaseReq) returns (RestrictReleaseResp);
+
+  // 内部（IM 调）
+  rpc chat(ChatReq) returns (ChatResp);
+
+  // 平台
+  rpc adminGetCompanySetting(AdminGetCompanySettingReq) returns (AdminGetCompanySettingResp);
+  rpc adminSetCompanySetting(AdminSetCompanySettingReq) returns (AdminSetCompanySettingResp);
+  rpc adminListCompanySettings(AdminListCompanySettingsReq) returns (AdminListCompanySettingsResp);
+  rpc adminListModels(AdminListModelsReq) returns (AdminListModelsResp);
+  rpc adminSaveModel(AdminSaveModelReq) returns (AdminSaveModelResp);
+  rpc adminDeleteModel(AdminDeleteModelReq) returns (AdminDeleteModelResp);
+  rpc adminTestModel(AdminTestModelReq) returns (AdminTestModelResp);
+  rpc adminListCapabilities(AdminListCapabilitiesReq) returns (AdminListCapabilitiesResp);
+  rpc adminListTemplates(AdminListTemplatesReq) returns (AdminListTemplatesResp);
+  rpc adminSaveTemplate(AdminSaveTemplateReq) returns (AdminSaveTemplateResp);
+  rpc adminDeleteTemplate(AdminDeleteTemplateReq) returns (AdminDeleteTemplateResp);
+  rpc adminListTags(AdminListTagsReq) returns (AdminListTagsResp);
+  rpc adminSaveTag(AdminSaveTagReq) returns (AdminSaveTagResp);
+  rpc adminDeleteTag(AdminDeleteTagReq) returns (AdminDeleteTagResp);
+  rpc adminListAgents(AdminListAgentsReq) returns (AdminListAgentsResp);
+  rpc adminDisableAgent(AdminDisableAgentReq) returns (AdminDisableAgentResp);
+  rpc adminEnableAgent(AdminEnableAgentReq) returns (AdminEnableAgentResp);
+  rpc adminScopeDisableAgent(AdminScopeDisableAgentReq) returns (AdminScopeDisableAgentResp);
+  rpc adminScopeEnableAgent(AdminScopeEnableAgentReq) returns (AdminScopeEnableAgentResp);
+  rpc adminRestoreAgent(AdminRestoreAgentReq) returns (AdminRestoreAgentResp);
+  rpc adminListAudits(AdminListAuditsReq) returns (AdminListAuditsResp);
+  rpc adminExportAudits(AdminExportAuditsReq) returns (AdminExportAuditsResp);
+}
