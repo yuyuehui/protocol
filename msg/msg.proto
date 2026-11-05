@@ -392,6 +392,90 @@ message GetSeqMessageResp {
   map<string, sdkws.PullMsgs> notificationMsgs = 2;
 }
 
+// 消息窗口某一方向的边界状态
+enum MessageWindowBoundary {
+  // 该方向还可以继续分页
+  MessageWindowBoundaryMore = 0;
+  // 已确认到达用户可读的终点
+  MessageWindowBoundaryEnd = 1;
+  // 暂时无法确认（如消息已分配 seq 但尚未落库），保留游标稍后重试，不代表已到终点
+  MessageWindowBoundaryRetryable = 2;
+}
+
+// 消息分页方向
+enum MessagePageDirection {
+  // 会话最新一页
+  MessagePageDirectionLatest = 0;
+  // 更早的消息（seq 更小）
+  MessagePageDirectionOlder = 1;
+  // 更晚的消息（seq 更大）
+  MessagePageDirectionNewer = 2;
+}
+
+// 定位目标消息的结果
+enum MessageAnchorStatus {
+  MessageAnchorStatusFound = 0;
+  // seq 处没有可读消息：不存在、已被本人删除或已被清理
+  MessageAnchorStatusNotFound = 1;
+  // seq 处的消息与请求的 clientMsgID 不一致
+  MessageAnchorStatusMismatch = 2;
+  // seq 不在用户可见范围：入群前、退群后、已清空的历史或无权访问的会话
+  MessageAnchorStatusNoAccess = 3;
+}
+
+// 消息窗口某一方向的一页结果
+message MessageWindowPage {
+  // 可展示的消息，按 seq 升序；空洞、本人删除的消息不返回
+  repeated sdkws.MsgData msgs = 1;
+  // 下一次同方向请求的游标：older 方向下次读取 seq < cursor，newer 方向下次读取 seq > cursor
+  int64 cursor = 2;
+  MessageWindowBoundary boundary = 3;
+  // 本次已确认覆盖的 seq 区间（含两端），区间内未返回的 seq 都是确认不可展示的；没有扫描任何 seq 时均为 0
+  int64 scannedBegin = 4;
+  int64 scannedEnd = 5;
+  // 本次请求时用户在该会话可读的 seq 范围（含两端）
+  int64 readableMinSeq = 6;
+  int64 readableMaxSeq = 7;
+}
+
+// 取目标消息及其前后的消息，用于从搜索、引用等入口直接打开目标附近的窗口
+message GetMessageContextReq {
+  string userID = 1;
+  string conversationID = 2;
+  // 目标消息 seq，必须大于 0
+  int64 seq = 3;
+  // 可选：目标消息 clientMsgID，与 seq 处的消息不一致时返回 Mismatch
+  string clientMsgID = 4;
+  // 目标之前、之后各取多少条可展示消息，取值 0-100
+  int32 before = 5;
+  int32 after = 6;
+}
+
+message GetMessageContextResp {
+  MessageAnchorStatus anchorStatus = 1;
+  // anchorStatus 为 Found 时的目标消息
+  sdkws.MsgData anchor = 2;
+  // 目标之前的消息，游标从目标向更早方向推进
+  MessageWindowPage older = 3;
+  // 目标之后的消息，游标从目标向更晚方向推进
+  MessageWindowPage newer = 4;
+}
+
+// 按方向分页读取消息；游标由上一页结果给出，每次请求都会重新校验用户的可见范围
+message GetMessagePageReq {
+  string userID = 1;
+  string conversationID = 2;
+  MessagePageDirection direction = 3;
+  // older/newer 方向的游标，latest 方向忽略
+  int64 cursor = 4;
+  // 本页最多返回的可展示消息数，取值 1-100
+  int32 limit = 5;
+}
+
+message GetMessagePageResp {
+  MessageWindowPage page = 1;
+}
+
 message GetActiveConversationReq {
   repeated string conversationIDs = 1;
   int64 limit = 2;
@@ -852,6 +936,10 @@ service msg {
   //拉取历史消息（包括用户的，以及指定群组的）
   rpc PullMessageBySeqs(sdkws.PullMessageBySeqsReq) returns (sdkws.PullMessageBySeqsResp);
   rpc GetSeqMessage(GetSeqMessageReq) returns (GetSeqMessageResp);
+  //取目标消息及其前后的消息（消息定位窗口）
+  rpc GetMessageContext(GetMessageContextReq) returns (GetMessageContextResp);
+  //按方向分页读取消息（消息窗口的双向分页）
+  rpc GetMessagePage(GetMessagePageReq) returns (GetMessagePageResp);
   rpc SearchMessage(SearchMessageReq) returns (SearchMessageResp);
   //发送消息
   rpc SendMsg(SendMsgReq) returns (SendMsgResp);

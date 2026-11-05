@@ -67,6 +67,11 @@ func TestEmailAccountReqStringRedactsPassword(t *testing.T) {
 	if !strings.Contains(got, "[REDACTED]") {
 		t.Fatalf("String() did not include redaction marker: %s", got)
 	}
+	if req.AuthPassword != "secret-authorization-code" { t.Fatal("日志脱敏修改了原请求") }
+	data, err := proto.Marshal(req)
+	if err != nil { t.Fatal(err) }
+	var decoded TestEmailAccountReq
+	if err = proto.Unmarshal(data, &decoded); err != nil || decoded.AuthPassword != req.AuthPassword { t.Fatal("日志脱敏影响协议传输", err) }
 }
 
 func TestEmailUserSettingsSettingsVersionProtoJSONPresence(t *testing.T) {
