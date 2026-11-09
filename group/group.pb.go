@@ -914,8 +914,10 @@ type TransferGroupOwnerReq struct {
 	GroupID        string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
 	OldOwnerUserID string                 `protobuf:"bytes,2,opt,name=oldOwnerUserID,proto3" json:"oldOwnerUserID"`
 	NewOwnerUserID string                 `protobuf:"bytes,3,opt,name=newOwnerUserID,proto3" json:"newOwnerUserID"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 不传或 true：群里显示转让提示；false：静默转让，只推数据同步通知（如离职自动转让）
+	SendMessage   *bool `protobuf:"varint,4,opt,name=sendMessage,proto3,oneof" json:"sendMessage"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TransferGroupOwnerReq) Reset() {
@@ -967,6 +969,13 @@ func (x *TransferGroupOwnerReq) GetNewOwnerUserID() string {
 		return x.NewOwnerUserID
 	}
 	return ""
+}
+
+func (x *TransferGroupOwnerReq) GetSendMessage() bool {
+	if x != nil && x.SendMessage != nil {
+		return *x.SendMessage
+	}
+	return false
 }
 
 type TransferGroupOwnerResp struct {
@@ -4512,11 +4521,13 @@ const file_group_group_proto_rawDesc = "" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"~\n" +
 	"$GetSpecifiedUserGroupRequestInfoResp\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\rR\x05total\x12@\n" +
-	"\rgroupRequests\x18\x02 \x03(\v2\x1a.openim.sdkws.GroupRequestR\rgroupRequests\"\x81\x01\n" +
+	"\rgroupRequests\x18\x02 \x03(\v2\x1a.openim.sdkws.GroupRequestR\rgroupRequests\"\xb8\x01\n" +
 	"\x15TransferGroupOwnerReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12&\n" +
 	"\x0eoldOwnerUserID\x18\x02 \x01(\tR\x0eoldOwnerUserID\x12&\n" +
-	"\x0enewOwnerUserID\x18\x03 \x01(\tR\x0enewOwnerUserID\"\x18\n" +
+	"\x0enewOwnerUserID\x18\x03 \x01(\tR\x0enewOwnerUserID\x12%\n" +
+	"\vsendMessage\x18\x04 \x01(\bH\x00R\vsendMessage\x88\x01\x01B\x0e\n" +
+	"\f_sendMessage\"\x18\n" +
 	"\x16TransferGroupOwnerResp\"\x9e\x01\n" +
 	"\fJoinGroupReq\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x1e\n" +
@@ -5043,6 +5054,7 @@ func file_group_group_proto_init() {
 		return
 	}
 	file_group_group_proto_msgTypes[0].OneofWrappers = []any{}
+	file_group_group_proto_msgTypes[16].OneofWrappers = []any{}
 	file_group_group_proto_msgTypes[28].OneofWrappers = []any{}
 	file_group_group_proto_msgTypes[32].OneofWrappers = []any{}
 	file_group_group_proto_msgTypes[42].OneofWrappers = []any{}
