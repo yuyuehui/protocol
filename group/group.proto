@@ -103,6 +103,8 @@ message TransferGroupOwnerReq {
   string groupID = 1;
   string oldOwnerUserID = 2;
   string newOwnerUserID = 3;
+  // 不传或 true：群里显示转让提示；false：静默转让，只推数据同步通知（如离职自动转让）
+  optional bool sendMessage = 4;
 }
 message TransferGroupOwnerResp {}
 
