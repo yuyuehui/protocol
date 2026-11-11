@@ -3,12 +3,14 @@ package agent
 import "errors"
 
 var (
-	errAgentIDEmpty   = errors.New("agentID is empty")
-	errRequestIDEmpty = errors.New("requestID is empty")
-	errScopeInvalid   = errors.New("scope is invalid")
-	errUserIDEmpty    = errors.New("userID is empty")
-	errReviewIDEmpty  = errors.New("reviewID is empty")
-	errOperatorEmpty  = errors.New("operatorUserID is empty")
+	errAgentIDEmpty    = errors.New("agentID is empty")
+	errRequestIDEmpty  = errors.New("requestID is empty")
+	errScopeInvalid    = errors.New("scope is invalid")
+	errUserIDEmpty     = errors.New("userID is empty")
+	errReviewIDEmpty   = errors.New("reviewID is empty")
+	errGroupIDEmpty    = errors.New("groupID is empty")
+	errUserIDsEmpty    = errors.New("userIDs is empty")
+	errProviderIDEmpty = errors.New("providerID is empty")
 )
 
 func (x *CreateAgentReq) Check() error {
@@ -111,19 +113,6 @@ func (x *ApplyRoleImportReq) Check() error {
 	}
 	if x.Zone < ImportZone_IMPORT_ZONE_GOAL || x.Zone > ImportZone_IMPORT_ZONE_OUTPUT {
 		return errors.New("zone is invalid")
-	}
-	return nil
-}
-
-func (x *TestAgentReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	if x.RequestID == "" {
-		return errRequestIDEmpty
-	}
-	if x.Question == "" {
-		return errors.New("question is empty")
 	}
 	return nil
 }
@@ -320,60 +309,6 @@ func (x *RestrictReleaseReq) Check() error {
 	return nil
 }
 
-func (x *ChatReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	if x.UserID == "" {
-		return errUserIDEmpty
-	}
-	if x.ConversationID == "" {
-		return errors.New("conversationID is empty")
-	}
-	if x.RequestID == "" {
-		return errRequestIDEmpty
-	}
-	if x.Question == "" {
-		return errors.New("question is empty")
-	}
-	return nil
-}
-
-func (x *AdminGetCompanySettingReq) Check() error {
-	if x.CompanyID == "" {
-		return errors.New("companyID is empty")
-	}
-	return nil
-}
-
-func (x *AdminSetCompanySettingReq) Check() error {
-	if x.CompanyID == "" {
-		return errors.New("companyID is empty")
-	}
-	return nil
-}
-
-func (x *AdminSaveModelReq) Check() error {
-	if x.Model == nil {
-		return errors.New("model is empty")
-	}
-	return nil
-}
-
-func (x *AdminDeleteModelReq) Check() error {
-	if x.ModelID == "" {
-		return errors.New("modelID is empty")
-	}
-	return nil
-}
-
-func (x *AdminTestModelReq) Check() error {
-	if x.ModelID == "" {
-		return errors.New("modelID is empty")
-	}
-	return nil
-}
-
 func (x *AdminSaveTemplateReq) Check() error {
 	if x.Template == nil {
 		return errors.New("template is empty")
@@ -432,9 +367,6 @@ func (x *AdminScopeDisableAgentReq) Check() error {
 	if x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
 		return errScopeInvalid
 	}
-	if x.OperatorUserID == "" {
-		return errOperatorEmpty
-	}
 	if x.Reason == "" {
 		return errors.New("reason is empty")
 	}
@@ -448,15 +380,153 @@ func (x *AdminScopeEnableAgentReq) Check() error {
 	if x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
 		return errScopeInvalid
 	}
-	if x.OperatorUserID == "" {
-		return errOperatorEmpty
-	}
 	return nil
 }
 
 func (x *AdminRestoreAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminScopeOptionsReq) Check() error {
+	if x.Type < ScopeItemType_SCOPE_ITEM_TYPE_DEPARTMENT || x.Type > ScopeItemType_SCOPE_ITEM_TYPE_USER {
+		return errors.New("type is invalid")
+	}
+	return nil
+}
+
+func (x *AdminGetPeopleGroupReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminListPeopleGroupMembersReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminListUserPeopleGroupsReq) Check() error {
+	if x.UserID == "" {
+		return errUserIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminSavePeopleGroupReq) Check() error {
+	if x.Group == nil {
+		return errors.New("group is empty")
+	}
+	return nil
+}
+
+func (x *AdminDeletePeopleGroupReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminAddPeopleGroupUsersReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	if len(x.UserIDs) == 0 {
+		return errUserIDsEmpty
+	}
+	return nil
+}
+
+func (x *AdminRemovePeopleGroupUsersReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	if len(x.UserIDs) == 0 {
+		return errUserIDsEmpty
+	}
+	return nil
+}
+
+func (x *AdminGetReviewReq) Check() error {
+	if x.ReviewID == "" {
+		return errReviewIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminDecideReviewReq) Check() error {
+	if x.ReviewID == "" {
+		return errReviewIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminGetAIProviderReq) Check() error {
+	if x.ProviderID == "" {
+		return errProviderIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminSaveAIProviderReq) Check() error {
+	if x.Provider == nil {
+		return errors.New("provider is empty")
+	}
+	return nil
+}
+
+func (x *AdminDeleteAIProviderReq) Check() error {
+	if x.ProviderID == "" {
+		return errProviderIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminSaveAIModelReq) Check() error {
+	if x.Model == nil {
+		return errors.New("model is empty")
+	}
+	if x.Model.ProviderID == "" {
+		return errProviderIDEmpty
+	}
+	return nil
+}
+
+func (x *AdminDeleteAIModelReq) Check() error {
+	if x.ProviderID == "" {
+		return errProviderIDEmpty
+	}
+	if x.ModelID == "" {
+		return errors.New("modelID is empty")
+	}
+	return nil
+}
+
+func (x *AdminSortAIModelsReq) Check() error {
+	if x.ProviderID == "" {
+		return errProviderIDEmpty
+	}
+	return nil
+}
+
+// Check 报错只用固定文字，不带传入的值：apiKey 不能出现在返回和日志里
+func (x *AdminTestAIProviderReq) Check() error {
+	switch {
+	case x.Api == "":
+		return errors.New("api is empty")
+	case x.BaseURL == "":
+		return errors.New("baseURL is empty")
+	case x.ModelID == "":
+		return errors.New("modelID is empty")
+	case x.ApiKey == "":
+		return errors.New("apiKey is empty")
+	case len(x.ApiKey) > 1000:
+		return errors.New("apiKey is too long")
 	}
 	return nil
 }
