@@ -34,16 +34,14 @@ const (
 	Agent_ApplyRoleImport_FullMethodName             = "/openim.agent.Agent/applyRoleImport"
 	Agent_ListTestRuns_FullMethodName                = "/openim.agent.Agent/listTestRuns"
 	Agent_MarkTestRun_FullMethodName                 = "/openim.agent.Agent/markTestRun"
-	Agent_SelfUse_FullMethodName                     = "/openim.agent.Agent/selfUse"
 	Agent_ListReleases_FullMethodName                = "/openim.agent.Agent/listReleases"
 	Agent_GetSnapshot_FullMethodName                 = "/openim.agent.Agent/getSnapshot"
-	Agent_DisableRelease_FullMethodName              = "/openim.agent.Agent/disableRelease"
-	Agent_EnableRelease_FullMethodName               = "/openim.agent.Agent/enableRelease"
 	Agent_SubmitCheck_FullMethodName                 = "/openim.agent.Agent/submitCheck"
-	Agent_ListGrants_FullMethodName                  = "/openim.agent.Agent/listGrants"
-	Agent_SetEditor_FullMethodName                   = "/openim.agent.Agent/setEditor"
-	Agent_RemoveEditor_FullMethodName                = "/openim.agent.Agent/removeEditor"
-	Agent_ListGrantedAgents_FullMethodName           = "/openim.agent.Agent/listGrantedAgents"
+	Agent_ListMembers_FullMethodName                 = "/openim.agent.Agent/listMembers"
+	Agent_SetMember_FullMethodName                   = "/openim.agent.Agent/setMember"
+	Agent_RemoveMember_FullMethodName                = "/openim.agent.Agent/removeMember"
+	Agent_SetVisibleScope_FullMethodName             = "/openim.agent.Agent/setVisibleScope"
+	Agent_ReportTestRun_FullMethodName               = "/openim.agent.Agent/reportTestRun"
 	Agent_ListTemplates_FullMethodName               = "/openim.agent.Agent/listTemplates"
 	Agent_GetTemplate_FullMethodName                 = "/openim.agent.Agent/getTemplate"
 	Agent_ListTags_FullMethodName                    = "/openim.agent.Agent/listTags"
@@ -55,10 +53,16 @@ const (
 	Agent_ListReviews_FullMethodName                 = "/openim.agent.Agent/listReviews"
 	Agent_GetReview_FullMethodName                   = "/openim.agent.Agent/getReview"
 	Agent_RetryReview_FullMethodName                 = "/openim.agent.Agent/retryReview"
-	Agent_RestrictRelease_FullMethodName             = "/openim.agent.Agent/restrictRelease"
+	Agent_ListMarket_FullMethodName                  = "/openim.agent.Agent/listMarket"
+	Agent_ListMyInstances_FullMethodName             = "/openim.agent.Agent/listMyInstances"
+	Agent_GetInstanceConfig_FullMethodName           = "/openim.agent.Agent/getInstanceConfig"
 	Agent_DescribeScope_FullMethodName               = "/openim.agent.Agent/describeScope"
 	Agent_ScopeOptions_FullMethodName                = "/openim.agent.Agent/scopeOptions"
 	Agent_GetAIConfig_FullMethodName                 = "/openim.agent.Agent/getAIConfig"
+	Agent_PrepareInstance_FullMethodName             = "/openim.agent.Agent/prepareInstance"
+	Agent_BindInstance_FullMethodName                = "/openim.agent.Agent/bindInstance"
+	Agent_RemoveInstance_FullMethodName              = "/openim.agent.Agent/removeInstance"
+	Agent_GetInstanceEligibility_FullMethodName      = "/openim.agent.Agent/getInstanceEligibility"
 	Agent_AdminGetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminGetCompanySetting"
 	Agent_AdminSetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminSetCompanySetting"
 	Agent_AdminListCompanySettings_FullMethodName    = "/openim.agent.Agent/adminListCompanySettings"
@@ -72,8 +76,9 @@ const (
 	Agent_AdminListAgents_FullMethodName             = "/openim.agent.Agent/adminListAgents"
 	Agent_AdminDisableAgent_FullMethodName           = "/openim.agent.Agent/adminDisableAgent"
 	Agent_AdminEnableAgent_FullMethodName            = "/openim.agent.Agent/adminEnableAgent"
-	Agent_AdminScopeDisableAgent_FullMethodName      = "/openim.agent.Agent/adminScopeDisableAgent"
-	Agent_AdminScopeEnableAgent_FullMethodName       = "/openim.agent.Agent/adminScopeEnableAgent"
+	Agent_AdminDelistAgent_FullMethodName            = "/openim.agent.Agent/adminDelistAgent"
+	Agent_AdminRelistAgent_FullMethodName            = "/openim.agent.Agent/adminRelistAgent"
+	Agent_AdminDeleteAgent_FullMethodName            = "/openim.agent.Agent/adminDeleteAgent"
 	Agent_AdminRestoreAgent_FullMethodName           = "/openim.agent.Agent/adminRestoreAgent"
 	Agent_AdminListAudits_FullMethodName             = "/openim.agent.Agent/adminListAudits"
 	Agent_AdminExportAudits_FullMethodName           = "/openim.agent.Agent/adminExportAudits"
@@ -123,16 +128,14 @@ type AgentClient interface {
 	ApplyRoleImport(ctx context.Context, in *ApplyRoleImportReq, opts ...grpc.CallOption) (*ApplyRoleImportResp, error)
 	ListTestRuns(ctx context.Context, in *ListTestRunsReq, opts ...grpc.CallOption) (*ListTestRunsResp, error)
 	MarkTestRun(ctx context.Context, in *MarkTestRunReq, opts ...grpc.CallOption) (*MarkTestRunResp, error)
-	SelfUse(ctx context.Context, in *SelfUseReq, opts ...grpc.CallOption) (*SelfUseResp, error)
 	ListReleases(ctx context.Context, in *ListReleasesReq, opts ...grpc.CallOption) (*ListReleasesResp, error)
 	GetSnapshot(ctx context.Context, in *GetSnapshotReq, opts ...grpc.CallOption) (*GetSnapshotResp, error)
-	DisableRelease(ctx context.Context, in *DisableReleaseReq, opts ...grpc.CallOption) (*DisableReleaseResp, error)
-	EnableRelease(ctx context.Context, in *EnableReleaseReq, opts ...grpc.CallOption) (*EnableReleaseResp, error)
 	SubmitCheck(ctx context.Context, in *SubmitCheckReq, opts ...grpc.CallOption) (*SubmitCheckResp, error)
-	ListGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error)
-	SetEditor(ctx context.Context, in *SetEditorReq, opts ...grpc.CallOption) (*SetEditorResp, error)
-	RemoveEditor(ctx context.Context, in *RemoveEditorReq, opts ...grpc.CallOption) (*RemoveEditorResp, error)
-	ListGrantedAgents(ctx context.Context, in *ListGrantedAgentsReq, opts ...grpc.CallOption) (*ListGrantedAgentsResp, error)
+	ListMembers(ctx context.Context, in *ListMembersReq, opts ...grpc.CallOption) (*ListMembersResp, error)
+	SetMember(ctx context.Context, in *SetMemberReq, opts ...grpc.CallOption) (*SetMemberResp, error)
+	RemoveMember(ctx context.Context, in *RemoveMemberReq, opts ...grpc.CallOption) (*RemoveMemberResp, error)
+	SetVisibleScope(ctx context.Context, in *SetVisibleScopeReq, opts ...grpc.CallOption) (*SetVisibleScopeResp, error)
+	ReportTestRun(ctx context.Context, in *ReportTestRunReq, opts ...grpc.CallOption) (*ReportTestRunResp, error)
 	ListTemplates(ctx context.Context, in *ListTemplatesReq, opts ...grpc.CallOption) (*ListTemplatesResp, error)
 	GetTemplate(ctx context.Context, in *GetTemplateReq, opts ...grpc.CallOption) (*GetTemplateResp, error)
 	ListTags(ctx context.Context, in *ListTagsReq, opts ...grpc.CallOption) (*ListTagsResp, error)
@@ -144,10 +147,17 @@ type AgentClient interface {
 	ListReviews(ctx context.Context, in *ListReviewsReq, opts ...grpc.CallOption) (*ListReviewsResp, error)
 	GetReview(ctx context.Context, in *GetReviewReq, opts ...grpc.CallOption) (*GetReviewResp, error)
 	RetryReview(ctx context.Context, in *RetryReviewReq, opts ...grpc.CallOption) (*RetryReviewResp, error)
-	RestrictRelease(ctx context.Context, in *RestrictReleaseReq, opts ...grpc.CallOption) (*RestrictReleaseResp, error)
+	ListMarket(ctx context.Context, in *ListMarketReq, opts ...grpc.CallOption) (*ListMarketResp, error)
+	ListMyInstances(ctx context.Context, in *ListMyInstancesReq, opts ...grpc.CallOption) (*ListMyInstancesResp, error)
+	GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error)
 	DescribeScope(ctx context.Context, in *DescribeScopeReq, opts ...grpc.CallOption) (*DescribeScopeResp, error)
 	ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opts ...grpc.CallOption) (*ScopeOptionsResp, error)
 	GetAIConfig(ctx context.Context, in *GetAIConfigReq, opts ...grpc.CallOption) (*GetAIConfigResp, error)
+	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
+	PrepareInstance(ctx context.Context, in *PrepareInstanceReq, opts ...grpc.CallOption) (*PrepareInstanceResp, error)
+	BindInstance(ctx context.Context, in *BindInstanceReq, opts ...grpc.CallOption) (*BindInstanceResp, error)
+	RemoveInstance(ctx context.Context, in *RemoveInstanceReq, opts ...grpc.CallOption) (*RemoveInstanceResp, error)
+	GetInstanceEligibility(ctx context.Context, in *GetInstanceEligibilityReq, opts ...grpc.CallOption) (*GetInstanceEligibilityResp, error)
 	// 后台：/agent/admin，只能操作本企业的
 	AdminGetCompanySetting(ctx context.Context, in *AdminGetCompanySettingReq, opts ...grpc.CallOption) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(ctx context.Context, in *AdminSetCompanySettingReq, opts ...grpc.CallOption) (*AdminSetCompanySettingResp, error)
@@ -162,8 +172,9 @@ type AgentClient interface {
 	AdminListAgents(ctx context.Context, in *AdminListAgentsReq, opts ...grpc.CallOption) (*AdminListAgentsResp, error)
 	AdminDisableAgent(ctx context.Context, in *AdminDisableAgentReq, opts ...grpc.CallOption) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(ctx context.Context, in *AdminEnableAgentReq, opts ...grpc.CallOption) (*AdminEnableAgentResp, error)
-	AdminScopeDisableAgent(ctx context.Context, in *AdminScopeDisableAgentReq, opts ...grpc.CallOption) (*AdminScopeDisableAgentResp, error)
-	AdminScopeEnableAgent(ctx context.Context, in *AdminScopeEnableAgentReq, opts ...grpc.CallOption) (*AdminScopeEnableAgentResp, error)
+	AdminDelistAgent(ctx context.Context, in *AdminDelistAgentReq, opts ...grpc.CallOption) (*AdminDelistAgentResp, error)
+	AdminRelistAgent(ctx context.Context, in *AdminRelistAgentReq, opts ...grpc.CallOption) (*AdminRelistAgentResp, error)
+	AdminDeleteAgent(ctx context.Context, in *AdminDeleteAgentReq, opts ...grpc.CallOption) (*AdminDeleteAgentResp, error)
 	AdminRestoreAgent(ctx context.Context, in *AdminRestoreAgentReq, opts ...grpc.CallOption) (*AdminRestoreAgentResp, error)
 	AdminListAudits(ctx context.Context, in *AdminListAuditsReq, opts ...grpc.CallOption) (*AdminListAuditsResp, error)
 	AdminExportAudits(ctx context.Context, in *AdminExportAuditsReq, opts ...grpc.CallOption) (*AdminExportAuditsResp, error)
@@ -352,16 +363,6 @@ func (c *agentClient) MarkTestRun(ctx context.Context, in *MarkTestRunReq, opts 
 	return out, nil
 }
 
-func (c *agentClient) SelfUse(ctx context.Context, in *SelfUseReq, opts ...grpc.CallOption) (*SelfUseResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SelfUseResp)
-	err := c.cc.Invoke(ctx, Agent_SelfUse_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) ListReleases(ctx context.Context, in *ListReleasesReq, opts ...grpc.CallOption) (*ListReleasesResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListReleasesResp)
@@ -382,26 +383,6 @@ func (c *agentClient) GetSnapshot(ctx context.Context, in *GetSnapshotReq, opts 
 	return out, nil
 }
 
-func (c *agentClient) DisableRelease(ctx context.Context, in *DisableReleaseReq, opts ...grpc.CallOption) (*DisableReleaseResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DisableReleaseResp)
-	err := c.cc.Invoke(ctx, Agent_DisableRelease_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) EnableRelease(ctx context.Context, in *EnableReleaseReq, opts ...grpc.CallOption) (*EnableReleaseResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(EnableReleaseResp)
-	err := c.cc.Invoke(ctx, Agent_EnableRelease_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) SubmitCheck(ctx context.Context, in *SubmitCheckReq, opts ...grpc.CallOption) (*SubmitCheckResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SubmitCheckResp)
@@ -412,40 +393,50 @@ func (c *agentClient) SubmitCheck(ctx context.Context, in *SubmitCheckReq, opts 
 	return out, nil
 }
 
-func (c *agentClient) ListGrants(ctx context.Context, in *ListGrantsReq, opts ...grpc.CallOption) (*ListGrantsResp, error) {
+func (c *agentClient) ListMembers(ctx context.Context, in *ListMembersReq, opts ...grpc.CallOption) (*ListMembersResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGrantsResp)
-	err := c.cc.Invoke(ctx, Agent_ListGrants_FullMethodName, in, out, cOpts...)
+	out := new(ListMembersResp)
+	err := c.cc.Invoke(ctx, Agent_ListMembers_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) SetEditor(ctx context.Context, in *SetEditorReq, opts ...grpc.CallOption) (*SetEditorResp, error) {
+func (c *agentClient) SetMember(ctx context.Context, in *SetMemberReq, opts ...grpc.CallOption) (*SetMemberResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetEditorResp)
-	err := c.cc.Invoke(ctx, Agent_SetEditor_FullMethodName, in, out, cOpts...)
+	out := new(SetMemberResp)
+	err := c.cc.Invoke(ctx, Agent_SetMember_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) RemoveEditor(ctx context.Context, in *RemoveEditorReq, opts ...grpc.CallOption) (*RemoveEditorResp, error) {
+func (c *agentClient) RemoveMember(ctx context.Context, in *RemoveMemberReq, opts ...grpc.CallOption) (*RemoveMemberResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RemoveEditorResp)
-	err := c.cc.Invoke(ctx, Agent_RemoveEditor_FullMethodName, in, out, cOpts...)
+	out := new(RemoveMemberResp)
+	err := c.cc.Invoke(ctx, Agent_RemoveMember_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) ListGrantedAgents(ctx context.Context, in *ListGrantedAgentsReq, opts ...grpc.CallOption) (*ListGrantedAgentsResp, error) {
+func (c *agentClient) SetVisibleScope(ctx context.Context, in *SetVisibleScopeReq, opts ...grpc.CallOption) (*SetVisibleScopeResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListGrantedAgentsResp)
-	err := c.cc.Invoke(ctx, Agent_ListGrantedAgents_FullMethodName, in, out, cOpts...)
+	out := new(SetVisibleScopeResp)
+	err := c.cc.Invoke(ctx, Agent_SetVisibleScope_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ReportTestRun(ctx context.Context, in *ReportTestRunReq, opts ...grpc.CallOption) (*ReportTestRunResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReportTestRunResp)
+	err := c.cc.Invoke(ctx, Agent_ReportTestRun_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -562,10 +553,30 @@ func (c *agentClient) RetryReview(ctx context.Context, in *RetryReviewReq, opts 
 	return out, nil
 }
 
-func (c *agentClient) RestrictRelease(ctx context.Context, in *RestrictReleaseReq, opts ...grpc.CallOption) (*RestrictReleaseResp, error) {
+func (c *agentClient) ListMarket(ctx context.Context, in *ListMarketReq, opts ...grpc.CallOption) (*ListMarketResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RestrictReleaseResp)
-	err := c.cc.Invoke(ctx, Agent_RestrictRelease_FullMethodName, in, out, cOpts...)
+	out := new(ListMarketResp)
+	err := c.cc.Invoke(ctx, Agent_ListMarket_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListMyInstances(ctx context.Context, in *ListMyInstancesReq, opts ...grpc.CallOption) (*ListMyInstancesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMyInstancesResp)
+	err := c.cc.Invoke(ctx, Agent_ListMyInstances_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetInstanceConfigResp)
+	err := c.cc.Invoke(ctx, Agent_GetInstanceConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -596,6 +607,46 @@ func (c *agentClient) GetAIConfig(ctx context.Context, in *GetAIConfigReq, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAIConfigResp)
 	err := c.cc.Invoke(ctx, Agent_GetAIConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) PrepareInstance(ctx context.Context, in *PrepareInstanceReq, opts ...grpc.CallOption) (*PrepareInstanceResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PrepareInstanceResp)
+	err := c.cc.Invoke(ctx, Agent_PrepareInstance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) BindInstance(ctx context.Context, in *BindInstanceReq, opts ...grpc.CallOption) (*BindInstanceResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BindInstanceResp)
+	err := c.cc.Invoke(ctx, Agent_BindInstance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) RemoveInstance(ctx context.Context, in *RemoveInstanceReq, opts ...grpc.CallOption) (*RemoveInstanceResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RemoveInstanceResp)
+	err := c.cc.Invoke(ctx, Agent_RemoveInstance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetInstanceEligibility(ctx context.Context, in *GetInstanceEligibilityReq, opts ...grpc.CallOption) (*GetInstanceEligibilityResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetInstanceEligibilityResp)
+	err := c.cc.Invoke(ctx, Agent_GetInstanceEligibility_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -732,20 +783,30 @@ func (c *agentClient) AdminEnableAgent(ctx context.Context, in *AdminEnableAgent
 	return out, nil
 }
 
-func (c *agentClient) AdminScopeDisableAgent(ctx context.Context, in *AdminScopeDisableAgentReq, opts ...grpc.CallOption) (*AdminScopeDisableAgentResp, error) {
+func (c *agentClient) AdminDelistAgent(ctx context.Context, in *AdminDelistAgentReq, opts ...grpc.CallOption) (*AdminDelistAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminScopeDisableAgentResp)
-	err := c.cc.Invoke(ctx, Agent_AdminScopeDisableAgent_FullMethodName, in, out, cOpts...)
+	out := new(AdminDelistAgentResp)
+	err := c.cc.Invoke(ctx, Agent_AdminDelistAgent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *agentClient) AdminScopeEnableAgent(ctx context.Context, in *AdminScopeEnableAgentReq, opts ...grpc.CallOption) (*AdminScopeEnableAgentResp, error) {
+func (c *agentClient) AdminRelistAgent(ctx context.Context, in *AdminRelistAgentReq, opts ...grpc.CallOption) (*AdminRelistAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminScopeEnableAgentResp)
-	err := c.cc.Invoke(ctx, Agent_AdminScopeEnableAgent_FullMethodName, in, out, cOpts...)
+	out := new(AdminRelistAgentResp)
+	err := c.cc.Invoke(ctx, Agent_AdminRelistAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) AdminDeleteAgent(ctx context.Context, in *AdminDeleteAgentReq, opts ...grpc.CallOption) (*AdminDeleteAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminDeleteAgentResp)
+	err := c.cc.Invoke(ctx, Agent_AdminDeleteAgent_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1042,16 +1103,14 @@ type AgentServer interface {
 	ApplyRoleImport(context.Context, *ApplyRoleImportReq) (*ApplyRoleImportResp, error)
 	ListTestRuns(context.Context, *ListTestRunsReq) (*ListTestRunsResp, error)
 	MarkTestRun(context.Context, *MarkTestRunReq) (*MarkTestRunResp, error)
-	SelfUse(context.Context, *SelfUseReq) (*SelfUseResp, error)
 	ListReleases(context.Context, *ListReleasesReq) (*ListReleasesResp, error)
 	GetSnapshot(context.Context, *GetSnapshotReq) (*GetSnapshotResp, error)
-	DisableRelease(context.Context, *DisableReleaseReq) (*DisableReleaseResp, error)
-	EnableRelease(context.Context, *EnableReleaseReq) (*EnableReleaseResp, error)
 	SubmitCheck(context.Context, *SubmitCheckReq) (*SubmitCheckResp, error)
-	ListGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error)
-	SetEditor(context.Context, *SetEditorReq) (*SetEditorResp, error)
-	RemoveEditor(context.Context, *RemoveEditorReq) (*RemoveEditorResp, error)
-	ListGrantedAgents(context.Context, *ListGrantedAgentsReq) (*ListGrantedAgentsResp, error)
+	ListMembers(context.Context, *ListMembersReq) (*ListMembersResp, error)
+	SetMember(context.Context, *SetMemberReq) (*SetMemberResp, error)
+	RemoveMember(context.Context, *RemoveMemberReq) (*RemoveMemberResp, error)
+	SetVisibleScope(context.Context, *SetVisibleScopeReq) (*SetVisibleScopeResp, error)
+	ReportTestRun(context.Context, *ReportTestRunReq) (*ReportTestRunResp, error)
 	ListTemplates(context.Context, *ListTemplatesReq) (*ListTemplatesResp, error)
 	GetTemplate(context.Context, *GetTemplateReq) (*GetTemplateResp, error)
 	ListTags(context.Context, *ListTagsReq) (*ListTagsResp, error)
@@ -1063,10 +1122,17 @@ type AgentServer interface {
 	ListReviews(context.Context, *ListReviewsReq) (*ListReviewsResp, error)
 	GetReview(context.Context, *GetReviewReq) (*GetReviewResp, error)
 	RetryReview(context.Context, *RetryReviewReq) (*RetryReviewResp, error)
-	RestrictRelease(context.Context, *RestrictReleaseReq) (*RestrictReleaseResp, error)
+	ListMarket(context.Context, *ListMarketReq) (*ListMarketResp, error)
+	ListMyInstances(context.Context, *ListMyInstancesReq) (*ListMyInstancesResp, error)
+	GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error)
 	DescribeScope(context.Context, *DescribeScopeReq) (*DescribeScopeResp, error)
 	ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error)
 	GetAIConfig(context.Context, *GetAIConfigReq) (*GetAIConfigResp, error)
+	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
+	PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error)
+	BindInstance(context.Context, *BindInstanceReq) (*BindInstanceResp, error)
+	RemoveInstance(context.Context, *RemoveInstanceReq) (*RemoveInstanceResp, error)
+	GetInstanceEligibility(context.Context, *GetInstanceEligibilityReq) (*GetInstanceEligibilityResp, error)
 	// 后台：/agent/admin，只能操作本企业的
 	AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(context.Context, *AdminSetCompanySettingReq) (*AdminSetCompanySettingResp, error)
@@ -1081,8 +1147,9 @@ type AgentServer interface {
 	AdminListAgents(context.Context, *AdminListAgentsReq) (*AdminListAgentsResp, error)
 	AdminDisableAgent(context.Context, *AdminDisableAgentReq) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(context.Context, *AdminEnableAgentReq) (*AdminEnableAgentResp, error)
-	AdminScopeDisableAgent(context.Context, *AdminScopeDisableAgentReq) (*AdminScopeDisableAgentResp, error)
-	AdminScopeEnableAgent(context.Context, *AdminScopeEnableAgentReq) (*AdminScopeEnableAgentResp, error)
+	AdminDelistAgent(context.Context, *AdminDelistAgentReq) (*AdminDelistAgentResp, error)
+	AdminRelistAgent(context.Context, *AdminRelistAgentReq) (*AdminRelistAgentResp, error)
+	AdminDeleteAgent(context.Context, *AdminDeleteAgentReq) (*AdminDeleteAgentResp, error)
 	AdminRestoreAgent(context.Context, *AdminRestoreAgentReq) (*AdminRestoreAgentResp, error)
 	AdminListAudits(context.Context, *AdminListAuditsReq) (*AdminListAuditsResp, error)
 	AdminExportAudits(context.Context, *AdminExportAuditsReq) (*AdminExportAuditsResp, error)
@@ -1166,35 +1233,29 @@ func (UnimplementedAgentServer) ListTestRuns(context.Context, *ListTestRunsReq) 
 func (UnimplementedAgentServer) MarkTestRun(context.Context, *MarkTestRunReq) (*MarkTestRunResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method MarkTestRun not implemented")
 }
-func (UnimplementedAgentServer) SelfUse(context.Context, *SelfUseReq) (*SelfUseResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SelfUse not implemented")
-}
 func (UnimplementedAgentServer) ListReleases(context.Context, *ListReleasesReq) (*ListReleasesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListReleases not implemented")
 }
 func (UnimplementedAgentServer) GetSnapshot(context.Context, *GetSnapshotReq) (*GetSnapshotResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSnapshot not implemented")
 }
-func (UnimplementedAgentServer) DisableRelease(context.Context, *DisableReleaseReq) (*DisableReleaseResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method DisableRelease not implemented")
-}
-func (UnimplementedAgentServer) EnableRelease(context.Context, *EnableReleaseReq) (*EnableReleaseResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method EnableRelease not implemented")
-}
 func (UnimplementedAgentServer) SubmitCheck(context.Context, *SubmitCheckReq) (*SubmitCheckResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SubmitCheck not implemented")
 }
-func (UnimplementedAgentServer) ListGrants(context.Context, *ListGrantsReq) (*ListGrantsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListGrants not implemented")
+func (UnimplementedAgentServer) ListMembers(context.Context, *ListMembersReq) (*ListMembersResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMembers not implemented")
 }
-func (UnimplementedAgentServer) SetEditor(context.Context, *SetEditorReq) (*SetEditorResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetEditor not implemented")
+func (UnimplementedAgentServer) SetMember(context.Context, *SetMemberReq) (*SetMemberResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetMember not implemented")
 }
-func (UnimplementedAgentServer) RemoveEditor(context.Context, *RemoveEditorReq) (*RemoveEditorResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method RemoveEditor not implemented")
+func (UnimplementedAgentServer) RemoveMember(context.Context, *RemoveMemberReq) (*RemoveMemberResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveMember not implemented")
 }
-func (UnimplementedAgentServer) ListGrantedAgents(context.Context, *ListGrantedAgentsReq) (*ListGrantedAgentsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ListGrantedAgents not implemented")
+func (UnimplementedAgentServer) SetVisibleScope(context.Context, *SetVisibleScopeReq) (*SetVisibleScopeResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetVisibleScope not implemented")
+}
+func (UnimplementedAgentServer) ReportTestRun(context.Context, *ReportTestRunReq) (*ReportTestRunResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReportTestRun not implemented")
 }
 func (UnimplementedAgentServer) ListTemplates(context.Context, *ListTemplatesReq) (*ListTemplatesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListTemplates not implemented")
@@ -1229,8 +1290,14 @@ func (UnimplementedAgentServer) GetReview(context.Context, *GetReviewReq) (*GetR
 func (UnimplementedAgentServer) RetryReview(context.Context, *RetryReviewReq) (*RetryReviewResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RetryReview not implemented")
 }
-func (UnimplementedAgentServer) RestrictRelease(context.Context, *RestrictReleaseReq) (*RestrictReleaseResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method RestrictRelease not implemented")
+func (UnimplementedAgentServer) ListMarket(context.Context, *ListMarketReq) (*ListMarketResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMarket not implemented")
+}
+func (UnimplementedAgentServer) ListMyInstances(context.Context, *ListMyInstancesReq) (*ListMyInstancesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMyInstances not implemented")
+}
+func (UnimplementedAgentServer) GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetInstanceConfig not implemented")
 }
 func (UnimplementedAgentServer) DescribeScope(context.Context, *DescribeScopeReq) (*DescribeScopeResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DescribeScope not implemented")
@@ -1240,6 +1307,18 @@ func (UnimplementedAgentServer) ScopeOptions(context.Context, *ScopeOptionsReq) 
 }
 func (UnimplementedAgentServer) GetAIConfig(context.Context, *GetAIConfigReq) (*GetAIConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAIConfig not implemented")
+}
+func (UnimplementedAgentServer) PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PrepareInstance not implemented")
+}
+func (UnimplementedAgentServer) BindInstance(context.Context, *BindInstanceReq) (*BindInstanceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BindInstance not implemented")
+}
+func (UnimplementedAgentServer) RemoveInstance(context.Context, *RemoveInstanceReq) (*RemoveInstanceResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveInstance not implemented")
+}
+func (UnimplementedAgentServer) GetInstanceEligibility(context.Context, *GetInstanceEligibilityReq) (*GetInstanceEligibilityResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetInstanceEligibility not implemented")
 }
 func (UnimplementedAgentServer) AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminGetCompanySetting not implemented")
@@ -1280,11 +1359,14 @@ func (UnimplementedAgentServer) AdminDisableAgent(context.Context, *AdminDisable
 func (UnimplementedAgentServer) AdminEnableAgent(context.Context, *AdminEnableAgentReq) (*AdminEnableAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminEnableAgent not implemented")
 }
-func (UnimplementedAgentServer) AdminScopeDisableAgent(context.Context, *AdminScopeDisableAgentReq) (*AdminScopeDisableAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminScopeDisableAgent not implemented")
+func (UnimplementedAgentServer) AdminDelistAgent(context.Context, *AdminDelistAgentReq) (*AdminDelistAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDelistAgent not implemented")
 }
-func (UnimplementedAgentServer) AdminScopeEnableAgent(context.Context, *AdminScopeEnableAgentReq) (*AdminScopeEnableAgentResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminScopeEnableAgent not implemented")
+func (UnimplementedAgentServer) AdminRelistAgent(context.Context, *AdminRelistAgentReq) (*AdminRelistAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminRelistAgent not implemented")
+}
+func (UnimplementedAgentServer) AdminDeleteAgent(context.Context, *AdminDeleteAgentReq) (*AdminDeleteAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminDeleteAgent not implemented")
 }
 func (UnimplementedAgentServer) AdminRestoreAgent(context.Context, *AdminRestoreAgentReq) (*AdminRestoreAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminRestoreAgent not implemented")
@@ -1658,24 +1740,6 @@ func _Agent_MarkTestRun_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_SelfUse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SelfUseReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).SelfUse(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_SelfUse_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).SelfUse(ctx, req.(*SelfUseReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_ListReleases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReleasesReq)
 	if err := dec(in); err != nil {
@@ -1712,42 +1776,6 @@ func _Agent_GetSnapshot_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_DisableRelease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DisableReleaseReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).DisableRelease(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_DisableRelease_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).DisableRelease(ctx, req.(*DisableReleaseReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_EnableRelease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EnableReleaseReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).EnableRelease(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_EnableRelease_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).EnableRelease(ctx, req.(*EnableReleaseReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_SubmitCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SubmitCheckReq)
 	if err := dec(in); err != nil {
@@ -1766,74 +1794,92 @@ func _Agent_SubmitCheck_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListGrants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListGrantsReq)
+func _Agent_ListMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMembersReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).ListGrants(ctx, in)
+		return srv.(AgentServer).ListMembers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_ListGrants_FullMethodName,
+		FullMethod: Agent_ListMembers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListGrants(ctx, req.(*ListGrantsReq))
+		return srv.(AgentServer).ListMembers(ctx, req.(*ListMembersReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_SetEditor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetEditorReq)
+func _Agent_SetMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMemberReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).SetEditor(ctx, in)
+		return srv.(AgentServer).SetMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_SetEditor_FullMethodName,
+		FullMethod: Agent_SetMember_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).SetEditor(ctx, req.(*SetEditorReq))
+		return srv.(AgentServer).SetMember(ctx, req.(*SetMemberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_RemoveEditor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveEditorReq)
+func _Agent_RemoveMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveMemberReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).RemoveEditor(ctx, in)
+		return srv.(AgentServer).RemoveMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_RemoveEditor_FullMethodName,
+		FullMethod: Agent_RemoveMember_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).RemoveEditor(ctx, req.(*RemoveEditorReq))
+		return srv.(AgentServer).RemoveMember(ctx, req.(*RemoveMemberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_ListGrantedAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListGrantedAgentsReq)
+func _Agent_SetVisibleScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetVisibleScopeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).ListGrantedAgents(ctx, in)
+		return srv.(AgentServer).SetVisibleScope(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_ListGrantedAgents_FullMethodName,
+		FullMethod: Agent_SetVisibleScope_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ListGrantedAgents(ctx, req.(*ListGrantedAgentsReq))
+		return srv.(AgentServer).SetVisibleScope(ctx, req.(*SetVisibleScopeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ReportTestRun_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportTestRunReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ReportTestRun(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ReportTestRun_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ReportTestRun(ctx, req.(*ReportTestRunReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2036,20 +2082,56 @@ func _Agent_RetryReview_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_RestrictRelease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RestrictReleaseReq)
+func _Agent_ListMarket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMarketReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).RestrictRelease(ctx, in)
+		return srv.(AgentServer).ListMarket(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_RestrictRelease_FullMethodName,
+		FullMethod: Agent_ListMarket_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).RestrictRelease(ctx, req.(*RestrictReleaseReq))
+		return srv.(AgentServer).ListMarket(ctx, req.(*ListMarketReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListMyInstances_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyInstancesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListMyInstances(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListMyInstances_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListMyInstances(ctx, req.(*ListMyInstancesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetInstanceConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInstanceConfigReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetInstanceConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetInstanceConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetInstanceConfig(ctx, req.(*GetInstanceConfigReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2104,6 +2186,78 @@ func _Agent_GetAIConfig_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).GetAIConfig(ctx, req.(*GetAIConfigReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_PrepareInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrepareInstanceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).PrepareInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_PrepareInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).PrepareInstance(ctx, req.(*PrepareInstanceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_BindInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BindInstanceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).BindInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_BindInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).BindInstance(ctx, req.(*BindInstanceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_RemoveInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveInstanceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).RemoveInstance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_RemoveInstance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).RemoveInstance(ctx, req.(*RemoveInstanceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetInstanceEligibility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInstanceEligibilityReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetInstanceEligibility(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetInstanceEligibility_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetInstanceEligibility(ctx, req.(*GetInstanceEligibilityReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2342,38 +2496,56 @@ func _Agent_AdminEnableAgent_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_AdminScopeDisableAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminScopeDisableAgentReq)
+func _Agent_AdminDelistAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDelistAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).AdminScopeDisableAgent(ctx, in)
+		return srv.(AgentServer).AdminDelistAgent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_AdminScopeDisableAgent_FullMethodName,
+		FullMethod: Agent_AdminDelistAgent_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminScopeDisableAgent(ctx, req.(*AdminScopeDisableAgentReq))
+		return srv.(AgentServer).AdminDelistAgent(ctx, req.(*AdminDelistAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_AdminScopeEnableAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminScopeEnableAgentReq)
+func _Agent_AdminRelistAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminRelistAgentReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AgentServer).AdminScopeEnableAgent(ctx, in)
+		return srv.(AgentServer).AdminRelistAgent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Agent_AdminScopeEnableAgent_FullMethodName,
+		FullMethod: Agent_AdminRelistAgent_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminScopeEnableAgent(ctx, req.(*AdminScopeEnableAgentReq))
+		return srv.(AgentServer).AdminRelistAgent(ctx, req.(*AdminRelistAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_AdminDeleteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDeleteAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).AdminDeleteAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_AdminDeleteAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).AdminDeleteAgent(ctx, req.(*AdminDeleteAgentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2932,10 +3104,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_MarkTestRun_Handler,
 		},
 		{
-			MethodName: "selfUse",
-			Handler:    _Agent_SelfUse_Handler,
-		},
-		{
 			MethodName: "listReleases",
 			Handler:    _Agent_ListReleases_Handler,
 		},
@@ -2944,32 +3112,28 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_GetSnapshot_Handler,
 		},
 		{
-			MethodName: "disableRelease",
-			Handler:    _Agent_DisableRelease_Handler,
-		},
-		{
-			MethodName: "enableRelease",
-			Handler:    _Agent_EnableRelease_Handler,
-		},
-		{
 			MethodName: "submitCheck",
 			Handler:    _Agent_SubmitCheck_Handler,
 		},
 		{
-			MethodName: "listGrants",
-			Handler:    _Agent_ListGrants_Handler,
+			MethodName: "listMembers",
+			Handler:    _Agent_ListMembers_Handler,
 		},
 		{
-			MethodName: "setEditor",
-			Handler:    _Agent_SetEditor_Handler,
+			MethodName: "setMember",
+			Handler:    _Agent_SetMember_Handler,
 		},
 		{
-			MethodName: "removeEditor",
-			Handler:    _Agent_RemoveEditor_Handler,
+			MethodName: "removeMember",
+			Handler:    _Agent_RemoveMember_Handler,
 		},
 		{
-			MethodName: "listGrantedAgents",
-			Handler:    _Agent_ListGrantedAgents_Handler,
+			MethodName: "setVisibleScope",
+			Handler:    _Agent_SetVisibleScope_Handler,
+		},
+		{
+			MethodName: "reportTestRun",
+			Handler:    _Agent_ReportTestRun_Handler,
 		},
 		{
 			MethodName: "listTemplates",
@@ -3016,8 +3180,16 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_RetryReview_Handler,
 		},
 		{
-			MethodName: "restrictRelease",
-			Handler:    _Agent_RestrictRelease_Handler,
+			MethodName: "listMarket",
+			Handler:    _Agent_ListMarket_Handler,
+		},
+		{
+			MethodName: "listMyInstances",
+			Handler:    _Agent_ListMyInstances_Handler,
+		},
+		{
+			MethodName: "getInstanceConfig",
+			Handler:    _Agent_GetInstanceConfig_Handler,
 		},
 		{
 			MethodName: "describeScope",
@@ -3030,6 +3202,22 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getAIConfig",
 			Handler:    _Agent_GetAIConfig_Handler,
+		},
+		{
+			MethodName: "prepareInstance",
+			Handler:    _Agent_PrepareInstance_Handler,
+		},
+		{
+			MethodName: "bindInstance",
+			Handler:    _Agent_BindInstance_Handler,
+		},
+		{
+			MethodName: "removeInstance",
+			Handler:    _Agent_RemoveInstance_Handler,
+		},
+		{
+			MethodName: "getInstanceEligibility",
+			Handler:    _Agent_GetInstanceEligibility_Handler,
 		},
 		{
 			MethodName: "adminGetCompanySetting",
@@ -3084,12 +3272,16 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_AdminEnableAgent_Handler,
 		},
 		{
-			MethodName: "adminScopeDisableAgent",
-			Handler:    _Agent_AdminScopeDisableAgent_Handler,
+			MethodName: "adminDelistAgent",
+			Handler:    _Agent_AdminDelistAgent_Handler,
 		},
 		{
-			MethodName: "adminScopeEnableAgent",
-			Handler:    _Agent_AdminScopeEnableAgent_Handler,
+			MethodName: "adminRelistAgent",
+			Handler:    _Agent_AdminRelistAgent_Handler,
+		},
+		{
+			MethodName: "adminDeleteAgent",
+			Handler:    _Agent_AdminDeleteAgent_Handler,
 		},
 		{
 			MethodName: "adminRestoreAgent",

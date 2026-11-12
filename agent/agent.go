@@ -5,12 +5,12 @@ import "errors"
 var (
 	errAgentIDEmpty    = errors.New("agentID is empty")
 	errRequestIDEmpty  = errors.New("requestID is empty")
-	errScopeInvalid    = errors.New("scope is invalid")
 	errUserIDEmpty     = errors.New("userID is empty")
 	errReviewIDEmpty   = errors.New("reviewID is empty")
 	errGroupIDEmpty    = errors.New("groupID is empty")
 	errUserIDsEmpty    = errors.New("userIDs is empty")
 	errProviderIDEmpty = errors.New("providerID is empty")
+	errInstanceIDEmpty = errors.New("instanceID is empty")
 )
 
 func (x *CreateAgentReq) Check() error {
@@ -26,6 +26,10 @@ func (x *CreateAgentReq) Check() error {
 	case AgentOrigin_AGENT_ORIGIN_SERVICE:
 		if x.ServiceID == "" {
 			return errors.New("serviceID is empty")
+		}
+	case AgentOrigin_AGENT_ORIGIN_EXPERT:
+		if x.ExpertID == "" {
+			return errors.New("expertID is empty")
 		}
 	default:
 		return errors.New("origin is invalid")
@@ -137,9 +141,17 @@ func (x *MarkTestRunReq) Check() error {
 	return nil
 }
 
-func (x *SelfUseReq) Check() error {
+func (x *ReportTestRunReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
+	}
+	if x.RequestID == "" {
+		return errRequestIDEmpty
+	}
+	switch x.Result {
+	case TestResult_TEST_RESULT_COMPLETED, TestResult_TEST_RESULT_FAILED, TestResult_TEST_RESULT_UNKNOWN:
+	default:
+		return errors.New("result is invalid")
 	}
 	return nil
 }
@@ -161,29 +173,6 @@ func (x *GetSnapshotReq) Check() error {
 	return nil
 }
 
-func (x *DisableReleaseReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_SELF && x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
-		return errScopeInvalid
-	}
-	if x.Reason == "" {
-		return errors.New("reason is empty")
-	}
-	return nil
-}
-
-func (x *EnableReleaseReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_SELF && x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
-		return errScopeInvalid
-	}
-	return nil
-}
-
 func (x *SubmitCheckReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
@@ -191,14 +180,27 @@ func (x *SubmitCheckReq) Check() error {
 	return nil
 }
 
-func (x *ListGrantsReq) Check() error {
+func (x *ListMembersReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
 	return nil
 }
 
-func (x *SetEditorReq) Check() error {
+func (x *SetMemberReq) Check() error {
+	if x.AgentID == "" {
+		return errAgentIDEmpty
+	}
+	if x.UserID == "" {
+		return errUserIDEmpty
+	}
+	if x.Role != MemberRole_MEMBER_ROLE_OWNER && x.Role != MemberRole_MEMBER_ROLE_COLLABORATOR {
+		return errors.New("role is invalid")
+	}
+	return nil
+}
+
+func (x *RemoveMemberReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
@@ -208,12 +210,12 @@ func (x *SetEditorReq) Check() error {
 	return nil
 }
 
-func (x *RemoveEditorReq) Check() error {
+func (x *SetVisibleScopeReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
-	if x.UserID == "" {
-		return errUserIDEmpty
+	if x.Scope == nil {
+		return errors.New("scope is empty")
 	}
 	return nil
 }
@@ -242,9 +244,6 @@ func (x *ListVersionsReq) Check() error {
 func (x *DiffVersionReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
-	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_UNSPECIFIED && x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY && x.Scope != ReleaseScope_RELEASE_SCOPE_PLATFORM {
-		return errScopeInvalid
 	}
 	return nil
 }
@@ -296,15 +295,43 @@ func (x *RetryReviewReq) Check() error {
 	return nil
 }
 
-func (x *RestrictReleaseReq) Check() error {
+func (x *GetInstanceConfigReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	return nil
+}
+
+func (x *PrepareInstanceReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
-		return errScopeInvalid
+	if x.HirerID == "" {
+		return errors.New("hirerID is empty")
 	}
-	if x.RequestID == "" {
-		return errRequestIDEmpty
+	return nil
+}
+
+func (x *BindInstanceReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.ImUserID == "" {
+		return errors.New("imUserID is empty")
+	}
+	return nil
+}
+
+func (x *RemoveInstanceReq) Check() error {
+	if x.InstanceID == "" && (x.AgentID == "" || x.HirerID == "") {
+		return errors.New("instanceID or agentID and hirerID is empty")
+	}
+	return nil
+}
+
+func (x *GetInstanceEligibilityReq) Check() error {
+	if x.InstanceID == "" && x.ImUserID == "" {
+		return errors.New("instanceID or imUserID is empty")
 	}
 	return nil
 }
@@ -341,9 +368,6 @@ func (x *AdminDisableAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
-	if x.Scope < ReleaseScope_RELEASE_SCOPE_SELF || x.Scope > ReleaseScope_RELEASE_SCOPE_PLATFORM {
-		return errScopeInvalid
-	}
 	if x.Reason == "" {
 		return errors.New("reason is empty")
 	}
@@ -354,31 +378,26 @@ func (x *AdminEnableAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
 	}
-	if x.Scope < ReleaseScope_RELEASE_SCOPE_SELF || x.Scope > ReleaseScope_RELEASE_SCOPE_PLATFORM {
-		return errScopeInvalid
+	return nil
+}
+
+func (x *AdminDelistAgentReq) Check() error {
+	if x.AgentID == "" {
+		return errAgentIDEmpty
 	}
 	return nil
 }
 
-func (x *AdminScopeDisableAgentReq) Check() error {
+func (x *AdminRelistAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
-	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
-		return errScopeInvalid
-	}
-	if x.Reason == "" {
-		return errors.New("reason is empty")
 	}
 	return nil
 }
 
-func (x *AdminScopeEnableAgentReq) Check() error {
+func (x *AdminDeleteAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
-	}
-	if x.Scope != ReleaseScope_RELEASE_SCOPE_COMPANY {
-		return errScopeInvalid
 	}
 	return nil
 }
