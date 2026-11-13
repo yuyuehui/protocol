@@ -7,7 +7,9 @@ import "wrapperspb/wrapperspb.proto";
 option go_package = "github.com/openimsdk/protocol/agent";
 
 // 数字员工管理。用户端接口的当前用户、企业都取自 token，请求里不传。
-// 后台接口经 im-chat 代理，操作人取自它签的 X-Admin-Assertion；要企业的接口不填企业时取操作人所在企业。
+// 后台接口经 im-chat 代理，操作人取自它签的 X-Admin-Assertion。要企业的接口操作的是「当前企业」：
+// 超管是请求体顶层 companyID 指定的企业，没带取本人所在企业（本人没有企业就必须带），审计筛选里填的 companyID 要和它一致；
+// 别人只能是本人所在企业，带了 companyID 也忽略。
 
 // ==================== Enums ====================
 
@@ -21,7 +23,8 @@ enum AgentKind {
 enum AgentExecutor {
   AGENT_EXECUTOR_UNSPECIFIED = 0;
   AGENT_EXECUTOR_BUILTIN = 1; // 内置执行：角色设定 + 知识 + 模型
-  AGENT_EXECUTOR_SERVICE = 2; // 连接已有服务
+  reserved 2;
+  reserved "AGENT_EXECUTOR_SERVICE"; // 连接已有服务，已去掉
 }
 
 // 创建起点
@@ -29,7 +32,8 @@ enum AgentOrigin {
   AGENT_ORIGIN_UNSPECIFIED = 0;
   AGENT_ORIGIN_BLANK = 1;    // 空白
   AGENT_ORIGIN_TEMPLATE = 2; // 模板
-  AGENT_ORIGIN_SERVICE = 3;  // 连接已有服务
+  reserved 3;
+  reserved "AGENT_ORIGIN_SERVICE"; // 连接已有服务，已去掉
   AGENT_ORIGIN_EXPERT = 4;   // 从能力中心的专家创建
 }
 
@@ -75,10 +79,10 @@ enum InstanceStatus {
 
 enum CapabilityType {
   CAPABILITY_TYPE_UNSPECIFIED = 0;
-  CAPABILITY_TYPE_SERVICE = 1; // 服务
+  reserved 1, 4;
+  reserved "CAPABILITY_TYPE_SERVICE", "CAPABILITY_TYPE_API"; // 服务、API，已去掉
   CAPABILITY_TYPE_SKILL = 2;
   CAPABILITY_TYPE_MCP = 3;
-  CAPABILITY_TYPE_API = 4;
   CAPABILITY_TYPE_EMPLOYEE = 5; // 引用别的数字员工，catalogID 是员工 ID
 }
 
@@ -183,14 +187,6 @@ enum IssueLevel {
   ISSUE_LEVEL_HINT = 2;  // 提醒
 }
 
-// 模型的推理模式
-enum AIReasoningMode {
-  AI_REASONING_MODE_UNSPECIFIED = 0;
-  AI_REASONING_MODE_UNSUPPORTED = 1; // 不支持
-  AI_REASONING_MODE_ALWAYS = 2;      // 始终开启
-  AI_REASONING_MODE_TOGGLE = 3;      // 可开关
-}
-
 // 模板分类，只用来分组
 enum TemplateCategory {
   TEMPLATE_CATEGORY_UNSPECIFIED = 0;
@@ -200,7 +196,7 @@ enum TemplateCategory {
   TEMPLATE_CATEGORY_PROCESS = 4;    // 流程
 }
 
-// 后台的三种按后台角色分：企业负责人优先，其次系统管理员，其余算后台管理员
+// 后台的三种按后台角色分：企业负责人优先（只在本人所在企业算），其次系统管理员，其余算后台管理员
 enum OperatorRole {
   OPERATOR_ROLE_UNSPECIFIED = 0;
   OPERATOR_ROLE_USER = 1;              // 前台用户
@@ -296,29 +292,23 @@ message RoleSetting {
   string output = 5;             // 输出要求
 }
 
-// 连接已有服务
-message ServiceBinding {
-  string serviceID = 1;
-  string version = 2;            // 空表示当前版本，保存时补上
-  map<string, string> fields = 3; // 开放字段
-}
-
 message CapabilityRef {
   CapabilityType type = 1;
   string catalogID = 2;           // Skill、MCP 是能力中心的资产 ID，引用员工是员工 ID
-  string version = 3;             // 服务、API 空表示当前版本，保存时补上；Skill、MCP、员工总是用最新版本，不存版本
+  reserved 3;
+  reserved "version";             // 都用最新版本，不存版本
   string purpose = 4;             // 用途
   repeated string tools = 5;      // MCP 允许调用的工具，可以先不选
   map<string, string> fields = 6; // 开放字段
   bool groupAvailable = 7;        // 群内可用，默认关；群里只用打开的
 }
 
-// 知识引用：客户端选文档时带上类型、标题、是否在个人空间，服务端不校验；
+// 知识引用：客户端选云文档时带上类型、标题、版本、是否在个人空间，服务端只存、不校验；
 // 用的时候按使用者本人的权限读
 message KnowledgeRef {
   string objectID = 1;
   string scope = 2;        // 引用范围；空表示整个对象
-  string versionAtRef = 3; // 确认时的版本，服务端填
+  string versionAtRef = 3; // 引用时的版本，客户端带，≤64 字；已有的引用保留第一次存的
   int64 addedAt = 4;       // 服务端填
   bool groupAvailable = 5; // 群内可用，默认关
   string kind = 6;         // 云文档、智能表格、多维表格等，≤32 字
@@ -348,7 +338,7 @@ message RoleImport {
   int64 at = 7;
 }
 
-// 员工配置：草稿、快照共用。头像不在这里
+// 员工配置：草稿、快照共用
 message AgentConfig {
   string name = 1;
   string intro = 2;
@@ -356,15 +346,15 @@ message AgentConfig {
   RoleSetting role = 4;
   string opening = 5;
   repeated string suggestedQuestions = 6;
-  reserved 7;
-  reserved "modelID";                       // 模型由使用者在自己电脑上选
-  ServiceBinding service = 8;               // 连接服务的员工才有
+  reserved 7, 8;
+  reserved "modelID", "service";            // 模型由使用者在自己电脑上选；连接已有服务已去掉
   repeated CapabilityRef capabilities = 9;
   repeated KnowledgeRef knowledge = 10;
   MemorySetting memory = 11;
   UsageSetting usage = 12;
   repeated RoleImport imports = 13;
   repeated ImportZone hiddenZones = 14; // 这几个区有当前查看人看不了的导入资料，正文已隐藏。存草稿时原样带回，这几个区保留库里的原文，除非 overwriteZones 里有
+  string avatar = 15; // 头像 URL，≤1024 字。和名称一样跟版本走：上架后改了要审核，生效后同步到各实例账号
 }
 
 // ==================== 员工 ====================
@@ -376,10 +366,11 @@ message AgentInfo {
   AgentExecutor executor = 4;
   AgentOrigin origin = 5;
   string templateID = 6;
-  string serviceID = 7;
+  reserved 7;
+  reserved "serviceID";
   string name = 8;    // 跟草稿走
   string intro = 9;   // 跟草稿走
-  string avatar = 10;
+  string avatar = 10; // 跟草稿走
   AgentStatus status = 11;
   reserved 12;
   reserved "imUserID"; // 账号按实例建，见 AgentInstance
@@ -393,7 +384,7 @@ message AgentInfo {
 // 当前用户能做什么。负责人全有（删除、恢复只限没上架过的）；协作者有 view、edit、test、submit
 message AgentPermissions {
   bool view = 1;    // 看配置、测试记录、快照、状态与版本、成员、可见范围
-  bool edit = 2;    // 存草稿、换头像、导入、确认知识、从快照恢复；群使用只有负责人能改
+  bool edit = 2;    // 存草稿、导入、从快照恢复；群使用只有负责人能改
   bool test = 3;    // 测试上报、标符合／不符合；发布前检查有 test 或 submit 就能做
   reserved 4;
   reserved "selfUse";
@@ -422,20 +413,21 @@ message CapabilityStatus {
   string reason = 5;
 }
 
-// 核心是否可用：内置执行用使用者电脑上的模型，服务端不判断，算可用；连接服务看服务
+// 核心是否可用：内置执行用使用者电脑上的模型，服务端不判断，总是可用
 message CoreStatus {
   bool ready = 1;
   string reason = 2;
 }
 
+// 知识引用的显示信息，取引用时客户端带的；服务端不查知识库
 message KnowledgeMeta {
   string objectID = 1;
   string scope = 2;
-  bool available = 3;     // 不可用时只有对象 ID
+  bool available = 3;     // 总是 true；能不能读按使用者本人的权限
   string kind = 4;        // 云文档、智能表格、多维表格等
   string title = 5;
-  string version = 6;
-  KnowledgeShare share = 7;
+  string version = 6;     // 引用时的版本
+  KnowledgeShare share = 7; // 暂不填
 }
 
 // 后台的下架、停用标记
@@ -560,7 +552,7 @@ message DiffItem {
   reserved 9;
   reserved "applied";
   bool hidden = 10;  // 查看人看不了来源的导入区：前后值不给，只显示「含无权查看来源的内容」
-  repeated KnowledgeMeta knowledgeAdded = 11;   // 知识按查看人查，看不了的只有对象 ID
+  repeated KnowledgeMeta knowledgeAdded = 11;   // 知识：引用时客户端带的类型、标题
   repeated KnowledgeMeta knowledgeRemoved = 12;
 }
 
@@ -595,12 +587,6 @@ message VersionItem {
   RestoredFrom restoredFrom = 7;
   repeated ChangeBlock changes = 8; // 和上一个快照比
   bool first = 9;                   // 首个版本
-}
-
-// 头像更新记录：不需审核，所有版本直接显示新头像
-message AvatarChange {
-  string by = 1;
-  int64 at = 2;
 }
 
 message EffectInfo {
@@ -680,6 +666,7 @@ message AgentProfile {
   repeated string knowledgeTitles = 11;         // 参考资料，只有标题
   bool groupUse = 12;                           // 能拉进群
   repeated string ownerIDs = 13;                // 负责人，不在可见范围的人也给，方便联系
+  string versionNote = 14;                      // 这个版本的更新说明：提交审核时写的说明，没写为空。员工档案和我的数字员工列表才带
 }
 
 // 档案里的一项能力，不给工具明细和开放字段
@@ -732,8 +719,9 @@ message CapabilityItem {
   CapabilityType type = 2;
   string name = 3;
   string provider = 4;
-  string version = 5;           // 当前版本
-  repeated string versions = 6; // 能选的版本
+  string version = 5; // 当前版本，只用来显示；引用总是用最新版本
+  reserved 6;
+  reserved "versions";
   CapabilityLocation location = 7;
   string description = 8;
   repeated string dependencies = 9;
@@ -743,7 +731,8 @@ message CapabilityItem {
   repeated CapabilityTool tools = 13;
   repeated CapabilityField fields = 14;
   bool companyPrivate = 15; // 本企业私有
-  repeated string duties = 16; // 类型是服务时，服务给的职责
+  reserved 16;
+  reserved "duties";
 }
 
 // ==================== 测试 ====================
@@ -800,7 +789,7 @@ message AgentTemplate {
   string opening = 7;
   repeated string suggestedQuestions = 8;
   repeated string tagIDs = 9;
-  repeated CapabilityRef capabilities = 10; // 只能是平台公共的；不带知识引用
+  repeated CapabilityRef capabilities = 10; // 暂不支持：能力目录按企业分，模板不属于企业，带了会被拒；不带知识引用
   int32 sort = 11;
   bool enabled = 12; // 上架
   int64 createTime = 13;
@@ -878,8 +867,8 @@ message CreateAgentReq {
   string requestID = 1; // 必填，≤64 字；重复请求拿到的是同一个员工
   AgentOrigin origin = 2;
   string templateID = 3;     // 起点是模板时必填
-  string serviceID = 4;      // 起点是服务时必填
-  string serviceVersion = 5; // 空表示当前版本
+  reserved 4, 5;
+  reserved "serviceID", "serviceVersion";
   string expertID = 6;       // 起点是专家时必填，能力中心的专家 ID
 }
 message CreateAgentResp {
@@ -895,7 +884,7 @@ message GetAgentResp {
   AgentPermissions permissions = 2;
   AgentDraft draft = 3; // 有编辑、测试、提交任一项才给
   repeated CapabilityStatus capabilities = 4;
-  repeated KnowledgeMeta knowledge = 5; // 客户端选文档时带的类型、标题
+  repeated KnowledgeMeta knowledge = 5; // 草稿里的知识引用，取客户端选文档时带的类型、标题
   CoreStatus core = 6;
   reserved 7, 8;
   reserved "releases", "selfUseCurrent";
@@ -943,14 +932,9 @@ message RestoreDraftReq {
 }
 message RestoreDraftResp {
   AgentDraft draft = 1;
-  int32 droppedKnowledge = 2; // 当前人不可用而去掉的知识引用数
+  reserved 2;
+  reserved "droppedKnowledge"; // 知识引用原样恢复
 }
-
-message UpdateAvatarReq {
-  string agentID = 1;
-  string avatar = 2;
-}
-message UpdateAvatarResp {}
 
 message DeleteAgentReq {
   string agentID = 1;
@@ -978,18 +962,7 @@ message ListCapabilitiesResp {
   repeated CapabilityItem items = 2;
 }
 
-message KnowledgeQuery {
-  string objectID = 1;
-  string scope = 2;
-}
-message ConfirmKnowledgeReq {
-  string agentID = 1;
-  repeated KnowledgeQuery items = 2;
-}
-message ConfirmKnowledgeResp {
-  repeated KnowledgeMeta items = 1;
-}
-
+// 从文档导入设定：服务端读不到云文档，previewRoleImport、applyRoleImport 暂时都返回暂不支持
 message PreviewRoleImportReq {
   string agentID = 1;
   string objectID = 2;
@@ -1174,8 +1147,9 @@ message ListVersionsReq {
 }
 message ListVersionsResp {
   int64 total = 1;
-  repeated VersionItem versions = 2;       // 新的在前
-  repeated AvatarChange avatarChanges = 3; // 最近 50 次，新的在前
+  repeated VersionItem versions = 2; // 新的在前
+  reserved 3;
+  reserved "avatarChanges"; // 头像跟版本走，不再单独记
 }
 
 // 草稿或某个快照，和当前上架的快照比
@@ -1239,12 +1213,16 @@ message GetReviewResp {
   ReviewInfo review = 1;
   UsageSetting usage = 2; // 快照里的群使用
   repeated CapabilityRef capabilities = 3;
-  ServiceBinding service = 4;
-  reserved 5;
-  reserved "modelID";
-  repeated KnowledgeMeta knowledge = 6; // 按查看人裁剪
+  reserved 4, 5;
+  reserved "service", "modelID";
+  repeated KnowledgeMeta knowledge = 6; // 快照里的知识引用
   repeated ReviewTest tests = 7;        // 有效测试：行为指纹和快照一样的
   Scope visibleScope = 8;               // 员工现在的可见范围，不跟版本走
+  AgentConfig config = 9;               // 送审的完整配置。查看人看不了来源的导入区隐藏，见 AgentConfig.hiddenZones
+  // 拿来对比的版本：待审核的是现在上架的（通过后会变什么），已处理的是提交时上架的。首次上架为空，diff 也为空
+  string baseSnapshotID = 10;
+  int64 baseRevision = 11;
+  repeated DiffItem diff = 12; // 和 baseSnapshotID 逐项比，文本给前后全文
 }
 
 // 重试生效失败、或换上以后没写完的单；不重审
@@ -1374,7 +1352,7 @@ message PeopleGroup {
   int64 updateTime = 10;
   int32 userCount = 11;          // 指定人员数，含已离职的
   int64 memberCount = 12;        // 在职成员数
-  string companyID = 13;         // 所属企业，建的时候取操作人的企业，之后不能改；保存时忽略
+  string companyID = 13;         // 所属企业，建的时候取当前企业（见 agent.proto 开头），之后不能改；保存时忽略
 }
 
 // 已选对象的显示名称
@@ -1623,7 +1601,7 @@ message AdminExportAuditsResp {
   bool truncated = 2;
 }
 
-// 发布目标是操作人企业的审核单，新的在前
+// 发布目标是当前企业的审核单，新的在前
 message AdminListReviewsReq {
   repeated ReviewStatus statuses = 1; // 不传只列待审核
   string agentID = 2;                 // 可不填
@@ -1631,7 +1609,7 @@ message AdminListReviewsReq {
 }
 message AdminReviewItem {
   ReviewInfo review = 1; // 不带检查项
-  string agentName = 2;
+  string agentName = 2;   // 送审版本的名称、头像；快照已清理的用员工现在的
   string agentAvatar = 3;
 }
 message AdminListReviewsResp {
@@ -1639,13 +1617,13 @@ message AdminListReviewsResp {
   repeated AdminReviewItem reviews = 2;
 }
 
-// 详情，内容同用户端的 getReview，知识按操作人裁剪
+// 详情，内容同用户端的 getReview
 message AdminGetReviewReq {
   string reviewID = 1;
 }
 message AdminGetReviewResp {
-  GetReviewResp detail = 1;
-  string agentName = 2;
+  GetReviewResp detail = 1; // 含送审的完整配置和与上架版本的逐项对比
+  string agentName = 2;     // 送审版本的名称、头像
   string agentAvatar = 3;
   bool decidable = 4; // 现在能做决定：单子待审核
 }
@@ -1661,7 +1639,7 @@ message AdminDecideReviewResp {
   ReviewInfo review = 1;
 }
 
-// 选择器的候选项，只列操作人企业的。职位、人员群体按 keyword 搜名称；
+// 选择器的候选项，只列当前企业的。职位、人员群体按 keyword 搜名称；
 // 部门：不带 keyword 时列 parentID 的下级，parentID 空为顶层，带了在整个企业里搜；
 // 人员：按姓名、账号搜，可以限定 departmentID（含下级部门）
 message AdminScopeOptionsReq {
@@ -1764,185 +1742,6 @@ message AdminRemovePeopleGroupUsersResp {
   repeated string stillMatched = 2;
 }
 
-// ==================== AI 配置（每个企业一份） ====================
-
-// 模型提供商。服务端不存 key，使用者在自己电脑上填
-message AIProvider {
-  string providerID = 1;  // 新建时留空
-  string name = 2;        // 1-50 字，企业内不能重名
-  string api = 3;         // API 协议，和 OpenClaw 的 api 一致：openai-completions、openai-responses、anthropic-messages、google-generative-ai
-  string baseURL = 4;     // 端点，http 或 https；保存时去掉末尾的调用路径，没有路径的补上版本路径
-  string keyGuide = 5;    // Key 获取指引，≤2000 字
-  string keyGuideURL = 6; // 获取 key 的网址，可不填
-  Scope visibleScope = 7; // 可见范围，列表不带；还要在 AI 使用范围内才看得到
-  bool enabled = 8;
-  int32 sort = 9;         // 小的在前；保存时忽略，用排序接口改
-  int64 revision = 10;    // 修改时带上读到的值，和库里不一样就报冲突
-  string createdBy = 11;
-  string updatedBy = 12;
-  int64 createTime = 13;
-  int64 updateTime = 14;
-  int32 modelCount = 15;  // 只读
-}
-
-// 提供商下的模型
-message AIModel {
-  string providerID = 1;
-  string modelID = 2;                   // 调用时用的模型 ID，1-200 字，不能有空白；建好后不能改
-  string name = 3;                      // 显示名，≤50 字，不填用 modelID
-  string description = 4;               // ≤500 字
-  bool imageInput = 5;                  // 支持图片输入
-  AIReasoningMode reasoningMode = 6;    // 不填按不支持
-  repeated string reasoningEfforts = 7; // 推理强度候选，≤10 个；不支持推理时不能填
-  string defaultReasoningEffort = 8;    // 有候选时必填，要在候选里
-  repeated int64 contextWindows = 9;    // 上下文窗口候选（token），1-10 个，每个 1024 到 1000 万
-  int64 defaultContextWindow = 10;      // 要在候选里，不填取最大的
-  int64 maxOutput = 11;                 // 最大输出（token），不超过最大的上下文窗口
-  int32 sort = 12;                      // 保存时忽略，用排序接口改
-  int64 revision = 13;                  // 0 表示新建；修改时带上读到的值
-  string updatedBy = 14;
-  int64 createTime = 15;
-  int64 updateTime = 16;
-}
-
-message AIModelRef {
-  string providerID = 1;
-  string modelID = 2;
-}
-
-// AI 使用权限和企业默认模型。没设置过时 AI 关着，谁都不能用
-message AISetting {
-  bool enabled = 1;
-  Scope usageScope = 2;        // AI 使用范围
-  AIModelRef defaultModel = 3; // 企业默认模型，新用户默认用它；可为空
-  int64 revision = 4;          // 没设置过为 0
-  string updatedBy = 5;
-  int64 updateTime = 6;
-}
-
-// 用户端看到的提供商，不含 key
-message AIProviderView {
-  string providerID = 1;
-  string name = 2;
-  string api = 3;
-  string baseURL = 4;
-  string keyGuide = 5;
-  string keyGuideURL = 6;
-  repeated AIModelView models = 7; // 按排序
-}
-
-message AIModelView {
-  string modelID = 1;
-  string name = 2;
-  string description = 3;
-  bool imageInput = 4;
-  AIReasoningMode reasoningMode = 5;
-  repeated string reasoningEfforts = 6;
-  string defaultReasoningEffort = 7;
-  repeated int64 contextWindows = 8;
-  int64 defaultContextWindow = 9;
-  int64 maxOutput = 10;
-}
-
-// 用户端，按本人现算：AI 开着、本人在 AI 使用范围内才有提供商；提供商要启用、本人在它的可见范围内。
-// 登录、重连、收到 ai.config.changed 时拉；revision 没变就不用处理
-message GetAIConfigReq {}
-message GetAIConfigResp {
-  bool aiEnabled = 1;
-  repeated AIProviderView providers = 2; // 按排序
-  AIModelRef defaultModel = 3;           // 本人看得到这个模型时才给
-  string revision = 4;                   // 返回内容的摘要
-}
-
-message AdminGetAISettingReq {}
-message AdminGetAISettingResp {
-  AISetting setting = 1;
-}
-
-// 不传的项不改；revision 带上读到的值，和库里不一样就报冲突
-message AdminSetAISettingReq {
-  openim.protobuf.BoolValue enabled = 1;
-  Scope usageScope = 2;        // 整体替换；不传不改
-  AIModelRef defaultModel = 3; // 不传不改；两项都空表示清掉。要是启用的提供商下的模型
-  int64 revision = 4;
-}
-message AdminSetAISettingResp {
-  int64 revision = 1;
-}
-
-message AdminListAIProvidersReq {}
-message AdminListAIProvidersResp {
-  repeated AIProvider providers = 1; // 按排序，不带可见范围
-}
-
-message AdminGetAIProviderReq {
-  string providerID = 1;
-}
-message AdminGetAIProviderResp {
-  AIProvider provider = 1;
-  repeated AIModel models = 2; // 按排序
-}
-
-// providerID 为空是新建，排在最后。名称、协议、端点、指引、可见范围、启用整体替换。
-// 停用企业默认模型所在的提供商要先换默认模型
-message AdminSaveAIProviderReq {
-  AIProvider provider = 1;
-}
-message AdminSaveAIProviderResp {
-  string providerID = 1;
-  int64 revision = 2;
-  string baseURL = 3; // 补全后的端点
-}
-
-// 连同下面的模型一起删；企业默认模型在它下面时不能删
-message AdminDeleteAIProviderReq {
-  string providerID = 1;
-}
-message AdminDeleteAIProviderResp {}
-
-// 传入的按顺序排在前面，没传的按原顺序排在后面
-message AdminSortAIProvidersReq {
-  repeated string providerIDs = 1;
-}
-message AdminSortAIProvidersResp {}
-
-// revision 为 0 是新建，排在最后
-message AdminSaveAIModelReq {
-  AIModel model = 1;
-}
-message AdminSaveAIModelResp {
-  int64 revision = 1;
-}
-
-// 企业默认模型不能删
-message AdminDeleteAIModelReq {
-  string providerID = 1;
-  string modelID = 2;
-}
-message AdminDeleteAIModelResp {}
-
-message AdminSortAIModelsReq {
-  string providerID = 1;
-  repeated string modelIDs = 2;
-}
-message AdminSortAIModelsResp {}
-
-// 连通性测试：用临时填的 key 发一次最小请求。key 不保存、不写日志、不进审计；
-// 端点不能是内网、回环、云元数据等地址（配置的白名单除外），只跟同一主机的重定向
-message AdminTestAIProviderReq {
-  string api = 1;
-  string baseURL = 2;
-  string modelID = 3;
-  string apiKey = 4; // ≤1000 字
-}
-message AdminTestAIProviderResp {
-  bool ok = 1;
-  int64 latencyMS = 2;
-  int32 httpStatus = 3;  // 没收到响应时为 0
-  string vendorCode = 4; // 厂商返回的错误码，取不到为空
-  string errorKind = 5;  // 不通时的类别：auth、not_found、rate_limit、bad_request、server、timeout、network、blocked、redirect、bad_response
-}
-
 service Agent {
   // 用户端
   rpc getContext(GetContextReq) returns (GetContextResp);
@@ -1951,11 +1750,9 @@ service Agent {
   rpc listMyAgents(ListMyAgentsReq) returns (ListMyAgentsResp);
   rpc saveDraft(SaveDraftReq) returns (SaveDraftResp);
   rpc restoreDraft(RestoreDraftReq) returns (RestoreDraftResp);
-  rpc updateAvatar(UpdateAvatarReq) returns (UpdateAvatarResp);
   rpc deleteAgent(DeleteAgentReq) returns (DeleteAgentResp);
   rpc restoreAgent(RestoreAgentReq) returns (RestoreAgentResp);
   rpc listCapabilities(ListCapabilitiesReq) returns (ListCapabilitiesResp);
-  rpc confirmKnowledge(ConfirmKnowledgeReq) returns (ConfirmKnowledgeResp);
   rpc previewRoleImport(PreviewRoleImportReq) returns (PreviewRoleImportResp);
   rpc applyRoleImport(ApplyRoleImportReq) returns (ApplyRoleImportResp);
   rpc listTestRuns(ListTestRunsReq) returns (ListTestRunsResp);
@@ -1984,7 +1781,6 @@ service Agent {
   rpc getInstanceConfig(GetInstanceConfigReq) returns (GetInstanceConfigResp);
   rpc describeScope(DescribeScopeReq) returns (DescribeScopeResp);
   rpc scopeOptions(ScopeOptionsReq) returns (ScopeOptionsResp);
-  rpc getAIConfig(GetAIConfigReq) returns (GetAIConfigResp);
 
   // 内部：/agent/internal，im-chat 用 IM 管理员 token 调
   rpc prepareInstance(PrepareInstanceReq) returns (PrepareInstanceResp);
@@ -1992,7 +1788,7 @@ service Agent {
   rpc removeInstance(RemoveInstanceReq) returns (RemoveInstanceResp);
   rpc getInstanceEligibility(GetInstanceEligibilityReq) returns (GetInstanceEligibilityResp);
 
-  // 后台：/agent/admin，只能操作本企业的
+  // 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
   rpc adminGetCompanySetting(AdminGetCompanySettingReq) returns (AdminGetCompanySettingResp);
   rpc adminSetCompanySetting(AdminSetCompanySettingReq) returns (AdminSetCompanySettingResp);
   rpc adminListCompanySettings(AdminListCompanySettingsReq) returns (AdminListCompanySettingsResp);
@@ -2016,7 +1812,7 @@ service Agent {
   rpc adminGetReview(AdminGetReviewReq) returns (AdminGetReviewResp);
   rpc adminDecideReview(AdminDecideReviewReq) returns (AdminDecideReviewResp);
 
-  // 后台：范围选择器（/agent/admin/scope、/ai/admin/scope 共用）、人员群体、AI 配置，都只限操作人的企业
+  // 后台：范围选择器、人员群体，都只限当前企业
   rpc adminDescribeScope(AdminDescribeScopeReq) returns (AdminDescribeScopeResp);
   rpc adminScopeOptions(AdminScopeOptionsReq) returns (AdminScopeOptionsResp);
   rpc adminListPeopleGroups(AdminListPeopleGroupsReq) returns (AdminListPeopleGroupsResp);
@@ -2027,15 +1823,4 @@ service Agent {
   rpc adminDeletePeopleGroup(AdminDeletePeopleGroupReq) returns (AdminDeletePeopleGroupResp);
   rpc adminAddPeopleGroupUsers(AdminAddPeopleGroupUsersReq) returns (AdminAddPeopleGroupUsersResp);
   rpc adminRemovePeopleGroupUsers(AdminRemovePeopleGroupUsersReq) returns (AdminRemovePeopleGroupUsersResp);
-  rpc adminGetAISetting(AdminGetAISettingReq) returns (AdminGetAISettingResp);
-  rpc adminSetAISetting(AdminSetAISettingReq) returns (AdminSetAISettingResp);
-  rpc adminListAIProviders(AdminListAIProvidersReq) returns (AdminListAIProvidersResp);
-  rpc adminGetAIProvider(AdminGetAIProviderReq) returns (AdminGetAIProviderResp);
-  rpc adminSaveAIProvider(AdminSaveAIProviderReq) returns (AdminSaveAIProviderResp);
-  rpc adminDeleteAIProvider(AdminDeleteAIProviderReq) returns (AdminDeleteAIProviderResp);
-  rpc adminSortAIProviders(AdminSortAIProvidersReq) returns (AdminSortAIProvidersResp);
-  rpc adminSaveAIModel(AdminSaveAIModelReq) returns (AdminSaveAIModelResp);
-  rpc adminDeleteAIModel(AdminDeleteAIModelReq) returns (AdminDeleteAIModelResp);
-  rpc adminSortAIModels(AdminSortAIModelsReq) returns (AdminSortAIModelsResp);
-  rpc adminTestAIProvider(AdminTestAIProviderReq) returns (AdminTestAIProviderResp);
 }

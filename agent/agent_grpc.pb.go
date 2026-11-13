@@ -25,11 +25,9 @@ const (
 	Agent_ListMyAgents_FullMethodName                = "/openim.agent.Agent/listMyAgents"
 	Agent_SaveDraft_FullMethodName                   = "/openim.agent.Agent/saveDraft"
 	Agent_RestoreDraft_FullMethodName                = "/openim.agent.Agent/restoreDraft"
-	Agent_UpdateAvatar_FullMethodName                = "/openim.agent.Agent/updateAvatar"
 	Agent_DeleteAgent_FullMethodName                 = "/openim.agent.Agent/deleteAgent"
 	Agent_RestoreAgent_FullMethodName                = "/openim.agent.Agent/restoreAgent"
 	Agent_ListCapabilities_FullMethodName            = "/openim.agent.Agent/listCapabilities"
-	Agent_ConfirmKnowledge_FullMethodName            = "/openim.agent.Agent/confirmKnowledge"
 	Agent_PreviewRoleImport_FullMethodName           = "/openim.agent.Agent/previewRoleImport"
 	Agent_ApplyRoleImport_FullMethodName             = "/openim.agent.Agent/applyRoleImport"
 	Agent_ListTestRuns_FullMethodName                = "/openim.agent.Agent/listTestRuns"
@@ -58,7 +56,6 @@ const (
 	Agent_GetInstanceConfig_FullMethodName           = "/openim.agent.Agent/getInstanceConfig"
 	Agent_DescribeScope_FullMethodName               = "/openim.agent.Agent/describeScope"
 	Agent_ScopeOptions_FullMethodName                = "/openim.agent.Agent/scopeOptions"
-	Agent_GetAIConfig_FullMethodName                 = "/openim.agent.Agent/getAIConfig"
 	Agent_PrepareInstance_FullMethodName             = "/openim.agent.Agent/prepareInstance"
 	Agent_BindInstance_FullMethodName                = "/openim.agent.Agent/bindInstance"
 	Agent_RemoveInstance_FullMethodName              = "/openim.agent.Agent/removeInstance"
@@ -95,17 +92,6 @@ const (
 	Agent_AdminDeletePeopleGroup_FullMethodName      = "/openim.agent.Agent/adminDeletePeopleGroup"
 	Agent_AdminAddPeopleGroupUsers_FullMethodName    = "/openim.agent.Agent/adminAddPeopleGroupUsers"
 	Agent_AdminRemovePeopleGroupUsers_FullMethodName = "/openim.agent.Agent/adminRemovePeopleGroupUsers"
-	Agent_AdminGetAISetting_FullMethodName           = "/openim.agent.Agent/adminGetAISetting"
-	Agent_AdminSetAISetting_FullMethodName           = "/openim.agent.Agent/adminSetAISetting"
-	Agent_AdminListAIProviders_FullMethodName        = "/openim.agent.Agent/adminListAIProviders"
-	Agent_AdminGetAIProvider_FullMethodName          = "/openim.agent.Agent/adminGetAIProvider"
-	Agent_AdminSaveAIProvider_FullMethodName         = "/openim.agent.Agent/adminSaveAIProvider"
-	Agent_AdminDeleteAIProvider_FullMethodName       = "/openim.agent.Agent/adminDeleteAIProvider"
-	Agent_AdminSortAIProviders_FullMethodName        = "/openim.agent.Agent/adminSortAIProviders"
-	Agent_AdminSaveAIModel_FullMethodName            = "/openim.agent.Agent/adminSaveAIModel"
-	Agent_AdminDeleteAIModel_FullMethodName          = "/openim.agent.Agent/adminDeleteAIModel"
-	Agent_AdminSortAIModels_FullMethodName           = "/openim.agent.Agent/adminSortAIModels"
-	Agent_AdminTestAIProvider_FullMethodName         = "/openim.agent.Agent/adminTestAIProvider"
 )
 
 // AgentClient is the client API for Agent service.
@@ -119,11 +105,9 @@ type AgentClient interface {
 	ListMyAgents(ctx context.Context, in *ListMyAgentsReq, opts ...grpc.CallOption) (*ListMyAgentsResp, error)
 	SaveDraft(ctx context.Context, in *SaveDraftReq, opts ...grpc.CallOption) (*SaveDraftResp, error)
 	RestoreDraft(ctx context.Context, in *RestoreDraftReq, opts ...grpc.CallOption) (*RestoreDraftResp, error)
-	UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error)
 	DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*DeleteAgentResp, error)
 	RestoreAgent(ctx context.Context, in *RestoreAgentReq, opts ...grpc.CallOption) (*RestoreAgentResp, error)
 	ListCapabilities(ctx context.Context, in *ListCapabilitiesReq, opts ...grpc.CallOption) (*ListCapabilitiesResp, error)
-	ConfirmKnowledge(ctx context.Context, in *ConfirmKnowledgeReq, opts ...grpc.CallOption) (*ConfirmKnowledgeResp, error)
 	PreviewRoleImport(ctx context.Context, in *PreviewRoleImportReq, opts ...grpc.CallOption) (*PreviewRoleImportResp, error)
 	ApplyRoleImport(ctx context.Context, in *ApplyRoleImportReq, opts ...grpc.CallOption) (*ApplyRoleImportResp, error)
 	ListTestRuns(ctx context.Context, in *ListTestRunsReq, opts ...grpc.CallOption) (*ListTestRunsResp, error)
@@ -152,13 +136,12 @@ type AgentClient interface {
 	GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error)
 	DescribeScope(ctx context.Context, in *DescribeScopeReq, opts ...grpc.CallOption) (*DescribeScopeResp, error)
 	ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opts ...grpc.CallOption) (*ScopeOptionsResp, error)
-	GetAIConfig(ctx context.Context, in *GetAIConfigReq, opts ...grpc.CallOption) (*GetAIConfigResp, error)
 	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
 	PrepareInstance(ctx context.Context, in *PrepareInstanceReq, opts ...grpc.CallOption) (*PrepareInstanceResp, error)
 	BindInstance(ctx context.Context, in *BindInstanceReq, opts ...grpc.CallOption) (*BindInstanceResp, error)
 	RemoveInstance(ctx context.Context, in *RemoveInstanceReq, opts ...grpc.CallOption) (*RemoveInstanceResp, error)
 	GetInstanceEligibility(ctx context.Context, in *GetInstanceEligibilityReq, opts ...grpc.CallOption) (*GetInstanceEligibilityResp, error)
-	// 后台：/agent/admin，只能操作本企业的
+	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(ctx context.Context, in *AdminGetCompanySettingReq, opts ...grpc.CallOption) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(ctx context.Context, in *AdminSetCompanySettingReq, opts ...grpc.CallOption) (*AdminSetCompanySettingResp, error)
 	AdminListCompanySettings(ctx context.Context, in *AdminListCompanySettingsReq, opts ...grpc.CallOption) (*AdminListCompanySettingsResp, error)
@@ -181,7 +164,7 @@ type AgentClient interface {
 	AdminListReviews(ctx context.Context, in *AdminListReviewsReq, opts ...grpc.CallOption) (*AdminListReviewsResp, error)
 	AdminGetReview(ctx context.Context, in *AdminGetReviewReq, opts ...grpc.CallOption) (*AdminGetReviewResp, error)
 	AdminDecideReview(ctx context.Context, in *AdminDecideReviewReq, opts ...grpc.CallOption) (*AdminDecideReviewResp, error)
-	// 后台：范围选择器（/agent/admin/scope、/ai/admin/scope 共用）、人员群体、AI 配置，都只限操作人的企业
+	// 后台：范围选择器、人员群体，都只限当前企业
 	AdminDescribeScope(ctx context.Context, in *AdminDescribeScopeReq, opts ...grpc.CallOption) (*AdminDescribeScopeResp, error)
 	AdminScopeOptions(ctx context.Context, in *AdminScopeOptionsReq, opts ...grpc.CallOption) (*AdminScopeOptionsResp, error)
 	AdminListPeopleGroups(ctx context.Context, in *AdminListPeopleGroupsReq, opts ...grpc.CallOption) (*AdminListPeopleGroupsResp, error)
@@ -192,17 +175,6 @@ type AgentClient interface {
 	AdminDeletePeopleGroup(ctx context.Context, in *AdminDeletePeopleGroupReq, opts ...grpc.CallOption) (*AdminDeletePeopleGroupResp, error)
 	AdminAddPeopleGroupUsers(ctx context.Context, in *AdminAddPeopleGroupUsersReq, opts ...grpc.CallOption) (*AdminAddPeopleGroupUsersResp, error)
 	AdminRemovePeopleGroupUsers(ctx context.Context, in *AdminRemovePeopleGroupUsersReq, opts ...grpc.CallOption) (*AdminRemovePeopleGroupUsersResp, error)
-	AdminGetAISetting(ctx context.Context, in *AdminGetAISettingReq, opts ...grpc.CallOption) (*AdminGetAISettingResp, error)
-	AdminSetAISetting(ctx context.Context, in *AdminSetAISettingReq, opts ...grpc.CallOption) (*AdminSetAISettingResp, error)
-	AdminListAIProviders(ctx context.Context, in *AdminListAIProvidersReq, opts ...grpc.CallOption) (*AdminListAIProvidersResp, error)
-	AdminGetAIProvider(ctx context.Context, in *AdminGetAIProviderReq, opts ...grpc.CallOption) (*AdminGetAIProviderResp, error)
-	AdminSaveAIProvider(ctx context.Context, in *AdminSaveAIProviderReq, opts ...grpc.CallOption) (*AdminSaveAIProviderResp, error)
-	AdminDeleteAIProvider(ctx context.Context, in *AdminDeleteAIProviderReq, opts ...grpc.CallOption) (*AdminDeleteAIProviderResp, error)
-	AdminSortAIProviders(ctx context.Context, in *AdminSortAIProvidersReq, opts ...grpc.CallOption) (*AdminSortAIProvidersResp, error)
-	AdminSaveAIModel(ctx context.Context, in *AdminSaveAIModelReq, opts ...grpc.CallOption) (*AdminSaveAIModelResp, error)
-	AdminDeleteAIModel(ctx context.Context, in *AdminDeleteAIModelReq, opts ...grpc.CallOption) (*AdminDeleteAIModelResp, error)
-	AdminSortAIModels(ctx context.Context, in *AdminSortAIModelsReq, opts ...grpc.CallOption) (*AdminSortAIModelsResp, error)
-	AdminTestAIProvider(ctx context.Context, in *AdminTestAIProviderReq, opts ...grpc.CallOption) (*AdminTestAIProviderResp, error)
 }
 
 type agentClient struct {
@@ -273,16 +245,6 @@ func (c *agentClient) RestoreDraft(ctx context.Context, in *RestoreDraftReq, opt
 	return out, nil
 }
 
-func (c *agentClient) UpdateAvatar(ctx context.Context, in *UpdateAvatarReq, opts ...grpc.CallOption) (*UpdateAvatarResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateAvatarResp)
-	err := c.cc.Invoke(ctx, Agent_UpdateAvatar_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *agentClient) DeleteAgent(ctx context.Context, in *DeleteAgentReq, opts ...grpc.CallOption) (*DeleteAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteAgentResp)
@@ -307,16 +269,6 @@ func (c *agentClient) ListCapabilities(ctx context.Context, in *ListCapabilities
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCapabilitiesResp)
 	err := c.cc.Invoke(ctx, Agent_ListCapabilities_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) ConfirmKnowledge(ctx context.Context, in *ConfirmKnowledgeReq, opts ...grpc.CallOption) (*ConfirmKnowledgeResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ConfirmKnowledgeResp)
-	err := c.cc.Invoke(ctx, Agent_ConfirmKnowledge_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -597,16 +549,6 @@ func (c *agentClient) ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ScopeOptionsResp)
 	err := c.cc.Invoke(ctx, Agent_ScopeOptions_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) GetAIConfig(ctx context.Context, in *GetAIConfigReq, opts ...grpc.CallOption) (*GetAIConfigResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAIConfigResp)
-	err := c.cc.Invoke(ctx, Agent_GetAIConfig_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -973,116 +915,6 @@ func (c *agentClient) AdminRemovePeopleGroupUsers(ctx context.Context, in *Admin
 	return out, nil
 }
 
-func (c *agentClient) AdminGetAISetting(ctx context.Context, in *AdminGetAISettingReq, opts ...grpc.CallOption) (*AdminGetAISettingResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminGetAISettingResp)
-	err := c.cc.Invoke(ctx, Agent_AdminGetAISetting_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminSetAISetting(ctx context.Context, in *AdminSetAISettingReq, opts ...grpc.CallOption) (*AdminSetAISettingResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminSetAISettingResp)
-	err := c.cc.Invoke(ctx, Agent_AdminSetAISetting_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminListAIProviders(ctx context.Context, in *AdminListAIProvidersReq, opts ...grpc.CallOption) (*AdminListAIProvidersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminListAIProvidersResp)
-	err := c.cc.Invoke(ctx, Agent_AdminListAIProviders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminGetAIProvider(ctx context.Context, in *AdminGetAIProviderReq, opts ...grpc.CallOption) (*AdminGetAIProviderResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminGetAIProviderResp)
-	err := c.cc.Invoke(ctx, Agent_AdminGetAIProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminSaveAIProvider(ctx context.Context, in *AdminSaveAIProviderReq, opts ...grpc.CallOption) (*AdminSaveAIProviderResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminSaveAIProviderResp)
-	err := c.cc.Invoke(ctx, Agent_AdminSaveAIProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminDeleteAIProvider(ctx context.Context, in *AdminDeleteAIProviderReq, opts ...grpc.CallOption) (*AdminDeleteAIProviderResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminDeleteAIProviderResp)
-	err := c.cc.Invoke(ctx, Agent_AdminDeleteAIProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminSortAIProviders(ctx context.Context, in *AdminSortAIProvidersReq, opts ...grpc.CallOption) (*AdminSortAIProvidersResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminSortAIProvidersResp)
-	err := c.cc.Invoke(ctx, Agent_AdminSortAIProviders_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminSaveAIModel(ctx context.Context, in *AdminSaveAIModelReq, opts ...grpc.CallOption) (*AdminSaveAIModelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminSaveAIModelResp)
-	err := c.cc.Invoke(ctx, Agent_AdminSaveAIModel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminDeleteAIModel(ctx context.Context, in *AdminDeleteAIModelReq, opts ...grpc.CallOption) (*AdminDeleteAIModelResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminDeleteAIModelResp)
-	err := c.cc.Invoke(ctx, Agent_AdminDeleteAIModel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminSortAIModels(ctx context.Context, in *AdminSortAIModelsReq, opts ...grpc.CallOption) (*AdminSortAIModelsResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminSortAIModelsResp)
-	err := c.cc.Invoke(ctx, Agent_AdminSortAIModels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agentClient) AdminTestAIProvider(ctx context.Context, in *AdminTestAIProviderReq, opts ...grpc.CallOption) (*AdminTestAIProviderResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AdminTestAIProviderResp)
-	err := c.cc.Invoke(ctx, Agent_AdminTestAIProvider_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AgentServer is the server API for Agent service.
 // All implementations must embed UnimplementedAgentServer
 // for forward compatibility.
@@ -1094,11 +926,9 @@ type AgentServer interface {
 	ListMyAgents(context.Context, *ListMyAgentsReq) (*ListMyAgentsResp, error)
 	SaveDraft(context.Context, *SaveDraftReq) (*SaveDraftResp, error)
 	RestoreDraft(context.Context, *RestoreDraftReq) (*RestoreDraftResp, error)
-	UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error)
 	DeleteAgent(context.Context, *DeleteAgentReq) (*DeleteAgentResp, error)
 	RestoreAgent(context.Context, *RestoreAgentReq) (*RestoreAgentResp, error)
 	ListCapabilities(context.Context, *ListCapabilitiesReq) (*ListCapabilitiesResp, error)
-	ConfirmKnowledge(context.Context, *ConfirmKnowledgeReq) (*ConfirmKnowledgeResp, error)
 	PreviewRoleImport(context.Context, *PreviewRoleImportReq) (*PreviewRoleImportResp, error)
 	ApplyRoleImport(context.Context, *ApplyRoleImportReq) (*ApplyRoleImportResp, error)
 	ListTestRuns(context.Context, *ListTestRunsReq) (*ListTestRunsResp, error)
@@ -1127,13 +957,12 @@ type AgentServer interface {
 	GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error)
 	DescribeScope(context.Context, *DescribeScopeReq) (*DescribeScopeResp, error)
 	ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error)
-	GetAIConfig(context.Context, *GetAIConfigReq) (*GetAIConfigResp, error)
 	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
 	PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error)
 	BindInstance(context.Context, *BindInstanceReq) (*BindInstanceResp, error)
 	RemoveInstance(context.Context, *RemoveInstanceReq) (*RemoveInstanceResp, error)
 	GetInstanceEligibility(context.Context, *GetInstanceEligibilityReq) (*GetInstanceEligibilityResp, error)
-	// 后台：/agent/admin，只能操作本企业的
+	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(context.Context, *AdminSetCompanySettingReq) (*AdminSetCompanySettingResp, error)
 	AdminListCompanySettings(context.Context, *AdminListCompanySettingsReq) (*AdminListCompanySettingsResp, error)
@@ -1156,7 +985,7 @@ type AgentServer interface {
 	AdminListReviews(context.Context, *AdminListReviewsReq) (*AdminListReviewsResp, error)
 	AdminGetReview(context.Context, *AdminGetReviewReq) (*AdminGetReviewResp, error)
 	AdminDecideReview(context.Context, *AdminDecideReviewReq) (*AdminDecideReviewResp, error)
-	// 后台：范围选择器（/agent/admin/scope、/ai/admin/scope 共用）、人员群体、AI 配置，都只限操作人的企业
+	// 后台：范围选择器、人员群体，都只限当前企业
 	AdminDescribeScope(context.Context, *AdminDescribeScopeReq) (*AdminDescribeScopeResp, error)
 	AdminScopeOptions(context.Context, *AdminScopeOptionsReq) (*AdminScopeOptionsResp, error)
 	AdminListPeopleGroups(context.Context, *AdminListPeopleGroupsReq) (*AdminListPeopleGroupsResp, error)
@@ -1167,17 +996,6 @@ type AgentServer interface {
 	AdminDeletePeopleGroup(context.Context, *AdminDeletePeopleGroupReq) (*AdminDeletePeopleGroupResp, error)
 	AdminAddPeopleGroupUsers(context.Context, *AdminAddPeopleGroupUsersReq) (*AdminAddPeopleGroupUsersResp, error)
 	AdminRemovePeopleGroupUsers(context.Context, *AdminRemovePeopleGroupUsersReq) (*AdminRemovePeopleGroupUsersResp, error)
-	AdminGetAISetting(context.Context, *AdminGetAISettingReq) (*AdminGetAISettingResp, error)
-	AdminSetAISetting(context.Context, *AdminSetAISettingReq) (*AdminSetAISettingResp, error)
-	AdminListAIProviders(context.Context, *AdminListAIProvidersReq) (*AdminListAIProvidersResp, error)
-	AdminGetAIProvider(context.Context, *AdminGetAIProviderReq) (*AdminGetAIProviderResp, error)
-	AdminSaveAIProvider(context.Context, *AdminSaveAIProviderReq) (*AdminSaveAIProviderResp, error)
-	AdminDeleteAIProvider(context.Context, *AdminDeleteAIProviderReq) (*AdminDeleteAIProviderResp, error)
-	AdminSortAIProviders(context.Context, *AdminSortAIProvidersReq) (*AdminSortAIProvidersResp, error)
-	AdminSaveAIModel(context.Context, *AdminSaveAIModelReq) (*AdminSaveAIModelResp, error)
-	AdminDeleteAIModel(context.Context, *AdminDeleteAIModelReq) (*AdminDeleteAIModelResp, error)
-	AdminSortAIModels(context.Context, *AdminSortAIModelsReq) (*AdminSortAIModelsResp, error)
-	AdminTestAIProvider(context.Context, *AdminTestAIProviderReq) (*AdminTestAIProviderResp, error)
 	mustEmbedUnimplementedAgentServer()
 }
 
@@ -1206,9 +1024,6 @@ func (UnimplementedAgentServer) SaveDraft(context.Context, *SaveDraftReq) (*Save
 func (UnimplementedAgentServer) RestoreDraft(context.Context, *RestoreDraftReq) (*RestoreDraftResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method RestoreDraft not implemented")
 }
-func (UnimplementedAgentServer) UpdateAvatar(context.Context, *UpdateAvatarReq) (*UpdateAvatarResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method UpdateAvatar not implemented")
-}
 func (UnimplementedAgentServer) DeleteAgent(context.Context, *DeleteAgentReq) (*DeleteAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteAgent not implemented")
 }
@@ -1217,9 +1032,6 @@ func (UnimplementedAgentServer) RestoreAgent(context.Context, *RestoreAgentReq) 
 }
 func (UnimplementedAgentServer) ListCapabilities(context.Context, *ListCapabilitiesReq) (*ListCapabilitiesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCapabilities not implemented")
-}
-func (UnimplementedAgentServer) ConfirmKnowledge(context.Context, *ConfirmKnowledgeReq) (*ConfirmKnowledgeResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method ConfirmKnowledge not implemented")
 }
 func (UnimplementedAgentServer) PreviewRoleImport(context.Context, *PreviewRoleImportReq) (*PreviewRoleImportResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PreviewRoleImport not implemented")
@@ -1304,9 +1116,6 @@ func (UnimplementedAgentServer) DescribeScope(context.Context, *DescribeScopeReq
 }
 func (UnimplementedAgentServer) ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ScopeOptions not implemented")
-}
-func (UnimplementedAgentServer) GetAIConfig(context.Context, *GetAIConfigReq) (*GetAIConfigResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAIConfig not implemented")
 }
 func (UnimplementedAgentServer) PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PrepareInstance not implemented")
@@ -1415,39 +1224,6 @@ func (UnimplementedAgentServer) AdminAddPeopleGroupUsers(context.Context, *Admin
 }
 func (UnimplementedAgentServer) AdminRemovePeopleGroupUsers(context.Context, *AdminRemovePeopleGroupUsersReq) (*AdminRemovePeopleGroupUsersResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminRemovePeopleGroupUsers not implemented")
-}
-func (UnimplementedAgentServer) AdminGetAISetting(context.Context, *AdminGetAISettingReq) (*AdminGetAISettingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminGetAISetting not implemented")
-}
-func (UnimplementedAgentServer) AdminSetAISetting(context.Context, *AdminSetAISettingReq) (*AdminSetAISettingResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminSetAISetting not implemented")
-}
-func (UnimplementedAgentServer) AdminListAIProviders(context.Context, *AdminListAIProvidersReq) (*AdminListAIProvidersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminListAIProviders not implemented")
-}
-func (UnimplementedAgentServer) AdminGetAIProvider(context.Context, *AdminGetAIProviderReq) (*AdminGetAIProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminGetAIProvider not implemented")
-}
-func (UnimplementedAgentServer) AdminSaveAIProvider(context.Context, *AdminSaveAIProviderReq) (*AdminSaveAIProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminSaveAIProvider not implemented")
-}
-func (UnimplementedAgentServer) AdminDeleteAIProvider(context.Context, *AdminDeleteAIProviderReq) (*AdminDeleteAIProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminDeleteAIProvider not implemented")
-}
-func (UnimplementedAgentServer) AdminSortAIProviders(context.Context, *AdminSortAIProvidersReq) (*AdminSortAIProvidersResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminSortAIProviders not implemented")
-}
-func (UnimplementedAgentServer) AdminSaveAIModel(context.Context, *AdminSaveAIModelReq) (*AdminSaveAIModelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminSaveAIModel not implemented")
-}
-func (UnimplementedAgentServer) AdminDeleteAIModel(context.Context, *AdminDeleteAIModelReq) (*AdminDeleteAIModelResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminDeleteAIModel not implemented")
-}
-func (UnimplementedAgentServer) AdminSortAIModels(context.Context, *AdminSortAIModelsReq) (*AdminSortAIModelsResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminSortAIModels not implemented")
-}
-func (UnimplementedAgentServer) AdminTestAIProvider(context.Context, *AdminTestAIProviderReq) (*AdminTestAIProviderResp, error) {
-	return nil, status.Error(codes.Unimplemented, "method AdminTestAIProvider not implemented")
 }
 func (UnimplementedAgentServer) mustEmbedUnimplementedAgentServer() {}
 func (UnimplementedAgentServer) testEmbeddedByValue()               {}
@@ -1578,24 +1354,6 @@ func _Agent_RestoreDraft_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_UpdateAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAvatarReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).UpdateAvatar(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_UpdateAvatar_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).UpdateAvatar(ctx, req.(*UpdateAvatarReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Agent_DeleteAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteAgentReq)
 	if err := dec(in); err != nil {
@@ -1646,24 +1404,6 @@ func _Agent_ListCapabilities_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).ListCapabilities(ctx, req.(*ListCapabilitiesReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_ConfirmKnowledge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfirmKnowledgeReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).ConfirmKnowledge(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_ConfirmKnowledge_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).ConfirmKnowledge(ctx, req.(*ConfirmKnowledgeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2168,24 +1908,6 @@ func _Agent_ScopeOptions_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).ScopeOptions(ctx, req.(*ScopeOptionsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_GetAIConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAIConfigReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).GetAIConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_GetAIConfig_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).GetAIConfig(ctx, req.(*GetAIConfigReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2838,204 +2560,6 @@ func _Agent_AdminRemovePeopleGroupUsers_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Agent_AdminGetAISetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminGetAISettingReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminGetAISetting(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminGetAISetting_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminGetAISetting(ctx, req.(*AdminGetAISettingReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminSetAISetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminSetAISettingReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminSetAISetting(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminSetAISetting_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminSetAISetting(ctx, req.(*AdminSetAISettingReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminListAIProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminListAIProvidersReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminListAIProviders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminListAIProviders_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminListAIProviders(ctx, req.(*AdminListAIProvidersReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminGetAIProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminGetAIProviderReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminGetAIProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminGetAIProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminGetAIProvider(ctx, req.(*AdminGetAIProviderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminSaveAIProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminSaveAIProviderReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminSaveAIProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminSaveAIProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminSaveAIProvider(ctx, req.(*AdminSaveAIProviderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminDeleteAIProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminDeleteAIProviderReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminDeleteAIProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminDeleteAIProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminDeleteAIProvider(ctx, req.(*AdminDeleteAIProviderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminSortAIProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminSortAIProvidersReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminSortAIProviders(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminSortAIProviders_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminSortAIProviders(ctx, req.(*AdminSortAIProvidersReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminSaveAIModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminSaveAIModelReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminSaveAIModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminSaveAIModel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminSaveAIModel(ctx, req.(*AdminSaveAIModelReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminDeleteAIModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminDeleteAIModelReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminDeleteAIModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminDeleteAIModel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminDeleteAIModel(ctx, req.(*AdminDeleteAIModelReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminSortAIModels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminSortAIModelsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminSortAIModels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminSortAIModels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminSortAIModels(ctx, req.(*AdminSortAIModelsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Agent_AdminTestAIProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AdminTestAIProviderReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AgentServer).AdminTestAIProvider(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Agent_AdminTestAIProvider_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AgentServer).AdminTestAIProvider(ctx, req.(*AdminTestAIProviderReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Agent_ServiceDesc is the grpc.ServiceDesc for Agent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -3068,10 +2592,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_RestoreDraft_Handler,
 		},
 		{
-			MethodName: "updateAvatar",
-			Handler:    _Agent_UpdateAvatar_Handler,
-		},
-		{
 			MethodName: "deleteAgent",
 			Handler:    _Agent_DeleteAgent_Handler,
 		},
@@ -3082,10 +2602,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "listCapabilities",
 			Handler:    _Agent_ListCapabilities_Handler,
-		},
-		{
-			MethodName: "confirmKnowledge",
-			Handler:    _Agent_ConfirmKnowledge_Handler,
 		},
 		{
 			MethodName: "previewRoleImport",
@@ -3198,10 +2714,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "scopeOptions",
 			Handler:    _Agent_ScopeOptions_Handler,
-		},
-		{
-			MethodName: "getAIConfig",
-			Handler:    _Agent_GetAIConfig_Handler,
 		},
 		{
 			MethodName: "prepareInstance",
@@ -3346,50 +2858,6 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "adminRemovePeopleGroupUsers",
 			Handler:    _Agent_AdminRemovePeopleGroupUsers_Handler,
-		},
-		{
-			MethodName: "adminGetAISetting",
-			Handler:    _Agent_AdminGetAISetting_Handler,
-		},
-		{
-			MethodName: "adminSetAISetting",
-			Handler:    _Agent_AdminSetAISetting_Handler,
-		},
-		{
-			MethodName: "adminListAIProviders",
-			Handler:    _Agent_AdminListAIProviders_Handler,
-		},
-		{
-			MethodName: "adminGetAIProvider",
-			Handler:    _Agent_AdminGetAIProvider_Handler,
-		},
-		{
-			MethodName: "adminSaveAIProvider",
-			Handler:    _Agent_AdminSaveAIProvider_Handler,
-		},
-		{
-			MethodName: "adminDeleteAIProvider",
-			Handler:    _Agent_AdminDeleteAIProvider_Handler,
-		},
-		{
-			MethodName: "adminSortAIProviders",
-			Handler:    _Agent_AdminSortAIProviders_Handler,
-		},
-		{
-			MethodName: "adminSaveAIModel",
-			Handler:    _Agent_AdminSaveAIModel_Handler,
-		},
-		{
-			MethodName: "adminDeleteAIModel",
-			Handler:    _Agent_AdminDeleteAIModel_Handler,
-		},
-		{
-			MethodName: "adminSortAIModels",
-			Handler:    _Agent_AdminSortAIModels_Handler,
-		},
-		{
-			MethodName: "adminTestAIProvider",
-			Handler:    _Agent_AdminTestAIProvider_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -9,7 +9,6 @@ var (
 	errReviewIDEmpty   = errors.New("reviewID is empty")
 	errGroupIDEmpty    = errors.New("groupID is empty")
 	errUserIDsEmpty    = errors.New("userIDs is empty")
-	errProviderIDEmpty = errors.New("providerID is empty")
 	errInstanceIDEmpty = errors.New("instanceID is empty")
 )
 
@@ -22,10 +21,6 @@ func (x *CreateAgentReq) Check() error {
 	case AgentOrigin_AGENT_ORIGIN_TEMPLATE:
 		if x.TemplateID == "" {
 			return errors.New("templateID is empty")
-		}
-	case AgentOrigin_AGENT_ORIGIN_SERVICE:
-		if x.ServiceID == "" {
-			return errors.New("serviceID is empty")
 		}
 	case AgentOrigin_AGENT_ORIGIN_EXPERT:
 		if x.ExpertID == "" {
@@ -64,13 +59,6 @@ func (x *RestoreDraftReq) Check() error {
 	return nil
 }
 
-func (x *UpdateAvatarReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	return nil
-}
-
 func (x *DeleteAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
@@ -81,16 +69,6 @@ func (x *DeleteAgentReq) Check() error {
 func (x *RestoreAgentReq) Check() error {
 	if x.AgentID == "" {
 		return errAgentIDEmpty
-	}
-	return nil
-}
-
-func (x *ConfirmKnowledgeReq) Check() error {
-	if x.AgentID == "" {
-		return errAgentIDEmpty
-	}
-	if len(x.Items) == 0 {
-		return errors.New("items is empty")
 	}
 	return nil
 }
@@ -481,71 +459,6 @@ func (x *AdminGetReviewReq) Check() error {
 func (x *AdminDecideReviewReq) Check() error {
 	if x.ReviewID == "" {
 		return errReviewIDEmpty
-	}
-	return nil
-}
-
-func (x *AdminGetAIProviderReq) Check() error {
-	if x.ProviderID == "" {
-		return errProviderIDEmpty
-	}
-	return nil
-}
-
-func (x *AdminSaveAIProviderReq) Check() error {
-	if x.Provider == nil {
-		return errors.New("provider is empty")
-	}
-	return nil
-}
-
-func (x *AdminDeleteAIProviderReq) Check() error {
-	if x.ProviderID == "" {
-		return errProviderIDEmpty
-	}
-	return nil
-}
-
-func (x *AdminSaveAIModelReq) Check() error {
-	if x.Model == nil {
-		return errors.New("model is empty")
-	}
-	if x.Model.ProviderID == "" {
-		return errProviderIDEmpty
-	}
-	return nil
-}
-
-func (x *AdminDeleteAIModelReq) Check() error {
-	if x.ProviderID == "" {
-		return errProviderIDEmpty
-	}
-	if x.ModelID == "" {
-		return errors.New("modelID is empty")
-	}
-	return nil
-}
-
-func (x *AdminSortAIModelsReq) Check() error {
-	if x.ProviderID == "" {
-		return errProviderIDEmpty
-	}
-	return nil
-}
-
-// Check 报错只用固定文字，不带传入的值：apiKey 不能出现在返回和日志里
-func (x *AdminTestAIProviderReq) Check() error {
-	switch {
-	case x.Api == "":
-		return errors.New("api is empty")
-	case x.BaseURL == "":
-		return errors.New("baseURL is empty")
-	case x.ModelID == "":
-		return errors.New("modelID is empty")
-	case x.ApiKey == "":
-		return errors.New("apiKey is empty")
-	case len(x.ApiKey) > 1000:
-		return errors.New("apiKey is too long")
 	}
 	return nil
 }
