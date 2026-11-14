@@ -303,6 +303,13 @@ const (
 	GroupBaned          = 3 // 群组被封禁
 	GroupBanPrivateChat = 4 // 群组禁止私聊
 
+	// 群成员构成（GroupInfo.memberComposition、Conversation.memberComposition），数字员工按 userID 前缀 AgentUserIDPrefix 识别
+	GroupMemberCompositionHuman = 0 // 纯人（默认值；单聊会话也是 0）
+	GroupMemberCompositionMixed = 1 // 数字员工和人混合
+	GroupMemberCompositionAgent = 2 // 纯数字员工
+
+	AgentUserIDPrefix = "bot_" // 数字员工（机器人）IM 账号前缀，和 im-chat 的 constant.AgentUserIDPrefix 一致
+
 	// 用户加入群组来源
 	JoinByAdmin = 1 // 管理员邀请
 

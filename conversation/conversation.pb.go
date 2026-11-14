@@ -63,6 +63,7 @@ type Conversation struct {
 	IsSystemDefault       bool                   `protobuf:"varint,22,opt,name=isSystemDefault,proto3" json:"isSystemDefault"`             // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
 	IsHidden              bool                   `protobuf:"varint,23,opt,name=isHidden,proto3" json:"isHidden"`                           // 是否隐藏（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
 	SeenSeq               int64                  `protobuf:"varint,24,opt,name=seenSeq,proto3" json:"seenSeq"`                             // 用户已看过的最大序列号；服务端保持 hasReadSeq <= seenSeq <= maxSeq，且不回退
+	MemberComposition     int32                  `protobuf:"varint,25,opt,name=memberComposition,proto3" json:"memberComposition"`         // 群成员构成（只读，返回时按群信息填）：0=纯人，1=数字员工和人混合，2=纯数字员工；单聊恒为 0
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -261,6 +262,13 @@ func (x *Conversation) GetIsHidden() bool {
 func (x *Conversation) GetSeenSeq() int64 {
 	if x != nil {
 		return x.SeenSeq
+	}
+	return 0
+}
+
+func (x *Conversation) GetMemberComposition() int32 {
+	if x != nil {
+		return x.MemberComposition
 	}
 	return 0
 }
@@ -852,6 +860,7 @@ type MsgInfo struct {
 	ContentType       int32                  `protobuf:"varint,15,opt,name=contentType,proto3" json:"contentType"`
 	Content           string                 `protobuf:"bytes,16,opt,name=content,proto3" json:"content"`
 	Ex                string                 `protobuf:"bytes,17,opt,name=ex,proto3" json:"ex"`
+	MemberComposition int32                  `protobuf:"varint,18,opt,name=memberComposition,proto3" json:"memberComposition"` // 群成员构成，同 sdkws.GroupInfo.memberComposition
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1003,6 +1012,13 @@ func (x *MsgInfo) GetEx() string {
 		return x.Ex
 	}
 	return ""
+}
+
+func (x *MsgInfo) GetMemberComposition() int32 {
+	if x != nil {
+		return x.MemberComposition
+	}
+	return 0
 }
 
 type GetConversationsReq struct {
@@ -3720,6 +3736,103 @@ func (x *UnhideConversationsIfNeededResp) GetUnhiddenUserIDs() []string {
 	return nil
 }
 
+// 群信息里会话也要带的字段（如成员构成）变了：给这些用户的群会话升版本、发会话变更通知，客户端增量同步时拿到新值
+type NotifyGroupConversationsChangedReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
+	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs"` // 要通知的用户，一般是当前群成员；没有这个群会话的跳过
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotifyGroupConversationsChangedReq) Reset() {
+	*x = NotifyGroupConversationsChangedReq{}
+	mi := &file_conversation_conversation_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotifyGroupConversationsChangedReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyGroupConversationsChangedReq) ProtoMessage() {}
+
+func (x *NotifyGroupConversationsChangedReq) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyGroupConversationsChangedReq.ProtoReflect.Descriptor instead.
+func (*NotifyGroupConversationsChangedReq) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *NotifyGroupConversationsChangedReq) GetGroupID() string {
+	if x != nil {
+		return x.GroupID
+	}
+	return ""
+}
+
+func (x *NotifyGroupConversationsChangedReq) GetUserIDs() []string {
+	if x != nil {
+		return x.UserIDs
+	}
+	return nil
+}
+
+type NotifyGroupConversationsChangedResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserIDs       []string               `protobuf:"bytes,1,rep,name=userIDs,proto3" json:"userIDs"` // 实际升了版本、发了通知的用户
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotifyGroupConversationsChangedResp) Reset() {
+	*x = NotifyGroupConversationsChangedResp{}
+	mi := &file_conversation_conversation_proto_msgTypes[65]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotifyGroupConversationsChangedResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyGroupConversationsChangedResp) ProtoMessage() {}
+
+func (x *NotifyGroupConversationsChangedResp) ProtoReflect() protoreflect.Message {
+	mi := &file_conversation_conversation_proto_msgTypes[65]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyGroupConversationsChangedResp.ProtoReflect.Descriptor instead.
+func (*NotifyGroupConversationsChangedResp) Descriptor() ([]byte, []int) {
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{65}
+}
+
+func (x *NotifyGroupConversationsChangedResp) GetUserIDs() []string {
+	if x != nil {
+		return x.UserIDs
+	}
+	return nil
+}
+
 // 会话分组
 type ConversationGroup struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -3738,7 +3851,7 @@ type ConversationGroup struct {
 
 func (x *ConversationGroup) Reset() {
 	*x = ConversationGroup{}
-	mi := &file_conversation_conversation_proto_msgTypes[64]
+	mi := &file_conversation_conversation_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3750,7 +3863,7 @@ func (x *ConversationGroup) String() string {
 func (*ConversationGroup) ProtoMessage() {}
 
 func (x *ConversationGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[64]
+	mi := &file_conversation_conversation_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3763,7 +3876,7 @@ func (x *ConversationGroup) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationGroup.ProtoReflect.Descriptor instead.
 func (*ConversationGroup) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{64}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *ConversationGroup) GetGroupID() string {
@@ -3839,7 +3952,7 @@ type GroupOrder struct {
 
 func (x *GroupOrder) Reset() {
 	*x = GroupOrder{}
-	mi := &file_conversation_conversation_proto_msgTypes[65]
+	mi := &file_conversation_conversation_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3851,7 +3964,7 @@ func (x *GroupOrder) String() string {
 func (*GroupOrder) ProtoMessage() {}
 
 func (x *GroupOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[65]
+	mi := &file_conversation_conversation_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3864,7 +3977,7 @@ func (x *GroupOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupOrder.ProtoReflect.Descriptor instead.
 func (*GroupOrder) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{65}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *GroupOrder) GetGroupID() string {
@@ -3891,7 +4004,7 @@ type InitConversationGroupsReq struct {
 
 func (x *InitConversationGroupsReq) Reset() {
 	*x = InitConversationGroupsReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[66]
+	mi := &file_conversation_conversation_proto_msgTypes[68]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3903,7 +4016,7 @@ func (x *InitConversationGroupsReq) String() string {
 func (*InitConversationGroupsReq) ProtoMessage() {}
 
 func (x *InitConversationGroupsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[66]
+	mi := &file_conversation_conversation_proto_msgTypes[68]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3916,7 +4029,7 @@ func (x *InitConversationGroupsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InitConversationGroupsReq.ProtoReflect.Descriptor instead.
 func (*InitConversationGroupsReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{66}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{68}
 }
 
 func (x *InitConversationGroupsReq) GetOwnerUserID() string {
@@ -3934,7 +4047,7 @@ type InitConversationGroupsResp struct {
 
 func (x *InitConversationGroupsResp) Reset() {
 	*x = InitConversationGroupsResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[67]
+	mi := &file_conversation_conversation_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3946,7 +4059,7 @@ func (x *InitConversationGroupsResp) String() string {
 func (*InitConversationGroupsResp) ProtoMessage() {}
 
 func (x *InitConversationGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[67]
+	mi := &file_conversation_conversation_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3959,7 +4072,7 @@ func (x *InitConversationGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InitConversationGroupsResp.ProtoReflect.Descriptor instead.
 func (*InitConversationGroupsResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{67}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{69}
 }
 
 type GetAllConversationGroupsReq struct {
@@ -3971,7 +4084,7 @@ type GetAllConversationGroupsReq struct {
 
 func (x *GetAllConversationGroupsReq) Reset() {
 	*x = GetAllConversationGroupsReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[68]
+	mi := &file_conversation_conversation_proto_msgTypes[70]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3983,7 +4096,7 @@ func (x *GetAllConversationGroupsReq) String() string {
 func (*GetAllConversationGroupsReq) ProtoMessage() {}
 
 func (x *GetAllConversationGroupsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[68]
+	mi := &file_conversation_conversation_proto_msgTypes[70]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3996,7 +4109,7 @@ func (x *GetAllConversationGroupsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllConversationGroupsReq.ProtoReflect.Descriptor instead.
 func (*GetAllConversationGroupsReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{68}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{70}
 }
 
 func (x *GetAllConversationGroupsReq) GetOwnerUserID() string {
@@ -4015,7 +4128,7 @@ type GetAllConversationGroupsResp struct {
 
 func (x *GetAllConversationGroupsResp) Reset() {
 	*x = GetAllConversationGroupsResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[69]
+	mi := &file_conversation_conversation_proto_msgTypes[71]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4027,7 +4140,7 @@ func (x *GetAllConversationGroupsResp) String() string {
 func (*GetAllConversationGroupsResp) ProtoMessage() {}
 
 func (x *GetAllConversationGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[69]
+	mi := &file_conversation_conversation_proto_msgTypes[71]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4040,7 +4153,7 @@ func (x *GetAllConversationGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllConversationGroupsResp.ProtoReflect.Descriptor instead.
 func (*GetAllConversationGroupsResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{69}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{71}
 }
 
 func (x *GetAllConversationGroupsResp) GetGroups() []*ConversationGroup {
@@ -4059,7 +4172,7 @@ type GetVisibleConversationGroupsReq struct {
 
 func (x *GetVisibleConversationGroupsReq) Reset() {
 	*x = GetVisibleConversationGroupsReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[70]
+	mi := &file_conversation_conversation_proto_msgTypes[72]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4071,7 +4184,7 @@ func (x *GetVisibleConversationGroupsReq) String() string {
 func (*GetVisibleConversationGroupsReq) ProtoMessage() {}
 
 func (x *GetVisibleConversationGroupsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[70]
+	mi := &file_conversation_conversation_proto_msgTypes[72]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4084,7 +4197,7 @@ func (x *GetVisibleConversationGroupsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVisibleConversationGroupsReq.ProtoReflect.Descriptor instead.
 func (*GetVisibleConversationGroupsReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{70}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{72}
 }
 
 func (x *GetVisibleConversationGroupsReq) GetOwnerUserID() string {
@@ -4103,7 +4216,7 @@ type GetVisibleConversationGroupsResp struct {
 
 func (x *GetVisibleConversationGroupsResp) Reset() {
 	*x = GetVisibleConversationGroupsResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[71]
+	mi := &file_conversation_conversation_proto_msgTypes[73]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4115,7 +4228,7 @@ func (x *GetVisibleConversationGroupsResp) String() string {
 func (*GetVisibleConversationGroupsResp) ProtoMessage() {}
 
 func (x *GetVisibleConversationGroupsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[71]
+	mi := &file_conversation_conversation_proto_msgTypes[73]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4128,7 +4241,7 @@ func (x *GetVisibleConversationGroupsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVisibleConversationGroupsResp.ProtoReflect.Descriptor instead.
 func (*GetVisibleConversationGroupsResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{71}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{73}
 }
 
 func (x *GetVisibleConversationGroupsResp) GetGroups() []*ConversationGroup {
@@ -4150,7 +4263,7 @@ type CreateConversationGroupReq struct {
 
 func (x *CreateConversationGroupReq) Reset() {
 	*x = CreateConversationGroupReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[72]
+	mi := &file_conversation_conversation_proto_msgTypes[74]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4162,7 +4275,7 @@ func (x *CreateConversationGroupReq) String() string {
 func (*CreateConversationGroupReq) ProtoMessage() {}
 
 func (x *CreateConversationGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[72]
+	mi := &file_conversation_conversation_proto_msgTypes[74]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4175,7 +4288,7 @@ func (x *CreateConversationGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConversationGroupReq.ProtoReflect.Descriptor instead.
 func (*CreateConversationGroupReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{72}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{74}
 }
 
 func (x *CreateConversationGroupReq) GetOwnerUserID() string {
@@ -4215,7 +4328,7 @@ type CreateConversationGroupResp struct {
 
 func (x *CreateConversationGroupResp) Reset() {
 	*x = CreateConversationGroupResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[73]
+	mi := &file_conversation_conversation_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4227,7 +4340,7 @@ func (x *CreateConversationGroupResp) String() string {
 func (*CreateConversationGroupResp) ProtoMessage() {}
 
 func (x *CreateConversationGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[73]
+	mi := &file_conversation_conversation_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4240,7 +4353,7 @@ func (x *CreateConversationGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConversationGroupResp.ProtoReflect.Descriptor instead.
 func (*CreateConversationGroupResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{73}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *CreateConversationGroupResp) GetGroup() *ConversationGroup {
@@ -4262,7 +4375,7 @@ type UpdateConversationGroupReq struct {
 
 func (x *UpdateConversationGroupReq) Reset() {
 	*x = UpdateConversationGroupReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[74]
+	mi := &file_conversation_conversation_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4274,7 +4387,7 @@ func (x *UpdateConversationGroupReq) String() string {
 func (*UpdateConversationGroupReq) ProtoMessage() {}
 
 func (x *UpdateConversationGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[74]
+	mi := &file_conversation_conversation_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4287,7 +4400,7 @@ func (x *UpdateConversationGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateConversationGroupReq.ProtoReflect.Descriptor instead.
 func (*UpdateConversationGroupReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{74}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{76}
 }
 
 func (x *UpdateConversationGroupReq) GetGroupID() string {
@@ -4326,7 +4439,7 @@ type UpdateConversationGroupResp struct {
 
 func (x *UpdateConversationGroupResp) Reset() {
 	*x = UpdateConversationGroupResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[75]
+	mi := &file_conversation_conversation_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4338,7 +4451,7 @@ func (x *UpdateConversationGroupResp) String() string {
 func (*UpdateConversationGroupResp) ProtoMessage() {}
 
 func (x *UpdateConversationGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[75]
+	mi := &file_conversation_conversation_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4351,7 +4464,7 @@ func (x *UpdateConversationGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateConversationGroupResp.ProtoReflect.Descriptor instead.
 func (*UpdateConversationGroupResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{75}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{77}
 }
 
 type DeleteConversationGroupReq struct {
@@ -4363,7 +4476,7 @@ type DeleteConversationGroupReq struct {
 
 func (x *DeleteConversationGroupReq) Reset() {
 	*x = DeleteConversationGroupReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[76]
+	mi := &file_conversation_conversation_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4375,7 +4488,7 @@ func (x *DeleteConversationGroupReq) String() string {
 func (*DeleteConversationGroupReq) ProtoMessage() {}
 
 func (x *DeleteConversationGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[76]
+	mi := &file_conversation_conversation_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4388,7 +4501,7 @@ func (x *DeleteConversationGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteConversationGroupReq.ProtoReflect.Descriptor instead.
 func (*DeleteConversationGroupReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{76}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *DeleteConversationGroupReq) GetGroupID() string {
@@ -4406,7 +4519,7 @@ type DeleteConversationGroupResp struct {
 
 func (x *DeleteConversationGroupResp) Reset() {
 	*x = DeleteConversationGroupResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[77]
+	mi := &file_conversation_conversation_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4418,7 +4531,7 @@ func (x *DeleteConversationGroupResp) String() string {
 func (*DeleteConversationGroupResp) ProtoMessage() {}
 
 func (x *DeleteConversationGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[77]
+	mi := &file_conversation_conversation_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4431,7 +4544,7 @@ func (x *DeleteConversationGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteConversationGroupResp.ProtoReflect.Descriptor instead.
 func (*DeleteConversationGroupResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{77}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{79}
 }
 
 type UpdateConversationGroupSortReq struct {
@@ -4444,7 +4557,7 @@ type UpdateConversationGroupSortReq struct {
 
 func (x *UpdateConversationGroupSortReq) Reset() {
 	*x = UpdateConversationGroupSortReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[78]
+	mi := &file_conversation_conversation_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4456,7 +4569,7 @@ func (x *UpdateConversationGroupSortReq) String() string {
 func (*UpdateConversationGroupSortReq) ProtoMessage() {}
 
 func (x *UpdateConversationGroupSortReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[78]
+	mi := &file_conversation_conversation_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4469,7 +4582,7 @@ func (x *UpdateConversationGroupSortReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateConversationGroupSortReq.ProtoReflect.Descriptor instead.
 func (*UpdateConversationGroupSortReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{78}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *UpdateConversationGroupSortReq) GetOwnerUserID() string {
@@ -4494,7 +4607,7 @@ type UpdateConversationGroupSortResp struct {
 
 func (x *UpdateConversationGroupSortResp) Reset() {
 	*x = UpdateConversationGroupSortResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[79]
+	mi := &file_conversation_conversation_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4506,7 +4619,7 @@ func (x *UpdateConversationGroupSortResp) String() string {
 func (*UpdateConversationGroupSortResp) ProtoMessage() {}
 
 func (x *UpdateConversationGroupSortResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[79]
+	mi := &file_conversation_conversation_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4519,7 +4632,7 @@ func (x *UpdateConversationGroupSortResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateConversationGroupSortResp.ProtoReflect.Descriptor instead.
 func (*UpdateConversationGroupSortResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{79}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{81}
 }
 
 type SetConversationGroupVisibilityReq struct {
@@ -4532,7 +4645,7 @@ type SetConversationGroupVisibilityReq struct {
 
 func (x *SetConversationGroupVisibilityReq) Reset() {
 	*x = SetConversationGroupVisibilityReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[80]
+	mi := &file_conversation_conversation_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4544,7 +4657,7 @@ func (x *SetConversationGroupVisibilityReq) String() string {
 func (*SetConversationGroupVisibilityReq) ProtoMessage() {}
 
 func (x *SetConversationGroupVisibilityReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[80]
+	mi := &file_conversation_conversation_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4557,7 +4670,7 @@ func (x *SetConversationGroupVisibilityReq) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use SetConversationGroupVisibilityReq.ProtoReflect.Descriptor instead.
 func (*SetConversationGroupVisibilityReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{80}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *SetConversationGroupVisibilityReq) GetGroupID() string {
@@ -4582,7 +4695,7 @@ type SetConversationGroupVisibilityResp struct {
 
 func (x *SetConversationGroupVisibilityResp) Reset() {
 	*x = SetConversationGroupVisibilityResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[81]
+	mi := &file_conversation_conversation_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4594,7 +4707,7 @@ func (x *SetConversationGroupVisibilityResp) String() string {
 func (*SetConversationGroupVisibilityResp) ProtoMessage() {}
 
 func (x *SetConversationGroupVisibilityResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[81]
+	mi := &file_conversation_conversation_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4607,7 +4720,7 @@ func (x *SetConversationGroupVisibilityResp) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use SetConversationGroupVisibilityResp.ProtoReflect.Descriptor instead.
 func (*SetConversationGroupVisibilityResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{81}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{83}
 }
 
 type AddConversationsToGroupReq struct {
@@ -4621,7 +4734,7 @@ type AddConversationsToGroupReq struct {
 
 func (x *AddConversationsToGroupReq) Reset() {
 	*x = AddConversationsToGroupReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[82]
+	mi := &file_conversation_conversation_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4633,7 +4746,7 @@ func (x *AddConversationsToGroupReq) String() string {
 func (*AddConversationsToGroupReq) ProtoMessage() {}
 
 func (x *AddConversationsToGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[82]
+	mi := &file_conversation_conversation_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4646,7 +4759,7 @@ func (x *AddConversationsToGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddConversationsToGroupReq.ProtoReflect.Descriptor instead.
 func (*AddConversationsToGroupReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{82}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *AddConversationsToGroupReq) GetOwnerUserID() string {
@@ -4678,7 +4791,7 @@ type AddConversationsToGroupResp struct {
 
 func (x *AddConversationsToGroupResp) Reset() {
 	*x = AddConversationsToGroupResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[83]
+	mi := &file_conversation_conversation_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4690,7 +4803,7 @@ func (x *AddConversationsToGroupResp) String() string {
 func (*AddConversationsToGroupResp) ProtoMessage() {}
 
 func (x *AddConversationsToGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[83]
+	mi := &file_conversation_conversation_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4703,7 +4816,7 @@ func (x *AddConversationsToGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddConversationsToGroupResp.ProtoReflect.Descriptor instead.
 func (*AddConversationsToGroupResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{83}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{85}
 }
 
 type RemoveConversationsFromGroupReq struct {
@@ -4716,7 +4829,7 @@ type RemoveConversationsFromGroupReq struct {
 
 func (x *RemoveConversationsFromGroupReq) Reset() {
 	*x = RemoveConversationsFromGroupReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[84]
+	mi := &file_conversation_conversation_proto_msgTypes[86]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4728,7 +4841,7 @@ func (x *RemoveConversationsFromGroupReq) String() string {
 func (*RemoveConversationsFromGroupReq) ProtoMessage() {}
 
 func (x *RemoveConversationsFromGroupReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[84]
+	mi := &file_conversation_conversation_proto_msgTypes[86]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4741,7 +4854,7 @@ func (x *RemoveConversationsFromGroupReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveConversationsFromGroupReq.ProtoReflect.Descriptor instead.
 func (*RemoveConversationsFromGroupReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{84}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{86}
 }
 
 func (x *RemoveConversationsFromGroupReq) GetGroupID() string {
@@ -4766,7 +4879,7 @@ type RemoveConversationsFromGroupResp struct {
 
 func (x *RemoveConversationsFromGroupResp) Reset() {
 	*x = RemoveConversationsFromGroupResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[85]
+	mi := &file_conversation_conversation_proto_msgTypes[87]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4778,7 +4891,7 @@ func (x *RemoveConversationsFromGroupResp) String() string {
 func (*RemoveConversationsFromGroupResp) ProtoMessage() {}
 
 func (x *RemoveConversationsFromGroupResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[85]
+	mi := &file_conversation_conversation_proto_msgTypes[87]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4791,7 +4904,7 @@ func (x *RemoveConversationsFromGroupResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveConversationsFromGroupResp.ProtoReflect.Descriptor instead.
 func (*RemoveConversationsFromGroupResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{85}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{87}
 }
 
 type GetConversationIDsByGroupIDReq struct {
@@ -4803,7 +4916,7 @@ type GetConversationIDsByGroupIDReq struct {
 
 func (x *GetConversationIDsByGroupIDReq) Reset() {
 	*x = GetConversationIDsByGroupIDReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[86]
+	mi := &file_conversation_conversation_proto_msgTypes[88]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4815,7 +4928,7 @@ func (x *GetConversationIDsByGroupIDReq) String() string {
 func (*GetConversationIDsByGroupIDReq) ProtoMessage() {}
 
 func (x *GetConversationIDsByGroupIDReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[86]
+	mi := &file_conversation_conversation_proto_msgTypes[88]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4828,7 +4941,7 @@ func (x *GetConversationIDsByGroupIDReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConversationIDsByGroupIDReq.ProtoReflect.Descriptor instead.
 func (*GetConversationIDsByGroupIDReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{86}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{88}
 }
 
 func (x *GetConversationIDsByGroupIDReq) GetGroupID() string {
@@ -4847,7 +4960,7 @@ type GetConversationIDsByGroupIDResp struct {
 
 func (x *GetConversationIDsByGroupIDResp) Reset() {
 	*x = GetConversationIDsByGroupIDResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[87]
+	mi := &file_conversation_conversation_proto_msgTypes[89]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4859,7 +4972,7 @@ func (x *GetConversationIDsByGroupIDResp) String() string {
 func (*GetConversationIDsByGroupIDResp) ProtoMessage() {}
 
 func (x *GetConversationIDsByGroupIDResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[87]
+	mi := &file_conversation_conversation_proto_msgTypes[89]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4872,7 +4985,7 @@ func (x *GetConversationIDsByGroupIDResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConversationIDsByGroupIDResp.ProtoReflect.Descriptor instead.
 func (*GetConversationIDsByGroupIDResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{87}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{89}
 }
 
 func (x *GetConversationIDsByGroupIDResp) GetConversationIDs() []string {
@@ -4895,7 +5008,7 @@ type SetConversationFoldReq struct {
 
 func (x *SetConversationFoldReq) Reset() {
 	*x = SetConversationFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[88]
+	mi := &file_conversation_conversation_proto_msgTypes[90]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4907,7 +5020,7 @@ func (x *SetConversationFoldReq) String() string {
 func (*SetConversationFoldReq) ProtoMessage() {}
 
 func (x *SetConversationFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[88]
+	mi := &file_conversation_conversation_proto_msgTypes[90]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4920,7 +5033,7 @@ func (x *SetConversationFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetConversationFoldReq.ProtoReflect.Descriptor instead.
 func (*SetConversationFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{88}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{90}
 }
 
 func (x *SetConversationFoldReq) GetConversationID() string {
@@ -4945,7 +5058,7 @@ type SetConversationFoldResp struct {
 
 func (x *SetConversationFoldResp) Reset() {
 	*x = SetConversationFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[89]
+	mi := &file_conversation_conversation_proto_msgTypes[91]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4957,7 +5070,7 @@ func (x *SetConversationFoldResp) String() string {
 func (*SetConversationFoldResp) ProtoMessage() {}
 
 func (x *SetConversationFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[89]
+	mi := &file_conversation_conversation_proto_msgTypes[91]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4970,7 +5083,7 @@ func (x *SetConversationFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetConversationFoldResp.ProtoReflect.Descriptor instead.
 func (*SetConversationFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{89}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{91}
 }
 
 // GetFoldConversationList 获取折叠内的会话列表
@@ -4987,7 +5100,7 @@ type GetFoldConversationListReq struct {
 
 func (x *GetFoldConversationListReq) Reset() {
 	*x = GetFoldConversationListReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[90]
+	mi := &file_conversation_conversation_proto_msgTypes[92]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4999,7 +5112,7 @@ func (x *GetFoldConversationListReq) String() string {
 func (*GetFoldConversationListReq) ProtoMessage() {}
 
 func (x *GetFoldConversationListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[90]
+	mi := &file_conversation_conversation_proto_msgTypes[92]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5012,7 +5125,7 @@ func (x *GetFoldConversationListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFoldConversationListReq.ProtoReflect.Descriptor instead.
 func (*GetFoldConversationListReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{90}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{92}
 }
 
 func (x *GetFoldConversationListReq) GetUserID() string {
@@ -5053,7 +5166,7 @@ type GetFoldConversationListResp struct {
 
 func (x *GetFoldConversationListResp) Reset() {
 	*x = GetFoldConversationListResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[91]
+	mi := &file_conversation_conversation_proto_msgTypes[93]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5065,7 +5178,7 @@ func (x *GetFoldConversationListResp) String() string {
 func (*GetFoldConversationListResp) ProtoMessage() {}
 
 func (x *GetFoldConversationListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[91]
+	mi := &file_conversation_conversation_proto_msgTypes[93]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5078,7 +5191,7 @@ func (x *GetFoldConversationListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFoldConversationListResp.ProtoReflect.Descriptor instead.
 func (*GetFoldConversationListResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{91}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{93}
 }
 
 func (x *GetFoldConversationListResp) GetTotal() int64 {
@@ -5105,7 +5218,7 @@ type GetAllFoldsReq struct {
 
 func (x *GetAllFoldsReq) Reset() {
 	*x = GetAllFoldsReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[92]
+	mi := &file_conversation_conversation_proto_msgTypes[94]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5117,7 +5230,7 @@ func (x *GetAllFoldsReq) String() string {
 func (*GetAllFoldsReq) ProtoMessage() {}
 
 func (x *GetAllFoldsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[92]
+	mi := &file_conversation_conversation_proto_msgTypes[94]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5130,7 +5243,7 @@ func (x *GetAllFoldsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllFoldsReq.ProtoReflect.Descriptor instead.
 func (*GetAllFoldsReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{92}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{94}
 }
 
 func (x *GetAllFoldsReq) GetUserID() string {
@@ -5167,7 +5280,7 @@ type ConversationFold struct {
 
 func (x *ConversationFold) Reset() {
 	*x = ConversationFold{}
-	mi := &file_conversation_conversation_proto_msgTypes[93]
+	mi := &file_conversation_conversation_proto_msgTypes[95]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5179,7 +5292,7 @@ func (x *ConversationFold) String() string {
 func (*ConversationFold) ProtoMessage() {}
 
 func (x *ConversationFold) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[93]
+	mi := &file_conversation_conversation_proto_msgTypes[95]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5192,7 +5305,7 @@ func (x *ConversationFold) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConversationFold.ProtoReflect.Descriptor instead.
 func (*ConversationFold) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{93}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{95}
 }
 
 func (x *ConversationFold) GetFoldConversationID() string {
@@ -5285,7 +5398,7 @@ type FoldInfo struct {
 
 func (x *FoldInfo) Reset() {
 	*x = FoldInfo{}
-	mi := &file_conversation_conversation_proto_msgTypes[94]
+	mi := &file_conversation_conversation_proto_msgTypes[96]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5297,7 +5410,7 @@ func (x *FoldInfo) String() string {
 func (*FoldInfo) ProtoMessage() {}
 
 func (x *FoldInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[94]
+	mi := &file_conversation_conversation_proto_msgTypes[96]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5310,7 +5423,7 @@ func (x *FoldInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FoldInfo.ProtoReflect.Descriptor instead.
 func (*FoldInfo) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{94}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{96}
 }
 
 func (x *FoldInfo) GetFoldConversationID() string {
@@ -5399,7 +5512,7 @@ type GetAllFoldsResp struct {
 
 func (x *GetAllFoldsResp) Reset() {
 	*x = GetAllFoldsResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[95]
+	mi := &file_conversation_conversation_proto_msgTypes[97]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5411,7 +5524,7 @@ func (x *GetAllFoldsResp) String() string {
 func (*GetAllFoldsResp) ProtoMessage() {}
 
 func (x *GetAllFoldsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[95]
+	mi := &file_conversation_conversation_proto_msgTypes[97]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5424,7 +5537,7 @@ func (x *GetAllFoldsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllFoldsResp.ProtoReflect.Descriptor instead.
 func (*GetAllFoldsResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{95}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{97}
 }
 
 func (x *GetAllFoldsResp) GetGroups() []*FoldInfo {
@@ -5444,7 +5557,7 @@ type RemoveFoldReq struct {
 
 func (x *RemoveFoldReq) Reset() {
 	*x = RemoveFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[96]
+	mi := &file_conversation_conversation_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5456,7 +5569,7 @@ func (x *RemoveFoldReq) String() string {
 func (*RemoveFoldReq) ProtoMessage() {}
 
 func (x *RemoveFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[96]
+	mi := &file_conversation_conversation_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5469,7 +5582,7 @@ func (x *RemoveFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFoldReq.ProtoReflect.Descriptor instead.
 func (*RemoveFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{96}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *RemoveFoldReq) GetUserID() string {
@@ -5495,7 +5608,7 @@ type RemoveFoldResp struct {
 
 func (x *RemoveFoldResp) Reset() {
 	*x = RemoveFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[97]
+	mi := &file_conversation_conversation_proto_msgTypes[99]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5507,7 +5620,7 @@ func (x *RemoveFoldResp) String() string {
 func (*RemoveFoldResp) ProtoMessage() {}
 
 func (x *RemoveFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[97]
+	mi := &file_conversation_conversation_proto_msgTypes[99]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5520,7 +5633,7 @@ func (x *RemoveFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFoldResp.ProtoReflect.Descriptor instead.
 func (*RemoveFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{97}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *RemoveFoldResp) GetMovedCount() int32 {
@@ -5544,7 +5657,7 @@ type CreateFoldReq struct {
 
 func (x *CreateFoldReq) Reset() {
 	*x = CreateFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[98]
+	mi := &file_conversation_conversation_proto_msgTypes[100]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5556,7 +5669,7 @@ func (x *CreateFoldReq) String() string {
 func (*CreateFoldReq) ProtoMessage() {}
 
 func (x *CreateFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[98]
+	mi := &file_conversation_conversation_proto_msgTypes[100]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5569,7 +5682,7 @@ func (x *CreateFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateFoldReq.ProtoReflect.Descriptor instead.
 func (*CreateFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{98}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{100}
 }
 
 func (x *CreateFoldReq) GetUserID() string {
@@ -5616,7 +5729,7 @@ type CreateFoldResp struct {
 
 func (x *CreateFoldResp) Reset() {
 	*x = CreateFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[99]
+	mi := &file_conversation_conversation_proto_msgTypes[101]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5628,7 +5741,7 @@ func (x *CreateFoldResp) String() string {
 func (*CreateFoldResp) ProtoMessage() {}
 
 func (x *CreateFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[99]
+	mi := &file_conversation_conversation_proto_msgTypes[101]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5641,7 +5754,7 @@ func (x *CreateFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateFoldResp.ProtoReflect.Descriptor instead.
 func (*CreateFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{99}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{101}
 }
 
 func (x *CreateFoldResp) GetFoldConversationID() string {
@@ -5665,7 +5778,7 @@ type UpdateFoldReq struct {
 
 func (x *UpdateFoldReq) Reset() {
 	*x = UpdateFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[100]
+	mi := &file_conversation_conversation_proto_msgTypes[102]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5677,7 +5790,7 @@ func (x *UpdateFoldReq) String() string {
 func (*UpdateFoldReq) ProtoMessage() {}
 
 func (x *UpdateFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[100]
+	mi := &file_conversation_conversation_proto_msgTypes[102]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5690,7 +5803,7 @@ func (x *UpdateFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateFoldReq.ProtoReflect.Descriptor instead.
 func (*UpdateFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{100}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{102}
 }
 
 func (x *UpdateFoldReq) GetUserID() string {
@@ -5736,7 +5849,7 @@ type UpdateFoldResp struct {
 
 func (x *UpdateFoldResp) Reset() {
 	*x = UpdateFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[101]
+	mi := &file_conversation_conversation_proto_msgTypes[103]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5748,7 +5861,7 @@ func (x *UpdateFoldResp) String() string {
 func (*UpdateFoldResp) ProtoMessage() {}
 
 func (x *UpdateFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[101]
+	mi := &file_conversation_conversation_proto_msgTypes[103]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5761,7 +5874,7 @@ func (x *UpdateFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateFoldResp.ProtoReflect.Descriptor instead.
 func (*UpdateFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{101}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{103}
 }
 
 // ClearFold 清空折叠会话（将子会话设为非免打扰、移出折叠、删除折叠会话）
@@ -5775,7 +5888,7 @@ type ClearFoldReq struct {
 
 func (x *ClearFoldReq) Reset() {
 	*x = ClearFoldReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[102]
+	mi := &file_conversation_conversation_proto_msgTypes[104]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5787,7 +5900,7 @@ func (x *ClearFoldReq) String() string {
 func (*ClearFoldReq) ProtoMessage() {}
 
 func (x *ClearFoldReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[102]
+	mi := &file_conversation_conversation_proto_msgTypes[104]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5800,7 +5913,7 @@ func (x *ClearFoldReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearFoldReq.ProtoReflect.Descriptor instead.
 func (*ClearFoldReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{102}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{104}
 }
 
 func (x *ClearFoldReq) GetUserID() string {
@@ -5826,7 +5939,7 @@ type ClearFoldResp struct {
 
 func (x *ClearFoldResp) Reset() {
 	*x = ClearFoldResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[103]
+	mi := &file_conversation_conversation_proto_msgTypes[105]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5838,7 +5951,7 @@ func (x *ClearFoldResp) String() string {
 func (*ClearFoldResp) ProtoMessage() {}
 
 func (x *ClearFoldResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[103]
+	mi := &file_conversation_conversation_proto_msgTypes[105]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5851,7 +5964,7 @@ func (x *ClearFoldResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClearFoldResp.ProtoReflect.Descriptor instead.
 func (*ClearFoldResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{103}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{105}
 }
 
 func (x *ClearFoldResp) GetClearedCount() int32 {
@@ -5873,7 +5986,7 @@ type SetConversationSeenSeqReq struct {
 
 func (x *SetConversationSeenSeqReq) Reset() {
 	*x = SetConversationSeenSeqReq{}
-	mi := &file_conversation_conversation_proto_msgTypes[104]
+	mi := &file_conversation_conversation_proto_msgTypes[106]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5885,7 +5998,7 @@ func (x *SetConversationSeenSeqReq) String() string {
 func (*SetConversationSeenSeqReq) ProtoMessage() {}
 
 func (x *SetConversationSeenSeqReq) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[104]
+	mi := &file_conversation_conversation_proto_msgTypes[106]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5898,7 +6011,7 @@ func (x *SetConversationSeenSeqReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetConversationSeenSeqReq.ProtoReflect.Descriptor instead.
 func (*SetConversationSeenSeqReq) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{104}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{106}
 }
 
 func (x *SetConversationSeenSeqReq) GetUserID() string {
@@ -5932,7 +6045,7 @@ type SetConversationSeenSeqResp struct {
 
 func (x *SetConversationSeenSeqResp) Reset() {
 	*x = SetConversationSeenSeqResp{}
-	mi := &file_conversation_conversation_proto_msgTypes[105]
+	mi := &file_conversation_conversation_proto_msgTypes[107]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5944,7 +6057,7 @@ func (x *SetConversationSeenSeqResp) String() string {
 func (*SetConversationSeenSeqResp) ProtoMessage() {}
 
 func (x *SetConversationSeenSeqResp) ProtoReflect() protoreflect.Message {
-	mi := &file_conversation_conversation_proto_msgTypes[105]
+	mi := &file_conversation_conversation_proto_msgTypes[107]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5957,7 +6070,7 @@ func (x *SetConversationSeenSeqResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetConversationSeenSeqResp.ProtoReflect.Descriptor instead.
 func (*SetConversationSeenSeqResp) Descriptor() ([]byte, []int) {
-	return file_conversation_conversation_proto_rawDescGZIP(), []int{105}
+	return file_conversation_conversation_proto_rawDescGZIP(), []int{107}
 }
 
 func (x *SetConversationSeenSeqResp) GetSeenSeq() int64 {
@@ -5978,7 +6091,7 @@ var File_conversation_conversation_proto protoreflect.FileDescriptor
 
 const file_conversation_conversation_proto_rawDesc = "" +
 	"\n" +
-	"\x1fconversation/conversation.proto\x12\x13openim.conversation\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\xcc\x06\n" +
+	"\x1fconversation/conversation.proto\x12\x13openim.conversation\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\"\xfa\x06\n" +
 	"\fConversation\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12\x1e\n" +
@@ -6006,7 +6119,8 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x14parentConversationID\x18\x15 \x01(\tR\x14parentConversationID\x12(\n" +
 	"\x0fisSystemDefault\x18\x16 \x01(\bR\x0fisSystemDefault\x12\x1a\n" +
 	"\bisHidden\x18\x17 \x01(\bR\bisHidden\x12\x18\n" +
-	"\aseenSeq\x18\x18 \x01(\x03R\aseenSeq\"\x81\t\n" +
+	"\aseenSeq\x18\x18 \x01(\x03R\aseenSeq\x12,\n" +
+	"\x11memberComposition\x18\x19 \x01(\x05R\x11memberComposition\"\x81\t\n" +
 	"\x0fConversationReq\x12&\n" +
 	"\x0econversationID\x18\x01 \x01(\tR\x0econversationID\x12*\n" +
 	"\x10conversationType\x18\x02 \x01(\x05R\x10conversationType\x12\x16\n" +
@@ -6056,7 +6170,7 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"recvMsgOpt\x12 \n" +
 	"\vunreadCount\x18\x03 \x01(\x03R\vunreadCount\x12\x1a\n" +
 	"\bIsPinned\x18\x04 \x01(\bR\bIsPinned\x126\n" +
-	"\amsgInfo\x18\x05 \x01(\v2\x1c.openim.conversation.MsgInfoR\amsgInfo\"\x93\x04\n" +
+	"\amsgInfo\x18\x05 \x01(\v2\x1c.openim.conversation.MsgInfoR\amsgInfo\"\xc1\x04\n" +
 	"\aMsgInfo\x12 \n" +
 	"\vserverMsgID\x18\x01 \x01(\tR\vserverMsgID\x12 \n" +
 	"\vclientMsgID\x18\x02 \x01(\tR\vclientMsgID\x12 \n" +
@@ -6077,7 +6191,8 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\amsgFrom\x18\x0e \x01(\x05R\amsgFrom\x12 \n" +
 	"\vcontentType\x18\x0f \x01(\x05R\vcontentType\x12\x18\n" +
 	"\acontent\x18\x10 \x01(\tR\acontent\x12\x0e\n" +
-	"\x02ex\x18\x11 \x01(\tR\x02ex\"a\n" +
+	"\x02ex\x18\x11 \x01(\tR\x02ex\x12,\n" +
+	"\x11memberComposition\x18\x12 \x01(\x05R\x11memberComposition\"a\n" +
 	"\x13GetConversationsReq\x12 \n" +
 	"\vownerUserID\x18\x01 \x01(\tR\vownerUserID\x12(\n" +
 	"\x0fconversationIDs\x18\x02 \x03(\tR\x0fconversationIDs\"_\n" +
@@ -6234,7 +6349,12 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\auserIDs\x18\x02 \x03(\tR\auserIDs\x12\x16\n" +
 	"\x06msgSeq\x18\x03 \x01(\x03R\x06msgSeq\"K\n" +
 	"\x1fUnhideConversationsIfNeededResp\x12(\n" +
-	"\x0funhiddenUserIDs\x18\x01 \x03(\tR\x0funhiddenUserIDs\"\x97\x02\n" +
+	"\x0funhiddenUserIDs\x18\x01 \x03(\tR\x0funhiddenUserIDs\"X\n" +
+	"\"NotifyGroupConversationsChangedReq\x12\x18\n" +
+	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x18\n" +
+	"\auserIDs\x18\x02 \x03(\tR\auserIDs\"?\n" +
+	"#NotifyGroupConversationsChangedResp\x12\x18\n" +
+	"\auserIDs\x18\x01 \x03(\tR\auserIDs\"\x97\x02\n" +
 	"\x11ConversationGroup\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12 \n" +
 	"\vownerUserID\x18\x02 \x01(\tR\vownerUserID\x12\x1c\n" +
@@ -6386,7 +6506,7 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\aseenSeq\x18\x03 \x01(\x03R\aseenSeq\"X\n" +
 	"\x1aSetConversationSeenSeqResp\x12\x18\n" +
 	"\aseenSeq\x18\x01 \x01(\x03R\aseenSeq\x12 \n" +
-	"\vunreadCount\x18\x02 \x01(\x03R\vunreadCount2\xf8/\n" +
+	"\vunreadCount\x18\x02 \x01(\x03R\vunreadCount2\x8f1\n" +
 	"\fconversation\x12d\n" +
 	"\x0fGetConversation\x12'.openim.conversation.GetConversationReq\x1a(.openim.conversation.GetConversationResp\x12\x82\x01\n" +
 	"\x19GetSortedConversationList\x121.openim.conversation.GetSortedConversationListReq\x1a2.openim.conversation.GetSortedConversationListResp\x12p\n" +
@@ -6418,7 +6538,8 @@ const file_conversation_conversation_proto_rawDesc = "" +
 	"\x18ClearUserConversationMsg\x120.openim.conversation.ClearUserConversationMsgReq\x1a1.openim.conversation.ClearUserConversationMsgResp\x12\x82\x01\n" +
 	"\x19UpdateConversationsByUser\x121.openim.conversation.UpdateConversationsByUserReq\x1a2.openim.conversation.UpdateConversationsByUserResp\x12p\n" +
 	"\x13DeleteConversations\x12+.openim.conversation.DeleteConversationsReq\x1a,.openim.conversation.DeleteConversationsResp\x12\x88\x01\n" +
-	"\x1bUnhideConversationsIfNeeded\x123.openim.conversation.UnhideConversationsIfNeededReq\x1a4.openim.conversation.UnhideConversationsIfNeededResp\x12y\n" +
+	"\x1bUnhideConversationsIfNeeded\x123.openim.conversation.UnhideConversationsIfNeededReq\x1a4.openim.conversation.UnhideConversationsIfNeededResp\x12\x94\x01\n" +
+	"\x1fNotifyGroupConversationsChanged\x127.openim.conversation.NotifyGroupConversationsChangedReq\x1a8.openim.conversation.NotifyGroupConversationsChangedResp\x12y\n" +
 	"\x16InitConversationGroups\x12..openim.conversation.InitConversationGroupsReq\x1a/.openim.conversation.InitConversationGroupsResp\x12\x7f\n" +
 	"\x18GetAllConversationGroups\x120.openim.conversation.GetAllConversationGroupsReq\x1a1.openim.conversation.GetAllConversationGroupsResp\x12\x8b\x01\n" +
 	"\x1cGetVisibleConversationGroups\x124.openim.conversation.GetVisibleConversationGroupsReq\x1a5.openim.conversation.GetVisibleConversationGroupsResp\x12|\n" +
@@ -6453,7 +6574,7 @@ func file_conversation_conversation_proto_rawDescGZIP() []byte {
 	return file_conversation_conversation_proto_rawDescData
 }
 
-var file_conversation_conversation_proto_msgTypes = make([]protoimpl.MessageInfo, 106)
+var file_conversation_conversation_proto_msgTypes = make([]protoimpl.MessageInfo, 108)
 var file_conversation_conversation_proto_goTypes = []any{
 	(*Conversation)(nil),                                // 0: openim.conversation.Conversation
 	(*ConversationReq)(nil),                             // 1: openim.conversation.ConversationReq
@@ -6519,111 +6640,113 @@ var file_conversation_conversation_proto_goTypes = []any{
 	(*DeleteConversationsResp)(nil),                     // 61: openim.conversation.DeleteConversationsResp
 	(*UnhideConversationsIfNeededReq)(nil),              // 62: openim.conversation.UnhideConversationsIfNeededReq
 	(*UnhideConversationsIfNeededResp)(nil),             // 63: openim.conversation.UnhideConversationsIfNeededResp
-	(*ConversationGroup)(nil),                           // 64: openim.conversation.ConversationGroup
-	(*GroupOrder)(nil),                                  // 65: openim.conversation.GroupOrder
-	(*InitConversationGroupsReq)(nil),                   // 66: openim.conversation.InitConversationGroupsReq
-	(*InitConversationGroupsResp)(nil),                  // 67: openim.conversation.InitConversationGroupsResp
-	(*GetAllConversationGroupsReq)(nil),                 // 68: openim.conversation.GetAllConversationGroupsReq
-	(*GetAllConversationGroupsResp)(nil),                // 69: openim.conversation.GetAllConversationGroupsResp
-	(*GetVisibleConversationGroupsReq)(nil),             // 70: openim.conversation.GetVisibleConversationGroupsReq
-	(*GetVisibleConversationGroupsResp)(nil),            // 71: openim.conversation.GetVisibleConversationGroupsResp
-	(*CreateConversationGroupReq)(nil),                  // 72: openim.conversation.CreateConversationGroupReq
-	(*CreateConversationGroupResp)(nil),                 // 73: openim.conversation.CreateConversationGroupResp
-	(*UpdateConversationGroupReq)(nil),                  // 74: openim.conversation.UpdateConversationGroupReq
-	(*UpdateConversationGroupResp)(nil),                 // 75: openim.conversation.UpdateConversationGroupResp
-	(*DeleteConversationGroupReq)(nil),                  // 76: openim.conversation.DeleteConversationGroupReq
-	(*DeleteConversationGroupResp)(nil),                 // 77: openim.conversation.DeleteConversationGroupResp
-	(*UpdateConversationGroupSortReq)(nil),              // 78: openim.conversation.UpdateConversationGroupSortReq
-	(*UpdateConversationGroupSortResp)(nil),             // 79: openim.conversation.UpdateConversationGroupSortResp
-	(*SetConversationGroupVisibilityReq)(nil),           // 80: openim.conversation.SetConversationGroupVisibilityReq
-	(*SetConversationGroupVisibilityResp)(nil),          // 81: openim.conversation.SetConversationGroupVisibilityResp
-	(*AddConversationsToGroupReq)(nil),                  // 82: openim.conversation.AddConversationsToGroupReq
-	(*AddConversationsToGroupResp)(nil),                 // 83: openim.conversation.AddConversationsToGroupResp
-	(*RemoveConversationsFromGroupReq)(nil),             // 84: openim.conversation.RemoveConversationsFromGroupReq
-	(*RemoveConversationsFromGroupResp)(nil),            // 85: openim.conversation.RemoveConversationsFromGroupResp
-	(*GetConversationIDsByGroupIDReq)(nil),              // 86: openim.conversation.GetConversationIDsByGroupIDReq
-	(*GetConversationIDsByGroupIDResp)(nil),             // 87: openim.conversation.GetConversationIDsByGroupIDResp
-	(*SetConversationFoldReq)(nil),                      // 88: openim.conversation.SetConversationFoldReq
-	(*SetConversationFoldResp)(nil),                     // 89: openim.conversation.SetConversationFoldResp
-	(*GetFoldConversationListReq)(nil),                  // 90: openim.conversation.GetFoldConversationListReq
-	(*GetFoldConversationListResp)(nil),                 // 91: openim.conversation.GetFoldConversationListResp
-	(*GetAllFoldsReq)(nil),                              // 92: openim.conversation.GetAllFoldsReq
-	(*ConversationFold)(nil),                            // 93: openim.conversation.ConversationFold
-	(*FoldInfo)(nil),                                    // 94: openim.conversation.FoldInfo
-	(*GetAllFoldsResp)(nil),                             // 95: openim.conversation.GetAllFoldsResp
-	(*RemoveFoldReq)(nil),                               // 96: openim.conversation.RemoveFoldReq
-	(*RemoveFoldResp)(nil),                              // 97: openim.conversation.RemoveFoldResp
-	(*CreateFoldReq)(nil),                               // 98: openim.conversation.CreateFoldReq
-	(*CreateFoldResp)(nil),                              // 99: openim.conversation.CreateFoldResp
-	(*UpdateFoldReq)(nil),                               // 100: openim.conversation.UpdateFoldReq
-	(*UpdateFoldResp)(nil),                              // 101: openim.conversation.UpdateFoldResp
-	(*ClearFoldReq)(nil),                                // 102: openim.conversation.ClearFoldReq
-	(*ClearFoldResp)(nil),                               // 103: openim.conversation.ClearFoldResp
-	(*SetConversationSeenSeqReq)(nil),                   // 104: openim.conversation.SetConversationSeenSeqReq
-	(*SetConversationSeenSeqResp)(nil),                  // 105: openim.conversation.SetConversationSeenSeqResp
-	(*wrapperspb.Int32Value)(nil),                       // 106: openim.protobuf.Int32Value
-	(*wrapperspb.BoolValue)(nil),                        // 107: openim.protobuf.BoolValue
-	(*wrapperspb.StringValue)(nil),                      // 108: openim.protobuf.StringValue
-	(*wrapperspb.Int64Value)(nil),                       // 109: openim.protobuf.Int64Value
-	(*sdkws.RequestPagination)(nil),                     // 110: openim.sdkws.RequestPagination
+	(*NotifyGroupConversationsChangedReq)(nil),          // 64: openim.conversation.NotifyGroupConversationsChangedReq
+	(*NotifyGroupConversationsChangedResp)(nil),         // 65: openim.conversation.NotifyGroupConversationsChangedResp
+	(*ConversationGroup)(nil),                           // 66: openim.conversation.ConversationGroup
+	(*GroupOrder)(nil),                                  // 67: openim.conversation.GroupOrder
+	(*InitConversationGroupsReq)(nil),                   // 68: openim.conversation.InitConversationGroupsReq
+	(*InitConversationGroupsResp)(nil),                  // 69: openim.conversation.InitConversationGroupsResp
+	(*GetAllConversationGroupsReq)(nil),                 // 70: openim.conversation.GetAllConversationGroupsReq
+	(*GetAllConversationGroupsResp)(nil),                // 71: openim.conversation.GetAllConversationGroupsResp
+	(*GetVisibleConversationGroupsReq)(nil),             // 72: openim.conversation.GetVisibleConversationGroupsReq
+	(*GetVisibleConversationGroupsResp)(nil),            // 73: openim.conversation.GetVisibleConversationGroupsResp
+	(*CreateConversationGroupReq)(nil),                  // 74: openim.conversation.CreateConversationGroupReq
+	(*CreateConversationGroupResp)(nil),                 // 75: openim.conversation.CreateConversationGroupResp
+	(*UpdateConversationGroupReq)(nil),                  // 76: openim.conversation.UpdateConversationGroupReq
+	(*UpdateConversationGroupResp)(nil),                 // 77: openim.conversation.UpdateConversationGroupResp
+	(*DeleteConversationGroupReq)(nil),                  // 78: openim.conversation.DeleteConversationGroupReq
+	(*DeleteConversationGroupResp)(nil),                 // 79: openim.conversation.DeleteConversationGroupResp
+	(*UpdateConversationGroupSortReq)(nil),              // 80: openim.conversation.UpdateConversationGroupSortReq
+	(*UpdateConversationGroupSortResp)(nil),             // 81: openim.conversation.UpdateConversationGroupSortResp
+	(*SetConversationGroupVisibilityReq)(nil),           // 82: openim.conversation.SetConversationGroupVisibilityReq
+	(*SetConversationGroupVisibilityResp)(nil),          // 83: openim.conversation.SetConversationGroupVisibilityResp
+	(*AddConversationsToGroupReq)(nil),                  // 84: openim.conversation.AddConversationsToGroupReq
+	(*AddConversationsToGroupResp)(nil),                 // 85: openim.conversation.AddConversationsToGroupResp
+	(*RemoveConversationsFromGroupReq)(nil),             // 86: openim.conversation.RemoveConversationsFromGroupReq
+	(*RemoveConversationsFromGroupResp)(nil),            // 87: openim.conversation.RemoveConversationsFromGroupResp
+	(*GetConversationIDsByGroupIDReq)(nil),              // 88: openim.conversation.GetConversationIDsByGroupIDReq
+	(*GetConversationIDsByGroupIDResp)(nil),             // 89: openim.conversation.GetConversationIDsByGroupIDResp
+	(*SetConversationFoldReq)(nil),                      // 90: openim.conversation.SetConversationFoldReq
+	(*SetConversationFoldResp)(nil),                     // 91: openim.conversation.SetConversationFoldResp
+	(*GetFoldConversationListReq)(nil),                  // 92: openim.conversation.GetFoldConversationListReq
+	(*GetFoldConversationListResp)(nil),                 // 93: openim.conversation.GetFoldConversationListResp
+	(*GetAllFoldsReq)(nil),                              // 94: openim.conversation.GetAllFoldsReq
+	(*ConversationFold)(nil),                            // 95: openim.conversation.ConversationFold
+	(*FoldInfo)(nil),                                    // 96: openim.conversation.FoldInfo
+	(*GetAllFoldsResp)(nil),                             // 97: openim.conversation.GetAllFoldsResp
+	(*RemoveFoldReq)(nil),                               // 98: openim.conversation.RemoveFoldReq
+	(*RemoveFoldResp)(nil),                              // 99: openim.conversation.RemoveFoldResp
+	(*CreateFoldReq)(nil),                               // 100: openim.conversation.CreateFoldReq
+	(*CreateFoldResp)(nil),                              // 101: openim.conversation.CreateFoldResp
+	(*UpdateFoldReq)(nil),                               // 102: openim.conversation.UpdateFoldReq
+	(*UpdateFoldResp)(nil),                              // 103: openim.conversation.UpdateFoldResp
+	(*ClearFoldReq)(nil),                                // 104: openim.conversation.ClearFoldReq
+	(*ClearFoldResp)(nil),                               // 105: openim.conversation.ClearFoldResp
+	(*SetConversationSeenSeqReq)(nil),                   // 106: openim.conversation.SetConversationSeenSeqReq
+	(*SetConversationSeenSeqResp)(nil),                  // 107: openim.conversation.SetConversationSeenSeqResp
+	(*wrapperspb.Int32Value)(nil),                       // 108: openim.protobuf.Int32Value
+	(*wrapperspb.BoolValue)(nil),                        // 109: openim.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil),                      // 110: openim.protobuf.StringValue
+	(*wrapperspb.Int64Value)(nil),                       // 111: openim.protobuf.Int64Value
+	(*sdkws.RequestPagination)(nil),                     // 112: openim.sdkws.RequestPagination
 }
 var file_conversation_conversation_proto_depIdxs = []int32{
-	106, // 0: openim.conversation.ConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
-	107, // 1: openim.conversation.ConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
-	108, // 2: openim.conversation.ConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
-	107, // 3: openim.conversation.ConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
-	108, // 4: openim.conversation.ConversationReq.ex:type_name -> openim.protobuf.StringValue
-	106, // 5: openim.conversation.ConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
-	109, // 6: openim.conversation.ConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
-	109, // 7: openim.conversation.ConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
-	106, // 8: openim.conversation.ConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
-	109, // 9: openim.conversation.ConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 10: openim.conversation.ConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
-	107, // 11: openim.conversation.ConversationReq.isMark:type_name -> openim.protobuf.BoolValue
-	106, // 12: openim.conversation.ConversationReq.unreadCount:type_name -> openim.protobuf.Int32Value
-	109, // 13: openim.conversation.ConversationReq.updateUnreadCountTime:type_name -> openim.protobuf.Int64Value
-	108, // 14: openim.conversation.ConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
-	107, // 15: openim.conversation.ConversationReq.isHidden:type_name -> openim.protobuf.BoolValue
+	108, // 0: openim.conversation.ConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
+	109, // 1: openim.conversation.ConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
+	110, // 2: openim.conversation.ConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
+	109, // 3: openim.conversation.ConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
+	110, // 4: openim.conversation.ConversationReq.ex:type_name -> openim.protobuf.StringValue
+	108, // 5: openim.conversation.ConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
+	111, // 6: openim.conversation.ConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
+	111, // 7: openim.conversation.ConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
+	108, // 8: openim.conversation.ConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
+	111, // 9: openim.conversation.ConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
+	109, // 10: openim.conversation.ConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
+	109, // 11: openim.conversation.ConversationReq.isMark:type_name -> openim.protobuf.BoolValue
+	108, // 12: openim.conversation.ConversationReq.unreadCount:type_name -> openim.protobuf.Int32Value
+	111, // 13: openim.conversation.ConversationReq.updateUnreadCountTime:type_name -> openim.protobuf.Int64Value
+	110, // 14: openim.conversation.ConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
+	109, // 15: openim.conversation.ConversationReq.isHidden:type_name -> openim.protobuf.BoolValue
 	0,   // 16: openim.conversation.SetConversationReq.conversation:type_name -> openim.conversation.Conversation
 	0,   // 17: openim.conversation.GetConversationResp.conversation:type_name -> openim.conversation.Conversation
-	110, // 18: openim.conversation.GetSortedConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	112, // 18: openim.conversation.GetSortedConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	8,   // 19: openim.conversation.GetSortedConversationListResp.conversationElems:type_name -> openim.conversation.ConversationElem
 	9,   // 20: openim.conversation.ConversationElem.msgInfo:type_name -> openim.conversation.MsgInfo
 	0,   // 21: openim.conversation.GetConversationsResp.conversations:type_name -> openim.conversation.Conversation
 	0,   // 22: openim.conversation.GetAllConversationsResp.conversations:type_name -> openim.conversation.Conversation
 	1,   // 23: openim.conversation.SetConversationsReq.conversation:type_name -> openim.conversation.ConversationReq
 	0,   // 24: openim.conversation.GetConversationsByConversationIDResp.conversations:type_name -> openim.conversation.Conversation
-	106, // 25: openim.conversation.UpdateConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
-	107, // 26: openim.conversation.UpdateConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
-	108, // 27: openim.conversation.UpdateConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
-	107, // 28: openim.conversation.UpdateConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
-	108, // 29: openim.conversation.UpdateConversationReq.ex:type_name -> openim.protobuf.StringValue
-	106, // 30: openim.conversation.UpdateConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
-	109, // 31: openim.conversation.UpdateConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
-	109, // 32: openim.conversation.UpdateConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
-	106, // 33: openim.conversation.UpdateConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
-	109, // 34: openim.conversation.UpdateConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 35: openim.conversation.UpdateConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
-	109, // 36: openim.conversation.UpdateConversationReq.latestMsgDestructTime:type_name -> openim.protobuf.Int64Value
-	107, // 37: openim.conversation.UpdateConversationReq.isMark:type_name -> openim.protobuf.BoolValue
-	108, // 38: openim.conversation.UpdateConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
-	107, // 39: openim.conversation.UpdateConversationReq.isHidden:type_name -> openim.protobuf.BoolValue
+	108, // 25: openim.conversation.UpdateConversationReq.recvMsgOpt:type_name -> openim.protobuf.Int32Value
+	109, // 26: openim.conversation.UpdateConversationReq.isPinned:type_name -> openim.protobuf.BoolValue
+	110, // 27: openim.conversation.UpdateConversationReq.attachedInfo:type_name -> openim.protobuf.StringValue
+	109, // 28: openim.conversation.UpdateConversationReq.isPrivateChat:type_name -> openim.protobuf.BoolValue
+	110, // 29: openim.conversation.UpdateConversationReq.ex:type_name -> openim.protobuf.StringValue
+	108, // 30: openim.conversation.UpdateConversationReq.burnDuration:type_name -> openim.protobuf.Int32Value
+	111, // 31: openim.conversation.UpdateConversationReq.minSeq:type_name -> openim.protobuf.Int64Value
+	111, // 32: openim.conversation.UpdateConversationReq.maxSeq:type_name -> openim.protobuf.Int64Value
+	108, // 33: openim.conversation.UpdateConversationReq.groupAtType:type_name -> openim.protobuf.Int32Value
+	111, // 34: openim.conversation.UpdateConversationReq.msgDestructTime:type_name -> openim.protobuf.Int64Value
+	109, // 35: openim.conversation.UpdateConversationReq.isMsgDestruct:type_name -> openim.protobuf.BoolValue
+	111, // 36: openim.conversation.UpdateConversationReq.latestMsgDestructTime:type_name -> openim.protobuf.Int64Value
+	109, // 37: openim.conversation.UpdateConversationReq.isMark:type_name -> openim.protobuf.BoolValue
+	110, // 38: openim.conversation.UpdateConversationReq.parentConversationID:type_name -> openim.protobuf.StringValue
+	109, // 39: openim.conversation.UpdateConversationReq.isHidden:type_name -> openim.protobuf.BoolValue
 	0,   // 40: openim.conversation.GetIncrementalConversationResp.insert:type_name -> openim.conversation.Conversation
 	0,   // 41: openim.conversation.GetIncrementalConversationResp.update:type_name -> openim.conversation.Conversation
-	110, // 42: openim.conversation.GetOwnerConversationReq.pagination:type_name -> openim.sdkws.RequestPagination
+	112, // 42: openim.conversation.GetOwnerConversationReq.pagination:type_name -> openim.sdkws.RequestPagination
 	0,   // 43: openim.conversation.GetOwnerConversationResp.conversations:type_name -> openim.conversation.Conversation
 	0,   // 44: openim.conversation.GetConversationsNeedClearMsgResp.conversations:type_name -> openim.conversation.Conversation
-	108, // 45: openim.conversation.UpdateConversationsByUserReq.ex:type_name -> openim.protobuf.StringValue
-	64,  // 46: openim.conversation.GetAllConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
-	64,  // 47: openim.conversation.GetVisibleConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
-	64,  // 48: openim.conversation.CreateConversationGroupResp.group:type_name -> openim.conversation.ConversationGroup
-	65,  // 49: openim.conversation.UpdateConversationGroupSortReq.groupOrders:type_name -> openim.conversation.GroupOrder
-	110, // 50: openim.conversation.GetFoldConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	110, // 45: openim.conversation.UpdateConversationsByUserReq.ex:type_name -> openim.protobuf.StringValue
+	66,  // 46: openim.conversation.GetAllConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
+	66,  // 47: openim.conversation.GetVisibleConversationGroupsResp.groups:type_name -> openim.conversation.ConversationGroup
+	66,  // 48: openim.conversation.CreateConversationGroupResp.group:type_name -> openim.conversation.ConversationGroup
+	67,  // 49: openim.conversation.UpdateConversationGroupSortReq.groupOrders:type_name -> openim.conversation.GroupOrder
+	112, // 50: openim.conversation.GetFoldConversationListReq.pagination:type_name -> openim.sdkws.RequestPagination
 	0,   // 51: openim.conversation.GetFoldConversationListResp.conversations:type_name -> openim.conversation.Conversation
-	94,  // 52: openim.conversation.GetAllFoldsResp.groups:type_name -> openim.conversation.FoldInfo
-	108, // 53: openim.conversation.UpdateFoldReq.foldName:type_name -> openim.protobuf.StringValue
-	108, // 54: openim.conversation.UpdateFoldReq.faceURL:type_name -> openim.protobuf.StringValue
-	108, // 55: openim.conversation.UpdateFoldReq.description:type_name -> openim.protobuf.StringValue
+	96,  // 52: openim.conversation.GetAllFoldsResp.groups:type_name -> openim.conversation.FoldInfo
+	110, // 53: openim.conversation.UpdateFoldReq.foldName:type_name -> openim.protobuf.StringValue
+	110, // 54: openim.conversation.UpdateFoldReq.faceURL:type_name -> openim.protobuf.StringValue
+	110, // 55: openim.conversation.UpdateFoldReq.description:type_name -> openim.protobuf.StringValue
 	4,   // 56: openim.conversation.conversation.GetConversation:input_type -> openim.conversation.GetConversationReq
 	6,   // 57: openim.conversation.conversation.GetSortedConversationList:input_type -> openim.conversation.GetSortedConversationListReq
 	12,  // 58: openim.conversation.conversation.GetAllConversations:input_type -> openim.conversation.GetAllConversationsReq
@@ -6650,80 +6773,82 @@ var file_conversation_conversation_proto_depIdxs = []int32{
 	50,  // 79: openim.conversation.conversation.MarkConversation:input_type -> openim.conversation.MarkConversationReq
 	52,  // 80: openim.conversation.conversation.MarkConversationAsUnread:input_type -> openim.conversation.MarkConversationAsUnreadReq
 	54,  // 81: openim.conversation.conversation.SyncUnreadCountByHasReadSeq:input_type -> openim.conversation.SyncUnreadCountByHasReadSeqReq
-	104, // 82: openim.conversation.conversation.SetConversationSeenSeq:input_type -> openim.conversation.SetConversationSeenSeqReq
+	106, // 82: openim.conversation.conversation.SetConversationSeenSeq:input_type -> openim.conversation.SetConversationSeenSeqReq
 	56,  // 83: openim.conversation.conversation.ClearUserConversationMsg:input_type -> openim.conversation.ClearUserConversationMsgReq
 	58,  // 84: openim.conversation.conversation.UpdateConversationsByUser:input_type -> openim.conversation.UpdateConversationsByUserReq
 	60,  // 85: openim.conversation.conversation.DeleteConversations:input_type -> openim.conversation.DeleteConversationsReq
 	62,  // 86: openim.conversation.conversation.UnhideConversationsIfNeeded:input_type -> openim.conversation.UnhideConversationsIfNeededReq
-	66,  // 87: openim.conversation.conversation.InitConversationGroups:input_type -> openim.conversation.InitConversationGroupsReq
-	68,  // 88: openim.conversation.conversation.GetAllConversationGroups:input_type -> openim.conversation.GetAllConversationGroupsReq
-	70,  // 89: openim.conversation.conversation.GetVisibleConversationGroups:input_type -> openim.conversation.GetVisibleConversationGroupsReq
-	72,  // 90: openim.conversation.conversation.CreateConversationGroup:input_type -> openim.conversation.CreateConversationGroupReq
-	74,  // 91: openim.conversation.conversation.UpdateConversationGroup:input_type -> openim.conversation.UpdateConversationGroupReq
-	76,  // 92: openim.conversation.conversation.DeleteConversationGroup:input_type -> openim.conversation.DeleteConversationGroupReq
-	78,  // 93: openim.conversation.conversation.UpdateConversationGroupSort:input_type -> openim.conversation.UpdateConversationGroupSortReq
-	80,  // 94: openim.conversation.conversation.SetConversationGroupVisibility:input_type -> openim.conversation.SetConversationGroupVisibilityReq
-	82,  // 95: openim.conversation.conversation.AddConversationsToGroup:input_type -> openim.conversation.AddConversationsToGroupReq
-	84,  // 96: openim.conversation.conversation.RemoveConversationsFromGroup:input_type -> openim.conversation.RemoveConversationsFromGroupReq
-	86,  // 97: openim.conversation.conversation.GetConversationIDsByGroupID:input_type -> openim.conversation.GetConversationIDsByGroupIDReq
-	98,  // 98: openim.conversation.conversation.CreateFold:input_type -> openim.conversation.CreateFoldReq
-	100, // 99: openim.conversation.conversation.UpdateFold:input_type -> openim.conversation.UpdateFoldReq
-	88,  // 100: openim.conversation.conversation.SetConversationFold:input_type -> openim.conversation.SetConversationFoldReq
-	90,  // 101: openim.conversation.conversation.GetFoldConversationList:input_type -> openim.conversation.GetFoldConversationListReq
-	92,  // 102: openim.conversation.conversation.GetAllFolds:input_type -> openim.conversation.GetAllFoldsReq
-	96,  // 103: openim.conversation.conversation.RemoveFold:input_type -> openim.conversation.RemoveFoldReq
-	102, // 104: openim.conversation.conversation.ClearFold:input_type -> openim.conversation.ClearFoldReq
-	5,   // 105: openim.conversation.conversation.GetConversation:output_type -> openim.conversation.GetConversationResp
-	7,   // 106: openim.conversation.conversation.GetSortedConversationList:output_type -> openim.conversation.GetSortedConversationListResp
-	13,  // 107: openim.conversation.conversation.GetAllConversations:output_type -> openim.conversation.GetAllConversationsResp
-	11,  // 108: openim.conversation.conversation.GetConversations:output_type -> openim.conversation.GetConversationsResp
-	3,   // 109: openim.conversation.conversation.SetConversation:output_type -> openim.conversation.SetConversationResp
-	15,  // 110: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:output_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsResp
-	17,  // 111: openim.conversation.conversation.CreateSingleChatConversations:output_type -> openim.conversation.CreateSingleChatConversationsResp
-	19,  // 112: openim.conversation.conversation.CreateGroupChatConversations:output_type -> openim.conversation.CreateGroupChatConversationsResp
-	21,  // 113: openim.conversation.conversation.SetConversationMaxSeq:output_type -> openim.conversation.SetConversationMaxSeqResp
-	23,  // 114: openim.conversation.conversation.SetConversationMinSeq:output_type -> openim.conversation.SetConversationMinSeqResp
-	25,  // 115: openim.conversation.conversation.GetConversationIDs:output_type -> openim.conversation.GetConversationIDsResp
-	27,  // 116: openim.conversation.conversation.SetConversations:output_type -> openim.conversation.SetConversationsResp
-	29,  // 117: openim.conversation.conversation.GetUserConversationIDsHash:output_type -> openim.conversation.GetUserConversationIDsHashResp
-	31,  // 118: openim.conversation.conversation.GetConversationsByConversationID:output_type -> openim.conversation.GetConversationsByConversationIDResp
-	33,  // 119: openim.conversation.conversation.GetConversationOfflinePushUserIDs:output_type -> openim.conversation.GetConversationOfflinePushUserIDsResp
-	35,  // 120: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:output_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsResp
-	37,  // 121: openim.conversation.conversation.UpdateConversation:output_type -> openim.conversation.UpdateConversationResp
-	39,  // 122: openim.conversation.conversation.GetFullOwnerConversationIDs:output_type -> openim.conversation.GetFullOwnerConversationIDsResp
-	41,  // 123: openim.conversation.conversation.GetIncrementalConversation:output_type -> openim.conversation.GetIncrementalConversationResp
-	43,  // 124: openim.conversation.conversation.GetOwnerConversation:output_type -> openim.conversation.GetOwnerConversationResp
-	45,  // 125: openim.conversation.conversation.GetConversationsNeedClearMsg:output_type -> openim.conversation.GetConversationsNeedClearMsgResp
-	47,  // 126: openim.conversation.conversation.GetNotNotifyConversationIDs:output_type -> openim.conversation.GetNotNotifyConversationIDsResp
-	49,  // 127: openim.conversation.conversation.GetPinnedConversationIDs:output_type -> openim.conversation.GetPinnedConversationIDsResp
-	51,  // 128: openim.conversation.conversation.MarkConversation:output_type -> openim.conversation.MarkConversationResp
-	53,  // 129: openim.conversation.conversation.MarkConversationAsUnread:output_type -> openim.conversation.MarkConversationAsUnreadResp
-	55,  // 130: openim.conversation.conversation.SyncUnreadCountByHasReadSeq:output_type -> openim.conversation.SyncUnreadCountByHasReadSeqResp
-	105, // 131: openim.conversation.conversation.SetConversationSeenSeq:output_type -> openim.conversation.SetConversationSeenSeqResp
-	57,  // 132: openim.conversation.conversation.ClearUserConversationMsg:output_type -> openim.conversation.ClearUserConversationMsgResp
-	59,  // 133: openim.conversation.conversation.UpdateConversationsByUser:output_type -> openim.conversation.UpdateConversationsByUserResp
-	61,  // 134: openim.conversation.conversation.DeleteConversations:output_type -> openim.conversation.DeleteConversationsResp
-	63,  // 135: openim.conversation.conversation.UnhideConversationsIfNeeded:output_type -> openim.conversation.UnhideConversationsIfNeededResp
-	67,  // 136: openim.conversation.conversation.InitConversationGroups:output_type -> openim.conversation.InitConversationGroupsResp
-	69,  // 137: openim.conversation.conversation.GetAllConversationGroups:output_type -> openim.conversation.GetAllConversationGroupsResp
-	71,  // 138: openim.conversation.conversation.GetVisibleConversationGroups:output_type -> openim.conversation.GetVisibleConversationGroupsResp
-	73,  // 139: openim.conversation.conversation.CreateConversationGroup:output_type -> openim.conversation.CreateConversationGroupResp
-	75,  // 140: openim.conversation.conversation.UpdateConversationGroup:output_type -> openim.conversation.UpdateConversationGroupResp
-	77,  // 141: openim.conversation.conversation.DeleteConversationGroup:output_type -> openim.conversation.DeleteConversationGroupResp
-	79,  // 142: openim.conversation.conversation.UpdateConversationGroupSort:output_type -> openim.conversation.UpdateConversationGroupSortResp
-	81,  // 143: openim.conversation.conversation.SetConversationGroupVisibility:output_type -> openim.conversation.SetConversationGroupVisibilityResp
-	83,  // 144: openim.conversation.conversation.AddConversationsToGroup:output_type -> openim.conversation.AddConversationsToGroupResp
-	85,  // 145: openim.conversation.conversation.RemoveConversationsFromGroup:output_type -> openim.conversation.RemoveConversationsFromGroupResp
-	87,  // 146: openim.conversation.conversation.GetConversationIDsByGroupID:output_type -> openim.conversation.GetConversationIDsByGroupIDResp
-	99,  // 147: openim.conversation.conversation.CreateFold:output_type -> openim.conversation.CreateFoldResp
-	101, // 148: openim.conversation.conversation.UpdateFold:output_type -> openim.conversation.UpdateFoldResp
-	89,  // 149: openim.conversation.conversation.SetConversationFold:output_type -> openim.conversation.SetConversationFoldResp
-	91,  // 150: openim.conversation.conversation.GetFoldConversationList:output_type -> openim.conversation.GetFoldConversationListResp
-	95,  // 151: openim.conversation.conversation.GetAllFolds:output_type -> openim.conversation.GetAllFoldsResp
-	97,  // 152: openim.conversation.conversation.RemoveFold:output_type -> openim.conversation.RemoveFoldResp
-	103, // 153: openim.conversation.conversation.ClearFold:output_type -> openim.conversation.ClearFoldResp
-	105, // [105:154] is the sub-list for method output_type
-	56,  // [56:105] is the sub-list for method input_type
+	64,  // 87: openim.conversation.conversation.NotifyGroupConversationsChanged:input_type -> openim.conversation.NotifyGroupConversationsChangedReq
+	68,  // 88: openim.conversation.conversation.InitConversationGroups:input_type -> openim.conversation.InitConversationGroupsReq
+	70,  // 89: openim.conversation.conversation.GetAllConversationGroups:input_type -> openim.conversation.GetAllConversationGroupsReq
+	72,  // 90: openim.conversation.conversation.GetVisibleConversationGroups:input_type -> openim.conversation.GetVisibleConversationGroupsReq
+	74,  // 91: openim.conversation.conversation.CreateConversationGroup:input_type -> openim.conversation.CreateConversationGroupReq
+	76,  // 92: openim.conversation.conversation.UpdateConversationGroup:input_type -> openim.conversation.UpdateConversationGroupReq
+	78,  // 93: openim.conversation.conversation.DeleteConversationGroup:input_type -> openim.conversation.DeleteConversationGroupReq
+	80,  // 94: openim.conversation.conversation.UpdateConversationGroupSort:input_type -> openim.conversation.UpdateConversationGroupSortReq
+	82,  // 95: openim.conversation.conversation.SetConversationGroupVisibility:input_type -> openim.conversation.SetConversationGroupVisibilityReq
+	84,  // 96: openim.conversation.conversation.AddConversationsToGroup:input_type -> openim.conversation.AddConversationsToGroupReq
+	86,  // 97: openim.conversation.conversation.RemoveConversationsFromGroup:input_type -> openim.conversation.RemoveConversationsFromGroupReq
+	88,  // 98: openim.conversation.conversation.GetConversationIDsByGroupID:input_type -> openim.conversation.GetConversationIDsByGroupIDReq
+	100, // 99: openim.conversation.conversation.CreateFold:input_type -> openim.conversation.CreateFoldReq
+	102, // 100: openim.conversation.conversation.UpdateFold:input_type -> openim.conversation.UpdateFoldReq
+	90,  // 101: openim.conversation.conversation.SetConversationFold:input_type -> openim.conversation.SetConversationFoldReq
+	92,  // 102: openim.conversation.conversation.GetFoldConversationList:input_type -> openim.conversation.GetFoldConversationListReq
+	94,  // 103: openim.conversation.conversation.GetAllFolds:input_type -> openim.conversation.GetAllFoldsReq
+	98,  // 104: openim.conversation.conversation.RemoveFold:input_type -> openim.conversation.RemoveFoldReq
+	104, // 105: openim.conversation.conversation.ClearFold:input_type -> openim.conversation.ClearFoldReq
+	5,   // 106: openim.conversation.conversation.GetConversation:output_type -> openim.conversation.GetConversationResp
+	7,   // 107: openim.conversation.conversation.GetSortedConversationList:output_type -> openim.conversation.GetSortedConversationListResp
+	13,  // 108: openim.conversation.conversation.GetAllConversations:output_type -> openim.conversation.GetAllConversationsResp
+	11,  // 109: openim.conversation.conversation.GetConversations:output_type -> openim.conversation.GetConversationsResp
+	3,   // 110: openim.conversation.conversation.SetConversation:output_type -> openim.conversation.SetConversationResp
+	15,  // 111: openim.conversation.conversation.GetRecvMsgNotNotifyUserIDs:output_type -> openim.conversation.GetRecvMsgNotNotifyUserIDsResp
+	17,  // 112: openim.conversation.conversation.CreateSingleChatConversations:output_type -> openim.conversation.CreateSingleChatConversationsResp
+	19,  // 113: openim.conversation.conversation.CreateGroupChatConversations:output_type -> openim.conversation.CreateGroupChatConversationsResp
+	21,  // 114: openim.conversation.conversation.SetConversationMaxSeq:output_type -> openim.conversation.SetConversationMaxSeqResp
+	23,  // 115: openim.conversation.conversation.SetConversationMinSeq:output_type -> openim.conversation.SetConversationMinSeqResp
+	25,  // 116: openim.conversation.conversation.GetConversationIDs:output_type -> openim.conversation.GetConversationIDsResp
+	27,  // 117: openim.conversation.conversation.SetConversations:output_type -> openim.conversation.SetConversationsResp
+	29,  // 118: openim.conversation.conversation.GetUserConversationIDsHash:output_type -> openim.conversation.GetUserConversationIDsHashResp
+	31,  // 119: openim.conversation.conversation.GetConversationsByConversationID:output_type -> openim.conversation.GetConversationsByConversationIDResp
+	33,  // 120: openim.conversation.conversation.GetConversationOfflinePushUserIDs:output_type -> openim.conversation.GetConversationOfflinePushUserIDsResp
+	35,  // 121: openim.conversation.conversation.GetConversationNotReceiveMessageUserIDs:output_type -> openim.conversation.GetConversationNotReceiveMessageUserIDsResp
+	37,  // 122: openim.conversation.conversation.UpdateConversation:output_type -> openim.conversation.UpdateConversationResp
+	39,  // 123: openim.conversation.conversation.GetFullOwnerConversationIDs:output_type -> openim.conversation.GetFullOwnerConversationIDsResp
+	41,  // 124: openim.conversation.conversation.GetIncrementalConversation:output_type -> openim.conversation.GetIncrementalConversationResp
+	43,  // 125: openim.conversation.conversation.GetOwnerConversation:output_type -> openim.conversation.GetOwnerConversationResp
+	45,  // 126: openim.conversation.conversation.GetConversationsNeedClearMsg:output_type -> openim.conversation.GetConversationsNeedClearMsgResp
+	47,  // 127: openim.conversation.conversation.GetNotNotifyConversationIDs:output_type -> openim.conversation.GetNotNotifyConversationIDsResp
+	49,  // 128: openim.conversation.conversation.GetPinnedConversationIDs:output_type -> openim.conversation.GetPinnedConversationIDsResp
+	51,  // 129: openim.conversation.conversation.MarkConversation:output_type -> openim.conversation.MarkConversationResp
+	53,  // 130: openim.conversation.conversation.MarkConversationAsUnread:output_type -> openim.conversation.MarkConversationAsUnreadResp
+	55,  // 131: openim.conversation.conversation.SyncUnreadCountByHasReadSeq:output_type -> openim.conversation.SyncUnreadCountByHasReadSeqResp
+	107, // 132: openim.conversation.conversation.SetConversationSeenSeq:output_type -> openim.conversation.SetConversationSeenSeqResp
+	57,  // 133: openim.conversation.conversation.ClearUserConversationMsg:output_type -> openim.conversation.ClearUserConversationMsgResp
+	59,  // 134: openim.conversation.conversation.UpdateConversationsByUser:output_type -> openim.conversation.UpdateConversationsByUserResp
+	61,  // 135: openim.conversation.conversation.DeleteConversations:output_type -> openim.conversation.DeleteConversationsResp
+	63,  // 136: openim.conversation.conversation.UnhideConversationsIfNeeded:output_type -> openim.conversation.UnhideConversationsIfNeededResp
+	65,  // 137: openim.conversation.conversation.NotifyGroupConversationsChanged:output_type -> openim.conversation.NotifyGroupConversationsChangedResp
+	69,  // 138: openim.conversation.conversation.InitConversationGroups:output_type -> openim.conversation.InitConversationGroupsResp
+	71,  // 139: openim.conversation.conversation.GetAllConversationGroups:output_type -> openim.conversation.GetAllConversationGroupsResp
+	73,  // 140: openim.conversation.conversation.GetVisibleConversationGroups:output_type -> openim.conversation.GetVisibleConversationGroupsResp
+	75,  // 141: openim.conversation.conversation.CreateConversationGroup:output_type -> openim.conversation.CreateConversationGroupResp
+	77,  // 142: openim.conversation.conversation.UpdateConversationGroup:output_type -> openim.conversation.UpdateConversationGroupResp
+	79,  // 143: openim.conversation.conversation.DeleteConversationGroup:output_type -> openim.conversation.DeleteConversationGroupResp
+	81,  // 144: openim.conversation.conversation.UpdateConversationGroupSort:output_type -> openim.conversation.UpdateConversationGroupSortResp
+	83,  // 145: openim.conversation.conversation.SetConversationGroupVisibility:output_type -> openim.conversation.SetConversationGroupVisibilityResp
+	85,  // 146: openim.conversation.conversation.AddConversationsToGroup:output_type -> openim.conversation.AddConversationsToGroupResp
+	87,  // 147: openim.conversation.conversation.RemoveConversationsFromGroup:output_type -> openim.conversation.RemoveConversationsFromGroupResp
+	89,  // 148: openim.conversation.conversation.GetConversationIDsByGroupID:output_type -> openim.conversation.GetConversationIDsByGroupIDResp
+	101, // 149: openim.conversation.conversation.CreateFold:output_type -> openim.conversation.CreateFoldResp
+	103, // 150: openim.conversation.conversation.UpdateFold:output_type -> openim.conversation.UpdateFoldResp
+	91,  // 151: openim.conversation.conversation.SetConversationFold:output_type -> openim.conversation.SetConversationFoldResp
+	93,  // 152: openim.conversation.conversation.GetFoldConversationList:output_type -> openim.conversation.GetFoldConversationListResp
+	97,  // 153: openim.conversation.conversation.GetAllFolds:output_type -> openim.conversation.GetAllFoldsResp
+	99,  // 154: openim.conversation.conversation.RemoveFold:output_type -> openim.conversation.RemoveFoldResp
+	105, // 155: openim.conversation.conversation.ClearFold:output_type -> openim.conversation.ClearFoldResp
+	106, // [106:156] is the sub-list for method output_type
+	56,  // [56:106] is the sub-list for method input_type
 	56,  // [56:56] is the sub-list for extension type_name
 	56,  // [56:56] is the sub-list for extension extendee
 	0,   // [0:56] is the sub-list for field type_name
@@ -6740,7 +6865,7 @@ func file_conversation_conversation_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conversation_conversation_proto_rawDesc), len(file_conversation_conversation_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   106,
+			NumMessages:   108,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

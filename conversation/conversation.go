@@ -129,6 +129,13 @@ func (x *CreateGroupChatConversationsReq) Check() error {
 	return nil
 }
 
+func (x *NotifyGroupConversationsChangedReq) Check() error {
+	if x.GroupID == "" {
+		return errors.New("groupID is empty")
+	}
+	return nil
+}
+
 func (x *SetConversationMaxSeqReq) Check() error {
 	if x.ConversationID == "" {
 		return errors.New("conversationID is empty")

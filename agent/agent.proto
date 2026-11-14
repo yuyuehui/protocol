@@ -301,6 +301,7 @@ message CapabilityRef {
   repeated string tools = 5;      // MCP 允许调用的工具，可以先不选
   map<string, string> fields = 6; // 开放字段
   bool groupAvailable = 7;        // 群内可用，默认关；群里只用打开的
+  string name = 8;                // 只读：能力目录里的名称，按查看人查，查不到、看不了的为空。审核详情带；保存时忽略
 }
 
 // 知识引用：客户端选云文档时带上类型、标题、版本、是否在个人空间，服务端只存、不校验；
@@ -1267,6 +1268,7 @@ message GetInstanceConfigReq {
 message GetInstanceConfigResp {
   AgentInstance instance = 1;
   AgentSnapshot snapshot = 2; // 现在上架的快照
+  InstanceSetting setting = 3; // 雇佣人的私聊设置：模型、长期记忆
 }
 
 // 以下是内部接口：im-chat 用 IM 管理员 token 调，雇佣、移除雇佣时建号、注销
@@ -1311,6 +1313,510 @@ message GetInstanceEligibilityResp {
   AgentInstance instance = 1;
   Eligibility eligibility = 2; // 按雇佣人算
   bool groupUse = 3;           // 上架版本允许在群里用
+}
+
+// ==================== 工作 ====================
+
+// 工作的状态。已受理、等待电脑上线、执行中、需要你处理是还没结束的，其余是结束了的，不会再变
+enum WorkStatus {
+  WORK_STATUS_UNSPECIFIED = 0;
+  WORK_STATUS_ACCEPTED = 1;   // 已受理：派到了执行电脑，还没开始
+  WORK_STATUS_QUEUED = 2;     // 等待电脑上线：执行电脑不在线，上线后自动开始
+  WORK_STATUS_RUNNING = 3;    // 执行中
+  WORK_STATUS_WAITING = 4;    // 需要你处理：等发起人回答、确认
+  WORK_STATUS_COMPLETED = 5;  // 已完成
+  WORK_STATUS_STOPPED = 6;    // 已停止：发起人停止、撤回了消息
+  WORK_STATUS_ABORTED = 7;    // 已中止：员工停用、雇佣人失去使用资格、档位收紧
+  WORK_STATUS_UNFINISHED = 8; // 未完成：电脑长时间不在线、执行失败、执行电脑断开、群解散、实例被移出群、关了群使用、移除雇佣、发起人退群
+}
+
+// 群里的使用档位，从低到高。没单独设的成员按默认档位
+enum GroupTier {
+  GROUP_TIER_UNSPECIFIED = 0;
+  GROUP_TIER_NONE = 1;  // 不可用
+  GROUP_TIER_CHAT = 2;  // 仅对话：只回答问题，不读文档、不做写操作
+  GROUP_TIER_READ = 3;  // 只读：还能读群内可用的文档、查业务系统
+  GROUP_TIER_WRITE = 4; // 可写：还能做写操作，做之前要确认
+}
+
+// 群里的成果怎么发
+enum GroupPublishMode {
+  GROUP_PUBLISH_MODE_UNSPECIFIED = 0;
+  GROUP_PUBLISH_MODE_CONFIRM = 1; // 发起人确认后发到群里（默认）：处理过程和成果先只给发起人看
+  GROUP_PUBLISH_MODE_DIRECT = 2;  // 直接发到群里
+}
+
+// 发起人确认后发到群里的工作，发起人选了什么
+enum WorkPublishState {
+  WORK_PUBLISH_STATE_UNSPECIFIED = 0; // 还没选，或者不用选
+  WORK_PUBLISH_STATE_PUBLISHED = 1;   // 发到群里
+  WORK_PUBLISH_STATE_DISCARDED = 2;   // 不发，或已不能发布（员工停用、实例出群、发起人退群等）
+}
+
+// 实例收到的一条需求是一份工作：私聊里雇佣人发给实例的消息，群里 @ 实例的消息，本地 Claw 交过来的一步，
+// 别的员工请求协作的子工作。
+// 工作没结束时，发起人引用实例的回复接着发的、私聊里排队时接着发的，记成这份工作的补充，不另建工作
+message Work {
+  string workID = 1;
+  string instanceID = 2;
+  string agentID = 3;
+  string botID = 4; // 实例的 bot_ 账号
+  string hirerID = 5;
+  string conversationID = 6;
+  string groupID = 7;     // 群里的工作才有
+  string initiatorID = 8; // 发起人
+  string sourceMsgID = 9; // 需求消息的 serverMsgID
+  string taskID = 10;     // 215 任务，执行电脑开始处理后才有
+  WorkStatus status = 11;
+  // 结束原因。已停止：stopped（发起人停止）、revoked（撤回了消息）；
+  // 已中止：employee_disabled（员工停用）、not_eligible（雇佣人失去使用资格）、tier_changed（发起人的档位不够了）；
+  // 未完成：expired（等电脑上线超过 24 小时）、failed（执行失败）、lost（执行电脑断开，没有结果）、group_dismissed（群解散）、
+  // instance_removed（实例被移出群）、group_use_disabled（关了群使用）、unhired（移除了雇佣）、parent_ended（协作子工作所属的工作结束了）、
+  // initiator_left（发起人退群或被移出群）
+  string endReason = 12;
+  int64 expireAt = 13; // 等待电脑上线的工作到这个时间还没开始，结束为未完成
+  int64 createTime = 14;
+  int64 startTime = 15; // 派到执行电脑的时间
+  int64 endTime = 16;
+  int64 updateTime = 17;
+  repeated WorkSupplement supplements = 18;
+  string snapshotID = 19; // 派发时实例跟的上架快照，整份工作用这一份
+  int64 revision = 20;
+  string parentWorkID = 21; // 协作子工作所属的工作，只有一层
+  string origin = 22;       // 空：聊天里发的；local_claw：本地 Claw 交过来的；collaborate：协作子工作
+  GroupTier tier = 23;      // 群里的工作：发起人建工作时的档位，之后档位收紧到比它低，工作中止
+  GroupPublishMode publishMode = 24; // 群里的工作：建工作时的发布方式，整份工作都按它
+  bool selfConfirm = 25;    // 群里的工作：发起人自己确认写操作
+  // 写操作、执行确认由谁确认：私聊为发起人；群里为雇佣人，开了自行确认的为发起人
+  string confirmerID = 26;
+  WorkPublishState published = 27;
+  string request = 28; // 协作子工作的需求
+  string result = 29;  // 协作子工作交回的结果，失败时是原因
+  int64 openTime = 30; // 执行电脑开始处理的时间
+}
+
+message WorkSupplement {
+  string messageID = 1; // 补充消息的 serverMsgID
+  string taskID = 2;    // 执行电脑开始处理这条补充后的 215 任务
+  int64 createTime = 3;
+}
+
+// 用户端：查工作。私聊里的工作只有发起人、雇佣人能看；群里的工作现在的群成员都能看。看不了的、找不到的不返回
+message GetWorksReq {
+  repeated string workIDs = 1;
+  repeated string taskIDs = 2; // 按 215 任务查，补充的任务也认
+  string conversationID = 3;   // 按需求消息查，和 sourceMsgIDs 一起用；补充消息也认
+  repeated string sourceMsgIDs = 4;
+  bool withChildren = 5; // 带上协作子工作
+}
+message GetWorksResp {
+  repeated Work works = 1;
+  repeated Work children = 2; // withChildren 时，works 里各工作的协作子工作
+}
+
+// 我的工作：我发起的，或者我雇佣的实例的；新的在前
+message ListWorksReq {
+  string role = 1;       // initiator：我发起的；hirer：我雇佣的实例的；空：都要
+  string instanceID = 2; // 只看这个实例的
+  string conversationID = 3;
+  repeated WorkStatus statuses = 4; // 空表示全部
+  sdkws.RequestPagination pagination = 5;
+  bool subWorks = 6; // 只看协作子工作：执行端上线后用它找还没领的（role 填 hirer、statuses 填等待电脑上线）
+}
+message ListWorksResp {
+  int64 total = 1;
+  repeated Work works = 2;
+}
+
+// 停止工作：发起人、雇佣人能停。还在排队的直接结束；已派发的通知执行电脑停止，工作马上记为已停止
+message StopWorkReq {
+  string workID = 1;
+}
+message StopWorkResp {
+  Work work = 1;
+}
+
+// 以下是内部接口：im-chat 网关派发消息时用 IM 管理员 token 调。
+// 工作令牌由 im-chat 生成，这里只传它的 sha256（小写十六进制）；令牌只发给执行电脑
+
+// 实例收到要处理的消息（im-chat 已经查过使用资格）：建工作，或记成补充。
+// online 时派到 deviceID、hostEpoch 这台电脑，tokenHash 给新受理的工作用
+message CreateWorkReq {
+  string botID = 1;
+  string conversationID = 2;
+  string groupID = 3;
+  string initiatorID = 4;
+  string messageID = 5;    // 消息的 serverMsgID
+  string quotedTaskID = 6; // 引用了实例的回复（215）时，被引用回复的任务
+  bool online = 7;
+  string deviceID = 8;
+  int64 hostEpoch = 9;
+  string tokenHash = 10;
+  string origin = 11; // 消息 ex 里的 agentOrigin：local_claw 是本地 Claw 交过来的
+}
+message CreateWorkResp {
+  Work work = 1;
+  bool duplicate = 2;  // 这条消息处理过了，不用再派发
+  bool supplement = 3; // 记成了 work 的补充
+  bool dispatch = 4;   // 现在派发；false 时排队，等电脑上线
+  bool fresh = 5;      // 派发的是刚受理的工作，要带令牌；补充不带
+  // 不受理的原因：not_eligible（实例现在用不了）、not_hirer（私聊的不是雇佣人）、group_use_off（员工没开群使用）、
+  // tier_none（发起人在这个群里不可用）。不受理时不建工作，im-chat 在同一个会话里回复 rejectMessage
+  string reject = 6;
+  string rejectMessage = 7;
+}
+
+// 执行电脑连上以后 im-chat 按顺序派发排队的消息，每条先调。
+// 工作还在等：转为已受理，派到这台电脑、用这个令牌；已派到别的连接还没开始：换成这个连接和令牌重派；
+// 补充跟着所属工作走；工作结束了、资格没了、已经开始了，drop 为 true，这条不用再派
+message StartWorkReq {
+  string botID = 1;
+  string workID = 2;
+  string messageID = 3; // 补充消息；空表示工作本身
+  string deviceID = 4;
+  int64 hostEpoch = 5;
+  string tokenHash = 6;
+}
+message StartWorkResp {
+  Work work = 1;
+  bool dispatch = 2;
+  bool fresh = 3;
+  bool drop = 4;
+}
+
+// 派发失败、执行电脑断开时：派到这个连接还没开始的工作退回等待电脑上线
+message RequeueWorksReq {
+  string botID = 1;
+  int64 hostEpoch = 2; // 只退回派到这个连接的
+  string workID = 3;   // 只退回这一份；空表示这个连接的全部
+  string tokenHash = 4; // 和 workID 一起用：只在令牌还是这一个时退回，免得退掉新连接刚派的
+}
+message RequeueWorksResp {
+  repeated Work works = 1; // 退回了的
+}
+
+// 下发以后以实例身份标记已读，只标到 hasReadSeq（下发了的最后一条），不越过还在排队的
+message MarkInstanceReadReq {
+  string botID = 1;
+  string conversationID = 2;
+  int64 hasReadSeq = 3; // 0 表示标到最新
+}
+message MarkInstanceReadResp {
+  int64 hasReadSeq = 1;
+}
+
+// 215 回调前由 im-server API 调（不开 HTTP 路由）：工作还在、令牌对得上、使用资格还在。
+// 不是雇佣实例的 bot 一律放行，instance 为 false
+message CheckWorkReq {
+  string botID = 1;
+  string taskID = 2;          // 215 任务，开任务时也要带（按来源消息算出来的）
+  string conversationID = 3; // 开任务（phase 为 open）时按会话和消息找工作
+  string sourceMsgID = 4;
+  string initiatorID = 5;
+  string tokenHash = 6;    // 执行端没带令牌时为空
+  string phase = 7;        // open：开任务；空：其他回调
+  bool requireToken = 8;   // 没带令牌、没有工作记录的都不放行
+}
+message CheckWorkResp {
+  bool allow = 1;
+  string reason = 2; // 不放行的原因：work_ended、not_eligible、token_invalid、no_work
+  Work work = 3;
+  bool instance = 4;
+}
+
+// 215 建确认、处理确认、查回复时由 im-server API 调（不开 HTTP 路由）：按 215 任务找工作
+message TakeWorkByTaskReq {
+  string botID = 1;
+  string taskID = 2;
+}
+message TakeWorkByTaskResp {
+  Work work = 1; // 不是雇佣实例的、找不到的为空；协作子工作的 published 跟所属工作
+}
+
+// 实例出群、群解散、发起人退群时群服务调（不开 HTTP 路由）：群里没结束的工作结束为未完成，已结束、还没选发不发的按不发定下来；
+// 实例出群、群解散时删掉这些实例的群设置
+message EndGroupWorksReq {
+  string groupID = 1;
+  repeated string botIDs = 2;       // 空表示群里全部实例
+  string reason = 3;                // group_dismissed、instance_removed、initiator_left
+  repeated string initiatorIDs = 4; // initiator_left 时必填：退群、被移出群的人，只结束他们发起的工作
+}
+message EndGroupWorksResp {
+  int32 count = 1; // 结束了的工作数
+}
+
+// ==================== 工作经过、问题反馈 ====================
+
+// 工作经过的一件事
+message WorkEvent {
+  string eventID = 1;
+  string workID = 2;
+  // created 建工作、queued 等电脑上线、dispatched 派到执行电脑、requeued 退回等待、opened 开始处理、
+  // supplemented 补充、status 状态变了、ended 结束、published 发布、sub_work 请求协作、claimed 子工作被领走
+  string kind = 3;
+  WorkStatus status = 4; // 这件事以后工作的状态
+  string reason = 5;
+  string actorID = 6;    // 谁做的；服务端自己做的为空
+  map<string, string> detail = 7; // messageID、taskID、subWorkID 等；deviceID 只给雇佣人看
+  int64 createTime = 8;
+}
+
+// 工作经过，按时间从早到晚，最多 200 条。能看这份工作的人都能看
+message ListWorkEventsReq {
+  string workID = 1;
+}
+message ListWorkEventsResp {
+  repeated WorkEvent events = 1;
+}
+
+// 问题反馈附带的一条对话
+message FeedbackMessage {
+  string role = 1; // user 使用者、agent 员工
+  string text = 2; // ≤2000 字
+  int64 sendTime = 3;
+}
+
+// 使用者在员工回复上提交的问题反馈。负责人看到的不带提交人
+message Feedback {
+  string feedbackID = 1;
+  string agentID = 2;
+  string workID = 3;
+  string messageID = 4; // 点反馈的那条回复
+  string kind = 5;      // wrong_answer 答案错误、misunderstood 没理解需求、operation_failed 操作失败、other 其他
+  string description = 6;
+  string snapshotID = 7; // 处理时的版本
+  int64 sourceRevision = 8;
+  string errorType = 9;  // 工作没完成时的结束原因
+  repeated FeedbackMessage messages = 10; // 提交人勾选附带的对话，默认没有
+  int64 createTime = 11;
+  int64 updateTime = 12;
+}
+
+// 提交问题反馈：能看这份工作的人都能提交；同一人对同一条回复再提交，覆盖上一次
+message SubmitFeedbackReq {
+  string workID = 1;
+  string messageID = 2;
+  string kind = 3;
+  string description = 4; // ≤500 字
+  repeated FeedbackMessage messages = 5; // 最多 11 条：本条和前后各 5 条
+}
+message SubmitFeedbackResp {
+  Feedback feedback = 1;
+}
+
+// 负责人看自己负责的员工的问题反馈（运行情况 → 问题反馈），新的在前；协作者看不了
+message ListFeedbackReq {
+  string agentID = 1;
+  string kind = 2; // 空表示全部
+  sdkws.RequestPagination pagination = 3;
+}
+message ListFeedbackResp {
+  int64 total = 1;
+  repeated Feedback items = 2;
+}
+
+// ==================== 协作与交接 ====================
+
+// 本地 Claw 把一步交给员工：以雇佣人身份给实例发一条文字消息（ex 带 agentOrigin=local_claw），
+// 在私聊里建工作，显示「来自本地 Claw」。用雇佣人的 token 调
+message HandoffWorkReq {
+  string instanceID = 1;
+  string text = 2; // ≤4000 字；材料先上传，链接写在正文里
+}
+message HandoffWorkResp {
+  string conversationID = 1;
+  string serverMsgID = 2;
+  string clientMsgID = 3;
+  string workID = 4;
+  int64 sendTime = 5;
+}
+
+// 执行端请别的员工协作（请之前让确认人确认过）：协作的是雇佣人自己雇佣的另一个员工的实例，以雇佣人身份执行，
+// 结果交回所属工作；只有一层，子工作不能再请协作。用雇佣人的 token 调。
+// 建好后给雇佣人发业务通知 agent.work.assigned，运行协作实例的执行电脑来领
+message CreateSubWorkReq {
+  string parentWorkID = 1;
+  string instanceID = 2; // 协作的实例；和 agentID 二选一
+  string agentID = 3;    // 雇佣人雇佣的这个员工的实例
+  string request = 4;    // ≤4000 字
+}
+message CreateSubWorkResp {
+  Work work = 1;
+}
+
+// 执行电脑领协作子工作：还在等的才领得到，先领先得
+message ClaimSubWorkReq {
+  string workID = 1;
+  string deviceID = 2;
+}
+message ClaimSubWorkResp {
+  Work work = 1;
+  bool claimed = 2; // false：别的电脑领了，或者已经结束了
+}
+
+// 领到的执行电脑交回结果，子工作结束：成功为已完成，失败为未完成
+message ReportSubWorkReq {
+  string workID = 1;
+  string deviceID = 2; // 要和领的时候一样
+  bool success = 3;
+  string result = 4; // ≤20000 字；失败时写原因
+}
+message ReportSubWorkResp {
+  Work work = 1;
+}
+
+// 发起人确认后发到群里的工作：发起人选发到群里或不发。只有发起人能选，已完成、未完成、已停止的才能选，选了不能改；
+// 没开始处理的、中止的、撤回了需求的、因群解散等结束的已不能发。发到群里前再看一次，已不能发的按不发定下来并报错
+message PublishWorkReq {
+  string workID = 1;
+  bool publish = 2;
+}
+message PublishWorkResp {
+  Work work = 1;
+}
+
+// ==================== 群设置 ====================
+
+message GroupMemberSetting {
+  string userID = 1;
+  GroupTier tier = 2;   // 不填按默认档位
+  bool selfConfirm = 3; // 这个成员发起的写操作自己确认
+}
+
+// 实例在一个群里的设置，只有雇佣人能改
+message GroupSetting {
+  string instanceID = 1;
+  string groupID = 2;
+  string botID = 3;
+  string hirerID = 4;
+  GroupTier defaultTier = 5;               // 群成员（含后加入的）的默认档位
+  repeated GroupMemberSetting members = 6; // 单独设了的成员
+  GroupPublishMode publishMode = 7;
+  int64 revision = 8; // 0 表示还没设过
+  string updatedBy = 9;
+  int64 updateTime = 10;
+}
+
+// 查实例在群里的设置：雇佣人看全部；其他群成员看不到 members，只看自己的
+message GetGroupSettingReq {
+  string instanceID = 1;
+  string groupID = 2;
+}
+message GetGroupSettingResp {
+  GroupSetting setting = 1;
+  bool defaulted = 2;   // 还没设过，按默认：仅对话、发起人确认后发到群里、写操作由雇佣人确认
+  GroupTier myTier = 3; // 我的档位；雇佣人自己总是可写
+  bool mySelfConfirm = 4;
+}
+
+// 改实例在群里的设置：只有雇佣人能改，实例要在群里；单独设的成员最多 500 个，不在群里的去掉。
+// 档位收紧时，发起人档位比工作建立时低的在途工作中止（tier_changed）；发布方式只对之后的工作生效
+message SetGroupSettingReq {
+  string instanceID = 1;
+  string groupID = 2;
+  GroupTier defaultTier = 3;
+  repeated GroupMemberSetting members = 4; // 整份替换
+  GroupPublishMode publishMode = 5;
+  int64 revision = 6; // 查到的修订号，没设过填 0；别人先改了报冲突
+}
+message SetGroupSettingResp {
+  GroupSetting setting = 1;
+  int32 aborted = 2; // 因档位收紧中止的工作数
+}
+
+// ==================== 私聊设置与记忆 ====================
+
+// 雇佣人对员工的私聊设置：按员工和雇佣人存，移除雇佣再雇佣还在
+message InstanceSetting {
+  bool memoryEnabled = 1; // 长期记忆，默认关
+  bool autoRemember = 2;  // 自动记住，默认开
+  // 不记的类别：output_preference 输出偏好、common_objects 常用对象、work_habits 工作习惯、address_language 称呼与语言
+  repeated string disabledCategories = 3;
+  string modelID = 4;  // 为这个员工另选的模型，格式由执行端定；空的用电脑上的默认模型
+  int64 revision = 5;  // 0 表示还没设过
+  int64 updateTime = 6;
+}
+
+// 查私聊设置：只有雇佣人能查
+message GetInstanceSettingReq {
+  string instanceID = 1;
+}
+message GetInstanceSettingResp {
+  InstanceSetting setting = 1;
+}
+
+// 改私聊设置：只有雇佣人能改，整份替换；别人先改了报冲突。换模型从下一条消息起生效
+message SetInstanceSettingReq {
+  string instanceID = 1;
+  bool memoryEnabled = 2;
+  bool autoRemember = 3;
+  repeated string disabledCategories = 4;
+  string modelID = 5; // ≤200 字
+  int64 revision = 6; // 查到的修订号，没设过填 0
+}
+message SetInstanceSettingResp {
+  InstanceSetting setting = 1;
+}
+
+// 员工记住的一条，只给雇佣人用
+message Memory {
+  string memoryID = 1;
+  string category = 2;
+  string content = 3; // ≤200 字
+  string mode = 4;    // manual 手动记的、auto 自动记的
+  string workID = 5;  // 记下时的工作
+  bool edited = 6;
+  int64 createTime = 7;
+  int64 updateTime = 8;
+}
+
+// 记忆管理：列出全部，新的在前。执行端也用它取：只在私聊的工作里用，长期记忆关着、类别关了的不用
+message ListMemoriesReq {
+  string instanceID = 1;
+  repeated string categories = 2; // 空表示全部
+}
+message ListMemoriesResp {
+  repeated Memory memories = 1;
+  InstanceSetting setting = 2;
+  int32 limit = 3; // 最多记多少条
+}
+
+// 执行端记下一条：只在雇佣人私聊的工作里记。长期记忆关着、自动记住关着（auto）、类别关了的不记，skipped 写原因；
+// 一样的已经有了不重复记；记满了报错，提示先删除部分
+message SaveMemoryReq {
+  string instanceID = 1;
+  string workID = 2;
+  string category = 3;
+  string content = 4;
+  string mode = 5; // manual：聊天里让它记的；auto：自动记的
+}
+message SaveMemoryResp {
+  Memory memory = 1;
+  bool existed = 2;
+  string skipped = 3; // memory_disabled、auto_disabled、category_disabled
+}
+
+// 编辑一条
+message UpdateMemoryReq {
+  string instanceID = 1;
+  string memoryID = 2;
+  string category = 3; // 空表示不改
+  string content = 4;
+}
+message UpdateMemoryResp {
+  Memory memory = 1;
+}
+
+// 删除，撤销也用它；all 为 true 时清空。已经不在的列在 missing 里，撤销时提示「该条已不在记忆中」
+message DeleteMemoriesReq {
+  string instanceID = 1;
+  repeated string memoryIDs = 2;
+  bool all = 3;
+}
+message DeleteMemoriesResp {
+  int64 deleted = 1;
+  repeated string missing = 2;
+  bool memoryEnabled = 3; // 长期记忆开着没有；关着时撤销也提示「该条已不在记忆中」
 }
 
 // ==================== 范围与人员群体 ====================
@@ -1781,12 +2287,38 @@ service Agent {
   rpc getInstanceConfig(GetInstanceConfigReq) returns (GetInstanceConfigResp);
   rpc describeScope(DescribeScopeReq) returns (DescribeScopeResp);
   rpc scopeOptions(ScopeOptionsReq) returns (ScopeOptionsResp);
+  rpc getWorks(GetWorksReq) returns (GetWorksResp);
+  rpc listWorks(ListWorksReq) returns (ListWorksResp);
+  rpc stopWork(StopWorkReq) returns (StopWorkResp);
+  rpc listWorkEvents(ListWorkEventsReq) returns (ListWorkEventsResp);
+  rpc submitFeedback(SubmitFeedbackReq) returns (SubmitFeedbackResp);
+  rpc listFeedback(ListFeedbackReq) returns (ListFeedbackResp);
+  rpc handoffWork(HandoffWorkReq) returns (HandoffWorkResp);
+  rpc createSubWork(CreateSubWorkReq) returns (CreateSubWorkResp);
+  rpc claimSubWork(ClaimSubWorkReq) returns (ClaimSubWorkResp);
+  rpc reportSubWork(ReportSubWorkReq) returns (ReportSubWorkResp);
+  rpc publishWork(PublishWorkReq) returns (PublishWorkResp);
+  rpc getGroupSetting(GetGroupSettingReq) returns (GetGroupSettingResp);
+  rpc setGroupSetting(SetGroupSettingReq) returns (SetGroupSettingResp);
+  rpc getInstanceSetting(GetInstanceSettingReq) returns (GetInstanceSettingResp);
+  rpc setInstanceSetting(SetInstanceSettingReq) returns (SetInstanceSettingResp);
+  rpc listMemories(ListMemoriesReq) returns (ListMemoriesResp);
+  rpc saveMemory(SaveMemoryReq) returns (SaveMemoryResp);
+  rpc updateMemory(UpdateMemoryReq) returns (UpdateMemoryResp);
+  rpc deleteMemories(DeleteMemoriesReq) returns (DeleteMemoriesResp);
 
   // 内部：/agent/internal，im-chat 用 IM 管理员 token 调
   rpc prepareInstance(PrepareInstanceReq) returns (PrepareInstanceResp);
   rpc bindInstance(BindInstanceReq) returns (BindInstanceResp);
   rpc removeInstance(RemoveInstanceReq) returns (RemoveInstanceResp);
   rpc getInstanceEligibility(GetInstanceEligibilityReq) returns (GetInstanceEligibilityResp);
+  rpc createWork(CreateWorkReq) returns (CreateWorkResp);
+  rpc startWork(StartWorkReq) returns (StartWorkResp);
+  rpc requeueWorks(RequeueWorksReq) returns (RequeueWorksResp);
+  rpc markInstanceRead(MarkInstanceReadReq) returns (MarkInstanceReadResp);
+  rpc checkWork(CheckWorkReq) returns (CheckWorkResp);
+  rpc takeWorkByTask(TakeWorkByTaskReq) returns (TakeWorkByTaskResp);
+  rpc endGroupWorks(EndGroupWorksReq) returns (EndGroupWorksResp);
 
   // 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
   rpc adminGetCompanySetting(AdminGetCompanySettingReq) returns (AdminGetCompanySettingResp);

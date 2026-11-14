@@ -56,10 +56,36 @@ const (
 	Agent_GetInstanceConfig_FullMethodName           = "/openim.agent.Agent/getInstanceConfig"
 	Agent_DescribeScope_FullMethodName               = "/openim.agent.Agent/describeScope"
 	Agent_ScopeOptions_FullMethodName                = "/openim.agent.Agent/scopeOptions"
+	Agent_GetWorks_FullMethodName                    = "/openim.agent.Agent/getWorks"
+	Agent_ListWorks_FullMethodName                   = "/openim.agent.Agent/listWorks"
+	Agent_StopWork_FullMethodName                    = "/openim.agent.Agent/stopWork"
+	Agent_ListWorkEvents_FullMethodName              = "/openim.agent.Agent/listWorkEvents"
+	Agent_SubmitFeedback_FullMethodName              = "/openim.agent.Agent/submitFeedback"
+	Agent_ListFeedback_FullMethodName                = "/openim.agent.Agent/listFeedback"
+	Agent_HandoffWork_FullMethodName                 = "/openim.agent.Agent/handoffWork"
+	Agent_CreateSubWork_FullMethodName               = "/openim.agent.Agent/createSubWork"
+	Agent_ClaimSubWork_FullMethodName                = "/openim.agent.Agent/claimSubWork"
+	Agent_ReportSubWork_FullMethodName               = "/openim.agent.Agent/reportSubWork"
+	Agent_PublishWork_FullMethodName                 = "/openim.agent.Agent/publishWork"
+	Agent_GetGroupSetting_FullMethodName             = "/openim.agent.Agent/getGroupSetting"
+	Agent_SetGroupSetting_FullMethodName             = "/openim.agent.Agent/setGroupSetting"
+	Agent_GetInstanceSetting_FullMethodName          = "/openim.agent.Agent/getInstanceSetting"
+	Agent_SetInstanceSetting_FullMethodName          = "/openim.agent.Agent/setInstanceSetting"
+	Agent_ListMemories_FullMethodName                = "/openim.agent.Agent/listMemories"
+	Agent_SaveMemory_FullMethodName                  = "/openim.agent.Agent/saveMemory"
+	Agent_UpdateMemory_FullMethodName                = "/openim.agent.Agent/updateMemory"
+	Agent_DeleteMemories_FullMethodName              = "/openim.agent.Agent/deleteMemories"
 	Agent_PrepareInstance_FullMethodName             = "/openim.agent.Agent/prepareInstance"
 	Agent_BindInstance_FullMethodName                = "/openim.agent.Agent/bindInstance"
 	Agent_RemoveInstance_FullMethodName              = "/openim.agent.Agent/removeInstance"
 	Agent_GetInstanceEligibility_FullMethodName      = "/openim.agent.Agent/getInstanceEligibility"
+	Agent_CreateWork_FullMethodName                  = "/openim.agent.Agent/createWork"
+	Agent_StartWork_FullMethodName                   = "/openim.agent.Agent/startWork"
+	Agent_RequeueWorks_FullMethodName                = "/openim.agent.Agent/requeueWorks"
+	Agent_MarkInstanceRead_FullMethodName            = "/openim.agent.Agent/markInstanceRead"
+	Agent_CheckWork_FullMethodName                   = "/openim.agent.Agent/checkWork"
+	Agent_TakeWorkByTask_FullMethodName              = "/openim.agent.Agent/takeWorkByTask"
+	Agent_EndGroupWorks_FullMethodName               = "/openim.agent.Agent/endGroupWorks"
 	Agent_AdminGetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminGetCompanySetting"
 	Agent_AdminSetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminSetCompanySetting"
 	Agent_AdminListCompanySettings_FullMethodName    = "/openim.agent.Agent/adminListCompanySettings"
@@ -136,11 +162,37 @@ type AgentClient interface {
 	GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error)
 	DescribeScope(ctx context.Context, in *DescribeScopeReq, opts ...grpc.CallOption) (*DescribeScopeResp, error)
 	ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opts ...grpc.CallOption) (*ScopeOptionsResp, error)
+	GetWorks(ctx context.Context, in *GetWorksReq, opts ...grpc.CallOption) (*GetWorksResp, error)
+	ListWorks(ctx context.Context, in *ListWorksReq, opts ...grpc.CallOption) (*ListWorksResp, error)
+	StopWork(ctx context.Context, in *StopWorkReq, opts ...grpc.CallOption) (*StopWorkResp, error)
+	ListWorkEvents(ctx context.Context, in *ListWorkEventsReq, opts ...grpc.CallOption) (*ListWorkEventsResp, error)
+	SubmitFeedback(ctx context.Context, in *SubmitFeedbackReq, opts ...grpc.CallOption) (*SubmitFeedbackResp, error)
+	ListFeedback(ctx context.Context, in *ListFeedbackReq, opts ...grpc.CallOption) (*ListFeedbackResp, error)
+	HandoffWork(ctx context.Context, in *HandoffWorkReq, opts ...grpc.CallOption) (*HandoffWorkResp, error)
+	CreateSubWork(ctx context.Context, in *CreateSubWorkReq, opts ...grpc.CallOption) (*CreateSubWorkResp, error)
+	ClaimSubWork(ctx context.Context, in *ClaimSubWorkReq, opts ...grpc.CallOption) (*ClaimSubWorkResp, error)
+	ReportSubWork(ctx context.Context, in *ReportSubWorkReq, opts ...grpc.CallOption) (*ReportSubWorkResp, error)
+	PublishWork(ctx context.Context, in *PublishWorkReq, opts ...grpc.CallOption) (*PublishWorkResp, error)
+	GetGroupSetting(ctx context.Context, in *GetGroupSettingReq, opts ...grpc.CallOption) (*GetGroupSettingResp, error)
+	SetGroupSetting(ctx context.Context, in *SetGroupSettingReq, opts ...grpc.CallOption) (*SetGroupSettingResp, error)
+	GetInstanceSetting(ctx context.Context, in *GetInstanceSettingReq, opts ...grpc.CallOption) (*GetInstanceSettingResp, error)
+	SetInstanceSetting(ctx context.Context, in *SetInstanceSettingReq, opts ...grpc.CallOption) (*SetInstanceSettingResp, error)
+	ListMemories(ctx context.Context, in *ListMemoriesReq, opts ...grpc.CallOption) (*ListMemoriesResp, error)
+	SaveMemory(ctx context.Context, in *SaveMemoryReq, opts ...grpc.CallOption) (*SaveMemoryResp, error)
+	UpdateMemory(ctx context.Context, in *UpdateMemoryReq, opts ...grpc.CallOption) (*UpdateMemoryResp, error)
+	DeleteMemories(ctx context.Context, in *DeleteMemoriesReq, opts ...grpc.CallOption) (*DeleteMemoriesResp, error)
 	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
 	PrepareInstance(ctx context.Context, in *PrepareInstanceReq, opts ...grpc.CallOption) (*PrepareInstanceResp, error)
 	BindInstance(ctx context.Context, in *BindInstanceReq, opts ...grpc.CallOption) (*BindInstanceResp, error)
 	RemoveInstance(ctx context.Context, in *RemoveInstanceReq, opts ...grpc.CallOption) (*RemoveInstanceResp, error)
 	GetInstanceEligibility(ctx context.Context, in *GetInstanceEligibilityReq, opts ...grpc.CallOption) (*GetInstanceEligibilityResp, error)
+	CreateWork(ctx context.Context, in *CreateWorkReq, opts ...grpc.CallOption) (*CreateWorkResp, error)
+	StartWork(ctx context.Context, in *StartWorkReq, opts ...grpc.CallOption) (*StartWorkResp, error)
+	RequeueWorks(ctx context.Context, in *RequeueWorksReq, opts ...grpc.CallOption) (*RequeueWorksResp, error)
+	MarkInstanceRead(ctx context.Context, in *MarkInstanceReadReq, opts ...grpc.CallOption) (*MarkInstanceReadResp, error)
+	CheckWork(ctx context.Context, in *CheckWorkReq, opts ...grpc.CallOption) (*CheckWorkResp, error)
+	TakeWorkByTask(ctx context.Context, in *TakeWorkByTaskReq, opts ...grpc.CallOption) (*TakeWorkByTaskResp, error)
+	EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, opts ...grpc.CallOption) (*EndGroupWorksResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(ctx context.Context, in *AdminGetCompanySettingReq, opts ...grpc.CallOption) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(ctx context.Context, in *AdminSetCompanySettingReq, opts ...grpc.CallOption) (*AdminSetCompanySettingResp, error)
@@ -555,6 +607,196 @@ func (c *agentClient) ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opt
 	return out, nil
 }
 
+func (c *agentClient) GetWorks(ctx context.Context, in *GetWorksReq, opts ...grpc.CallOption) (*GetWorksResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWorksResp)
+	err := c.cc.Invoke(ctx, Agent_GetWorks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListWorks(ctx context.Context, in *ListWorksReq, opts ...grpc.CallOption) (*ListWorksResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListWorksResp)
+	err := c.cc.Invoke(ctx, Agent_ListWorks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) StopWork(ctx context.Context, in *StopWorkReq, opts ...grpc.CallOption) (*StopWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StopWorkResp)
+	err := c.cc.Invoke(ctx, Agent_StopWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListWorkEvents(ctx context.Context, in *ListWorkEventsReq, opts ...grpc.CallOption) (*ListWorkEventsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListWorkEventsResp)
+	err := c.cc.Invoke(ctx, Agent_ListWorkEvents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) SubmitFeedback(ctx context.Context, in *SubmitFeedbackReq, opts ...grpc.CallOption) (*SubmitFeedbackResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SubmitFeedbackResp)
+	err := c.cc.Invoke(ctx, Agent_SubmitFeedback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListFeedback(ctx context.Context, in *ListFeedbackReq, opts ...grpc.CallOption) (*ListFeedbackResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListFeedbackResp)
+	err := c.cc.Invoke(ctx, Agent_ListFeedback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) HandoffWork(ctx context.Context, in *HandoffWorkReq, opts ...grpc.CallOption) (*HandoffWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HandoffWorkResp)
+	err := c.cc.Invoke(ctx, Agent_HandoffWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) CreateSubWork(ctx context.Context, in *CreateSubWorkReq, opts ...grpc.CallOption) (*CreateSubWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateSubWorkResp)
+	err := c.cc.Invoke(ctx, Agent_CreateSubWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ClaimSubWork(ctx context.Context, in *ClaimSubWorkReq, opts ...grpc.CallOption) (*ClaimSubWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClaimSubWorkResp)
+	err := c.cc.Invoke(ctx, Agent_ClaimSubWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ReportSubWork(ctx context.Context, in *ReportSubWorkReq, opts ...grpc.CallOption) (*ReportSubWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReportSubWorkResp)
+	err := c.cc.Invoke(ctx, Agent_ReportSubWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) PublishWork(ctx context.Context, in *PublishWorkReq, opts ...grpc.CallOption) (*PublishWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PublishWorkResp)
+	err := c.cc.Invoke(ctx, Agent_PublishWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetGroupSetting(ctx context.Context, in *GetGroupSettingReq, opts ...grpc.CallOption) (*GetGroupSettingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGroupSettingResp)
+	err := c.cc.Invoke(ctx, Agent_GetGroupSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) SetGroupSetting(ctx context.Context, in *SetGroupSettingReq, opts ...grpc.CallOption) (*SetGroupSettingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetGroupSettingResp)
+	err := c.cc.Invoke(ctx, Agent_SetGroupSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetInstanceSetting(ctx context.Context, in *GetInstanceSettingReq, opts ...grpc.CallOption) (*GetInstanceSettingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetInstanceSettingResp)
+	err := c.cc.Invoke(ctx, Agent_GetInstanceSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) SetInstanceSetting(ctx context.Context, in *SetInstanceSettingReq, opts ...grpc.CallOption) (*SetInstanceSettingResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetInstanceSettingResp)
+	err := c.cc.Invoke(ctx, Agent_SetInstanceSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListMemories(ctx context.Context, in *ListMemoriesReq, opts ...grpc.CallOption) (*ListMemoriesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMemoriesResp)
+	err := c.cc.Invoke(ctx, Agent_ListMemories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) SaveMemory(ctx context.Context, in *SaveMemoryReq, opts ...grpc.CallOption) (*SaveMemoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveMemoryResp)
+	err := c.cc.Invoke(ctx, Agent_SaveMemory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) UpdateMemory(ctx context.Context, in *UpdateMemoryReq, opts ...grpc.CallOption) (*UpdateMemoryResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateMemoryResp)
+	err := c.cc.Invoke(ctx, Agent_UpdateMemory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) DeleteMemories(ctx context.Context, in *DeleteMemoriesReq, opts ...grpc.CallOption) (*DeleteMemoriesResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteMemoriesResp)
+	err := c.cc.Invoke(ctx, Agent_DeleteMemories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agentClient) PrepareInstance(ctx context.Context, in *PrepareInstanceReq, opts ...grpc.CallOption) (*PrepareInstanceResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PrepareInstanceResp)
@@ -589,6 +831,76 @@ func (c *agentClient) GetInstanceEligibility(ctx context.Context, in *GetInstanc
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetInstanceEligibilityResp)
 	err := c.cc.Invoke(ctx, Agent_GetInstanceEligibility_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) CreateWork(ctx context.Context, in *CreateWorkReq, opts ...grpc.CallOption) (*CreateWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateWorkResp)
+	err := c.cc.Invoke(ctx, Agent_CreateWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) StartWork(ctx context.Context, in *StartWorkReq, opts ...grpc.CallOption) (*StartWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StartWorkResp)
+	err := c.cc.Invoke(ctx, Agent_StartWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) RequeueWorks(ctx context.Context, in *RequeueWorksReq, opts ...grpc.CallOption) (*RequeueWorksResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RequeueWorksResp)
+	err := c.cc.Invoke(ctx, Agent_RequeueWorks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) MarkInstanceRead(ctx context.Context, in *MarkInstanceReadReq, opts ...grpc.CallOption) (*MarkInstanceReadResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MarkInstanceReadResp)
+	err := c.cc.Invoke(ctx, Agent_MarkInstanceRead_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) CheckWork(ctx context.Context, in *CheckWorkReq, opts ...grpc.CallOption) (*CheckWorkResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckWorkResp)
+	err := c.cc.Invoke(ctx, Agent_CheckWork_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) TakeWorkByTask(ctx context.Context, in *TakeWorkByTaskReq, opts ...grpc.CallOption) (*TakeWorkByTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TakeWorkByTaskResp)
+	err := c.cc.Invoke(ctx, Agent_TakeWorkByTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, opts ...grpc.CallOption) (*EndGroupWorksResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EndGroupWorksResp)
+	err := c.cc.Invoke(ctx, Agent_EndGroupWorks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -957,11 +1269,37 @@ type AgentServer interface {
 	GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error)
 	DescribeScope(context.Context, *DescribeScopeReq) (*DescribeScopeResp, error)
 	ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error)
+	GetWorks(context.Context, *GetWorksReq) (*GetWorksResp, error)
+	ListWorks(context.Context, *ListWorksReq) (*ListWorksResp, error)
+	StopWork(context.Context, *StopWorkReq) (*StopWorkResp, error)
+	ListWorkEvents(context.Context, *ListWorkEventsReq) (*ListWorkEventsResp, error)
+	SubmitFeedback(context.Context, *SubmitFeedbackReq) (*SubmitFeedbackResp, error)
+	ListFeedback(context.Context, *ListFeedbackReq) (*ListFeedbackResp, error)
+	HandoffWork(context.Context, *HandoffWorkReq) (*HandoffWorkResp, error)
+	CreateSubWork(context.Context, *CreateSubWorkReq) (*CreateSubWorkResp, error)
+	ClaimSubWork(context.Context, *ClaimSubWorkReq) (*ClaimSubWorkResp, error)
+	ReportSubWork(context.Context, *ReportSubWorkReq) (*ReportSubWorkResp, error)
+	PublishWork(context.Context, *PublishWorkReq) (*PublishWorkResp, error)
+	GetGroupSetting(context.Context, *GetGroupSettingReq) (*GetGroupSettingResp, error)
+	SetGroupSetting(context.Context, *SetGroupSettingReq) (*SetGroupSettingResp, error)
+	GetInstanceSetting(context.Context, *GetInstanceSettingReq) (*GetInstanceSettingResp, error)
+	SetInstanceSetting(context.Context, *SetInstanceSettingReq) (*SetInstanceSettingResp, error)
+	ListMemories(context.Context, *ListMemoriesReq) (*ListMemoriesResp, error)
+	SaveMemory(context.Context, *SaveMemoryReq) (*SaveMemoryResp, error)
+	UpdateMemory(context.Context, *UpdateMemoryReq) (*UpdateMemoryResp, error)
+	DeleteMemories(context.Context, *DeleteMemoriesReq) (*DeleteMemoriesResp, error)
 	// 内部：/agent/internal，im-chat 用 IM 管理员 token 调
 	PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error)
 	BindInstance(context.Context, *BindInstanceReq) (*BindInstanceResp, error)
 	RemoveInstance(context.Context, *RemoveInstanceReq) (*RemoveInstanceResp, error)
 	GetInstanceEligibility(context.Context, *GetInstanceEligibilityReq) (*GetInstanceEligibilityResp, error)
+	CreateWork(context.Context, *CreateWorkReq) (*CreateWorkResp, error)
+	StartWork(context.Context, *StartWorkReq) (*StartWorkResp, error)
+	RequeueWorks(context.Context, *RequeueWorksReq) (*RequeueWorksResp, error)
+	MarkInstanceRead(context.Context, *MarkInstanceReadReq) (*MarkInstanceReadResp, error)
+	CheckWork(context.Context, *CheckWorkReq) (*CheckWorkResp, error)
+	TakeWorkByTask(context.Context, *TakeWorkByTaskReq) (*TakeWorkByTaskResp, error)
+	EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(context.Context, *AdminSetCompanySettingReq) (*AdminSetCompanySettingResp, error)
@@ -1117,6 +1455,63 @@ func (UnimplementedAgentServer) DescribeScope(context.Context, *DescribeScopeReq
 func (UnimplementedAgentServer) ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ScopeOptions not implemented")
 }
+func (UnimplementedAgentServer) GetWorks(context.Context, *GetWorksReq) (*GetWorksResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetWorks not implemented")
+}
+func (UnimplementedAgentServer) ListWorks(context.Context, *ListWorksReq) (*ListWorksResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListWorks not implemented")
+}
+func (UnimplementedAgentServer) StopWork(context.Context, *StopWorkReq) (*StopWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method StopWork not implemented")
+}
+func (UnimplementedAgentServer) ListWorkEvents(context.Context, *ListWorkEventsReq) (*ListWorkEventsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListWorkEvents not implemented")
+}
+func (UnimplementedAgentServer) SubmitFeedback(context.Context, *SubmitFeedbackReq) (*SubmitFeedbackResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SubmitFeedback not implemented")
+}
+func (UnimplementedAgentServer) ListFeedback(context.Context, *ListFeedbackReq) (*ListFeedbackResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFeedback not implemented")
+}
+func (UnimplementedAgentServer) HandoffWork(context.Context, *HandoffWorkReq) (*HandoffWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method HandoffWork not implemented")
+}
+func (UnimplementedAgentServer) CreateSubWork(context.Context, *CreateSubWorkReq) (*CreateSubWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateSubWork not implemented")
+}
+func (UnimplementedAgentServer) ClaimSubWork(context.Context, *ClaimSubWorkReq) (*ClaimSubWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ClaimSubWork not implemented")
+}
+func (UnimplementedAgentServer) ReportSubWork(context.Context, *ReportSubWorkReq) (*ReportSubWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReportSubWork not implemented")
+}
+func (UnimplementedAgentServer) PublishWork(context.Context, *PublishWorkReq) (*PublishWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method PublishWork not implemented")
+}
+func (UnimplementedAgentServer) GetGroupSetting(context.Context, *GetGroupSettingReq) (*GetGroupSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetGroupSetting not implemented")
+}
+func (UnimplementedAgentServer) SetGroupSetting(context.Context, *SetGroupSettingReq) (*SetGroupSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetGroupSetting not implemented")
+}
+func (UnimplementedAgentServer) GetInstanceSetting(context.Context, *GetInstanceSettingReq) (*GetInstanceSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetInstanceSetting not implemented")
+}
+func (UnimplementedAgentServer) SetInstanceSetting(context.Context, *SetInstanceSettingReq) (*SetInstanceSettingResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetInstanceSetting not implemented")
+}
+func (UnimplementedAgentServer) ListMemories(context.Context, *ListMemoriesReq) (*ListMemoriesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListMemories not implemented")
+}
+func (UnimplementedAgentServer) SaveMemory(context.Context, *SaveMemoryReq) (*SaveMemoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveMemory not implemented")
+}
+func (UnimplementedAgentServer) UpdateMemory(context.Context, *UpdateMemoryReq) (*UpdateMemoryResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateMemory not implemented")
+}
+func (UnimplementedAgentServer) DeleteMemories(context.Context, *DeleteMemoriesReq) (*DeleteMemoriesResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteMemories not implemented")
+}
 func (UnimplementedAgentServer) PrepareInstance(context.Context, *PrepareInstanceReq) (*PrepareInstanceResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method PrepareInstance not implemented")
 }
@@ -1128,6 +1523,27 @@ func (UnimplementedAgentServer) RemoveInstance(context.Context, *RemoveInstanceR
 }
 func (UnimplementedAgentServer) GetInstanceEligibility(context.Context, *GetInstanceEligibilityReq) (*GetInstanceEligibilityResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetInstanceEligibility not implemented")
+}
+func (UnimplementedAgentServer) CreateWork(context.Context, *CreateWorkReq) (*CreateWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateWork not implemented")
+}
+func (UnimplementedAgentServer) StartWork(context.Context, *StartWorkReq) (*StartWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method StartWork not implemented")
+}
+func (UnimplementedAgentServer) RequeueWorks(context.Context, *RequeueWorksReq) (*RequeueWorksResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RequeueWorks not implemented")
+}
+func (UnimplementedAgentServer) MarkInstanceRead(context.Context, *MarkInstanceReadReq) (*MarkInstanceReadResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method MarkInstanceRead not implemented")
+}
+func (UnimplementedAgentServer) CheckWork(context.Context, *CheckWorkReq) (*CheckWorkResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method CheckWork not implemented")
+}
+func (UnimplementedAgentServer) TakeWorkByTask(context.Context, *TakeWorkByTaskReq) (*TakeWorkByTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method TakeWorkByTask not implemented")
+}
+func (UnimplementedAgentServer) EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method EndGroupWorks not implemented")
 }
 func (UnimplementedAgentServer) AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminGetCompanySetting not implemented")
@@ -1912,6 +2328,348 @@ func _Agent_ScopeOptions_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_GetWorks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetWorks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetWorks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetWorks(ctx, req.(*GetWorksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListWorks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListWorks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListWorks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListWorks(ctx, req.(*ListWorksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_StopWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StopWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).StopWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_StopWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).StopWork(ctx, req.(*StopWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListWorkEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWorkEventsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListWorkEvents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListWorkEvents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListWorkEvents(ctx, req.(*ListWorkEventsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_SubmitFeedback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitFeedbackReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SubmitFeedback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SubmitFeedback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SubmitFeedback(ctx, req.(*SubmitFeedbackReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListFeedback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFeedbackReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListFeedback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListFeedback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListFeedback(ctx, req.(*ListFeedbackReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_HandoffWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandoffWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).HandoffWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_HandoffWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).HandoffWork(ctx, req.(*HandoffWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_CreateSubWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSubWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).CreateSubWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_CreateSubWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).CreateSubWork(ctx, req.(*CreateSubWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ClaimSubWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClaimSubWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ClaimSubWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ClaimSubWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ClaimSubWork(ctx, req.(*ClaimSubWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ReportSubWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportSubWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ReportSubWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ReportSubWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ReportSubWork(ctx, req.(*ReportSubWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_PublishWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).PublishWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_PublishWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).PublishWork(ctx, req.(*PublishWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetGroupSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupSettingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetGroupSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetGroupSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetGroupSetting(ctx, req.(*GetGroupSettingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_SetGroupSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetGroupSettingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SetGroupSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SetGroupSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SetGroupSetting(ctx, req.(*SetGroupSettingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetInstanceSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInstanceSettingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetInstanceSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetInstanceSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetInstanceSetting(ctx, req.(*GetInstanceSettingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_SetInstanceSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetInstanceSettingReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SetInstanceSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SetInstanceSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SetInstanceSetting(ctx, req.(*SetInstanceSettingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListMemories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMemoriesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListMemories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListMemories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListMemories(ctx, req.(*ListMemoriesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_SaveMemory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveMemoryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SaveMemory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SaveMemory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SaveMemory(ctx, req.(*SaveMemoryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_UpdateMemory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateMemoryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).UpdateMemory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_UpdateMemory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).UpdateMemory(ctx, req.(*UpdateMemoryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_DeleteMemories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteMemoriesReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).DeleteMemories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_DeleteMemories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).DeleteMemories(ctx, req.(*DeleteMemoriesReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_PrepareInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PrepareInstanceReq)
 	if err := dec(in); err != nil {
@@ -1980,6 +2738,132 @@ func _Agent_GetInstanceEligibility_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).GetInstanceEligibility(ctx, req.(*GetInstanceEligibilityReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_CreateWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).CreateWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_CreateWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).CreateWork(ctx, req.(*CreateWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_StartWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).StartWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_StartWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).StartWork(ctx, req.(*StartWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_RequeueWorks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequeueWorksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).RequeueWorks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_RequeueWorks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).RequeueWorks(ctx, req.(*RequeueWorksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_MarkInstanceRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarkInstanceReadReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).MarkInstanceRead(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_MarkInstanceRead_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).MarkInstanceRead(ctx, req.(*MarkInstanceReadReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_CheckWork_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckWorkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).CheckWork(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_CheckWork_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).CheckWork(ctx, req.(*CheckWorkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_TakeWorkByTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TakeWorkByTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).TakeWorkByTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_TakeWorkByTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).TakeWorkByTask(ctx, req.(*TakeWorkByTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_EndGroupWorks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EndGroupWorksReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).EndGroupWorks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_EndGroupWorks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).EndGroupWorks(ctx, req.(*EndGroupWorksReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2716,6 +3600,82 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_ScopeOptions_Handler,
 		},
 		{
+			MethodName: "getWorks",
+			Handler:    _Agent_GetWorks_Handler,
+		},
+		{
+			MethodName: "listWorks",
+			Handler:    _Agent_ListWorks_Handler,
+		},
+		{
+			MethodName: "stopWork",
+			Handler:    _Agent_StopWork_Handler,
+		},
+		{
+			MethodName: "listWorkEvents",
+			Handler:    _Agent_ListWorkEvents_Handler,
+		},
+		{
+			MethodName: "submitFeedback",
+			Handler:    _Agent_SubmitFeedback_Handler,
+		},
+		{
+			MethodName: "listFeedback",
+			Handler:    _Agent_ListFeedback_Handler,
+		},
+		{
+			MethodName: "handoffWork",
+			Handler:    _Agent_HandoffWork_Handler,
+		},
+		{
+			MethodName: "createSubWork",
+			Handler:    _Agent_CreateSubWork_Handler,
+		},
+		{
+			MethodName: "claimSubWork",
+			Handler:    _Agent_ClaimSubWork_Handler,
+		},
+		{
+			MethodName: "reportSubWork",
+			Handler:    _Agent_ReportSubWork_Handler,
+		},
+		{
+			MethodName: "publishWork",
+			Handler:    _Agent_PublishWork_Handler,
+		},
+		{
+			MethodName: "getGroupSetting",
+			Handler:    _Agent_GetGroupSetting_Handler,
+		},
+		{
+			MethodName: "setGroupSetting",
+			Handler:    _Agent_SetGroupSetting_Handler,
+		},
+		{
+			MethodName: "getInstanceSetting",
+			Handler:    _Agent_GetInstanceSetting_Handler,
+		},
+		{
+			MethodName: "setInstanceSetting",
+			Handler:    _Agent_SetInstanceSetting_Handler,
+		},
+		{
+			MethodName: "listMemories",
+			Handler:    _Agent_ListMemories_Handler,
+		},
+		{
+			MethodName: "saveMemory",
+			Handler:    _Agent_SaveMemory_Handler,
+		},
+		{
+			MethodName: "updateMemory",
+			Handler:    _Agent_UpdateMemory_Handler,
+		},
+		{
+			MethodName: "deleteMemories",
+			Handler:    _Agent_DeleteMemories_Handler,
+		},
+		{
 			MethodName: "prepareInstance",
 			Handler:    _Agent_PrepareInstance_Handler,
 		},
@@ -2730,6 +3690,34 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getInstanceEligibility",
 			Handler:    _Agent_GetInstanceEligibility_Handler,
+		},
+		{
+			MethodName: "createWork",
+			Handler:    _Agent_CreateWork_Handler,
+		},
+		{
+			MethodName: "startWork",
+			Handler:    _Agent_StartWork_Handler,
+		},
+		{
+			MethodName: "requeueWorks",
+			Handler:    _Agent_RequeueWorks_Handler,
+		},
+		{
+			MethodName: "markInstanceRead",
+			Handler:    _Agent_MarkInstanceRead_Handler,
+		},
+		{
+			MethodName: "checkWork",
+			Handler:    _Agent_CheckWork_Handler,
+		},
+		{
+			MethodName: "takeWorkByTask",
+			Handler:    _Agent_TakeWorkByTask_Handler,
+		},
+		{
+			MethodName: "endGroupWorks",
+			Handler:    _Agent_EndGroupWorks_Handler,
 		},
 		{
 			MethodName: "adminGetCompanySetting",

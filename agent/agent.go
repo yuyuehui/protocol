@@ -10,6 +10,8 @@ var (
 	errGroupIDEmpty    = errors.New("groupID is empty")
 	errUserIDsEmpty    = errors.New("userIDs is empty")
 	errInstanceIDEmpty = errors.New("instanceID is empty")
+	errBotIDEmpty      = errors.New("botID is empty")
+	errWorkIDEmpty     = errors.New("workID is empty")
 )
 
 func (x *CreateAgentReq) Check() error {
@@ -459,6 +461,281 @@ func (x *AdminGetReviewReq) Check() error {
 func (x *AdminDecideReviewReq) Check() error {
 	if x.ReviewID == "" {
 		return errReviewIDEmpty
+	}
+	return nil
+}
+
+func (x *GetWorksReq) Check() error {
+	if len(x.WorkIDs) == 0 && len(x.TaskIDs) == 0 && (x.ConversationID == "" || len(x.SourceMsgIDs) == 0) {
+		return errors.New("workIDs, taskIDs or conversationID and sourceMsgIDs is empty")
+	}
+	return nil
+}
+
+func (x *ListWorksReq) Check() error {
+	switch x.Role {
+	case "", "initiator", "hirer":
+		return nil
+	}
+	return errors.New("role is invalid")
+}
+
+func (x *StopWorkReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	return nil
+}
+
+func (x *CreateWorkReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.ConversationID == "" || x.MessageID == "" || x.InitiatorID == "" {
+		return errors.New("conversationID, messageID or initiatorID is empty")
+	}
+	if x.Online && (x.HostEpoch <= 0 || x.TokenHash == "") {
+		return errors.New("hostEpoch or tokenHash is empty")
+	}
+	return nil
+}
+
+func (x *StartWorkReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	if x.HostEpoch <= 0 || x.TokenHash == "" {
+		return errors.New("hostEpoch or tokenHash is empty")
+	}
+	return nil
+}
+
+func (x *RequeueWorksReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.HostEpoch <= 0 {
+		return errors.New("hostEpoch is empty")
+	}
+	if x.TokenHash != "" && x.WorkID == "" {
+		return errors.New("workID is required with tokenHash")
+	}
+	return nil
+}
+
+func (x *MarkInstanceReadReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.ConversationID == "" {
+		return errors.New("conversationID is empty")
+	}
+	if x.HasReadSeq < 0 {
+		return errors.New("hasReadSeq is invalid")
+	}
+	return nil
+}
+
+func (x *CheckWorkReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.TaskID == "" {
+		return errors.New("taskID is empty")
+	}
+	if x.Phase == "open" && (x.ConversationID == "" || x.SourceMsgID == "") {
+		return errors.New("conversationID or sourceMsgID is empty")
+	}
+	return nil
+}
+
+func (x *TakeWorkByTaskReq) Check() error {
+	if x.BotID == "" {
+		return errBotIDEmpty
+	}
+	if x.TaskID == "" {
+		return errors.New("taskID is empty")
+	}
+	return nil
+}
+
+func (x *EndGroupWorksReq) Check() error {
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	switch x.Reason {
+	case "group_dismissed", "instance_removed":
+		return nil
+	case "initiator_left":
+		if len(x.InitiatorIDs) == 0 {
+			return errors.New("initiatorIDs is empty")
+		}
+		return nil
+	}
+	return errors.New("reason is invalid")
+}
+
+func (x *ListWorkEventsReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	return nil
+}
+
+func (x *SubmitFeedbackReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	switch x.Kind {
+	case "wrong_answer", "misunderstood", "operation_failed", "other":
+		return nil
+	}
+	return errors.New("kind is invalid")
+}
+
+func (x *ListFeedbackReq) Check() error {
+	if x.AgentID == "" {
+		return errAgentIDEmpty
+	}
+	return nil
+}
+
+func (x *HandoffWorkReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.Text == "" {
+		return errors.New("text is empty")
+	}
+	return nil
+}
+
+func (x *CreateSubWorkReq) Check() error {
+	if x.ParentWorkID == "" {
+		return errors.New("parentWorkID is empty")
+	}
+	if x.InstanceID == "" && x.AgentID == "" {
+		return errors.New("instanceID or agentID is empty")
+	}
+	if x.Request == "" {
+		return errors.New("request is empty")
+	}
+	return nil
+}
+
+func (x *ClaimSubWorkReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	if x.DeviceID == "" {
+		return errors.New("deviceID is empty")
+	}
+	return nil
+}
+
+func (x *ReportSubWorkReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	if x.DeviceID == "" {
+		return errors.New("deviceID is empty")
+	}
+	return nil
+}
+
+func (x *PublishWorkReq) Check() error {
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	return nil
+}
+
+func (x *GetGroupSettingReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	return nil
+}
+
+func (x *SetGroupSettingReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.GroupID == "" {
+		return errGroupIDEmpty
+	}
+	if x.Revision < 0 {
+		return errors.New("revision is invalid")
+	}
+	return nil
+}
+
+func (x *GetInstanceSettingReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	return nil
+}
+
+func (x *SetInstanceSettingReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.Revision < 0 {
+		return errors.New("revision is invalid")
+	}
+	return nil
+}
+
+func (x *ListMemoriesReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	return nil
+}
+
+func (x *SaveMemoryReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.WorkID == "" {
+		return errWorkIDEmpty
+	}
+	if x.Category == "" || x.Content == "" {
+		return errors.New("category or content is empty")
+	}
+	switch x.Mode {
+	case "manual", "auto":
+		return nil
+	}
+	return errors.New("mode is invalid")
+}
+
+func (x *UpdateMemoryReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if x.MemoryID == "" {
+		return errors.New("memoryID is empty")
+	}
+	if x.Content == "" {
+		return errors.New("content is empty")
+	}
+	return nil
+}
+
+func (x *DeleteMemoriesReq) Check() error {
+	if x.InstanceID == "" {
+		return errInstanceIDEmpty
+	}
+	if len(x.MemoryIDs) == 0 && !x.All {
+		return errors.New("memoryIDs is empty")
 	}
 	return nil
 }

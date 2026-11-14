@@ -39,6 +39,7 @@ message GroupInfo {
   int32 applyMemberFriend = 15;
   int64 notificationUpdateTime = 16;
   string notificationUserID = 17;
+  int32 memberComposition = 18;  // 成员构成：0=纯人，1=数字员工和人混合，2=纯数字员工（数字员工按 userID 前缀 bot_ 识别，进人退人时服务端自动算，不能设置）
 }
 
 message GroupInfoForSet {
