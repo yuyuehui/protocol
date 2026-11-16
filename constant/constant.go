@@ -197,6 +197,7 @@ const (
 	InvitationCancelledNotification      = 1812 // 邀请取消通知
 	ParticipantRoleChangedNotification   = 1813 // 参会者角色变更通知
 	MeetingCancelledNotification         = 1814 // 会议取消通知（区别于删除，取消后仍显示）
+	MeetingControlChangedNotification    = 1815 // 会中控制变更通知（控制状态、联合主持人、举手、请求解除静音）
 	MeetingNotificationEnd               = 1899 // 会议通知类型结束
 
 	// 1v1通话通知类型
