@@ -97,6 +97,8 @@ const (
 	Agent_AdminSaveTag_FullMethodName                = "/openim.agent.Agent/adminSaveTag"
 	Agent_AdminDeleteTag_FullMethodName              = "/openim.agent.Agent/adminDeleteTag"
 	Agent_AdminListAgents_FullMethodName             = "/openim.agent.Agent/adminListAgents"
+	Agent_AdminGetAgentConfig_FullMethodName         = "/openim.agent.Agent/adminGetAgentConfig"
+	Agent_AdminUpdateAgent_FullMethodName            = "/openim.agent.Agent/adminUpdateAgent"
 	Agent_AdminDisableAgent_FullMethodName           = "/openim.agent.Agent/adminDisableAgent"
 	Agent_AdminEnableAgent_FullMethodName            = "/openim.agent.Agent/adminEnableAgent"
 	Agent_AdminDelistAgent_FullMethodName            = "/openim.agent.Agent/adminDelistAgent"
@@ -205,6 +207,8 @@ type AgentClient interface {
 	AdminSaveTag(ctx context.Context, in *AdminSaveTagReq, opts ...grpc.CallOption) (*AdminSaveTagResp, error)
 	AdminDeleteTag(ctx context.Context, in *AdminDeleteTagReq, opts ...grpc.CallOption) (*AdminDeleteTagResp, error)
 	AdminListAgents(ctx context.Context, in *AdminListAgentsReq, opts ...grpc.CallOption) (*AdminListAgentsResp, error)
+	AdminGetAgentConfig(ctx context.Context, in *AdminGetAgentConfigReq, opts ...grpc.CallOption) (*AdminGetAgentConfigResp, error)
+	AdminUpdateAgent(ctx context.Context, in *AdminUpdateAgentReq, opts ...grpc.CallOption) (*AdminUpdateAgentResp, error)
 	AdminDisableAgent(ctx context.Context, in *AdminDisableAgentReq, opts ...grpc.CallOption) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(ctx context.Context, in *AdminEnableAgentReq, opts ...grpc.CallOption) (*AdminEnableAgentResp, error)
 	AdminDelistAgent(ctx context.Context, in *AdminDelistAgentReq, opts ...grpc.CallOption) (*AdminDelistAgentResp, error)
@@ -1017,6 +1021,26 @@ func (c *agentClient) AdminListAgents(ctx context.Context, in *AdminListAgentsRe
 	return out, nil
 }
 
+func (c *agentClient) AdminGetAgentConfig(ctx context.Context, in *AdminGetAgentConfigReq, opts ...grpc.CallOption) (*AdminGetAgentConfigResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminGetAgentConfigResp)
+	err := c.cc.Invoke(ctx, Agent_AdminGetAgentConfig_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) AdminUpdateAgent(ctx context.Context, in *AdminUpdateAgentReq, opts ...grpc.CallOption) (*AdminUpdateAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminUpdateAgentResp)
+	err := c.cc.Invoke(ctx, Agent_AdminUpdateAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agentClient) AdminDisableAgent(ctx context.Context, in *AdminDisableAgentReq, opts ...grpc.CallOption) (*AdminDisableAgentResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminDisableAgentResp)
@@ -1312,6 +1336,8 @@ type AgentServer interface {
 	AdminSaveTag(context.Context, *AdminSaveTagReq) (*AdminSaveTagResp, error)
 	AdminDeleteTag(context.Context, *AdminDeleteTagReq) (*AdminDeleteTagResp, error)
 	AdminListAgents(context.Context, *AdminListAgentsReq) (*AdminListAgentsResp, error)
+	AdminGetAgentConfig(context.Context, *AdminGetAgentConfigReq) (*AdminGetAgentConfigResp, error)
+	AdminUpdateAgent(context.Context, *AdminUpdateAgentReq) (*AdminUpdateAgentResp, error)
 	AdminDisableAgent(context.Context, *AdminDisableAgentReq) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(context.Context, *AdminEnableAgentReq) (*AdminEnableAgentResp, error)
 	AdminDelistAgent(context.Context, *AdminDelistAgentReq) (*AdminDelistAgentResp, error)
@@ -1577,6 +1603,12 @@ func (UnimplementedAgentServer) AdminDeleteTag(context.Context, *AdminDeleteTagR
 }
 func (UnimplementedAgentServer) AdminListAgents(context.Context, *AdminListAgentsReq) (*AdminListAgentsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminListAgents not implemented")
+}
+func (UnimplementedAgentServer) AdminGetAgentConfig(context.Context, *AdminGetAgentConfigReq) (*AdminGetAgentConfigResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminGetAgentConfig not implemented")
+}
+func (UnimplementedAgentServer) AdminUpdateAgent(context.Context, *AdminUpdateAgentReq) (*AdminUpdateAgentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminUpdateAgent not implemented")
 }
 func (UnimplementedAgentServer) AdminDisableAgent(context.Context, *AdminDisableAgentReq) (*AdminDisableAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminDisableAgent not implemented")
@@ -3066,6 +3098,42 @@ func _Agent_AdminListAgents_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_AdminGetAgentConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminGetAgentConfigReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).AdminGetAgentConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_AdminGetAgentConfig_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).AdminGetAgentConfig(ctx, req.(*AdminGetAgentConfigReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_AdminUpdateAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminUpdateAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).AdminUpdateAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_AdminUpdateAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).AdminUpdateAgent(ctx, req.(*AdminUpdateAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_AdminDisableAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminDisableAgentReq)
 	if err := dec(in); err != nil {
@@ -3762,6 +3830,14 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "adminListAgents",
 			Handler:    _Agent_AdminListAgents_Handler,
+		},
+		{
+			MethodName: "adminGetAgentConfig",
+			Handler:    _Agent_AdminGetAgentConfig_Handler,
+		},
+		{
+			MethodName: "adminUpdateAgent",
+			Handler:    _Agent_AdminUpdateAgent_Handler,
 		},
 		{
 			MethodName: "adminDisableAgent",

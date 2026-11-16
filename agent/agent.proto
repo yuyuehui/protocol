@@ -535,6 +535,11 @@ message AgentListItem {
   MemberRole myRole = 8;    // 我管理的列表才带
   int64 hireCount = 9;      // 在雇的实例数
   bool releaseCurrent = 10; // 上架版本就是当前草稿，没有没发布的修改
+  // 以下后台全部员工列表才带
+  repeated string releaseTagIDs = 11; // 上架版本的分类；没上架过为空
+  int32 releaseVersion = 12;          // 上架版本号：第几次上线，3 显示为 V3；没上架过为 0
+  repeated string ownerIDs = 13;      // 本企业在职的负责人
+  bool noOwner = 14;                  // 没有在职的负责人（都离职了或不在本企业），显示「暂无负责人」
 }
 
 // 员工成员：负责人或协作者
@@ -2075,11 +2080,58 @@ message AdminListAgentsReq {
   string createdBy = 3;
   string keyword = 4;
   sdkws.RequestPagination pagination = 5;
-  AgentState state = 6; // 不传不限
+  AgentState state = 6;       // 不传不限
+  repeated string tagIDs = 7; // 按分类筛：上架版本的分类命中任一即返回，没上架过的不算命中
 }
 message AdminListAgentsResp {
   int64 total = 1;
   repeated AgentListItem agents = 2;
+  AgentStateCounts counts = 3; // 各状态数量，标签页上的数字用
+}
+
+// AgentStateCounts 后台全部员工各状态的数量：按请求里的企业、创建人、关键词、分类筛，不看 status、state。
+// 已上架、已下架、已停用只算没删除的，已删除只看删除状态
+message AgentStateCounts {
+  int64 listed = 1;
+  int64 delisted = 2;
+  int64 disabled = 3;
+  int64 deleted = 4;
+}
+
+// 企业负责人在后台直接修改已上架员工前取配置：给上架版本的配置，后台账号看不了的导入，那个区隐藏（hiddenZones 原样带回）。
+// 现在能不能直接改看 updatable，不能时 blockReason 给原因：
+// no_permission 只有企业负责人、超管能改；deleted 员工已删除；not_listed 不是已上架；reviewing 负责人有待审核的新版本；
+// unpublished_draft 负责人有没发布的草稿修改；no_owner 没有在职负责人
+message AdminGetAgentConfigReq {
+  string agentID = 1;
+}
+message AdminGetAgentConfigResp {
+  AgentInfo agent = 1;
+  AgentConfig config = 2;  // 上架版本的配置
+  int64 revision = 3;      // 现在草稿的修订号，修改时原样带回
+  ReleaseInfo release = 4;
+  int32 releaseVersion = 5;
+  bool updatable = 6;
+  string blockReason = 7;
+}
+
+// 企业负责人在后台直接修改已上架员工，不用审核：按员工负责人的身份先跑发布检查，有阻断返回问题、什么都不存；
+// 通过就存成新草稿、生成快照并直接上线（审核单记为后台通过，生效、通知雇佣人和负责人提交审核通过时一样），
+// 记操作并通知员工负责人（业务通知 agent.admin.updated）。不能改的情况见 AdminGetAgentConfigResp.blockReason，对应报错：
+// no_permission 1002；deleted、not_listed、unpublished_draft、no_owner 1902；reviewing 1910；修订号对不上 1901
+message AdminUpdateAgentReq {
+  string agentID = 1;
+  int64 revision = 2;     // AdminGetAgentConfig 拿到的修订号
+  AgentConfig config = 3; // 完整配置
+  string requestID = 4;   // 必填，重复提交拿到同一个结果
+  string note = 5;        // 更新说明，随新版本通知雇佣人，可不填
+}
+message AdminUpdateAgentResp {
+  bool passed = 1;               // 检查没有阻断；false 时什么都没存
+  repeated CheckResult checks = 2;
+  ReviewInfo review = 3;         // 后台直接通过的审核单，生效结果看 effect
+  ReleaseInfo release = 4;       // 上线后的上架记录
+  int32 releaseVersion = 5;
 }
 
 // 停用：员工要是已上架或已下架。所有实例停用，进行中的工作中止，通知雇佣人
@@ -2395,6 +2447,8 @@ service Agent {
   rpc adminSaveTag(AdminSaveTagReq) returns (AdminSaveTagResp);
   rpc adminDeleteTag(AdminDeleteTagReq) returns (AdminDeleteTagResp);
   rpc adminListAgents(AdminListAgentsReq) returns (AdminListAgentsResp);
+  rpc adminGetAgentConfig(AdminGetAgentConfigReq) returns (AdminGetAgentConfigResp);
+  rpc adminUpdateAgent(AdminUpdateAgentReq) returns (AdminUpdateAgentResp);
   rpc adminDisableAgent(AdminDisableAgentReq) returns (AdminDisableAgentResp);
   rpc adminEnableAgent(AdminEnableAgentReq) returns (AdminEnableAgentResp);
   rpc adminDelistAgent(AdminDelistAgentReq) returns (AdminDelistAgentResp);
