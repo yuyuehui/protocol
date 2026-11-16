@@ -540,6 +540,10 @@ type AssistantElem struct {
 	Phase         string                 `protobuf:"bytes,9,opt,name=phase,proto3" json:"phase"`
 	Summary       string                 `protobuf:"bytes,10,opt,name=summary,proto3" json:"summary"`
 	Blocks        []*Block               `protobuf:"bytes,11,rep,name=blocks,proto3" json:"blocks"`
+	// 回复提醒的人（2026-11-14）：群里受理时由服务端填发起人，执行端写的不算；PC 在回复开头显示“@昵称”。
+	// 用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。服务端按 im-server 的 assistant.replyMentions
+	// 开关填（默认关），各端 SDK 都认这个字段以后再开
+	Mentions      *Mentions `protobuf:"bytes,12,opt,name=mentions,proto3,oneof" json:"mentions"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -651,6 +655,58 @@ func (x *AssistantElem) GetBlocks() []*Block {
 	return nil
 }
 
+func (x *AssistantElem) GetMentions() *Mentions {
+	if x != nil {
+		return x.Mentions
+	}
+	return nil
+}
+
+// 1–MaxMentions 个不重复的用户 ID，每个 1–64 字节
+type Mentions struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserIDs       []string               `protobuf:"bytes,1,rep,name=userIDs,proto3" json:"userIDs"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Mentions) Reset() {
+	*x = Mentions{}
+	mi := &file_assistant_assistant_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Mentions) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Mentions) ProtoMessage() {}
+
+func (x *Mentions) ProtoReflect() protoreflect.Message {
+	mi := &file_assistant_assistant_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Mentions.ProtoReflect.Descriptor instead.
+func (*Mentions) Descriptor() ([]byte, []int) {
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Mentions) GetUserIDs() []string {
+	if x != nil {
+		return x.UserIDs
+	}
+	return nil
+}
+
 type Block struct {
 	state   protoimpl.MessageState `protogen:"open.v1"`
 	BlockID string                 `protobuf:"bytes,1,opt,name=blockID,proto3" json:"blockID"`
@@ -663,6 +719,7 @@ type Block struct {
 	//	*Block_Interaction
 	//	*Block_Receipt
 	//	*Block_Notice
+	//	*Block_DocCard
 	Content       isBlock_Content `protobuf_oneof:"content"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -670,7 +727,7 @@ type Block struct {
 
 func (x *Block) Reset() {
 	*x = Block{}
-	mi := &file_assistant_assistant_proto_msgTypes[1]
+	mi := &file_assistant_assistant_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -682,7 +739,7 @@ func (x *Block) String() string {
 func (*Block) ProtoMessage() {}
 
 func (x *Block) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[1]
+	mi := &file_assistant_assistant_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -695,7 +752,7 @@ func (x *Block) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Block.ProtoReflect.Descriptor instead.
 func (*Block) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{1}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Block) GetBlockID() string {
@@ -775,6 +832,15 @@ func (x *Block) GetNotice() *NoticeBlock {
 	return nil
 }
 
+func (x *Block) GetDocCard() *DocCardBlock {
+	if x != nil {
+		if x, ok := x.Content.(*Block_DocCard); ok {
+			return x.DocCard
+		}
+	}
+	return nil
+}
+
 type isBlock_Content interface {
 	isBlock_Content()
 }
@@ -807,6 +873,10 @@ type Block_Notice struct {
 	Notice *NoticeBlock `protobuf:"bytes,8,opt,name=notice,proto3,oneof"`
 }
 
+type Block_DocCard struct {
+	DocCard *DocCardBlock `protobuf:"bytes,9,opt,name=docCard,proto3,oneof"`
+}
+
 func (*Block_Text) isBlock_Content() {}
 
 func (*Block_Progress) isBlock_Content() {}
@@ -821,6 +891,8 @@ func (*Block_Receipt) isBlock_Content() {}
 
 func (*Block_Notice) isBlock_Content() {}
 
+func (*Block_DocCard) isBlock_Content() {}
+
 type TextBlock struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Text          string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text"`
@@ -830,7 +902,7 @@ type TextBlock struct {
 
 func (x *TextBlock) Reset() {
 	*x = TextBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[2]
+	mi := &file_assistant_assistant_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -842,7 +914,7 @@ func (x *TextBlock) String() string {
 func (*TextBlock) ProtoMessage() {}
 
 func (x *TextBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[2]
+	mi := &file_assistant_assistant_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -855,7 +927,7 @@ func (x *TextBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TextBlock.ProtoReflect.Descriptor instead.
 func (*TextBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{2}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TextBlock) GetText() string {
@@ -879,7 +951,7 @@ type ProgressBlock struct {
 
 func (x *ProgressBlock) Reset() {
 	*x = ProgressBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[3]
+	mi := &file_assistant_assistant_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -891,7 +963,7 @@ func (x *ProgressBlock) String() string {
 func (*ProgressBlock) ProtoMessage() {}
 
 func (x *ProgressBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[3]
+	mi := &file_assistant_assistant_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -904,7 +976,7 @@ func (x *ProgressBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProgressBlock.ProtoReflect.Descriptor instead.
 func (*ProgressBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{3}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ProgressBlock) GetPhase() string {
@@ -952,7 +1024,7 @@ type ProcessStep struct {
 
 func (x *ProcessStep) Reset() {
 	*x = ProcessStep{}
-	mi := &file_assistant_assistant_proto_msgTypes[4]
+	mi := &file_assistant_assistant_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -964,7 +1036,7 @@ func (x *ProcessStep) String() string {
 func (*ProcessStep) ProtoMessage() {}
 
 func (x *ProcessStep) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[4]
+	mi := &file_assistant_assistant_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -977,7 +1049,7 @@ func (x *ProcessStep) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessStep.ProtoReflect.Descriptor instead.
 func (*ProcessStep) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{4}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ProcessStep) GetStepID() string {
@@ -1055,7 +1127,7 @@ type ProcessCounts struct {
 
 func (x *ProcessCounts) Reset() {
 	*x = ProcessCounts{}
-	mi := &file_assistant_assistant_proto_msgTypes[5]
+	mi := &file_assistant_assistant_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1067,7 +1139,7 @@ func (x *ProcessCounts) String() string {
 func (*ProcessCounts) ProtoMessage() {}
 
 func (x *ProcessCounts) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[5]
+	mi := &file_assistant_assistant_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1080,7 +1152,7 @@ func (x *ProcessCounts) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessCounts.ProtoReflect.Descriptor instead.
 func (*ProcessCounts) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{5}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ProcessCounts) GetMessages() uint32 {
@@ -1119,13 +1191,20 @@ type AttachmentBlock struct {
 	MediaType      string                 `protobuf:"bytes,4,opt,name=mediaType,proto3" json:"mediaType"`
 	Size           int64                  `protobuf:"varint,5,opt,name=size,proto3" json:"size"`
 	Sha256         string                 `protobuf:"bytes,6,opt,name=sha256,proto3" json:"sha256"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// 以下四个由服务端写（2026-11-14），执行端写的不算：按 im-server 的 assistant.attachmentIMFile 开关（默认关），
+	// 把成果复制成一份普通 IM 文件。用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。
+	// kind 和 imObject 要么都有要么都没有；没有＝没开开关或复制失败，客户端照旧按 resourceID 读
+	Kind          *string `protobuf:"bytes,7,opt,name=kind,proto3,oneof" json:"kind"`         // 按真实字节判断：image / video / audio / file
+	ImObject      *string `protobuf:"bytes,8,opt,name=imObject,proto3,oneof" json:"imObject"` // IM 文件对象名，只含不用转义的字符；客户端拼 <API 地址>/object/<imObject> 下载、转发，图片缩略图加 ?type=image&width=&height=
+	Width         *int32  `protobuf:"varint,9,opt,name=width,proto3,oneof" json:"width"`      // 只有 image 带，像素
+	Height        *int32  `protobuf:"varint,10,opt,name=height,proto3,oneof" json:"height"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AttachmentBlock) Reset() {
 	*x = AttachmentBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[6]
+	mi := &file_assistant_assistant_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1137,7 +1216,7 @@ func (x *AttachmentBlock) String() string {
 func (*AttachmentBlock) ProtoMessage() {}
 
 func (x *AttachmentBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[6]
+	mi := &file_assistant_assistant_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1150,7 +1229,7 @@ func (x *AttachmentBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AttachmentBlock.ProtoReflect.Descriptor instead.
 func (*AttachmentBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{6}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AttachmentBlock) GetResourceID() string {
@@ -1195,6 +1274,34 @@ func (x *AttachmentBlock) GetSha256() string {
 	return ""
 }
 
+func (x *AttachmentBlock) GetKind() string {
+	if x != nil && x.Kind != nil {
+		return *x.Kind
+	}
+	return ""
+}
+
+func (x *AttachmentBlock) GetImObject() string {
+	if x != nil && x.ImObject != nil {
+		return *x.ImObject
+	}
+	return ""
+}
+
+func (x *AttachmentBlock) GetWidth() int32 {
+	if x != nil && x.Width != nil {
+		return *x.Width
+	}
+	return 0
+}
+
+func (x *AttachmentBlock) GetHeight() int32 {
+	if x != nil && x.Height != nil {
+		return *x.Height
+	}
+	return 0
+}
+
 type SourceRef struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	SourceID       string                 `protobuf:"bytes,1,opt,name=sourceID,proto3" json:"sourceID"`
@@ -1209,7 +1316,7 @@ type SourceRef struct {
 
 func (x *SourceRef) Reset() {
 	*x = SourceRef{}
-	mi := &file_assistant_assistant_proto_msgTypes[7]
+	mi := &file_assistant_assistant_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1221,7 +1328,7 @@ func (x *SourceRef) String() string {
 func (*SourceRef) ProtoMessage() {}
 
 func (x *SourceRef) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[7]
+	mi := &file_assistant_assistant_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1234,7 +1341,7 @@ func (x *SourceRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SourceRef.ProtoReflect.Descriptor instead.
 func (*SourceRef) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{7}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *SourceRef) GetSourceID() string {
@@ -1288,7 +1395,7 @@ type SourcesBlock struct {
 
 func (x *SourcesBlock) Reset() {
 	*x = SourcesBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[8]
+	mi := &file_assistant_assistant_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1300,7 +1407,7 @@ func (x *SourcesBlock) String() string {
 func (*SourcesBlock) ProtoMessage() {}
 
 func (x *SourcesBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[8]
+	mi := &file_assistant_assistant_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1313,7 +1420,7 @@ func (x *SourcesBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SourcesBlock.ProtoReflect.Descriptor instead.
 func (*SourcesBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{8}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *SourcesBlock) GetSources() []*SourceRef {
@@ -1323,8 +1430,71 @@ func (x *SourcesBlock) GetSources() []*SourceRef {
 	return nil
 }
 
+// 云文档卡片（2026-11-14）：执行端只给文档 ID、类型和标题，不带链接；客户端按自己配置的文档站拼链接
+// （doc → /files/editor、excel → /files/sheet、board → /files/board，?tid=<tid>），执行端指定不了跳转地址。
+// 打开时由文档站按点开的人核验权限；服务端不核验文档是否存在、谁能看。一条消息最多 MaxDocCards 张
+type DocCardBlock struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tid           string                 `protobuf:"bytes,1,opt,name=tid,proto3" json:"tid"`         // 文档 ID：字母、数字、_、-，1–64 字节
+	DocType       string                 `protobuf:"bytes,2,opt,name=docType,proto3" json:"docType"` // doc | excel | board
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title"`     // 1–200 个字符，不能全是空白，不含控制字符
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DocCardBlock) Reset() {
+	*x = DocCardBlock{}
+	mi := &file_assistant_assistant_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocCardBlock) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocCardBlock) ProtoMessage() {}
+
+func (x *DocCardBlock) ProtoReflect() protoreflect.Message {
+	mi := &file_assistant_assistant_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocCardBlock.ProtoReflect.Descriptor instead.
+func (*DocCardBlock) Descriptor() ([]byte, []int) {
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DocCardBlock) GetTid() string {
+	if x != nil {
+		return x.Tid
+	}
+	return ""
+}
+
+func (x *DocCardBlock) GetDocType() string {
+	if x != nil {
+		return x.DocType
+	}
+	return ""
+}
+
+func (x *DocCardBlock) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
 // 此引用不赋予操作权；详情与有效操作人由受保护接口返回。
-// state / outcome / actorUserID / decidedAt 只能由服务端按交互记录写入，执行端不能自行伪造；
+// state / outcome / actorUserID / decidedAt / confirmerUserID 只能由服务端按交互记录写入，执行端不能自行伪造；
 // 不含答案、参数或草稿正文，处理结果文案由客户端按 outcome 本地化。
 type InteractionRef struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1337,13 +1507,18 @@ type InteractionRef struct {
 	Outcome       InteractionOutcome     `protobuf:"varint,7,opt,name=outcome,proto3,enum=openim.assistant.InteractionOutcome" json:"outcome"`
 	ActorUserID   string                 `protobuf:"bytes,8,opt,name=actorUserID,proto3" json:"actorUserID"` // 处理人；PENDING / EXPIRED 时为空
 	DecidedAt     int64                  `protobuf:"varint,9,opt,name=decidedAt,proto3" json:"decidedAt"`    // 毫秒；提交、过期或作废的时间，PENDING 时为 0
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// 交给发起人以外的人处理时为该人，没有＝发起人处理。创建时定、之后不变：写操作确认（执行审批，或创建时标了 confirm 的
+	// 问答、草稿）在数字员工的工作里交给工作的确认人（群里为雇佣人）。客户端只给处理人显示操作按钮；执行端不带时服务端补上。
+	// 用 optional：服务端按 EmitUnpopulated 序列化 215，普通字段为空也会输出，老客户端严格解析、认不出就整条显示不了；
+	// optional 没设时不输出，只有交给别人确认的新流程才需要新客户端
+	ConfirmerUserID *string `protobuf:"bytes,10,opt,name=confirmerUserID,proto3,oneof" json:"confirmerUserID"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *InteractionRef) Reset() {
 	*x = InteractionRef{}
-	mi := &file_assistant_assistant_proto_msgTypes[9]
+	mi := &file_assistant_assistant_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1355,7 +1530,7 @@ func (x *InteractionRef) String() string {
 func (*InteractionRef) ProtoMessage() {}
 
 func (x *InteractionRef) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[9]
+	mi := &file_assistant_assistant_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1368,7 +1543,7 @@ func (x *InteractionRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InteractionRef.ProtoReflect.Descriptor instead.
 func (*InteractionRef) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{9}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *InteractionRef) GetInteractionID() string {
@@ -1434,6 +1609,13 @@ func (x *InteractionRef) GetDecidedAt() int64 {
 	return 0
 }
 
+func (x *InteractionRef) GetConfirmerUserID() string {
+	if x != nil && x.ConfirmerUserID != nil {
+		return *x.ConfirmerUserID
+	}
+	return ""
+}
+
 type ReceiptBlock struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	DeliveryID    string                 `protobuf:"bytes,1,opt,name=deliveryID,proto3" json:"deliveryID"`
@@ -1446,7 +1628,7 @@ type ReceiptBlock struct {
 
 func (x *ReceiptBlock) Reset() {
 	*x = ReceiptBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[10]
+	mi := &file_assistant_assistant_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1458,7 +1640,7 @@ func (x *ReceiptBlock) String() string {
 func (*ReceiptBlock) ProtoMessage() {}
 
 func (x *ReceiptBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[10]
+	mi := &file_assistant_assistant_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1471,7 +1653,7 @@ func (x *ReceiptBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReceiptBlock.ProtoReflect.Descriptor instead.
 func (*ReceiptBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{10}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ReceiptBlock) GetDeliveryID() string {
@@ -1512,7 +1694,7 @@ type NoticeBlock struct {
 
 func (x *NoticeBlock) Reset() {
 	*x = NoticeBlock{}
-	mi := &file_assistant_assistant_proto_msgTypes[11]
+	mi := &file_assistant_assistant_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1524,7 +1706,7 @@ func (x *NoticeBlock) String() string {
 func (*NoticeBlock) ProtoMessage() {}
 
 func (x *NoticeBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[11]
+	mi := &file_assistant_assistant_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1537,7 +1719,7 @@ func (x *NoticeBlock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NoticeBlock.ProtoReflect.Descriptor instead.
 func (*NoticeBlock) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{11}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *NoticeBlock) GetCode() string {
@@ -1579,7 +1761,7 @@ type AssistantStreamNotification struct {
 
 func (x *AssistantStreamNotification) Reset() {
 	*x = AssistantStreamNotification{}
-	mi := &file_assistant_assistant_proto_msgTypes[12]
+	mi := &file_assistant_assistant_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1591,7 +1773,7 @@ func (x *AssistantStreamNotification) String() string {
 func (*AssistantStreamNotification) ProtoMessage() {}
 
 func (x *AssistantStreamNotification) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[12]
+	mi := &file_assistant_assistant_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1604,7 +1786,7 @@ func (x *AssistantStreamNotification) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AssistantStreamNotification.ProtoReflect.Descriptor instead.
 func (*AssistantStreamNotification) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{12}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *AssistantStreamNotification) GetConversationID() string {
@@ -1724,7 +1906,7 @@ type ProgressDelta struct {
 
 func (x *ProgressDelta) Reset() {
 	*x = ProgressDelta{}
-	mi := &file_assistant_assistant_proto_msgTypes[13]
+	mi := &file_assistant_assistant_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1736,7 +1918,7 @@ func (x *ProgressDelta) String() string {
 func (*ProgressDelta) ProtoMessage() {}
 
 func (x *ProgressDelta) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[13]
+	mi := &file_assistant_assistant_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1749,7 +1931,7 @@ func (x *ProgressDelta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProgressDelta.ProtoReflect.Descriptor instead.
 func (*ProgressDelta) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{13}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ProgressDelta) GetPhase() string {
@@ -1793,7 +1975,7 @@ type AssistantMessageChangedNotification struct {
 
 func (x *AssistantMessageChangedNotification) Reset() {
 	*x = AssistantMessageChangedNotification{}
-	mi := &file_assistant_assistant_proto_msgTypes[14]
+	mi := &file_assistant_assistant_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1805,7 +1987,7 @@ func (x *AssistantMessageChangedNotification) String() string {
 func (*AssistantMessageChangedNotification) ProtoMessage() {}
 
 func (x *AssistantMessageChangedNotification) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[14]
+	mi := &file_assistant_assistant_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1818,7 +2000,7 @@ func (x *AssistantMessageChangedNotification) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use AssistantMessageChangedNotification.ProtoReflect.Descriptor instead.
 func (*AssistantMessageChangedNotification) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{14}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *AssistantMessageChangedNotification) GetEventID() string {
@@ -1864,7 +2046,7 @@ type ControlAction struct {
 
 func (x *ControlAction) Reset() {
 	*x = ControlAction{}
-	mi := &file_assistant_assistant_proto_msgTypes[15]
+	mi := &file_assistant_assistant_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1876,7 +2058,7 @@ func (x *ControlAction) String() string {
 func (*ControlAction) ProtoMessage() {}
 
 func (x *ControlAction) ProtoReflect() protoreflect.Message {
-	mi := &file_assistant_assistant_proto_msgTypes[15]
+	mi := &file_assistant_assistant_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1889,7 +2071,7 @@ func (x *ControlAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ControlAction.ProtoReflect.Descriptor instead.
 func (*ControlAction) Descriptor() ([]byte, []int) {
-	return file_assistant_assistant_proto_rawDescGZIP(), []int{15}
+	return file_assistant_assistant_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ControlAction) GetTaskID() string {
@@ -1938,7 +2120,7 @@ var File_assistant_assistant_proto protoreflect.FileDescriptor
 
 const file_assistant_assistant_proto_rawDesc = "" +
 	"\n" +
-	"\x19assistant/assistant.proto\x12\x10openim.assistant\"\xf9\x02\n" +
+	"\x19assistant/assistant.proto\x12\x10openim.assistant\"\xc3\x03\n" +
 	"\rAssistantElem\x12$\n" +
 	"\rschemaVersion\x18\x01 \x01(\rR\rschemaVersion\x12\x16\n" +
 	"\x06taskID\x18\x02 \x01(\tR\x06taskID\x12\x14\n" +
@@ -1951,7 +2133,11 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\x05phase\x18\t \x01(\tR\x05phase\x12\x18\n" +
 	"\asummary\x18\n" +
 	" \x01(\tR\asummary\x12/\n" +
-	"\x06blocks\x18\v \x03(\v2\x17.openim.assistant.BlockR\x06blocks\"\xda\x03\n" +
+	"\x06blocks\x18\v \x03(\v2\x17.openim.assistant.BlockR\x06blocks\x12;\n" +
+	"\bmentions\x18\f \x01(\v2\x1a.openim.assistant.MentionsH\x00R\bmentions\x88\x01\x01B\v\n" +
+	"\t_mentions\"$\n" +
+	"\bMentions\x12\x18\n" +
+	"\auserIDs\x18\x01 \x03(\tR\auserIDs\"\x96\x04\n" +
 	"\x05Block\x12\x18\n" +
 	"\ablockID\x18\x01 \x01(\tR\ablockID\x121\n" +
 	"\x04text\x18\x02 \x01(\v2\x1b.openim.assistant.TextBlockH\x00R\x04text\x12=\n" +
@@ -1962,7 +2148,8 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\asources\x18\x05 \x01(\v2\x1e.openim.assistant.SourcesBlockH\x00R\asources\x12D\n" +
 	"\vinteraction\x18\x06 \x01(\v2 .openim.assistant.InteractionRefH\x00R\vinteraction\x12:\n" +
 	"\areceipt\x18\a \x01(\v2\x1e.openim.assistant.ReceiptBlockH\x00R\areceipt\x127\n" +
-	"\x06notice\x18\b \x01(\v2\x1d.openim.assistant.NoticeBlockH\x00R\x06noticeB\t\n" +
+	"\x06notice\x18\b \x01(\v2\x1d.openim.assistant.NoticeBlockH\x00R\x06notice\x12:\n" +
+	"\adocCard\x18\t \x01(\v2\x1e.openim.assistant.DocCardBlockH\x00R\adocCardB\t\n" +
 	"\acontent\"\x1f\n" +
 	"\tTextBlock\x12\x12\n" +
 	"\x04text\x18\x01 \x01(\tR\x04text\"\xad\x01\n" +
@@ -1985,7 +2172,7 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\bmessages\x18\x01 \x01(\rR\bmessages\x12 \n" +
 	"\vattachments\x18\x02 \x01(\rR\vattachments\x12\x14\n" +
 	"\x05tools\x18\x03 \x01(\rR\x05tools\x12 \n" +
-	"\vfailedSteps\x18\x04 \x01(\rR\vfailedSteps\"\xb7\x01\n" +
+	"\vfailedSteps\x18\x04 \x01(\rR\vfailedSteps\"\xd4\x02\n" +
 	"\x0fAttachmentBlock\x12\x1e\n" +
 	"\n" +
 	"resourceID\x18\x01 \x01(\tR\n" +
@@ -1994,7 +2181,16 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x1c\n" +
 	"\tmediaType\x18\x04 \x01(\tR\tmediaType\x12\x12\n" +
 	"\x04size\x18\x05 \x01(\x03R\x04size\x12\x16\n" +
-	"\x06sha256\x18\x06 \x01(\tR\x06sha256\"\xc5\x01\n" +
+	"\x06sha256\x18\x06 \x01(\tR\x06sha256\x12\x17\n" +
+	"\x04kind\x18\a \x01(\tH\x00R\x04kind\x88\x01\x01\x12\x1f\n" +
+	"\bimObject\x18\b \x01(\tH\x01R\bimObject\x88\x01\x01\x12\x19\n" +
+	"\x05width\x18\t \x01(\x05H\x02R\x05width\x88\x01\x01\x12\x1b\n" +
+	"\x06height\x18\n" +
+	" \x01(\x05H\x03R\x06height\x88\x01\x01B\a\n" +
+	"\x05_kindB\v\n" +
+	"\t_imObjectB\b\n" +
+	"\x06_widthB\t\n" +
+	"\a_height\"\xc5\x01\n" +
 	"\tSourceRef\x12\x1a\n" +
 	"\bsourceID\x18\x01 \x01(\tR\bsourceID\x12&\n" +
 	"\x0econversationID\x18\x02 \x01(\tR\x0econversationID\x12 \n" +
@@ -2003,7 +2199,11 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\x0econtentVersion\x18\x05 \x01(\tR\x0econtentVersion\x12\x18\n" +
 	"\alocator\x18\x06 \x01(\tR\alocator\"E\n" +
 	"\fSourcesBlock\x125\n" +
-	"\asources\x18\x01 \x03(\v2\x1b.openim.assistant.SourceRefR\asources\"\xfb\x02\n" +
+	"\asources\x18\x01 \x03(\v2\x1b.openim.assistant.SourceRefR\asources\"P\n" +
+	"\fDocCardBlock\x12\x10\n" +
+	"\x03tid\x18\x01 \x01(\tR\x03tid\x12\x18\n" +
+	"\adocType\x18\x02 \x01(\tR\adocType\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\"\xbe\x03\n" +
 	"\x0eInteractionRef\x12$\n" +
 	"\rinteractionID\x18\x01 \x01(\tR\rinteractionID\x125\n" +
 	"\x04kind\x18\x02 \x01(\x0e2!.openim.assistant.InteractionKindR\x04kind\x12\x1a\n" +
@@ -2013,7 +2213,10 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	"\x05state\x18\x06 \x01(\x0e2\".openim.assistant.InteractionStateR\x05state\x12>\n" +
 	"\aoutcome\x18\a \x01(\x0e2$.openim.assistant.InteractionOutcomeR\aoutcome\x12 \n" +
 	"\vactorUserID\x18\b \x01(\tR\vactorUserID\x12\x1c\n" +
-	"\tdecidedAt\x18\t \x01(\x03R\tdecidedAt\"\xac\x01\n" +
+	"\tdecidedAt\x18\t \x01(\x03R\tdecidedAt\x12-\n" +
+	"\x0fconfirmerUserID\x18\n" +
+	" \x01(\tH\x00R\x0fconfirmerUserID\x88\x01\x01B\x12\n" +
+	"\x10_confirmerUserID\"\xac\x01\n" +
 	"\fReceiptBlock\x12\x1e\n" +
 	"\n" +
 	"deliveryID\x18\x01 \x01(\tR\n" +
@@ -2137,7 +2340,7 @@ func file_assistant_assistant_proto_rawDescGZIP() []byte {
 }
 
 var file_assistant_assistant_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
-var file_assistant_assistant_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_assistant_assistant_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_assistant_assistant_proto_goTypes = []any{
 	(RunStatus)(0),                              // 0: openim.assistant.RunStatus
 	(StepKind)(0),                               // 1: openim.assistant.StepKind
@@ -2148,51 +2351,55 @@ var file_assistant_assistant_proto_goTypes = []any{
 	(DeliveryStatus)(0),                         // 6: openim.assistant.DeliveryStatus
 	(ControlKind)(0),                            // 7: openim.assistant.ControlKind
 	(*AssistantElem)(nil),                       // 8: openim.assistant.AssistantElem
-	(*Block)(nil),                               // 9: openim.assistant.Block
-	(*TextBlock)(nil),                           // 10: openim.assistant.TextBlock
-	(*ProgressBlock)(nil),                       // 11: openim.assistant.ProgressBlock
-	(*ProcessStep)(nil),                         // 12: openim.assistant.ProcessStep
-	(*ProcessCounts)(nil),                       // 13: openim.assistant.ProcessCounts
-	(*AttachmentBlock)(nil),                     // 14: openim.assistant.AttachmentBlock
-	(*SourceRef)(nil),                           // 15: openim.assistant.SourceRef
-	(*SourcesBlock)(nil),                        // 16: openim.assistant.SourcesBlock
-	(*InteractionRef)(nil),                      // 17: openim.assistant.InteractionRef
-	(*ReceiptBlock)(nil),                        // 18: openim.assistant.ReceiptBlock
-	(*NoticeBlock)(nil),                         // 19: openim.assistant.NoticeBlock
-	(*AssistantStreamNotification)(nil),         // 20: openim.assistant.AssistantStreamNotification
-	(*ProgressDelta)(nil),                       // 21: openim.assistant.ProgressDelta
-	(*AssistantMessageChangedNotification)(nil), // 22: openim.assistant.AssistantMessageChangedNotification
-	(*ControlAction)(nil),                       // 23: openim.assistant.ControlAction
+	(*Mentions)(nil),                            // 9: openim.assistant.Mentions
+	(*Block)(nil),                               // 10: openim.assistant.Block
+	(*TextBlock)(nil),                           // 11: openim.assistant.TextBlock
+	(*ProgressBlock)(nil),                       // 12: openim.assistant.ProgressBlock
+	(*ProcessStep)(nil),                         // 13: openim.assistant.ProcessStep
+	(*ProcessCounts)(nil),                       // 14: openim.assistant.ProcessCounts
+	(*AttachmentBlock)(nil),                     // 15: openim.assistant.AttachmentBlock
+	(*SourceRef)(nil),                           // 16: openim.assistant.SourceRef
+	(*SourcesBlock)(nil),                        // 17: openim.assistant.SourcesBlock
+	(*DocCardBlock)(nil),                        // 18: openim.assistant.DocCardBlock
+	(*InteractionRef)(nil),                      // 19: openim.assistant.InteractionRef
+	(*ReceiptBlock)(nil),                        // 20: openim.assistant.ReceiptBlock
+	(*NoticeBlock)(nil),                         // 21: openim.assistant.NoticeBlock
+	(*AssistantStreamNotification)(nil),         // 22: openim.assistant.AssistantStreamNotification
+	(*ProgressDelta)(nil),                       // 23: openim.assistant.ProgressDelta
+	(*AssistantMessageChangedNotification)(nil), // 24: openim.assistant.AssistantMessageChangedNotification
+	(*ControlAction)(nil),                       // 25: openim.assistant.ControlAction
 }
 var file_assistant_assistant_proto_depIdxs = []int32{
 	0,  // 0: openim.assistant.AssistantElem.status:type_name -> openim.assistant.RunStatus
-	9,  // 1: openim.assistant.AssistantElem.blocks:type_name -> openim.assistant.Block
-	10, // 2: openim.assistant.Block.text:type_name -> openim.assistant.TextBlock
-	11, // 3: openim.assistant.Block.progress:type_name -> openim.assistant.ProgressBlock
-	14, // 4: openim.assistant.Block.attachment:type_name -> openim.assistant.AttachmentBlock
-	16, // 5: openim.assistant.Block.sources:type_name -> openim.assistant.SourcesBlock
-	17, // 6: openim.assistant.Block.interaction:type_name -> openim.assistant.InteractionRef
-	18, // 7: openim.assistant.Block.receipt:type_name -> openim.assistant.ReceiptBlock
-	19, // 8: openim.assistant.Block.notice:type_name -> openim.assistant.NoticeBlock
-	12, // 9: openim.assistant.ProgressBlock.steps:type_name -> openim.assistant.ProcessStep
-	13, // 10: openim.assistant.ProgressBlock.counts:type_name -> openim.assistant.ProcessCounts
-	1,  // 11: openim.assistant.ProcessStep.kind:type_name -> openim.assistant.StepKind
-	2,  // 12: openim.assistant.ProcessStep.status:type_name -> openim.assistant.StepStatus
-	15, // 13: openim.assistant.SourcesBlock.sources:type_name -> openim.assistant.SourceRef
-	3,  // 14: openim.assistant.InteractionRef.kind:type_name -> openim.assistant.InteractionKind
-	4,  // 15: openim.assistant.InteractionRef.state:type_name -> openim.assistant.InteractionState
-	5,  // 16: openim.assistant.InteractionRef.outcome:type_name -> openim.assistant.InteractionOutcome
-	6,  // 17: openim.assistant.ReceiptBlock.status:type_name -> openim.assistant.DeliveryStatus
-	21, // 18: openim.assistant.AssistantStreamNotification.progress:type_name -> openim.assistant.ProgressDelta
-	12, // 19: openim.assistant.ProgressDelta.step:type_name -> openim.assistant.ProcessStep
-	13, // 20: openim.assistant.ProgressDelta.counts:type_name -> openim.assistant.ProcessCounts
-	8,  // 21: openim.assistant.AssistantMessageChangedNotification.snapshot:type_name -> openim.assistant.AssistantElem
-	7,  // 22: openim.assistant.ControlAction.kind:type_name -> openim.assistant.ControlKind
-	23, // [23:23] is the sub-list for method output_type
-	23, // [23:23] is the sub-list for method input_type
-	23, // [23:23] is the sub-list for extension type_name
-	23, // [23:23] is the sub-list for extension extendee
-	0,  // [0:23] is the sub-list for field type_name
+	10, // 1: openim.assistant.AssistantElem.blocks:type_name -> openim.assistant.Block
+	9,  // 2: openim.assistant.AssistantElem.mentions:type_name -> openim.assistant.Mentions
+	11, // 3: openim.assistant.Block.text:type_name -> openim.assistant.TextBlock
+	12, // 4: openim.assistant.Block.progress:type_name -> openim.assistant.ProgressBlock
+	15, // 5: openim.assistant.Block.attachment:type_name -> openim.assistant.AttachmentBlock
+	17, // 6: openim.assistant.Block.sources:type_name -> openim.assistant.SourcesBlock
+	19, // 7: openim.assistant.Block.interaction:type_name -> openim.assistant.InteractionRef
+	20, // 8: openim.assistant.Block.receipt:type_name -> openim.assistant.ReceiptBlock
+	21, // 9: openim.assistant.Block.notice:type_name -> openim.assistant.NoticeBlock
+	18, // 10: openim.assistant.Block.docCard:type_name -> openim.assistant.DocCardBlock
+	13, // 11: openim.assistant.ProgressBlock.steps:type_name -> openim.assistant.ProcessStep
+	14, // 12: openim.assistant.ProgressBlock.counts:type_name -> openim.assistant.ProcessCounts
+	1,  // 13: openim.assistant.ProcessStep.kind:type_name -> openim.assistant.StepKind
+	2,  // 14: openim.assistant.ProcessStep.status:type_name -> openim.assistant.StepStatus
+	16, // 15: openim.assistant.SourcesBlock.sources:type_name -> openim.assistant.SourceRef
+	3,  // 16: openim.assistant.InteractionRef.kind:type_name -> openim.assistant.InteractionKind
+	4,  // 17: openim.assistant.InteractionRef.state:type_name -> openim.assistant.InteractionState
+	5,  // 18: openim.assistant.InteractionRef.outcome:type_name -> openim.assistant.InteractionOutcome
+	6,  // 19: openim.assistant.ReceiptBlock.status:type_name -> openim.assistant.DeliveryStatus
+	23, // 20: openim.assistant.AssistantStreamNotification.progress:type_name -> openim.assistant.ProgressDelta
+	13, // 21: openim.assistant.ProgressDelta.step:type_name -> openim.assistant.ProcessStep
+	14, // 22: openim.assistant.ProgressDelta.counts:type_name -> openim.assistant.ProcessCounts
+	8,  // 23: openim.assistant.AssistantMessageChangedNotification.snapshot:type_name -> openim.assistant.AssistantElem
+	7,  // 24: openim.assistant.ControlAction.kind:type_name -> openim.assistant.ControlKind
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_assistant_assistant_proto_init() }
@@ -2200,7 +2407,8 @@ func file_assistant_assistant_proto_init() {
 	if File_assistant_assistant_proto != nil {
 		return
 	}
-	file_assistant_assistant_proto_msgTypes[1].OneofWrappers = []any{
+	file_assistant_assistant_proto_msgTypes[0].OneofWrappers = []any{}
+	file_assistant_assistant_proto_msgTypes[2].OneofWrappers = []any{
 		(*Block_Text)(nil),
 		(*Block_Progress)(nil),
 		(*Block_Attachment)(nil),
@@ -2208,8 +2416,11 @@ func file_assistant_assistant_proto_init() {
 		(*Block_Interaction)(nil),
 		(*Block_Receipt)(nil),
 		(*Block_Notice)(nil),
+		(*Block_DocCard)(nil),
 	}
-	file_assistant_assistant_proto_msgTypes[12].OneofWrappers = []any{
+	file_assistant_assistant_proto_msgTypes[7].OneofWrappers = []any{}
+	file_assistant_assistant_proto_msgTypes[11].OneofWrappers = []any{}
+	file_assistant_assistant_proto_msgTypes[14].OneofWrappers = []any{
 		(*AssistantStreamNotification_TextDelta)(nil),
 		(*AssistantStreamNotification_Progress)(nil),
 	}
@@ -2219,7 +2430,7 @@ func file_assistant_assistant_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assistant_assistant_proto_rawDesc), len(file_assistant_assistant_proto_rawDesc)),
 			NumEnums:      8,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -29,7 +29,13 @@ message AssistantElem {
   string phase = 9;
   string summary = 10;
   repeated Block blocks = 11;
+  // 回复提醒的人（2026-11-14）：群里受理时由服务端填发起人，执行端写的不算；PC 在回复开头显示“@昵称”。
+  // 用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。服务端按 im-server 的 assistant.replyMentions
+  // 开关填（默认关），各端 SDK 都认这个字段以后再开
+  optional Mentions mentions = 12;
 }
+// 1–MaxMentions 个不重复的用户 ID，每个 1–64 字节
+message Mentions { repeated string userIDs = 1; }
 
 enum RunStatus {
   RUN_STATUS_UNSPECIFIED = 0;
@@ -57,6 +63,7 @@ message Block {
     InteractionRef interaction = 6;
     ReceiptBlock receipt = 7;
     NoticeBlock notice = 8;
+    DocCardBlock docCard = 9;
   }
 }
 message TextBlock { string text = 1; }
@@ -112,6 +119,13 @@ message AttachmentBlock {
   string mediaType = 4;
   int64 size = 5;
   string sha256 = 6;
+  // 以下四个由服务端写（2026-11-14），执行端写的不算：按 im-server 的 assistant.attachmentIMFile 开关（默认关），
+  // 把成果复制成一份普通 IM 文件。用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。
+  // kind 和 imObject 要么都有要么都没有；没有＝没开开关或复制失败，客户端照旧按 resourceID 读
+  optional string kind = 7;      // 按真实字节判断：image / video / audio / file
+  optional string imObject = 8;  // IM 文件对象名，只含不用转义的字符；客户端拼 <API 地址>/object/<imObject> 下载、转发，图片缩略图加 ?type=image&width=&height=
+  optional int32 width = 9;      // 只有 image 带，像素
+  optional int32 height = 10;
 }
 message SourceRef {
   string sourceID = 1;
@@ -122,6 +136,14 @@ message SourceRef {
   string locator = 6;
 }
 message SourcesBlock { repeated SourceRef sources = 1; }
+// 云文档卡片（2026-11-14）：执行端只给文档 ID、类型和标题，不带链接；客户端按自己配置的文档站拼链接
+// （doc → /files/editor、excel → /files/sheet、board → /files/board，?tid=<tid>），执行端指定不了跳转地址。
+// 打开时由文档站按点开的人核验权限；服务端不核验文档是否存在、谁能看。一条消息最多 MaxDocCards 张
+message DocCardBlock {
+  string tid = 1;      // 文档 ID：字母、数字、_、-，1–64 字节
+  string docType = 2;  // doc | excel | board
+  string title = 3;    // 1–200 个字符，不能全是空白，不含控制字符
+}
 
 enum InteractionKind {
   INTERACTION_KIND_UNSPECIFIED = 0;
@@ -147,7 +169,7 @@ enum InteractionOutcome {
   INTERACTION_OUTCOME_CANCELLED = 5;
 }
 // 此引用不赋予操作权；详情与有效操作人由受保护接口返回。
-// state / outcome / actorUserID / decidedAt 只能由服务端按交互记录写入，执行端不能自行伪造；
+// state / outcome / actorUserID / decidedAt / confirmerUserID 只能由服务端按交互记录写入，执行端不能自行伪造；
 // 不含答案、参数或草稿正文，处理结果文案由客户端按 outcome 本地化。
 message InteractionRef {
   string interactionID = 1;
@@ -159,6 +181,11 @@ message InteractionRef {
   InteractionOutcome outcome = 7;
   string actorUserID = 8;     // 处理人；PENDING / EXPIRED 时为空
   int64 decidedAt = 9;        // 毫秒；提交、过期或作废的时间，PENDING 时为 0
+  // 交给发起人以外的人处理时为该人，没有＝发起人处理。创建时定、之后不变：写操作确认（执行审批，或创建时标了 confirm 的
+  // 问答、草稿）在数字员工的工作里交给工作的确认人（群里为雇佣人）。客户端只给处理人显示操作按钮；执行端不带时服务端补上。
+  // 用 optional：服务端按 EmitUnpopulated 序列化 215，普通字段为空也会输出，老客户端严格解析、认不出就整条显示不了；
+  // optional 没设时不输出，只有交给别人确认的新流程才需要新客户端
+  optional string confirmerUserID = 10;
 }
 
 enum DeliveryStatus {

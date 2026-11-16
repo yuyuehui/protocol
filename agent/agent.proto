@@ -301,7 +301,53 @@ message CapabilityRef {
   repeated string tools = 5;      // MCP 允许调用的工具，可以先不选
   map<string, string> fields = 6; // 开放字段
   bool groupAvailable = 7;        // 群内可用，默认关；群里只用打开的
-  string name = 8;                // 只读：能力目录里的名称，按查看人查，查不到、看不了的为空。审核详情带；保存时忽略
+  string name = 8;                // 只读：能力目录里的名称，按查看人查，查不到、看不了的为空。审核详情、实例配置带；保存时忽略
+  CapabilityInstall install = 9;  // 只读：执行端在本机装这项能力要用的信息，只有实例配置（/agent/instance/config）的 Skill、MCP 带；保存时忽略
+}
+
+// CapabilityInstall 执行端装能力要用的信息，和能力中心一致：按雇佣人在能力中心看得到的给，能力中心总是装最新版本。
+// 雇佣人看不到、找不到、已下架的只有 available = false，其余为空。装的时候照常以雇佣人身份走能力中心的
+// /capability/user/install、/capability/market/download_url（个人带脚本的技能开关关了时下载会被拒）
+message CapabilityInstall {
+  bool available = 1;                       // 雇佣人在能力中心看得到这项能力，可以装
+  string key = 2;                           // 能力中心里同类型唯一的标识
+  string version = 3;                       // 当前版本
+  string contentHash = 4;                   // 内容摘要；和本机装的不一样就要重装
+  bool builtin = 5;                         // 内置能力，随客户端分发，不用装
+  repeated string platforms = 6;            // 支持的平台：win32、darwin、linux；空为不限
+  CapabilitySkillInstall skill = 7;         // Skill 才有
+  CapabilityConnectorInstall connector = 8; // MCP 才有
+}
+
+// CapabilitySkillInstall 技能包。下载地址用能力中心的 /capability/market/download_url 取（10 分钟有效）
+message CapabilitySkillInstall {
+  int64 size = 1;                   // 包大小，字节
+  string sha256 = 2;                // 包的 sha256，下载后校验
+  int32 fileCount = 3;              // 包里的文件数
+  bool hasScripts = 4;              // 包里有脚本
+  repeated string dependencies = 5; // 运行要的依赖，比如 python
+}
+
+// CapabilityConnectorInstall 连接器怎么连。凭据只在使用者本机，这里只有要填哪些字段
+message CapabilityConnectorInstall {
+  string transport = 1;                        // stdio、streamable_http、sse
+  string command = 2;                          // stdio：启动命令（npx、uvx、node、python3）
+  repeated string args = 3;                    // stdio：启动参数，凭据是 ${字段} 占位
+  string url = 4;                              // streamable_http、sse：服务地址，凭据是 ${字段} 占位
+  repeated string allowedHosts = 5;            // 允许访问的域名
+  string authType = 6;                         // none、api_key、oauth2、basic
+  repeated CapabilityAuthField authFields = 7; // 使用者要填的凭据字段
+  string oauthClientID = 8;                    // oauth2：桌面端是公共客户端，没有 Client Secret
+  repeated string oauthScopes = 9;             // oauth2：授权范围
+  string access = 10;                          // 现在只有 read_only
+}
+
+message CapabilityAuthField {
+  string key = 1;
+  string label = 2;
+  bool secret = 3;   // 密文显示
+  bool required = 4;
+  string placeholder = 5;
 }
 
 // 知识引用：客户端选云文档时带上类型、标题、版本、是否在个人空间，服务端只存、不校验；
@@ -454,6 +500,9 @@ message ReleaseInfo {
   StateMark disableMark = 13;
   bool delisted = 14; // 后台下架了
   StateMark delistMark = 15;
+  // 私人员工：提交时可见范围只有负责人，自动检查（含敏感内容）通过直接生效、没经过人工审核。
+  // 只有负责人能用（别人按不在可见范围），不进员工目录、能力目录，不占名称；范围扩大到别人后要人工审核通过才转为公开
+  bool ownerOnly = 16;
 }
 
 message ReleaseLog {
@@ -574,7 +623,8 @@ message ReviewBrief {
   reserved "exempt";
   EffectState effect = 5;
   int64 createTime = 6;
-  bool selfReview = 7; // 审核人就是提交人
+  bool selfReview = 7;   // 审核人就是提交人
+  bool autoApproved = 8; // 私人员工自动检查通过、免人工审核，这时 decidedBy 为空
 }
 
 // 版本列表的一项。版本标识是修订号 + 生成时间
@@ -623,6 +673,7 @@ message ReviewInfo {
   bool withdrawable = 22; // 当前用户能撤回：提交人或负责人
   bool retryable = 23;    // 当前用户能重试生效
   bool selfReview = 24;   // 本人提交：做决定的审核人就是提交人。待审核的单由前端拿 submitterID 和当前登录人比
+  bool autoApproved = 25; // 私人员工自动检查通过、免人工审核（见 ReleaseInfo.ownerOnly），这时 decidedBy 为空
 }
 
 // 审核详情里的有效测试：只给结果和覆盖的职责，不给问答
@@ -1063,6 +1114,8 @@ message SubmitCheckResp {
   bool passed = 1; // 有阻断时为 false
   repeated CheckResult checks = 2;
   int64 revision = 3;
+  // 私人员工：可见范围只有负责人、没有阻断、敏感内容检查通过（没有「请确认」的提醒），提交后免人工审核直接生效（见 ReleaseInfo.ownerOnly）
+  bool autoApprove = 4;
 }
 
 // 成员：负责人在前，再按加入时间
@@ -1097,7 +1150,9 @@ message RemoveMemberResp {
 }
 
 // 改可见范围，只有负责人能做。已上架的立即生效、记审计、不重审；
-// 缩小后不在范围内的雇佣人，实例变成无使用资格，进行中的工作中止
+// 缩小后不在范围内的雇佣人，实例变成无使用资格，进行中的工作中止。
+// 私人员工（ReleaseInfo.ownerOnly）范围扩大到负责人以外的人：范围照常保存，同时自动提交一张审核单（上架中的快照），
+// 审核通过前别人还是用不了，负责人照常用
 message SetVisibleScopeReq {
   string agentID = 1;
   Scope scope = 2;
@@ -1109,6 +1164,8 @@ message SetVisibleScopeResp {
   int64 added = 2;          // 新增可见的人数
   int64 removed = 3;        // 不再可见的人数
   int64 affectedHirers = 4; // 已雇佣、会失去使用资格的人数
+  bool needsReview = 5;     // 私人员工范围里有负责人以外的人：要人工审核通过别人才能用。dryRun 也给
+  ReviewInfo review = 6;    // needsReview 且保存了时：待审核的单，自动提交的或原来就有的
 }
 
 message ListTemplatesReq {
@@ -1267,7 +1324,7 @@ message GetInstanceConfigReq {
 }
 message GetInstanceConfigResp {
   AgentInstance instance = 1;
-  AgentSnapshot snapshot = 2; // 现在上架的快照
+  AgentSnapshot snapshot = 2; // 现在上架的快照。能力带名称（按雇佣人查目录），Skill、MCP 带安装信息（CapabilityRef.install）
   InstanceSetting setting = 3; // 雇佣人的私聊设置：模型、长期记忆
 }
 
@@ -1368,9 +1425,9 @@ message Work {
   string sourceMsgID = 9; // 需求消息的 serverMsgID
   string taskID = 10;     // 215 任务，执行电脑开始处理后才有
   WorkStatus status = 11;
-  // 结束原因。已停止：stopped（发起人停止）、revoked（撤回了消息）；
+  // 结束原因。已停止：stopped（发起人停止）、revoked（撤回了消息）、wait_expired（要你处理满 14 天没人处理）；
   // 已中止：employee_disabled（员工停用）、not_eligible（雇佣人失去使用资格）、tier_changed（发起人的档位不够了）；
-  // 未完成：expired（等电脑上线超过 24 小时）、failed（执行失败）、lost（执行电脑断开，没有结果）、group_dismissed（群解散）、
+  // 未完成：expired（等电脑上线超过 24 小时：没开始的从收到消息算，处理完要你处理的从最后一次处理算）、failed（执行失败）、lost（执行电脑断开，没有结果）、group_dismissed（群解散）、
   // instance_removed（实例被移出群）、group_use_disabled（关了群使用）、unhired（移除了雇佣）、parent_ended（协作子工作所属的工作结束了）、
   // initiator_left（发起人退群或被移出群）
   string endReason = 12;
@@ -1393,6 +1450,12 @@ message Work {
   string request = 28; // 协作子工作的需求
   string result = 29;  // 协作子工作交回的结果，失败时是原因
   int64 openTime = 30; // 执行电脑开始处理的时间
+  // 执行电脑不在线，开始了的任务挂起、等同一台电脑回来接着做（215 契约 §14），工作没结束时才有。
+  // 执行中＝要你处理的都处理完了，等电脑上线（24 小时没回来结束为未完成 expired）；要你处理＝电脑不在线也能先处理
+  bool hostOffline = 31;
+  // 这次进入要你处理的时间（中间有人处理过的从最近一次处理算），只在要你处理时有：
+  // 满 3 天员工再提醒一次，满 14 天仍未处理结束为已停止 wait_expired
+  int64 waitTime = 32;
 }
 
 message WorkSupplement {
