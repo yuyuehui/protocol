@@ -53,11 +53,13 @@ const (
 	Agent_RetryReview_FullMethodName                 = "/openim.agent.Agent/retryReview"
 	Agent_ListMarket_FullMethodName                  = "/openim.agent.Agent/listMarket"
 	Agent_ListMyInstances_FullMethodName             = "/openim.agent.Agent/listMyInstances"
+	Agent_GetMyClone_FullMethodName                  = "/openim.agent.Agent/getMyClone"
 	Agent_GetInstanceConfig_FullMethodName           = "/openim.agent.Agent/getInstanceConfig"
 	Agent_DescribeScope_FullMethodName               = "/openim.agent.Agent/describeScope"
 	Agent_ScopeOptions_FullMethodName                = "/openim.agent.Agent/scopeOptions"
 	Agent_GetWorks_FullMethodName                    = "/openim.agent.Agent/getWorks"
 	Agent_ListWorks_FullMethodName                   = "/openim.agent.Agent/listWorks"
+	Agent_GetWorkStats_FullMethodName                = "/openim.agent.Agent/getWorkStats"
 	Agent_StopWork_FullMethodName                    = "/openim.agent.Agent/stopWork"
 	Agent_ListWorkEvents_FullMethodName              = "/openim.agent.Agent/listWorkEvents"
 	Agent_SubmitFeedback_FullMethodName              = "/openim.agent.Agent/submitFeedback"
@@ -69,6 +71,7 @@ const (
 	Agent_PublishWork_FullMethodName                 = "/openim.agent.Agent/publishWork"
 	Agent_GetGroupSetting_FullMethodName             = "/openim.agent.Agent/getGroupSetting"
 	Agent_SetGroupSetting_FullMethodName             = "/openim.agent.Agent/setGroupSetting"
+	Agent_ListGroupAgents_FullMethodName             = "/openim.agent.Agent/listGroupAgents"
 	Agent_GetInstanceSetting_FullMethodName          = "/openim.agent.Agent/getInstanceSetting"
 	Agent_SetInstanceSetting_FullMethodName          = "/openim.agent.Agent/setInstanceSetting"
 	Agent_ListMemories_FullMethodName                = "/openim.agent.Agent/listMemories"
@@ -86,6 +89,7 @@ const (
 	Agent_CheckWork_FullMethodName                   = "/openim.agent.Agent/checkWork"
 	Agent_TakeWorkByTask_FullMethodName              = "/openim.agent.Agent/takeWorkByTask"
 	Agent_EndGroupWorks_FullMethodName               = "/openim.agent.Agent/endGroupWorks"
+	Agent_InstancesJoinedGroup_FullMethodName        = "/openim.agent.Agent/instancesJoinedGroup"
 	Agent_AdminGetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminGetCompanySetting"
 	Agent_AdminSetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminSetCompanySetting"
 	Agent_AdminListCompanySettings_FullMethodName    = "/openim.agent.Agent/adminListCompanySettings"
@@ -99,6 +103,8 @@ const (
 	Agent_AdminListAgents_FullMethodName             = "/openim.agent.Agent/adminListAgents"
 	Agent_AdminGetAgentConfig_FullMethodName         = "/openim.agent.Agent/adminGetAgentConfig"
 	Agent_AdminUpdateAgent_FullMethodName            = "/openim.agent.Agent/adminUpdateAgent"
+	Agent_AdminSetAgentMember_FullMethodName         = "/openim.agent.Agent/adminSetAgentMember"
+	Agent_AdminRemoveAgentMember_FullMethodName      = "/openim.agent.Agent/adminRemoveAgentMember"
 	Agent_AdminDisableAgent_FullMethodName           = "/openim.agent.Agent/adminDisableAgent"
 	Agent_AdminEnableAgent_FullMethodName            = "/openim.agent.Agent/adminEnableAgent"
 	Agent_AdminDelistAgent_FullMethodName            = "/openim.agent.Agent/adminDelistAgent"
@@ -161,11 +167,13 @@ type AgentClient interface {
 	RetryReview(ctx context.Context, in *RetryReviewReq, opts ...grpc.CallOption) (*RetryReviewResp, error)
 	ListMarket(ctx context.Context, in *ListMarketReq, opts ...grpc.CallOption) (*ListMarketResp, error)
 	ListMyInstances(ctx context.Context, in *ListMyInstancesReq, opts ...grpc.CallOption) (*ListMyInstancesResp, error)
+	GetMyClone(ctx context.Context, in *GetMyCloneReq, opts ...grpc.CallOption) (*GetMyCloneResp, error)
 	GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error)
 	DescribeScope(ctx context.Context, in *DescribeScopeReq, opts ...grpc.CallOption) (*DescribeScopeResp, error)
 	ScopeOptions(ctx context.Context, in *ScopeOptionsReq, opts ...grpc.CallOption) (*ScopeOptionsResp, error)
 	GetWorks(ctx context.Context, in *GetWorksReq, opts ...grpc.CallOption) (*GetWorksResp, error)
 	ListWorks(ctx context.Context, in *ListWorksReq, opts ...grpc.CallOption) (*ListWorksResp, error)
+	GetWorkStats(ctx context.Context, in *GetWorkStatsReq, opts ...grpc.CallOption) (*GetWorkStatsResp, error)
 	StopWork(ctx context.Context, in *StopWorkReq, opts ...grpc.CallOption) (*StopWorkResp, error)
 	ListWorkEvents(ctx context.Context, in *ListWorkEventsReq, opts ...grpc.CallOption) (*ListWorkEventsResp, error)
 	SubmitFeedback(ctx context.Context, in *SubmitFeedbackReq, opts ...grpc.CallOption) (*SubmitFeedbackResp, error)
@@ -177,6 +185,7 @@ type AgentClient interface {
 	PublishWork(ctx context.Context, in *PublishWorkReq, opts ...grpc.CallOption) (*PublishWorkResp, error)
 	GetGroupSetting(ctx context.Context, in *GetGroupSettingReq, opts ...grpc.CallOption) (*GetGroupSettingResp, error)
 	SetGroupSetting(ctx context.Context, in *SetGroupSettingReq, opts ...grpc.CallOption) (*SetGroupSettingResp, error)
+	ListGroupAgents(ctx context.Context, in *ListGroupAgentsReq, opts ...grpc.CallOption) (*ListGroupAgentsResp, error)
 	GetInstanceSetting(ctx context.Context, in *GetInstanceSettingReq, opts ...grpc.CallOption) (*GetInstanceSettingResp, error)
 	SetInstanceSetting(ctx context.Context, in *SetInstanceSettingReq, opts ...grpc.CallOption) (*SetInstanceSettingResp, error)
 	ListMemories(ctx context.Context, in *ListMemoriesReq, opts ...grpc.CallOption) (*ListMemoriesResp, error)
@@ -195,6 +204,7 @@ type AgentClient interface {
 	CheckWork(ctx context.Context, in *CheckWorkReq, opts ...grpc.CallOption) (*CheckWorkResp, error)
 	TakeWorkByTask(ctx context.Context, in *TakeWorkByTaskReq, opts ...grpc.CallOption) (*TakeWorkByTaskResp, error)
 	EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, opts ...grpc.CallOption) (*EndGroupWorksResp, error)
+	InstancesJoinedGroup(ctx context.Context, in *InstancesJoinedGroupReq, opts ...grpc.CallOption) (*InstancesJoinedGroupResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(ctx context.Context, in *AdminGetCompanySettingReq, opts ...grpc.CallOption) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(ctx context.Context, in *AdminSetCompanySettingReq, opts ...grpc.CallOption) (*AdminSetCompanySettingResp, error)
@@ -209,6 +219,8 @@ type AgentClient interface {
 	AdminListAgents(ctx context.Context, in *AdminListAgentsReq, opts ...grpc.CallOption) (*AdminListAgentsResp, error)
 	AdminGetAgentConfig(ctx context.Context, in *AdminGetAgentConfigReq, opts ...grpc.CallOption) (*AdminGetAgentConfigResp, error)
 	AdminUpdateAgent(ctx context.Context, in *AdminUpdateAgentReq, opts ...grpc.CallOption) (*AdminUpdateAgentResp, error)
+	AdminSetAgentMember(ctx context.Context, in *AdminSetAgentMemberReq, opts ...grpc.CallOption) (*AdminSetAgentMemberResp, error)
+	AdminRemoveAgentMember(ctx context.Context, in *AdminRemoveAgentMemberReq, opts ...grpc.CallOption) (*AdminRemoveAgentMemberResp, error)
 	AdminDisableAgent(ctx context.Context, in *AdminDisableAgentReq, opts ...grpc.CallOption) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(ctx context.Context, in *AdminEnableAgentReq, opts ...grpc.CallOption) (*AdminEnableAgentResp, error)
 	AdminDelistAgent(ctx context.Context, in *AdminDelistAgentReq, opts ...grpc.CallOption) (*AdminDelistAgentResp, error)
@@ -581,6 +593,16 @@ func (c *agentClient) ListMyInstances(ctx context.Context, in *ListMyInstancesRe
 	return out, nil
 }
 
+func (c *agentClient) GetMyClone(ctx context.Context, in *GetMyCloneReq, opts ...grpc.CallOption) (*GetMyCloneResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMyCloneResp)
+	err := c.cc.Invoke(ctx, Agent_GetMyClone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agentClient) GetInstanceConfig(ctx context.Context, in *GetInstanceConfigReq, opts ...grpc.CallOption) (*GetInstanceConfigResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetInstanceConfigResp)
@@ -625,6 +647,16 @@ func (c *agentClient) ListWorks(ctx context.Context, in *ListWorksReq, opts ...g
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListWorksResp)
 	err := c.cc.Invoke(ctx, Agent_ListWorks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) GetWorkStats(ctx context.Context, in *GetWorkStatsReq, opts ...grpc.CallOption) (*GetWorkStatsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetWorkStatsResp)
+	err := c.cc.Invoke(ctx, Agent_GetWorkStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -735,6 +767,16 @@ func (c *agentClient) SetGroupSetting(ctx context.Context, in *SetGroupSettingRe
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SetGroupSettingResp)
 	err := c.cc.Invoke(ctx, Agent_SetGroupSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) ListGroupAgents(ctx context.Context, in *ListGroupAgentsReq, opts ...grpc.CallOption) (*ListGroupAgentsResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListGroupAgentsResp)
+	err := c.cc.Invoke(ctx, Agent_ListGroupAgents_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -911,6 +953,16 @@ func (c *agentClient) EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, o
 	return out, nil
 }
 
+func (c *agentClient) InstancesJoinedGroup(ctx context.Context, in *InstancesJoinedGroupReq, opts ...grpc.CallOption) (*InstancesJoinedGroupResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InstancesJoinedGroupResp)
+	err := c.cc.Invoke(ctx, Agent_InstancesJoinedGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agentClient) AdminGetCompanySetting(ctx context.Context, in *AdminGetCompanySettingReq, opts ...grpc.CallOption) (*AdminGetCompanySettingResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminGetCompanySettingResp)
@@ -1035,6 +1087,26 @@ func (c *agentClient) AdminUpdateAgent(ctx context.Context, in *AdminUpdateAgent
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AdminUpdateAgentResp)
 	err := c.cc.Invoke(ctx, Agent_AdminUpdateAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) AdminSetAgentMember(ctx context.Context, in *AdminSetAgentMemberReq, opts ...grpc.CallOption) (*AdminSetAgentMemberResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminSetAgentMemberResp)
+	err := c.cc.Invoke(ctx, Agent_AdminSetAgentMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agentClient) AdminRemoveAgentMember(ctx context.Context, in *AdminRemoveAgentMemberReq, opts ...grpc.CallOption) (*AdminRemoveAgentMemberResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AdminRemoveAgentMemberResp)
+	err := c.cc.Invoke(ctx, Agent_AdminRemoveAgentMember_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1290,11 +1362,13 @@ type AgentServer interface {
 	RetryReview(context.Context, *RetryReviewReq) (*RetryReviewResp, error)
 	ListMarket(context.Context, *ListMarketReq) (*ListMarketResp, error)
 	ListMyInstances(context.Context, *ListMyInstancesReq) (*ListMyInstancesResp, error)
+	GetMyClone(context.Context, *GetMyCloneReq) (*GetMyCloneResp, error)
 	GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error)
 	DescribeScope(context.Context, *DescribeScopeReq) (*DescribeScopeResp, error)
 	ScopeOptions(context.Context, *ScopeOptionsReq) (*ScopeOptionsResp, error)
 	GetWorks(context.Context, *GetWorksReq) (*GetWorksResp, error)
 	ListWorks(context.Context, *ListWorksReq) (*ListWorksResp, error)
+	GetWorkStats(context.Context, *GetWorkStatsReq) (*GetWorkStatsResp, error)
 	StopWork(context.Context, *StopWorkReq) (*StopWorkResp, error)
 	ListWorkEvents(context.Context, *ListWorkEventsReq) (*ListWorkEventsResp, error)
 	SubmitFeedback(context.Context, *SubmitFeedbackReq) (*SubmitFeedbackResp, error)
@@ -1306,6 +1380,7 @@ type AgentServer interface {
 	PublishWork(context.Context, *PublishWorkReq) (*PublishWorkResp, error)
 	GetGroupSetting(context.Context, *GetGroupSettingReq) (*GetGroupSettingResp, error)
 	SetGroupSetting(context.Context, *SetGroupSettingReq) (*SetGroupSettingResp, error)
+	ListGroupAgents(context.Context, *ListGroupAgentsReq) (*ListGroupAgentsResp, error)
 	GetInstanceSetting(context.Context, *GetInstanceSettingReq) (*GetInstanceSettingResp, error)
 	SetInstanceSetting(context.Context, *SetInstanceSettingReq) (*SetInstanceSettingResp, error)
 	ListMemories(context.Context, *ListMemoriesReq) (*ListMemoriesResp, error)
@@ -1324,6 +1399,7 @@ type AgentServer interface {
 	CheckWork(context.Context, *CheckWorkReq) (*CheckWorkResp, error)
 	TakeWorkByTask(context.Context, *TakeWorkByTaskReq) (*TakeWorkByTaskResp, error)
 	EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error)
+	InstancesJoinedGroup(context.Context, *InstancesJoinedGroupReq) (*InstancesJoinedGroupResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
 	AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error)
 	AdminSetCompanySetting(context.Context, *AdminSetCompanySettingReq) (*AdminSetCompanySettingResp, error)
@@ -1338,6 +1414,8 @@ type AgentServer interface {
 	AdminListAgents(context.Context, *AdminListAgentsReq) (*AdminListAgentsResp, error)
 	AdminGetAgentConfig(context.Context, *AdminGetAgentConfigReq) (*AdminGetAgentConfigResp, error)
 	AdminUpdateAgent(context.Context, *AdminUpdateAgentReq) (*AdminUpdateAgentResp, error)
+	AdminSetAgentMember(context.Context, *AdminSetAgentMemberReq) (*AdminSetAgentMemberResp, error)
+	AdminRemoveAgentMember(context.Context, *AdminRemoveAgentMemberReq) (*AdminRemoveAgentMemberResp, error)
 	AdminDisableAgent(context.Context, *AdminDisableAgentReq) (*AdminDisableAgentResp, error)
 	AdminEnableAgent(context.Context, *AdminEnableAgentReq) (*AdminEnableAgentResp, error)
 	AdminDelistAgent(context.Context, *AdminDelistAgentReq) (*AdminDelistAgentResp, error)
@@ -1472,6 +1550,9 @@ func (UnimplementedAgentServer) ListMarket(context.Context, *ListMarketReq) (*Li
 func (UnimplementedAgentServer) ListMyInstances(context.Context, *ListMyInstancesReq) (*ListMyInstancesResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListMyInstances not implemented")
 }
+func (UnimplementedAgentServer) GetMyClone(context.Context, *GetMyCloneReq) (*GetMyCloneResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetMyClone not implemented")
+}
 func (UnimplementedAgentServer) GetInstanceConfig(context.Context, *GetInstanceConfigReq) (*GetInstanceConfigResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetInstanceConfig not implemented")
 }
@@ -1486,6 +1567,9 @@ func (UnimplementedAgentServer) GetWorks(context.Context, *GetWorksReq) (*GetWor
 }
 func (UnimplementedAgentServer) ListWorks(context.Context, *ListWorksReq) (*ListWorksResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListWorks not implemented")
+}
+func (UnimplementedAgentServer) GetWorkStats(context.Context, *GetWorkStatsReq) (*GetWorkStatsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetWorkStats not implemented")
 }
 func (UnimplementedAgentServer) StopWork(context.Context, *StopWorkReq) (*StopWorkResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method StopWork not implemented")
@@ -1519,6 +1603,9 @@ func (UnimplementedAgentServer) GetGroupSetting(context.Context, *GetGroupSettin
 }
 func (UnimplementedAgentServer) SetGroupSetting(context.Context, *SetGroupSettingReq) (*SetGroupSettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetGroupSetting not implemented")
+}
+func (UnimplementedAgentServer) ListGroupAgents(context.Context, *ListGroupAgentsReq) (*ListGroupAgentsResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListGroupAgents not implemented")
 }
 func (UnimplementedAgentServer) GetInstanceSetting(context.Context, *GetInstanceSettingReq) (*GetInstanceSettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetInstanceSetting not implemented")
@@ -1571,6 +1658,9 @@ func (UnimplementedAgentServer) TakeWorkByTask(context.Context, *TakeWorkByTaskR
 func (UnimplementedAgentServer) EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method EndGroupWorks not implemented")
 }
+func (UnimplementedAgentServer) InstancesJoinedGroup(context.Context, *InstancesJoinedGroupReq) (*InstancesJoinedGroupResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method InstancesJoinedGroup not implemented")
+}
 func (UnimplementedAgentServer) AdminGetCompanySetting(context.Context, *AdminGetCompanySettingReq) (*AdminGetCompanySettingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminGetCompanySetting not implemented")
 }
@@ -1609,6 +1699,12 @@ func (UnimplementedAgentServer) AdminGetAgentConfig(context.Context, *AdminGetAg
 }
 func (UnimplementedAgentServer) AdminUpdateAgent(context.Context, *AdminUpdateAgentReq) (*AdminUpdateAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminUpdateAgent not implemented")
+}
+func (UnimplementedAgentServer) AdminSetAgentMember(context.Context, *AdminSetAgentMemberReq) (*AdminSetAgentMemberResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminSetAgentMember not implemented")
+}
+func (UnimplementedAgentServer) AdminRemoveAgentMember(context.Context, *AdminRemoveAgentMemberReq) (*AdminRemoveAgentMemberResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method AdminRemoveAgentMember not implemented")
 }
 func (UnimplementedAgentServer) AdminDisableAgent(context.Context, *AdminDisableAgentReq) (*AdminDisableAgentResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method AdminDisableAgent not implemented")
@@ -2306,6 +2402,24 @@ func _Agent_ListMyInstances_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_GetMyClone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyCloneReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetMyClone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetMyClone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetMyClone(ctx, req.(*GetMyCloneReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_GetInstanceConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetInstanceConfigReq)
 	if err := dec(in); err != nil {
@@ -2392,6 +2506,24 @@ func _Agent_ListWorks_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).ListWorks(ctx, req.(*ListWorksReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_GetWorkStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkStatsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).GetWorkStats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_GetWorkStats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).GetWorkStats(ctx, req.(*GetWorkStatsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2590,6 +2722,24 @@ func _Agent_SetGroupSetting_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).SetGroupSetting(ctx, req.(*SetGroupSettingReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_ListGroupAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListGroupAgentsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).ListGroupAgents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_ListGroupAgents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).ListGroupAgents(ctx, req.(*ListGroupAgentsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2900,6 +3050,24 @@ func _Agent_EndGroupWorks_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_InstancesJoinedGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InstancesJoinedGroupReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).InstancesJoinedGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_InstancesJoinedGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).InstancesJoinedGroup(ctx, req.(*InstancesJoinedGroupReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_AdminGetCompanySetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminGetCompanySettingReq)
 	if err := dec(in); err != nil {
@@ -3130,6 +3298,42 @@ func _Agent_AdminUpdateAgent_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AgentServer).AdminUpdateAgent(ctx, req.(*AdminUpdateAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_AdminSetAgentMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminSetAgentMemberReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).AdminSetAgentMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_AdminSetAgentMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).AdminSetAgentMember(ctx, req.(*AdminSetAgentMemberReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Agent_AdminRemoveAgentMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminRemoveAgentMemberReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).AdminRemoveAgentMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_AdminRemoveAgentMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).AdminRemoveAgentMember(ctx, req.(*AdminRemoveAgentMemberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3656,6 +3860,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_ListMyInstances_Handler,
 		},
 		{
+			MethodName: "getMyClone",
+			Handler:    _Agent_GetMyClone_Handler,
+		},
+		{
 			MethodName: "getInstanceConfig",
 			Handler:    _Agent_GetInstanceConfig_Handler,
 		},
@@ -3674,6 +3882,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "listWorks",
 			Handler:    _Agent_ListWorks_Handler,
+		},
+		{
+			MethodName: "getWorkStats",
+			Handler:    _Agent_GetWorkStats_Handler,
 		},
 		{
 			MethodName: "stopWork",
@@ -3718,6 +3930,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "setGroupSetting",
 			Handler:    _Agent_SetGroupSetting_Handler,
+		},
+		{
+			MethodName: "listGroupAgents",
+			Handler:    _Agent_ListGroupAgents_Handler,
 		},
 		{
 			MethodName: "getInstanceSetting",
@@ -3788,6 +4004,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Agent_EndGroupWorks_Handler,
 		},
 		{
+			MethodName: "instancesJoinedGroup",
+			Handler:    _Agent_InstancesJoinedGroup_Handler,
+		},
+		{
 			MethodName: "adminGetCompanySetting",
 			Handler:    _Agent_AdminGetCompanySetting_Handler,
 		},
@@ -3838,6 +4058,14 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "adminUpdateAgent",
 			Handler:    _Agent_AdminUpdateAgent_Handler,
+		},
+		{
+			MethodName: "adminSetAgentMember",
+			Handler:    _Agent_AdminSetAgentMember_Handler,
+		},
+		{
+			MethodName: "adminRemoveAgentMember",
+			Handler:    _Agent_AdminRemoveAgentMember_Handler,
 		},
 		{
 			MethodName: "adminDisableAgent",

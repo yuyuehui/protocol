@@ -16,8 +16,10 @@ option go_package = "github.com/openimsdk/protocol/agent";
 enum AgentKind {
   AGENT_KIND_UNSPECIFIED = 0;
   AGENT_KIND_EMPLOYEE = 1; // 数字员工
-  reserved 2;
-  reserved "AGENT_KIND_CLONE";
+  // 分身：每人一个，系统在准备分身时建，是本人的私人员工——本人是唯一的负责人、可见范围只有本人，
+  // 用草稿、发布前检查、提交审核那一套改角色、能力、知识，免人工审核的条件都满足才能提交，提交后直接生效。
+  // 不进市场、我管理的、后台列表，不占名额、名称；不能删除、不能加成员、不能改可见范围。用 getMyClone 取
+  AGENT_KIND_CLONE = 2;
 }
 
 enum AgentExecutor {
@@ -540,6 +542,15 @@ message AgentListItem {
   int32 releaseVersion = 12;          // 上架版本号：第几次上线，3 显示为 V3；没上架过为 0
   repeated string ownerIDs = 13;      // 本企业在职的负责人
   bool noOwner = 14;                  // 没有在职的负责人（都离职了或不在本企业），显示「暂无负责人」
+  ScopeSummary scopeSummary = 15;     // 现在的可见范围摘要，显示「部门 2 · 人员 3」
+}
+
+// 可见范围摘要：各类对象各选了几个，不展开成人数。all 为 true 时是全员，其余为 0
+message ScopeSummary {
+  bool all = 1;
+  int32 departments = 2;
+  int32 groups = 3; // 人员群体
+  int32 users = 4;
 }
 
 // 员工成员：负责人或协作者
@@ -1323,6 +1334,16 @@ message ListMyInstancesResp {
   repeated MyInstance items = 1;
 }
 
+// 本人的分身（见 AGENT_KIND_CLONE）：现在所在企业的分身员工和分身实例。还没准备过的（im-chat 还没给本人准备分身）都为空。
+// 改配置用 getAgent、saveDraft、submitCheck、submitReview 等，和私人员工一样
+message GetMyCloneReq {}
+message GetMyCloneResp {
+  AgentInfo agent = 1;
+  AgentInstance instance = 2;
+  ReleaseInfo release = 3;
+  bool releaseCurrent = 4; // 上架版本就是当前草稿，没有没发布的修改
+}
+
 // 执行端取实例的配置：只有雇佣人能取，实例要能用
 message GetInstanceConfigReq {
   string instanceID = 1;
@@ -1408,6 +1429,19 @@ enum GroupPublishMode {
   GROUP_PUBLISH_MODE_DIRECT = 2;  // 直接发到群里
 }
 
+// 需要你处理的是什么，服务端按 215 任务的快照算：有等待处理的交互按交互的类别——问答为补充信息，执行审批为确认写操作，
+// 草稿确认为确认草稿；没有的看执行端写的提示块（NoticeBlock）code：need_auth 需要授权、need_local 需要本地执行、
+// capability_failed 能力连接失败。都没有的为 UNSPECIFIED，客户端只显示「需要你处理」
+enum WorkWaitKind {
+  WORK_WAIT_KIND_UNSPECIFIED = 0;
+  WORK_WAIT_KIND_INFO = 1;              // 补充信息
+  WORK_WAIT_KIND_CONFIRM_WRITE = 2;     // 确认写操作
+  WORK_WAIT_KIND_CONFIRM_DRAFT = 3;     // 确认草稿
+  WORK_WAIT_KIND_AUTH = 4;              // 需要授权
+  WORK_WAIT_KIND_LOCAL = 5;             // 需要本地执行
+  WORK_WAIT_KIND_CAPABILITY_FAILED = 6; // 能力连接失败
+}
+
 // 发起人确认后发到群里的工作，发起人选了什么
 enum WorkPublishState {
   WORK_PUBLISH_STATE_UNSPECIFIED = 0; // 还没选，或者不用选
@@ -1452,7 +1486,8 @@ message Work {
   // 写操作、执行确认由谁确认：私聊为发起人；群里为雇佣人，开了自行确认的为发起人
   string confirmerID = 26;
   WorkPublishState published = 27;
-  string request = 28; // 协作子工作的需求
+  // 需求：协作子工作是请求协作时写的需求；聊天里的工作是需求消息的文字摘要（im-chat 建工作时带，≤4000 字，超出截断），老工作为空
+  string request = 28;
   string result = 29;  // 协作子工作交回的结果，失败时是原因
   int64 openTime = 30; // 执行电脑开始处理的时间
   // 执行电脑不在线，开始了的任务挂起、等同一台电脑回来接着做（215 契约 §14），工作没结束时才有。
@@ -1461,6 +1496,11 @@ message Work {
   // 这次进入要你处理的时间（中间有人处理过的从最近一次处理算），只在要你处理时有：
   // 满 3 天员工再提醒一次，满 14 天仍未处理结束为已停止 wait_expired
   int64 waitTime = 32;
+  // 需要你做什么和一句说明（交互或提示块的 summary，≤200 字），只在要你处理时有，见 WorkWaitKind
+  WorkWaitKind waitKind = 33;
+  string waitMessage = 34;
+  // 普通问答：已完成、各个任务都没用工具、没有附件和文档卡片。我的工作列表、工作统计默认不算
+  bool chat = 35;
 }
 
 message WorkSupplement {
@@ -1482,7 +1522,7 @@ message GetWorksResp {
   repeated Work children = 2; // withChildren 时，works 里各工作的协作子工作
 }
 
-// 我的工作：我发起的，或者我雇佣的实例的；新的在前
+// 我的工作：我发起的，或者我雇佣的实例的；新的在前。普通问答（Work.chat）默认不列
 message ListWorksReq {
   string role = 1;       // initiator：我发起的；hirer：我雇佣的实例的；空：都要
   string instanceID = 2; // 只看这个实例的
@@ -1490,10 +1530,30 @@ message ListWorksReq {
   repeated WorkStatus statuses = 4; // 空表示全部
   sdkws.RequestPagination pagination = 5;
   bool subWorks = 6; // 只看协作子工作：执行端上线后用它找还没领的（role 填 hirer、statuses 填等待电脑上线）
+  // 按结束时间筛（毫秒，from 含、to 不含，0 为不限），用于「近 7 天已完成 / 未完成」；带了的只列已经结束的
+  int64 endTimeFrom = 7;
+  int64 endTimeTo = 8;
+  bool withChats = 9; // 也列普通问答
 }
 message ListWorksResp {
   int64 total = 1;
   repeated Work works = 2;
+}
+
+// 与我相关的工作的数量：只算我发起的，不含协作子工作和普通问答
+message GetWorkStatsReq {}
+message GetWorkStatsResp {
+  int64 waiting = 1;    // 待我处理：需要你处理
+  int64 processing = 2; // 处理中：已受理、等待电脑上线、执行中
+  int64 completed = 3;  // 近 7 天已完成
+  int64 unfinished = 4; // 近 7 天未完成：已停止、已中止、未完成
+  int64 since = 5;      // 近 7 天的起点（毫秒），按结束时间算；ListWorksReq.endTimeFrom 填它就能列出同样的工作
+  repeated InstanceWorkCount instances = 6; // 按实例的待我处理数，只列有待我处理的
+}
+message InstanceWorkCount {
+  string instanceID = 1;
+  string botID = 2;
+  int64 waiting = 3;
 }
 
 // 停止工作：发起人、雇佣人能停。还在排队的直接结束；已派发的通知执行电脑停止，工作马上记为已停止
@@ -1521,6 +1581,9 @@ message CreateWorkReq {
   int64 hostEpoch = 9;
   string tokenHash = 10;
   string origin = 11; // 消息 ex 里的 agentOrigin：local_claw 是本地 Claw 交过来的
+  // 消息的文字摘要，记成新工作的需求（Work.request），≤4000 字，超出由服务端截断；补充消息不记。
+  // 斜杠命令（/new、/stop 等）不建工作，im-chat 不调这个接口
+  string request = 12;
 }
 message CreateWorkResp {
   Work work = 1;
@@ -1611,6 +1674,17 @@ message EndGroupWorksReq {
 }
 message EndGroupWorksResp {
   int32 count = 1; // 结束了的工作数
+}
+
+// 实例进群以后群服务调（不开 HTTP 路由）：在雇、账号在群里的实例以实例账号在群里发一条说明——由谁运行、@ 即可提需求、
+// 成果要不要发起人确认。消息是文字，ex 带 {"agentNotice":"group_joined","instanceID":...}，客户端可以按系统提示显示。
+// 雇佣人改了实例的群设置（发布方式、默认档位、单独设的成员）时 agent 服务自己发，ex 的 agentNotice 是 group_setting_changed
+message InstancesJoinedGroupReq {
+  string groupID = 1;
+  repeated string botIDs = 2;
+}
+message InstancesJoinedGroupResp {
+  int32 sent = 1; // 发了几条
 }
 
 // ==================== 工作经过、问题反馈 ====================
@@ -1769,6 +1843,7 @@ message GroupSetting {
 message GetGroupSettingReq {
   string instanceID = 1;
   string groupID = 2;
+  string botID = 3; // 和 instanceID 二选一：实例的 bot_ 账号，群成员列表里点员工时用
 }
 message GetGroupSettingResp {
   GroupSetting setting = 1;
@@ -1790,6 +1865,27 @@ message SetGroupSettingReq {
 message SetGroupSettingResp {
   GroupSetting setting = 1;
   int32 aborted = 2; // 因档位收紧中止的工作数
+}
+
+// 群里的数字员工：现在的群成员都能查，只列在雇、账号在群里的实例，按进群先后。
+// 每个实例给运行人（雇佣人）、发布方式，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
+message ListGroupAgentsReq {
+  string groupID = 1;
+}
+message GroupAgent {
+  string instanceID = 1;
+  string botID = 2;
+  string agentID = 3;
+  string hirerID = 4;               // 运行人
+  GroupPublishMode publishMode = 5; // 成果怎么发：确认后发到群里，还是直接发
+  GroupTier myTier = 6;             // 查看人的档位；运行人自己总是可写
+  bool mySelfConfirm = 7;           // 查看人发起的写操作自己确认；运行人总是 true
+  bool defaulted = 8;               // 运行人还没设过，按默认
+  bool editable = 9;                // 查看人就是运行人，能改
+  bool clone = 10;                  // 运行人的分身
+}
+message ListGroupAgentsResp {
+  repeated GroupAgent agents = 1;
 }
 
 // ==================== 私聊设置与记忆 ====================
@@ -2113,6 +2209,33 @@ message AdminGetAgentConfigResp {
   int32 releaseVersion = 5;
   bool updatable = 6;
   string blockReason = 7;
+  repeated AgentMember members = 8;   // 负责人和协作者：负责人在前，再按加入时间；valid 为 false 的是已离职或不在本企业的
+  VisibleScopeInfo visibleScope = 9;  // 现在的可见范围，不跟版本走；名称用 adminDescribeScope 查
+  bool membersEditable = 10;          // 后台操作人现在能改成员（adminSetAgentMember、adminRemoveAgentMember）
+}
+
+// 后台加成员或改角色（PRD《管理授权与生命周期》§6）：企业负责人、超管能改，员工要没删除。
+// 规则和负责人在用户端改一样（setMember）：成员要是员工所在企业的在职成员，至少留一位负责人；审计记后台操作人。
+// 不能改报 1002，员工已删除报 1902
+message AdminSetAgentMemberReq {
+  string agentID = 1;
+  string userID = 2;
+  MemberRole role = 3;
+  string reason = 4; // ≤200 字，可不填
+}
+message AdminSetAgentMemberResp {
+  AgentMember member = 1;
+  bool changed = 2; // false 表示角色和原来一样，没有改
+}
+
+// 后台移除成员：规则同 adminSetAgentMember，离职的也能移除；最后一位负责人不能移除
+message AdminRemoveAgentMemberReq {
+  string agentID = 1;
+  string userID = 2;
+  string reason = 3; // ≤200 字，可不填
+}
+message AdminRemoveAgentMemberResp {
+  bool removed = 1; // false 表示本来就不是成员
 }
 
 // 企业负责人在后台直接修改已上架员工，不用审核：按员工负责人的身份先跑发布检查，有阻断返回问题、什么都不存；
@@ -2399,11 +2522,13 @@ service Agent {
   rpc retryReview(RetryReviewReq) returns (RetryReviewResp);
   rpc listMarket(ListMarketReq) returns (ListMarketResp);
   rpc listMyInstances(ListMyInstancesReq) returns (ListMyInstancesResp);
+  rpc getMyClone(GetMyCloneReq) returns (GetMyCloneResp);
   rpc getInstanceConfig(GetInstanceConfigReq) returns (GetInstanceConfigResp);
   rpc describeScope(DescribeScopeReq) returns (DescribeScopeResp);
   rpc scopeOptions(ScopeOptionsReq) returns (ScopeOptionsResp);
   rpc getWorks(GetWorksReq) returns (GetWorksResp);
   rpc listWorks(ListWorksReq) returns (ListWorksResp);
+  rpc getWorkStats(GetWorkStatsReq) returns (GetWorkStatsResp);
   rpc stopWork(StopWorkReq) returns (StopWorkResp);
   rpc listWorkEvents(ListWorkEventsReq) returns (ListWorkEventsResp);
   rpc submitFeedback(SubmitFeedbackReq) returns (SubmitFeedbackResp);
@@ -2415,6 +2540,7 @@ service Agent {
   rpc publishWork(PublishWorkReq) returns (PublishWorkResp);
   rpc getGroupSetting(GetGroupSettingReq) returns (GetGroupSettingResp);
   rpc setGroupSetting(SetGroupSettingReq) returns (SetGroupSettingResp);
+  rpc listGroupAgents(ListGroupAgentsReq) returns (ListGroupAgentsResp);
   rpc getInstanceSetting(GetInstanceSettingReq) returns (GetInstanceSettingResp);
   rpc setInstanceSetting(SetInstanceSettingReq) returns (SetInstanceSettingResp);
   rpc listMemories(ListMemoriesReq) returns (ListMemoriesResp);
@@ -2434,6 +2560,7 @@ service Agent {
   rpc checkWork(CheckWorkReq) returns (CheckWorkResp);
   rpc takeWorkByTask(TakeWorkByTaskReq) returns (TakeWorkByTaskResp);
   rpc endGroupWorks(EndGroupWorksReq) returns (EndGroupWorksResp);
+  rpc instancesJoinedGroup(InstancesJoinedGroupReq) returns (InstancesJoinedGroupResp);
 
   // 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
   rpc adminGetCompanySetting(AdminGetCompanySettingReq) returns (AdminGetCompanySettingResp);
@@ -2449,6 +2576,8 @@ service Agent {
   rpc adminListAgents(AdminListAgentsReq) returns (AdminListAgentsResp);
   rpc adminGetAgentConfig(AdminGetAgentConfigReq) returns (AdminGetAgentConfigResp);
   rpc adminUpdateAgent(AdminUpdateAgentReq) returns (AdminUpdateAgentResp);
+  rpc adminSetAgentMember(AdminSetAgentMemberReq) returns (AdminSetAgentMemberResp);
+  rpc adminRemoveAgentMember(AdminRemoveAgentMemberReq) returns (AdminRemoveAgentMemberResp);
   rpc adminDisableAgent(AdminDisableAgentReq) returns (AdminDisableAgentResp);
   rpc adminEnableAgent(AdminEnableAgentReq) returns (AdminEnableAgentResp);
   rpc adminDelistAgent(AdminDelistAgentReq) returns (AdminDelistAgentResp);
