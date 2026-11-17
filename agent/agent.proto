@@ -1522,9 +1522,11 @@ message GetWorksResp {
   repeated Work children = 2; // withChildren 时，works 里各工作的协作子工作
 }
 
-// 我的工作：我发起的，或者我雇佣的实例的；新的在前。普通问答（Work.chat）默认不列
+// 我的工作：我发起的、我雇佣的实例的，或者由我确认写操作的；新的在前。普通问答（Work.chat）默认不列
 message ListWorksReq {
-  string role = 1;       // initiator：我发起的；hirer：我雇佣的实例的；空：都要
+  // initiator：我发起的；hirer：我雇佣的实例的；confirmer：由我确认写操作的（Work.confirmerID 是我：私聊、开了自行确认的群工作是发起人，
+  // 群里其余是雇佣人）；空：我发起的或我雇佣的实例的
+  string role = 1;
   string instanceID = 2; // 只看这个实例的
   string conversationID = 3;
   repeated WorkStatus statuses = 4; // 空表示全部
@@ -1534,16 +1536,20 @@ message ListWorksReq {
   int64 endTimeFrom = 7;
   int64 endTimeTo = 8;
   bool withChats = 9; // 也列普通问答
+  // 按几种身份查，对上任意一种就算，填了就不看 role。待我处理填 ["initiator", "confirmer"]、statuses 填要你处理，
+  // 和 getWorkStats 的 waiting 是同一批
+  repeated string roles = 10;
 }
 message ListWorksResp {
   int64 total = 1;
   repeated Work works = 2;
 }
 
-// 与我相关的工作的数量：只算我发起的，不含协作子工作和普通问答
+// 与我相关的工作的数量，不含协作子工作和普通问答：待我处理算我发起的和由我确认写操作的（ListWorksReq.roles 的 initiator、confirmer），
+// 其余只算我发起的
 message GetWorkStatsReq {}
 message GetWorkStatsResp {
-  int64 waiting = 1;    // 待我处理：需要你处理
+  int64 waiting = 1;    // 待我处理：需要你处理，含群里等我确认的
   int64 processing = 2; // 处理中：已受理、等待电脑上线、执行中
   int64 completed = 3;  // 近 7 天已完成
   int64 unfinished = 4; // 近 7 天未完成：已停止、已中止、未完成
@@ -1663,6 +1669,14 @@ message TakeWorkByTaskReq {
 message TakeWorkByTaskResp {
   Work work = 1; // 不是雇佣实例的、找不到的为空；协作子工作的 published 跟所属工作
 }
+
+// 执行端写了快照、任务在要你处理时由 im-server API 调（不开 HTTP 路由）：马上按 215 对一下这份工作，
+// 群里要确认写操作、授权、本地执行的，员工在群里另发一条消息 @ 要处理的人（同一项只发一次）。不是雇佣实例的、找不到的不做什么
+message SyncWorkByTaskReq {
+  string botID = 1;
+  string taskID = 2;
+}
+message SyncWorkByTaskResp {}
 
 // 实例出群、群解散、发起人退群时群服务调（不开 HTTP 路由）：群里没结束的工作结束为未完成，已结束、还没选发不发的按不发定下来；
 // 实例出群、群解散时删掉这些实例的群设置
@@ -1822,7 +1836,7 @@ message PublishWorkResp {
 message GroupMemberSetting {
   string userID = 1;
   GroupTier tier = 2;   // 不填按默认档位
-  bool selfConfirm = 3; // 这个成员发起的写操作自己确认
+  bool selfConfirm = 3; // 这个成员发起的写操作自己确认；单独设了的成员按这里，不看 GroupSetting.selfConfirmAll
 }
 
 // 实例在一个群里的设置，只有雇佣人能改
@@ -1837,6 +1851,9 @@ message GroupSetting {
   int64 revision = 8; // 0 表示还没设过
   string updatedBy = 9;
   int64 updateTime = 10;
+  // 所有成员自行确认：默认档位为可写时才有，群成员发起的写操作自己确认。单独设了的成员按成员的 selfConfirm，
+  // 不想自己确认的成员单独设 selfConfirm=false
+  bool selfConfirmAll = 11;
 }
 
 // 查实例在群里的设置：雇佣人看全部；其他群成员看不到 members，只看自己的
@@ -1852,8 +1869,9 @@ message GetGroupSettingResp {
   bool mySelfConfirm = 4;
 }
 
-// 改实例在群里的设置：只有雇佣人能改，实例要在群里；单独设的成员最多 500 个，不在群里的去掉。
-// 档位收紧时，发起人档位比工作建立时低的在途工作中止（tier_changed）；发布方式只对之后的工作生效
+// 改实例在群里的设置：只有雇佣人能改，实例要在群里；单独设的成员最多 500 个，不在群里的去掉，和默认一样的（不单独设档位、
+// selfConfirm 和 selfConfirmAll 相同）不存。档位收紧时，发起人档位比工作建立时低的在途工作中止（tier_changed）；
+// 取消了自行确认的，在途工作改由雇佣人确认；发布方式只对之后的工作生效
 message SetGroupSettingReq {
   string instanceID = 1;
   string groupID = 2;
@@ -1861,6 +1879,7 @@ message SetGroupSettingReq {
   repeated GroupMemberSetting members = 4; // 整份替换
   GroupPublishMode publishMode = 5;
   int64 revision = 6; // 查到的修订号，没设过填 0；别人先改了报冲突
+  bool selfConfirmAll = 7; // 所有成员自行确认，见 GroupSetting.selfConfirmAll；默认档位不是可写时不生效，按 false 存
 }
 message SetGroupSettingResp {
   GroupSetting setting = 1;
@@ -2559,6 +2578,7 @@ service Agent {
   rpc markInstanceRead(MarkInstanceReadReq) returns (MarkInstanceReadResp);
   rpc checkWork(CheckWorkReq) returns (CheckWorkResp);
   rpc takeWorkByTask(TakeWorkByTaskReq) returns (TakeWorkByTaskResp);
+  rpc syncWorkByTask(SyncWorkByTaskReq) returns (SyncWorkByTaskResp);
   rpc endGroupWorks(EndGroupWorksReq) returns (EndGroupWorksResp);
   rpc instancesJoinedGroup(InstancesJoinedGroupReq) returns (InstancesJoinedGroupResp);
 

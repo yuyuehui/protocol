@@ -88,6 +88,7 @@ const (
 	Agent_MarkInstanceRead_FullMethodName            = "/openim.agent.Agent/markInstanceRead"
 	Agent_CheckWork_FullMethodName                   = "/openim.agent.Agent/checkWork"
 	Agent_TakeWorkByTask_FullMethodName              = "/openim.agent.Agent/takeWorkByTask"
+	Agent_SyncWorkByTask_FullMethodName              = "/openim.agent.Agent/syncWorkByTask"
 	Agent_EndGroupWorks_FullMethodName               = "/openim.agent.Agent/endGroupWorks"
 	Agent_InstancesJoinedGroup_FullMethodName        = "/openim.agent.Agent/instancesJoinedGroup"
 	Agent_AdminGetCompanySetting_FullMethodName      = "/openim.agent.Agent/adminGetCompanySetting"
@@ -203,6 +204,7 @@ type AgentClient interface {
 	MarkInstanceRead(ctx context.Context, in *MarkInstanceReadReq, opts ...grpc.CallOption) (*MarkInstanceReadResp, error)
 	CheckWork(ctx context.Context, in *CheckWorkReq, opts ...grpc.CallOption) (*CheckWorkResp, error)
 	TakeWorkByTask(ctx context.Context, in *TakeWorkByTaskReq, opts ...grpc.CallOption) (*TakeWorkByTaskResp, error)
+	SyncWorkByTask(ctx context.Context, in *SyncWorkByTaskReq, opts ...grpc.CallOption) (*SyncWorkByTaskResp, error)
 	EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, opts ...grpc.CallOption) (*EndGroupWorksResp, error)
 	InstancesJoinedGroup(ctx context.Context, in *InstancesJoinedGroupReq, opts ...grpc.CallOption) (*InstancesJoinedGroupResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
@@ -943,6 +945,16 @@ func (c *agentClient) TakeWorkByTask(ctx context.Context, in *TakeWorkByTaskReq,
 	return out, nil
 }
 
+func (c *agentClient) SyncWorkByTask(ctx context.Context, in *SyncWorkByTaskReq, opts ...grpc.CallOption) (*SyncWorkByTaskResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SyncWorkByTaskResp)
+	err := c.cc.Invoke(ctx, Agent_SyncWorkByTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agentClient) EndGroupWorks(ctx context.Context, in *EndGroupWorksReq, opts ...grpc.CallOption) (*EndGroupWorksResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EndGroupWorksResp)
@@ -1398,6 +1410,7 @@ type AgentServer interface {
 	MarkInstanceRead(context.Context, *MarkInstanceReadReq) (*MarkInstanceReadResp, error)
 	CheckWork(context.Context, *CheckWorkReq) (*CheckWorkResp, error)
 	TakeWorkByTask(context.Context, *TakeWorkByTaskReq) (*TakeWorkByTaskResp, error)
+	SyncWorkByTask(context.Context, *SyncWorkByTaskReq) (*SyncWorkByTaskResp, error)
 	EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error)
 	InstancesJoinedGroup(context.Context, *InstancesJoinedGroupReq) (*InstancesJoinedGroupResp, error)
 	// 后台：/agent/admin，只能操作当前企业的（见 agent.proto 开头）
@@ -1654,6 +1667,9 @@ func (UnimplementedAgentServer) CheckWork(context.Context, *CheckWorkReq) (*Chec
 }
 func (UnimplementedAgentServer) TakeWorkByTask(context.Context, *TakeWorkByTaskReq) (*TakeWorkByTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method TakeWorkByTask not implemented")
+}
+func (UnimplementedAgentServer) SyncWorkByTask(context.Context, *SyncWorkByTaskReq) (*SyncWorkByTaskResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SyncWorkByTask not implemented")
 }
 func (UnimplementedAgentServer) EndGroupWorks(context.Context, *EndGroupWorksReq) (*EndGroupWorksResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method EndGroupWorks not implemented")
@@ -3032,6 +3048,24 @@ func _Agent_TakeWorkByTask_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Agent_SyncWorkByTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncWorkByTaskReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AgentServer).SyncWorkByTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Agent_SyncWorkByTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AgentServer).SyncWorkByTask(ctx, req.(*SyncWorkByTaskReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Agent_EndGroupWorks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EndGroupWorksReq)
 	if err := dec(in); err != nil {
@@ -3998,6 +4032,10 @@ var Agent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "takeWorkByTask",
 			Handler:    _Agent_TakeWorkByTask_Handler,
+		},
+		{
+			MethodName: "syncWorkByTask",
+			Handler:    _Agent_SyncWorkByTask_Handler,
 		},
 		{
 			MethodName: "endGroupWorks",
