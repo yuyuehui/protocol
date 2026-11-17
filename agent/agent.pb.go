@@ -15631,7 +15631,7 @@ func (x *SetGroupSettingResp) GetAborted() int32 {
 }
 
 // 群里的数字员工：现在的群成员都能查，只列在雇、账号在群里的实例，按进群先后。
-// 每个实例给运行人（雇佣人）、发布方式，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
+// 每个实例给运行人（雇佣人）、发布方式、执行电脑在不在线，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
 type ListGroupAgentsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
@@ -15688,6 +15688,9 @@ type GroupAgent struct {
 	Defaulted     bool                   `protobuf:"varint,8,opt,name=defaulted,proto3" json:"defaulted"`                                        // 运行人还没设过，按默认
 	Editable      bool                   `protobuf:"varint,9,opt,name=editable,proto3" json:"editable"`                                          // 查看人就是运行人，能改
 	Clone         bool                   `protobuf:"varint,10,opt,name=clone,proto3" json:"clone"`                                               // 运行人的分身
+	// 执行电脑（运行人的电脑）现在连着：不在线时发起人发消息前在输入框上方提示“XX 的电脑不在线，需求会在电脑上线后处理”，
+	// 排队中的工作卡对其他成员显示“暂停中”。按网关登记的连接算，意外断开的最多 90 秒后才算不在线；查不了的按不在线
+	HostOnline    bool `protobuf:"varint,11,opt,name=hostOnline,proto3" json:"hostOnline"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -15788,6 +15791,13 @@ func (x *GroupAgent) GetEditable() bool {
 func (x *GroupAgent) GetClone() bool {
 	if x != nil {
 		return x.Clone
+	}
+	return false
+}
+
+func (x *GroupAgent) GetHostOnline() bool {
+	if x != nil {
+		return x.HostOnline
 	}
 	return false
 }
@@ -22930,7 +22940,7 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\asetting\x18\x01 \x01(\v2\x1a.openim.agent.GroupSettingR\asetting\x12\x18\n" +
 	"\aaborted\x18\x02 \x01(\x05R\aaborted\".\n" +
 	"\x12ListGroupAgentsReq\x12\x18\n" +
-	"\agroupID\x18\x01 \x01(\tR\agroupID\"\xdf\x02\n" +
+	"\agroupID\x18\x01 \x01(\tR\agroupID\"\xff\x02\n" +
 	"\n" +
 	"GroupAgent\x12\x1e\n" +
 	"\n" +
@@ -22945,7 +22955,10 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\tdefaulted\x18\b \x01(\bR\tdefaulted\x12\x1a\n" +
 	"\beditable\x18\t \x01(\bR\beditable\x12\x14\n" +
 	"\x05clone\x18\n" +
-	" \x01(\bR\x05clone\"G\n" +
+	" \x01(\bR\x05clone\x12\x1e\n" +
+	"\n" +
+	"hostOnline\x18\v \x01(\bR\n" +
+	"hostOnline\"G\n" +
 	"\x13ListGroupAgentsResp\x120\n" +
 	"\x06agents\x18\x01 \x03(\v2\x18.openim.agent.GroupAgentR\x06agents\"\xe1\x01\n" +
 	"\x0fInstanceSetting\x12$\n" +

@@ -1887,7 +1887,7 @@ message SetGroupSettingResp {
 }
 
 // 群里的数字员工：现在的群成员都能查，只列在雇、账号在群里的实例，按进群先后。
-// 每个实例给运行人（雇佣人）、发布方式，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
+// 每个实例给运行人（雇佣人）、发布方式、执行电脑在不在线，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
 message ListGroupAgentsReq {
   string groupID = 1;
 }
@@ -1902,6 +1902,9 @@ message GroupAgent {
   bool defaulted = 8;               // 运行人还没设过，按默认
   bool editable = 9;                // 查看人就是运行人，能改
   bool clone = 10;                  // 运行人的分身
+  // 执行电脑（运行人的电脑）现在连着：不在线时发起人发消息前在输入框上方提示“XX 的电脑不在线，需求会在电脑上线后处理”，
+  // 排队中的工作卡对其他成员显示“暂停中”。按网关登记的连接算，意外断开的最多 90 秒后才算不在线；查不了的按不在线
+  bool hostOnline = 11;
 }
 message ListGroupAgentsResp {
   repeated GroupAgent agents = 1;
