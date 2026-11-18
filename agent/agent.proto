@@ -801,6 +801,9 @@ message CapabilityItem {
   bool companyPrivate = 15; // 本企业私有
   reserved 16;
   reserved "duties";
+  string icon = 17;    // 技能、连接器：能力中心的图标名（lucide），没有图标图片时显示它
+  string iconURL = 18; // 技能、连接器：能力中心的图标图片，签名地址 12 小时内有效；没有图片为空，显示 icon
+  string avatar = 19;  // 引用的员工：上架版本的头像
 }
 
 // ==================== 测试 ====================

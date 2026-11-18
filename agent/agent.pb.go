@@ -5983,6 +5983,9 @@ type CapabilityItem struct {
 	Tools          []*CapabilityTool      `protobuf:"bytes,13,rep,name=tools,proto3" json:"tools"`
 	Fields         []*CapabilityField     `protobuf:"bytes,14,rep,name=fields,proto3" json:"fields"`
 	CompanyPrivate bool                   `protobuf:"varint,15,opt,name=companyPrivate,proto3" json:"companyPrivate"` // 本企业私有
+	Icon           string                 `protobuf:"bytes,17,opt,name=icon,proto3" json:"icon"`                      // 技能、连接器：能力中心的图标名（lucide），没有图标图片时显示它
+	IconURL        string                 `protobuf:"bytes,18,opt,name=iconURL,proto3" json:"iconURL"`                // 技能、连接器：能力中心的图标图片，签名地址 12 小时内有效；没有图片为空，显示 icon
+	Avatar         string                 `protobuf:"bytes,19,opt,name=avatar,proto3" json:"avatar"`                  // 引用的员工：上架版本的头像
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -6113,6 +6116,27 @@ func (x *CapabilityItem) GetCompanyPrivate() bool {
 		return x.CompanyPrivate
 	}
 	return false
+}
+
+func (x *CapabilityItem) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *CapabilityItem) GetIconURL() string {
+	if x != nil {
+		return x.IconURL
+	}
+	return ""
+}
+
+func (x *CapabilityItem) GetAvatar() string {
+	if x != nil {
+		return x.Avatar
+	}
+	return ""
 }
 
 // 测试时显示的执行事件，不带资料标题和正文
@@ -22122,7 +22146,7 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05label\x18\x02 \x01(\tR\x05label\x12\x1a\n" +
 	"\brequired\x18\x03 \x01(\bR\brequired\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xb5\x04\n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\"\xfb\x04\n" +
 	"\x0eCapabilityItem\x12\x1c\n" +
 	"\tcatalogID\x18\x01 \x01(\tR\tcatalogID\x120\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x1c.openim.agent.CapabilityTypeR\x04type\x12\x12\n" +
@@ -22138,7 +22162,10 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\x06writes\x18\f \x01(\bR\x06writes\x122\n" +
 	"\x05tools\x18\r \x03(\v2\x1c.openim.agent.CapabilityToolR\x05tools\x125\n" +
 	"\x06fields\x18\x0e \x03(\v2\x1d.openim.agent.CapabilityFieldR\x06fields\x12&\n" +
-	"\x0ecompanyPrivate\x18\x0f \x01(\bR\x0ecompanyPrivateJ\x04\b\x06\x10\aJ\x04\b\x10\x10\x11R\bversionsR\x06duties\"3\n" +
+	"\x0ecompanyPrivate\x18\x0f \x01(\bR\x0ecompanyPrivate\x12\x12\n" +
+	"\x04icon\x18\x11 \x01(\tR\x04icon\x12\x18\n" +
+	"\aiconURL\x18\x12 \x01(\tR\aiconURL\x12\x16\n" +
+	"\x06avatar\x18\x13 \x01(\tR\x06avatarJ\x04\b\x06\x10\aJ\x04\b\x10\x10\x11R\bversionsR\x06duties\"3\n" +
 	"\tTestEvent\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x12\n" +
 	"\x04text\x18\x02 \x01(\tR\x04text\"\xed\x05\n" +
