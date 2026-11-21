@@ -1940,6 +1940,58 @@ func (WorkPublishState) EnumDescriptor() ([]byte, []int) {
 	return file_agent_agent_proto_rawDescGZIP(), []int{34}
 }
 
+// 执行电脑（运行人的电脑）连没连上。和 im-chat 员工中心同一口径：员工在运行人名下的有效执行租约和网关登记的连接都在，
+// 设备 ID、hostEpoch 也对上才算已连接；查到了但对不上（没有租约、没有连接、连着的是别的电脑或旧的一轮）算未连接；
+// 查不了（Redis 出错）为 UNSPECIFIED，客户端显示“状态暂不可用”、不当成未连接
+type HostConnection int32
+
+const (
+	HostConnection_HOST_CONNECTION_UNSPECIFIED  HostConnection = 0
+	HostConnection_HOST_CONNECTION_CONNECTED    HostConnection = 1
+	HostConnection_HOST_CONNECTION_DISCONNECTED HostConnection = 2
+)
+
+// Enum value maps for HostConnection.
+var (
+	HostConnection_name = map[int32]string{
+		0: "HOST_CONNECTION_UNSPECIFIED",
+		1: "HOST_CONNECTION_CONNECTED",
+		2: "HOST_CONNECTION_DISCONNECTED",
+	}
+	HostConnection_value = map[string]int32{
+		"HOST_CONNECTION_UNSPECIFIED":  0,
+		"HOST_CONNECTION_CONNECTED":    1,
+		"HOST_CONNECTION_DISCONNECTED": 2,
+	}
+)
+
+func (x HostConnection) Enum() *HostConnection {
+	p := new(HostConnection)
+	*p = x
+	return p
+}
+
+func (x HostConnection) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (HostConnection) Descriptor() protoreflect.EnumDescriptor {
+	return file_agent_agent_proto_enumTypes[35].Descriptor()
+}
+
+func (HostConnection) Type() protoreflect.EnumType {
+	return &file_agent_agent_proto_enumTypes[35]
+}
+
+func (x HostConnection) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use HostConnection.Descriptor instead.
+func (HostConnection) EnumDescriptor() ([]byte, []int) {
+	return file_agent_agent_proto_rawDescGZIP(), []int{35}
+}
+
 // 职责逐条存
 type AgentDuty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -15655,7 +15707,7 @@ func (x *SetGroupSettingResp) GetAborted() int32 {
 }
 
 // 群里的数字员工：现在的群成员都能查，只列在雇、账号在群里的实例，按进群先后。
-// 每个实例给运行人（雇佣人）、发布方式、执行电脑在不在线，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
+// 每个实例给运行人（雇佣人）、发布方式、执行电脑连没连上，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
 type ListGroupAgentsReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GroupID       string                 `protobuf:"bytes,1,opt,name=groupID,proto3" json:"groupID"`
@@ -15712,11 +15764,10 @@ type GroupAgent struct {
 	Defaulted     bool                   `protobuf:"varint,8,opt,name=defaulted,proto3" json:"defaulted"`                                        // 运行人还没设过，按默认
 	Editable      bool                   `protobuf:"varint,9,opt,name=editable,proto3" json:"editable"`                                          // 查看人就是运行人，能改
 	Clone         bool                   `protobuf:"varint,10,opt,name=clone,proto3" json:"clone"`                                               // 运行人的分身
-	// 执行电脑（运行人的电脑）现在连着：不在线时发起人发消息前在输入框上方提示“XX 的电脑不在线，需求会在电脑上线后处理”，
-	// 排队中的工作卡对其他成员显示“暂停中”。按网关登记的连接算，意外断开的最多 90 秒后才算不在线；查不了的按不在线
-	HostOnline    bool `protobuf:"varint,11,opt,name=hostOnline,proto3" json:"hostOnline"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// 执行电脑连没连上：明确未连接时客户端才提示“员工未连接”。网关连接意外断开的，最多 90 秒后才算未连接
+	HostConnection HostConnection `protobuf:"varint,12,opt,name=hostConnection,proto3,enum=openim.agent.HostConnection" json:"hostConnection"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *GroupAgent) Reset() {
@@ -15819,11 +15870,11 @@ func (x *GroupAgent) GetClone() bool {
 	return false
 }
 
-func (x *GroupAgent) GetHostOnline() bool {
+func (x *GroupAgent) GetHostConnection() HostConnection {
 	if x != nil {
-		return x.HostOnline
+		return x.HostConnection
 	}
-	return false
+	return HostConnection_HOST_CONNECTION_UNSPECIFIED
 }
 
 type ListGroupAgentsResp struct {
@@ -22967,7 +23018,7 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\asetting\x18\x01 \x01(\v2\x1a.openim.agent.GroupSettingR\asetting\x12\x18\n" +
 	"\aaborted\x18\x02 \x01(\x05R\aaborted\".\n" +
 	"\x12ListGroupAgentsReq\x12\x18\n" +
-	"\agroupID\x18\x01 \x01(\tR\agroupID\"\xff\x02\n" +
+	"\agroupID\x18\x01 \x01(\tR\agroupID\"\xb7\x03\n" +
 	"\n" +
 	"GroupAgent\x12\x1e\n" +
 	"\n" +
@@ -22982,9 +23033,8 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\tdefaulted\x18\b \x01(\bR\tdefaulted\x12\x1a\n" +
 	"\beditable\x18\t \x01(\bR\beditable\x12\x14\n" +
 	"\x05clone\x18\n" +
-	" \x01(\bR\x05clone\x12\x1e\n" +
-	"\n" +
-	"hostOnline\x18\v \x01(\bR\n" +
+	" \x01(\bR\x05clone\x12D\n" +
+	"\x0ehostConnection\x18\f \x01(\x0e2\x1c.openim.agent.HostConnectionR\x0ehostConnectionJ\x04\b\v\x10\fR\n" +
 	"hostOnline\"G\n" +
 	"\x13ListGroupAgentsResp\x120\n" +
 	"\x06agents\x18\x01 \x03(\v2\x18.openim.agent.GroupAgentR\x06agents\"\xe1\x01\n" +
@@ -23615,7 +23665,11 @@ const file_agent_agent_proto_rawDesc = "" +
 	"\x10WorkPublishState\x12\"\n" +
 	"\x1eWORK_PUBLISH_STATE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cWORK_PUBLISH_STATE_PUBLISHED\x10\x01\x12 \n" +
-	"\x1cWORK_PUBLISH_STATE_DISCARDED\x10\x022\x8eI\n" +
+	"\x1cWORK_PUBLISH_STATE_DISCARDED\x10\x02*r\n" +
+	"\x0eHostConnection\x12\x1f\n" +
+	"\x1bHOST_CONNECTION_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19HOST_CONNECTION_CONNECTED\x10\x01\x12 \n" +
+	"\x1cHOST_CONNECTION_DISCONNECTED\x10\x022\x8eI\n" +
 	"\x05Agent\x12G\n" +
 	"\n" +
 	"getContext\x12\x1b.openim.agent.GetContextReq\x1a\x1c.openim.agent.GetContextResp\x12J\n" +
@@ -23743,7 +23797,7 @@ func file_agent_agent_proto_rawDescGZIP() []byte {
 	return file_agent_agent_proto_rawDescData
 }
 
-var file_agent_agent_proto_enumTypes = make([]protoimpl.EnumInfo, 35)
+var file_agent_agent_proto_enumTypes = make([]protoimpl.EnumInfo, 36)
 var file_agent_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 296)
 var file_agent_agent_proto_goTypes = []any{
 	(AgentKind)(0),                          // 0: openim.agent.AgentKind
@@ -23781,821 +23835,823 @@ var file_agent_agent_proto_goTypes = []any{
 	(GroupPublishMode)(0),                   // 32: openim.agent.GroupPublishMode
 	(WorkWaitKind)(0),                       // 33: openim.agent.WorkWaitKind
 	(WorkPublishState)(0),                   // 34: openim.agent.WorkPublishState
-	(*AgentDuty)(nil),                       // 35: openim.agent.AgentDuty
-	(*RoleSetting)(nil),                     // 36: openim.agent.RoleSetting
-	(*CapabilityRef)(nil),                   // 37: openim.agent.CapabilityRef
-	(*CapabilityInstall)(nil),               // 38: openim.agent.CapabilityInstall
-	(*CapabilitySkillInstall)(nil),          // 39: openim.agent.CapabilitySkillInstall
-	(*CapabilityConnectorInstall)(nil),      // 40: openim.agent.CapabilityConnectorInstall
-	(*CapabilityAuthField)(nil),             // 41: openim.agent.CapabilityAuthField
-	(*KnowledgeRef)(nil),                    // 42: openim.agent.KnowledgeRef
-	(*MemorySetting)(nil),                   // 43: openim.agent.MemorySetting
-	(*UsageSetting)(nil),                    // 44: openim.agent.UsageSetting
-	(*RoleImport)(nil),                      // 45: openim.agent.RoleImport
-	(*AgentConfig)(nil),                     // 46: openim.agent.AgentConfig
-	(*AgentInfo)(nil),                       // 47: openim.agent.AgentInfo
-	(*AgentPermissions)(nil),                // 48: openim.agent.AgentPermissions
-	(*AgentDraft)(nil),                      // 49: openim.agent.AgentDraft
-	(*CapabilityStatus)(nil),                // 50: openim.agent.CapabilityStatus
-	(*CoreStatus)(nil),                      // 51: openim.agent.CoreStatus
-	(*KnowledgeMeta)(nil),                   // 52: openim.agent.KnowledgeMeta
-	(*StateMark)(nil),                       // 53: openim.agent.StateMark
-	(*ReleaseInfo)(nil),                     // 54: openim.agent.ReleaseInfo
-	(*ReleaseLog)(nil),                      // 55: openim.agent.ReleaseLog
-	(*AgentSnapshot)(nil),                   // 56: openim.agent.AgentSnapshot
-	(*AgentListItem)(nil),                   // 57: openim.agent.AgentListItem
-	(*ScopeSummary)(nil),                    // 58: openim.agent.ScopeSummary
-	(*AgentMember)(nil),                     // 59: openim.agent.AgentMember
-	(*VisibleScopeInfo)(nil),                // 60: openim.agent.VisibleScopeInfo
-	(*CheckIssue)(nil),                      // 61: openim.agent.CheckIssue
-	(*CheckResult)(nil),                     // 62: openim.agent.CheckResult
-	(*RestoredFrom)(nil),                    // 63: openim.agent.RestoredFrom
-	(*ChangeBlock)(nil),                     // 64: openim.agent.ChangeBlock
-	(*DiffItem)(nil),                        // 65: openim.agent.DiffItem
-	(*VersionEffect)(nil),                   // 66: openim.agent.VersionEffect
-	(*ReviewBrief)(nil),                     // 67: openim.agent.ReviewBrief
-	(*VersionItem)(nil),                     // 68: openim.agent.VersionItem
-	(*EffectInfo)(nil),                      // 69: openim.agent.EffectInfo
-	(*ReviewInfo)(nil),                      // 70: openim.agent.ReviewInfo
-	(*ReviewTest)(nil),                      // 71: openim.agent.ReviewTest
-	(*Eligibility)(nil),                     // 72: openim.agent.Eligibility
-	(*AgentProfile)(nil),                    // 73: openim.agent.AgentProfile
-	(*ProfileCapability)(nil),               // 74: openim.agent.ProfileCapability
-	(*AgentInstance)(nil),                   // 75: openim.agent.AgentInstance
-	(*MyInstance)(nil),                      // 76: openim.agent.MyInstance
-	(*CapabilityTool)(nil),                  // 77: openim.agent.CapabilityTool
-	(*CapabilityField)(nil),                 // 78: openim.agent.CapabilityField
-	(*CapabilityItem)(nil),                  // 79: openim.agent.CapabilityItem
-	(*TestEvent)(nil),                       // 80: openim.agent.TestEvent
-	(*TestRun)(nil),                         // 81: openim.agent.TestRun
-	(*DutyCoverageInfo)(nil),                // 82: openim.agent.DutyCoverageInfo
-	(*AgentTemplate)(nil),                   // 83: openim.agent.AgentTemplate
-	(*AgentTag)(nil),                        // 84: openim.agent.AgentTag
-	(*AgentLimits)(nil),                     // 85: openim.agent.AgentLimits
-	(*CreatorScope)(nil),                    // 86: openim.agent.CreatorScope
-	(*CompanySettingInfo)(nil),              // 87: openim.agent.CompanySettingInfo
-	(*AuditLog)(nil),                        // 88: openim.agent.AuditLog
-	(*GetContextReq)(nil),                   // 89: openim.agent.GetContextReq
-	(*GetContextResp)(nil),                  // 90: openim.agent.GetContextResp
-	(*CreateAgentReq)(nil),                  // 91: openim.agent.CreateAgentReq
-	(*CreateAgentResp)(nil),                 // 92: openim.agent.CreateAgentResp
-	(*GetAgentReq)(nil),                     // 93: openim.agent.GetAgentReq
-	(*GetAgentResp)(nil),                    // 94: openim.agent.GetAgentResp
-	(*ListMyAgentsReq)(nil),                 // 95: openim.agent.ListMyAgentsReq
-	(*ListMyAgentsResp)(nil),                // 96: openim.agent.ListMyAgentsResp
-	(*SaveDraftReq)(nil),                    // 97: openim.agent.SaveDraftReq
-	(*SaveDraftResp)(nil),                   // 98: openim.agent.SaveDraftResp
-	(*RestoreDraftReq)(nil),                 // 99: openim.agent.RestoreDraftReq
-	(*RestoreDraftResp)(nil),                // 100: openim.agent.RestoreDraftResp
-	(*DeleteAgentReq)(nil),                  // 101: openim.agent.DeleteAgentReq
-	(*DeleteAgentResp)(nil),                 // 102: openim.agent.DeleteAgentResp
-	(*RestoreAgentReq)(nil),                 // 103: openim.agent.RestoreAgentReq
-	(*RestoreAgentResp)(nil),                // 104: openim.agent.RestoreAgentResp
-	(*ListCapabilitiesReq)(nil),             // 105: openim.agent.ListCapabilitiesReq
-	(*ListCapabilitiesResp)(nil),            // 106: openim.agent.ListCapabilitiesResp
-	(*PreviewRoleImportReq)(nil),            // 107: openim.agent.PreviewRoleImportReq
-	(*PreviewRoleImportResp)(nil),           // 108: openim.agent.PreviewRoleImportResp
-	(*ApplyRoleImportReq)(nil),              // 109: openim.agent.ApplyRoleImportReq
-	(*ApplyRoleImportResp)(nil),             // 110: openim.agent.ApplyRoleImportResp
-	(*ListTestRunsReq)(nil),                 // 111: openim.agent.ListTestRunsReq
-	(*ListTestRunsResp)(nil),                // 112: openim.agent.ListTestRunsResp
-	(*MarkTestRunReq)(nil),                  // 113: openim.agent.MarkTestRunReq
-	(*MarkTestRunResp)(nil),                 // 114: openim.agent.MarkTestRunResp
-	(*ReportTestRunReq)(nil),                // 115: openim.agent.ReportTestRunReq
-	(*ReportTestRunResp)(nil),               // 116: openim.agent.ReportTestRunResp
-	(*ListReleasesReq)(nil),                 // 117: openim.agent.ListReleasesReq
-	(*ListReleasesResp)(nil),                // 118: openim.agent.ListReleasesResp
-	(*GetSnapshotReq)(nil),                  // 119: openim.agent.GetSnapshotReq
-	(*GetSnapshotResp)(nil),                 // 120: openim.agent.GetSnapshotResp
-	(*SubmitCheckReq)(nil),                  // 121: openim.agent.SubmitCheckReq
-	(*SubmitCheckResp)(nil),                 // 122: openim.agent.SubmitCheckResp
-	(*ListMembersReq)(nil),                  // 123: openim.agent.ListMembersReq
-	(*ListMembersResp)(nil),                 // 124: openim.agent.ListMembersResp
-	(*SetMemberReq)(nil),                    // 125: openim.agent.SetMemberReq
-	(*SetMemberResp)(nil),                   // 126: openim.agent.SetMemberResp
-	(*RemoveMemberReq)(nil),                 // 127: openim.agent.RemoveMemberReq
-	(*RemoveMemberResp)(nil),                // 128: openim.agent.RemoveMemberResp
-	(*SetVisibleScopeReq)(nil),              // 129: openim.agent.SetVisibleScopeReq
-	(*SetVisibleScopeResp)(nil),             // 130: openim.agent.SetVisibleScopeResp
-	(*ListTemplatesReq)(nil),                // 131: openim.agent.ListTemplatesReq
-	(*ListTemplatesResp)(nil),               // 132: openim.agent.ListTemplatesResp
-	(*GetTemplateReq)(nil),                  // 133: openim.agent.GetTemplateReq
-	(*GetTemplateResp)(nil),                 // 134: openim.agent.GetTemplateResp
-	(*ListTagsReq)(nil),                     // 135: openim.agent.ListTagsReq
-	(*ListTagsResp)(nil),                    // 136: openim.agent.ListTagsResp
-	(*GetEligibilityReq)(nil),               // 137: openim.agent.GetEligibilityReq
-	(*GetEligibilityResp)(nil),              // 138: openim.agent.GetEligibilityResp
-	(*ListVersionsReq)(nil),                 // 139: openim.agent.ListVersionsReq
-	(*ListVersionsResp)(nil),                // 140: openim.agent.ListVersionsResp
-	(*DiffVersionReq)(nil),                  // 141: openim.agent.DiffVersionReq
-	(*DiffVersionResp)(nil),                 // 142: openim.agent.DiffVersionResp
-	(*SubmitReviewReq)(nil),                 // 143: openim.agent.SubmitReviewReq
-	(*SubmitReviewResp)(nil),                // 144: openim.agent.SubmitReviewResp
-	(*WithdrawReviewReq)(nil),               // 145: openim.agent.WithdrawReviewReq
-	(*WithdrawReviewResp)(nil),              // 146: openim.agent.WithdrawReviewResp
-	(*ListReviewsReq)(nil),                  // 147: openim.agent.ListReviewsReq
-	(*ListReviewsResp)(nil),                 // 148: openim.agent.ListReviewsResp
-	(*GetReviewReq)(nil),                    // 149: openim.agent.GetReviewReq
-	(*GetReviewResp)(nil),                   // 150: openim.agent.GetReviewResp
-	(*RetryReviewReq)(nil),                  // 151: openim.agent.RetryReviewReq
-	(*RetryReviewResp)(nil),                 // 152: openim.agent.RetryReviewResp
-	(*ListMarketReq)(nil),                   // 153: openim.agent.ListMarketReq
-	(*MarketItem)(nil),                      // 154: openim.agent.MarketItem
-	(*ListMarketResp)(nil),                  // 155: openim.agent.ListMarketResp
-	(*ListMyInstancesReq)(nil),              // 156: openim.agent.ListMyInstancesReq
-	(*ListMyInstancesResp)(nil),             // 157: openim.agent.ListMyInstancesResp
-	(*GetMyCloneReq)(nil),                   // 158: openim.agent.GetMyCloneReq
-	(*GetMyCloneResp)(nil),                  // 159: openim.agent.GetMyCloneResp
-	(*GetInstanceConfigReq)(nil),            // 160: openim.agent.GetInstanceConfigReq
-	(*GetInstanceConfigResp)(nil),           // 161: openim.agent.GetInstanceConfigResp
-	(*PrepareInstanceReq)(nil),              // 162: openim.agent.PrepareInstanceReq
-	(*PrepareInstanceResp)(nil),             // 163: openim.agent.PrepareInstanceResp
-	(*BindInstanceReq)(nil),                 // 164: openim.agent.BindInstanceReq
-	(*BindInstanceResp)(nil),                // 165: openim.agent.BindInstanceResp
-	(*RemoveInstanceReq)(nil),               // 166: openim.agent.RemoveInstanceReq
-	(*RemoveInstanceResp)(nil),              // 167: openim.agent.RemoveInstanceResp
-	(*GetInstanceEligibilityReq)(nil),       // 168: openim.agent.GetInstanceEligibilityReq
-	(*GetInstanceEligibilityResp)(nil),      // 169: openim.agent.GetInstanceEligibilityResp
-	(*Work)(nil),                            // 170: openim.agent.Work
-	(*WorkSupplement)(nil),                  // 171: openim.agent.WorkSupplement
-	(*GetWorksReq)(nil),                     // 172: openim.agent.GetWorksReq
-	(*GetWorksResp)(nil),                    // 173: openim.agent.GetWorksResp
-	(*ListWorksReq)(nil),                    // 174: openim.agent.ListWorksReq
-	(*ListWorksResp)(nil),                   // 175: openim.agent.ListWorksResp
-	(*GetWorkStatsReq)(nil),                 // 176: openim.agent.GetWorkStatsReq
-	(*GetWorkStatsResp)(nil),                // 177: openim.agent.GetWorkStatsResp
-	(*InstanceWorkCount)(nil),               // 178: openim.agent.InstanceWorkCount
-	(*StopWorkReq)(nil),                     // 179: openim.agent.StopWorkReq
-	(*StopWorkResp)(nil),                    // 180: openim.agent.StopWorkResp
-	(*CreateWorkReq)(nil),                   // 181: openim.agent.CreateWorkReq
-	(*CreateWorkResp)(nil),                  // 182: openim.agent.CreateWorkResp
-	(*StartWorkReq)(nil),                    // 183: openim.agent.StartWorkReq
-	(*StartWorkResp)(nil),                   // 184: openim.agent.StartWorkResp
-	(*RequeueWorksReq)(nil),                 // 185: openim.agent.RequeueWorksReq
-	(*RequeueWorksResp)(nil),                // 186: openim.agent.RequeueWorksResp
-	(*MarkInstanceReadReq)(nil),             // 187: openim.agent.MarkInstanceReadReq
-	(*MarkInstanceReadResp)(nil),            // 188: openim.agent.MarkInstanceReadResp
-	(*CheckWorkReq)(nil),                    // 189: openim.agent.CheckWorkReq
-	(*CheckWorkResp)(nil),                   // 190: openim.agent.CheckWorkResp
-	(*TakeWorkByTaskReq)(nil),               // 191: openim.agent.TakeWorkByTaskReq
-	(*TakeWorkByTaskResp)(nil),              // 192: openim.agent.TakeWorkByTaskResp
-	(*SyncWorkByTaskReq)(nil),               // 193: openim.agent.SyncWorkByTaskReq
-	(*SyncWorkByTaskResp)(nil),              // 194: openim.agent.SyncWorkByTaskResp
-	(*EndGroupWorksReq)(nil),                // 195: openim.agent.EndGroupWorksReq
-	(*EndGroupWorksResp)(nil),               // 196: openim.agent.EndGroupWorksResp
-	(*InstancesJoinedGroupReq)(nil),         // 197: openim.agent.InstancesJoinedGroupReq
-	(*InstancesJoinedGroupResp)(nil),        // 198: openim.agent.InstancesJoinedGroupResp
-	(*WorkEvent)(nil),                       // 199: openim.agent.WorkEvent
-	(*ListWorkEventsReq)(nil),               // 200: openim.agent.ListWorkEventsReq
-	(*ListWorkEventsResp)(nil),              // 201: openim.agent.ListWorkEventsResp
-	(*FeedbackMessage)(nil),                 // 202: openim.agent.FeedbackMessage
-	(*Feedback)(nil),                        // 203: openim.agent.Feedback
-	(*SubmitFeedbackReq)(nil),               // 204: openim.agent.SubmitFeedbackReq
-	(*SubmitFeedbackResp)(nil),              // 205: openim.agent.SubmitFeedbackResp
-	(*ListFeedbackReq)(nil),                 // 206: openim.agent.ListFeedbackReq
-	(*ListFeedbackResp)(nil),                // 207: openim.agent.ListFeedbackResp
-	(*HandoffWorkReq)(nil),                  // 208: openim.agent.HandoffWorkReq
-	(*HandoffWorkResp)(nil),                 // 209: openim.agent.HandoffWorkResp
-	(*CreateSubWorkReq)(nil),                // 210: openim.agent.CreateSubWorkReq
-	(*CreateSubWorkResp)(nil),               // 211: openim.agent.CreateSubWorkResp
-	(*ClaimSubWorkReq)(nil),                 // 212: openim.agent.ClaimSubWorkReq
-	(*ClaimSubWorkResp)(nil),                // 213: openim.agent.ClaimSubWorkResp
-	(*ReportSubWorkReq)(nil),                // 214: openim.agent.ReportSubWorkReq
-	(*ReportSubWorkResp)(nil),               // 215: openim.agent.ReportSubWorkResp
-	(*PublishWorkReq)(nil),                  // 216: openim.agent.PublishWorkReq
-	(*PublishWorkResp)(nil),                 // 217: openim.agent.PublishWorkResp
-	(*GroupMemberSetting)(nil),              // 218: openim.agent.GroupMemberSetting
-	(*GroupSetting)(nil),                    // 219: openim.agent.GroupSetting
-	(*GetGroupSettingReq)(nil),              // 220: openim.agent.GetGroupSettingReq
-	(*GetGroupSettingResp)(nil),             // 221: openim.agent.GetGroupSettingResp
-	(*SetGroupSettingReq)(nil),              // 222: openim.agent.SetGroupSettingReq
-	(*SetGroupSettingResp)(nil),             // 223: openim.agent.SetGroupSettingResp
-	(*ListGroupAgentsReq)(nil),              // 224: openim.agent.ListGroupAgentsReq
-	(*GroupAgent)(nil),                      // 225: openim.agent.GroupAgent
-	(*ListGroupAgentsResp)(nil),             // 226: openim.agent.ListGroupAgentsResp
-	(*InstanceSetting)(nil),                 // 227: openim.agent.InstanceSetting
-	(*GetInstanceSettingReq)(nil),           // 228: openim.agent.GetInstanceSettingReq
-	(*GetInstanceSettingResp)(nil),          // 229: openim.agent.GetInstanceSettingResp
-	(*SetInstanceSettingReq)(nil),           // 230: openim.agent.SetInstanceSettingReq
-	(*SetInstanceSettingResp)(nil),          // 231: openim.agent.SetInstanceSettingResp
-	(*Memory)(nil),                          // 232: openim.agent.Memory
-	(*ListMemoriesReq)(nil),                 // 233: openim.agent.ListMemoriesReq
-	(*ListMemoriesResp)(nil),                // 234: openim.agent.ListMemoriesResp
-	(*SaveMemoryReq)(nil),                   // 235: openim.agent.SaveMemoryReq
-	(*SaveMemoryResp)(nil),                  // 236: openim.agent.SaveMemoryResp
-	(*UpdateMemoryReq)(nil),                 // 237: openim.agent.UpdateMemoryReq
-	(*UpdateMemoryResp)(nil),                // 238: openim.agent.UpdateMemoryResp
-	(*DeleteMemoriesReq)(nil),               // 239: openim.agent.DeleteMemoriesReq
-	(*DeleteMemoriesResp)(nil),              // 240: openim.agent.DeleteMemoriesResp
-	(*Scope)(nil),                           // 241: openim.agent.Scope
-	(*ScopeDepartment)(nil),                 // 242: openim.agent.ScopeDepartment
-	(*PeopleRule)(nil),                      // 243: openim.agent.PeopleRule
-	(*PeopleGroup)(nil),                     // 244: openim.agent.PeopleGroup
-	(*ScopeName)(nil),                       // 245: openim.agent.ScopeName
-	(*ScopeOption)(nil),                     // 246: openim.agent.ScopeOption
-	(*PeopleGroupMember)(nil),               // 247: openim.agent.PeopleGroupMember
-	(*UserPeopleGroup)(nil),                 // 248: openim.agent.UserPeopleGroup
-	(*PeopleGroupRef)(nil),                  // 249: openim.agent.PeopleGroupRef
-	(*DescribeScopeReq)(nil),                // 250: openim.agent.DescribeScopeReq
-	(*DescribeScopeResp)(nil),               // 251: openim.agent.DescribeScopeResp
-	(*ScopeOptionsReq)(nil),                 // 252: openim.agent.ScopeOptionsReq
-	(*ScopeOptionsResp)(nil),                // 253: openim.agent.ScopeOptionsResp
-	(*AdminGetCompanySettingReq)(nil),       // 254: openim.agent.AdminGetCompanySettingReq
-	(*AdminGetCompanySettingResp)(nil),      // 255: openim.agent.AdminGetCompanySettingResp
-	(*AdminSetCompanySettingReq)(nil),       // 256: openim.agent.AdminSetCompanySettingReq
-	(*AdminSetCompanySettingResp)(nil),      // 257: openim.agent.AdminSetCompanySettingResp
-	(*AdminListCompanySettingsReq)(nil),     // 258: openim.agent.AdminListCompanySettingsReq
-	(*AdminListCompanySettingsResp)(nil),    // 259: openim.agent.AdminListCompanySettingsResp
-	(*AdminListCapabilitiesReq)(nil),        // 260: openim.agent.AdminListCapabilitiesReq
-	(*AdminListCapabilitiesResp)(nil),       // 261: openim.agent.AdminListCapabilitiesResp
-	(*AdminListTemplatesReq)(nil),           // 262: openim.agent.AdminListTemplatesReq
-	(*AdminListTemplatesResp)(nil),          // 263: openim.agent.AdminListTemplatesResp
-	(*AdminSaveTemplateReq)(nil),            // 264: openim.agent.AdminSaveTemplateReq
-	(*AdminSaveTemplateResp)(nil),           // 265: openim.agent.AdminSaveTemplateResp
-	(*AdminDeleteTemplateReq)(nil),          // 266: openim.agent.AdminDeleteTemplateReq
-	(*AdminDeleteTemplateResp)(nil),         // 267: openim.agent.AdminDeleteTemplateResp
-	(*AdminListTagsReq)(nil),                // 268: openim.agent.AdminListTagsReq
-	(*AdminListTagsResp)(nil),               // 269: openim.agent.AdminListTagsResp
-	(*AdminSaveTagReq)(nil),                 // 270: openim.agent.AdminSaveTagReq
-	(*AdminSaveTagResp)(nil),                // 271: openim.agent.AdminSaveTagResp
-	(*AdminDeleteTagReq)(nil),               // 272: openim.agent.AdminDeleteTagReq
-	(*AdminDeleteTagResp)(nil),              // 273: openim.agent.AdminDeleteTagResp
-	(*AdminListAgentsReq)(nil),              // 274: openim.agent.AdminListAgentsReq
-	(*AdminListAgentsResp)(nil),             // 275: openim.agent.AdminListAgentsResp
-	(*AgentStateCounts)(nil),                // 276: openim.agent.AgentStateCounts
-	(*AdminGetAgentConfigReq)(nil),          // 277: openim.agent.AdminGetAgentConfigReq
-	(*AdminGetAgentConfigResp)(nil),         // 278: openim.agent.AdminGetAgentConfigResp
-	(*AdminSetAgentMemberReq)(nil),          // 279: openim.agent.AdminSetAgentMemberReq
-	(*AdminSetAgentMemberResp)(nil),         // 280: openim.agent.AdminSetAgentMemberResp
-	(*AdminRemoveAgentMemberReq)(nil),       // 281: openim.agent.AdminRemoveAgentMemberReq
-	(*AdminRemoveAgentMemberResp)(nil),      // 282: openim.agent.AdminRemoveAgentMemberResp
-	(*AdminUpdateAgentReq)(nil),             // 283: openim.agent.AdminUpdateAgentReq
-	(*AdminUpdateAgentResp)(nil),            // 284: openim.agent.AdminUpdateAgentResp
-	(*AdminDisableAgentReq)(nil),            // 285: openim.agent.AdminDisableAgentReq
-	(*AdminDisableAgentResp)(nil),           // 286: openim.agent.AdminDisableAgentResp
-	(*AdminEnableAgentReq)(nil),             // 287: openim.agent.AdminEnableAgentReq
-	(*AdminEnableAgentResp)(nil),            // 288: openim.agent.AdminEnableAgentResp
-	(*AdminDelistAgentReq)(nil),             // 289: openim.agent.AdminDelistAgentReq
-	(*AdminDelistAgentResp)(nil),            // 290: openim.agent.AdminDelistAgentResp
-	(*AdminRelistAgentReq)(nil),             // 291: openim.agent.AdminRelistAgentReq
-	(*AdminRelistAgentResp)(nil),            // 292: openim.agent.AdminRelistAgentResp
-	(*AdminDeleteAgentReq)(nil),             // 293: openim.agent.AdminDeleteAgentReq
-	(*AdminDeleteAgentResp)(nil),            // 294: openim.agent.AdminDeleteAgentResp
-	(*AdminRestoreAgentReq)(nil),            // 295: openim.agent.AdminRestoreAgentReq
-	(*AdminRestoreAgentResp)(nil),           // 296: openim.agent.AdminRestoreAgentResp
-	(*AuditFilter)(nil),                     // 297: openim.agent.AuditFilter
-	(*AdminListAuditsReq)(nil),              // 298: openim.agent.AdminListAuditsReq
-	(*AdminListAuditsResp)(nil),             // 299: openim.agent.AdminListAuditsResp
-	(*AdminExportAuditsReq)(nil),            // 300: openim.agent.AdminExportAuditsReq
-	(*AdminExportAuditsResp)(nil),           // 301: openim.agent.AdminExportAuditsResp
-	(*AdminListReviewsReq)(nil),             // 302: openim.agent.AdminListReviewsReq
-	(*AdminReviewItem)(nil),                 // 303: openim.agent.AdminReviewItem
-	(*AdminListReviewsResp)(nil),            // 304: openim.agent.AdminListReviewsResp
-	(*AdminGetReviewReq)(nil),               // 305: openim.agent.AdminGetReviewReq
-	(*AdminGetReviewResp)(nil),              // 306: openim.agent.AdminGetReviewResp
-	(*AdminDecideReviewReq)(nil),            // 307: openim.agent.AdminDecideReviewReq
-	(*AdminDecideReviewResp)(nil),           // 308: openim.agent.AdminDecideReviewResp
-	(*AdminScopeOptionsReq)(nil),            // 309: openim.agent.AdminScopeOptionsReq
-	(*AdminScopeOptionsResp)(nil),           // 310: openim.agent.AdminScopeOptionsResp
-	(*AdminDescribeScopeReq)(nil),           // 311: openim.agent.AdminDescribeScopeReq
-	(*AdminDescribeScopeResp)(nil),          // 312: openim.agent.AdminDescribeScopeResp
-	(*AdminListPeopleGroupsReq)(nil),        // 313: openim.agent.AdminListPeopleGroupsReq
-	(*AdminListPeopleGroupsResp)(nil),       // 314: openim.agent.AdminListPeopleGroupsResp
-	(*AdminGetPeopleGroupReq)(nil),          // 315: openim.agent.AdminGetPeopleGroupReq
-	(*AdminGetPeopleGroupResp)(nil),         // 316: openim.agent.AdminGetPeopleGroupResp
-	(*AdminListPeopleGroupMembersReq)(nil),  // 317: openim.agent.AdminListPeopleGroupMembersReq
-	(*AdminListPeopleGroupMembersResp)(nil), // 318: openim.agent.AdminListPeopleGroupMembersResp
-	(*AdminListUserPeopleGroupsReq)(nil),    // 319: openim.agent.AdminListUserPeopleGroupsReq
-	(*AdminListUserPeopleGroupsResp)(nil),   // 320: openim.agent.AdminListUserPeopleGroupsResp
-	(*AdminSavePeopleGroupReq)(nil),         // 321: openim.agent.AdminSavePeopleGroupReq
-	(*AdminSavePeopleGroupResp)(nil),        // 322: openim.agent.AdminSavePeopleGroupResp
-	(*AdminDeletePeopleGroupReq)(nil),       // 323: openim.agent.AdminDeletePeopleGroupReq
-	(*AdminDeletePeopleGroupResp)(nil),      // 324: openim.agent.AdminDeletePeopleGroupResp
-	(*AdminAddPeopleGroupUsersReq)(nil),     // 325: openim.agent.AdminAddPeopleGroupUsersReq
-	(*AdminAddPeopleGroupUsersResp)(nil),    // 326: openim.agent.AdminAddPeopleGroupUsersResp
-	(*AdminRemovePeopleGroupUsersReq)(nil),  // 327: openim.agent.AdminRemovePeopleGroupUsersReq
-	(*AdminRemovePeopleGroupUsersResp)(nil), // 328: openim.agent.AdminRemovePeopleGroupUsersResp
-	nil,                                     // 329: openim.agent.CapabilityRef.FieldsEntry
-	nil,                                     // 330: openim.agent.WorkEvent.DetailEntry
-	(*wrapperspb.BoolValue)(nil),            // 331: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil),         // 332: openim.sdkws.RequestPagination
+	(HostConnection)(0),                     // 35: openim.agent.HostConnection
+	(*AgentDuty)(nil),                       // 36: openim.agent.AgentDuty
+	(*RoleSetting)(nil),                     // 37: openim.agent.RoleSetting
+	(*CapabilityRef)(nil),                   // 38: openim.agent.CapabilityRef
+	(*CapabilityInstall)(nil),               // 39: openim.agent.CapabilityInstall
+	(*CapabilitySkillInstall)(nil),          // 40: openim.agent.CapabilitySkillInstall
+	(*CapabilityConnectorInstall)(nil),      // 41: openim.agent.CapabilityConnectorInstall
+	(*CapabilityAuthField)(nil),             // 42: openim.agent.CapabilityAuthField
+	(*KnowledgeRef)(nil),                    // 43: openim.agent.KnowledgeRef
+	(*MemorySetting)(nil),                   // 44: openim.agent.MemorySetting
+	(*UsageSetting)(nil),                    // 45: openim.agent.UsageSetting
+	(*RoleImport)(nil),                      // 46: openim.agent.RoleImport
+	(*AgentConfig)(nil),                     // 47: openim.agent.AgentConfig
+	(*AgentInfo)(nil),                       // 48: openim.agent.AgentInfo
+	(*AgentPermissions)(nil),                // 49: openim.agent.AgentPermissions
+	(*AgentDraft)(nil),                      // 50: openim.agent.AgentDraft
+	(*CapabilityStatus)(nil),                // 51: openim.agent.CapabilityStatus
+	(*CoreStatus)(nil),                      // 52: openim.agent.CoreStatus
+	(*KnowledgeMeta)(nil),                   // 53: openim.agent.KnowledgeMeta
+	(*StateMark)(nil),                       // 54: openim.agent.StateMark
+	(*ReleaseInfo)(nil),                     // 55: openim.agent.ReleaseInfo
+	(*ReleaseLog)(nil),                      // 56: openim.agent.ReleaseLog
+	(*AgentSnapshot)(nil),                   // 57: openim.agent.AgentSnapshot
+	(*AgentListItem)(nil),                   // 58: openim.agent.AgentListItem
+	(*ScopeSummary)(nil),                    // 59: openim.agent.ScopeSummary
+	(*AgentMember)(nil),                     // 60: openim.agent.AgentMember
+	(*VisibleScopeInfo)(nil),                // 61: openim.agent.VisibleScopeInfo
+	(*CheckIssue)(nil),                      // 62: openim.agent.CheckIssue
+	(*CheckResult)(nil),                     // 63: openim.agent.CheckResult
+	(*RestoredFrom)(nil),                    // 64: openim.agent.RestoredFrom
+	(*ChangeBlock)(nil),                     // 65: openim.agent.ChangeBlock
+	(*DiffItem)(nil),                        // 66: openim.agent.DiffItem
+	(*VersionEffect)(nil),                   // 67: openim.agent.VersionEffect
+	(*ReviewBrief)(nil),                     // 68: openim.agent.ReviewBrief
+	(*VersionItem)(nil),                     // 69: openim.agent.VersionItem
+	(*EffectInfo)(nil),                      // 70: openim.agent.EffectInfo
+	(*ReviewInfo)(nil),                      // 71: openim.agent.ReviewInfo
+	(*ReviewTest)(nil),                      // 72: openim.agent.ReviewTest
+	(*Eligibility)(nil),                     // 73: openim.agent.Eligibility
+	(*AgentProfile)(nil),                    // 74: openim.agent.AgentProfile
+	(*ProfileCapability)(nil),               // 75: openim.agent.ProfileCapability
+	(*AgentInstance)(nil),                   // 76: openim.agent.AgentInstance
+	(*MyInstance)(nil),                      // 77: openim.agent.MyInstance
+	(*CapabilityTool)(nil),                  // 78: openim.agent.CapabilityTool
+	(*CapabilityField)(nil),                 // 79: openim.agent.CapabilityField
+	(*CapabilityItem)(nil),                  // 80: openim.agent.CapabilityItem
+	(*TestEvent)(nil),                       // 81: openim.agent.TestEvent
+	(*TestRun)(nil),                         // 82: openim.agent.TestRun
+	(*DutyCoverageInfo)(nil),                // 83: openim.agent.DutyCoverageInfo
+	(*AgentTemplate)(nil),                   // 84: openim.agent.AgentTemplate
+	(*AgentTag)(nil),                        // 85: openim.agent.AgentTag
+	(*AgentLimits)(nil),                     // 86: openim.agent.AgentLimits
+	(*CreatorScope)(nil),                    // 87: openim.agent.CreatorScope
+	(*CompanySettingInfo)(nil),              // 88: openim.agent.CompanySettingInfo
+	(*AuditLog)(nil),                        // 89: openim.agent.AuditLog
+	(*GetContextReq)(nil),                   // 90: openim.agent.GetContextReq
+	(*GetContextResp)(nil),                  // 91: openim.agent.GetContextResp
+	(*CreateAgentReq)(nil),                  // 92: openim.agent.CreateAgentReq
+	(*CreateAgentResp)(nil),                 // 93: openim.agent.CreateAgentResp
+	(*GetAgentReq)(nil),                     // 94: openim.agent.GetAgentReq
+	(*GetAgentResp)(nil),                    // 95: openim.agent.GetAgentResp
+	(*ListMyAgentsReq)(nil),                 // 96: openim.agent.ListMyAgentsReq
+	(*ListMyAgentsResp)(nil),                // 97: openim.agent.ListMyAgentsResp
+	(*SaveDraftReq)(nil),                    // 98: openim.agent.SaveDraftReq
+	(*SaveDraftResp)(nil),                   // 99: openim.agent.SaveDraftResp
+	(*RestoreDraftReq)(nil),                 // 100: openim.agent.RestoreDraftReq
+	(*RestoreDraftResp)(nil),                // 101: openim.agent.RestoreDraftResp
+	(*DeleteAgentReq)(nil),                  // 102: openim.agent.DeleteAgentReq
+	(*DeleteAgentResp)(nil),                 // 103: openim.agent.DeleteAgentResp
+	(*RestoreAgentReq)(nil),                 // 104: openim.agent.RestoreAgentReq
+	(*RestoreAgentResp)(nil),                // 105: openim.agent.RestoreAgentResp
+	(*ListCapabilitiesReq)(nil),             // 106: openim.agent.ListCapabilitiesReq
+	(*ListCapabilitiesResp)(nil),            // 107: openim.agent.ListCapabilitiesResp
+	(*PreviewRoleImportReq)(nil),            // 108: openim.agent.PreviewRoleImportReq
+	(*PreviewRoleImportResp)(nil),           // 109: openim.agent.PreviewRoleImportResp
+	(*ApplyRoleImportReq)(nil),              // 110: openim.agent.ApplyRoleImportReq
+	(*ApplyRoleImportResp)(nil),             // 111: openim.agent.ApplyRoleImportResp
+	(*ListTestRunsReq)(nil),                 // 112: openim.agent.ListTestRunsReq
+	(*ListTestRunsResp)(nil),                // 113: openim.agent.ListTestRunsResp
+	(*MarkTestRunReq)(nil),                  // 114: openim.agent.MarkTestRunReq
+	(*MarkTestRunResp)(nil),                 // 115: openim.agent.MarkTestRunResp
+	(*ReportTestRunReq)(nil),                // 116: openim.agent.ReportTestRunReq
+	(*ReportTestRunResp)(nil),               // 117: openim.agent.ReportTestRunResp
+	(*ListReleasesReq)(nil),                 // 118: openim.agent.ListReleasesReq
+	(*ListReleasesResp)(nil),                // 119: openim.agent.ListReleasesResp
+	(*GetSnapshotReq)(nil),                  // 120: openim.agent.GetSnapshotReq
+	(*GetSnapshotResp)(nil),                 // 121: openim.agent.GetSnapshotResp
+	(*SubmitCheckReq)(nil),                  // 122: openim.agent.SubmitCheckReq
+	(*SubmitCheckResp)(nil),                 // 123: openim.agent.SubmitCheckResp
+	(*ListMembersReq)(nil),                  // 124: openim.agent.ListMembersReq
+	(*ListMembersResp)(nil),                 // 125: openim.agent.ListMembersResp
+	(*SetMemberReq)(nil),                    // 126: openim.agent.SetMemberReq
+	(*SetMemberResp)(nil),                   // 127: openim.agent.SetMemberResp
+	(*RemoveMemberReq)(nil),                 // 128: openim.agent.RemoveMemberReq
+	(*RemoveMemberResp)(nil),                // 129: openim.agent.RemoveMemberResp
+	(*SetVisibleScopeReq)(nil),              // 130: openim.agent.SetVisibleScopeReq
+	(*SetVisibleScopeResp)(nil),             // 131: openim.agent.SetVisibleScopeResp
+	(*ListTemplatesReq)(nil),                // 132: openim.agent.ListTemplatesReq
+	(*ListTemplatesResp)(nil),               // 133: openim.agent.ListTemplatesResp
+	(*GetTemplateReq)(nil),                  // 134: openim.agent.GetTemplateReq
+	(*GetTemplateResp)(nil),                 // 135: openim.agent.GetTemplateResp
+	(*ListTagsReq)(nil),                     // 136: openim.agent.ListTagsReq
+	(*ListTagsResp)(nil),                    // 137: openim.agent.ListTagsResp
+	(*GetEligibilityReq)(nil),               // 138: openim.agent.GetEligibilityReq
+	(*GetEligibilityResp)(nil),              // 139: openim.agent.GetEligibilityResp
+	(*ListVersionsReq)(nil),                 // 140: openim.agent.ListVersionsReq
+	(*ListVersionsResp)(nil),                // 141: openim.agent.ListVersionsResp
+	(*DiffVersionReq)(nil),                  // 142: openim.agent.DiffVersionReq
+	(*DiffVersionResp)(nil),                 // 143: openim.agent.DiffVersionResp
+	(*SubmitReviewReq)(nil),                 // 144: openim.agent.SubmitReviewReq
+	(*SubmitReviewResp)(nil),                // 145: openim.agent.SubmitReviewResp
+	(*WithdrawReviewReq)(nil),               // 146: openim.agent.WithdrawReviewReq
+	(*WithdrawReviewResp)(nil),              // 147: openim.agent.WithdrawReviewResp
+	(*ListReviewsReq)(nil),                  // 148: openim.agent.ListReviewsReq
+	(*ListReviewsResp)(nil),                 // 149: openim.agent.ListReviewsResp
+	(*GetReviewReq)(nil),                    // 150: openim.agent.GetReviewReq
+	(*GetReviewResp)(nil),                   // 151: openim.agent.GetReviewResp
+	(*RetryReviewReq)(nil),                  // 152: openim.agent.RetryReviewReq
+	(*RetryReviewResp)(nil),                 // 153: openim.agent.RetryReviewResp
+	(*ListMarketReq)(nil),                   // 154: openim.agent.ListMarketReq
+	(*MarketItem)(nil),                      // 155: openim.agent.MarketItem
+	(*ListMarketResp)(nil),                  // 156: openim.agent.ListMarketResp
+	(*ListMyInstancesReq)(nil),              // 157: openim.agent.ListMyInstancesReq
+	(*ListMyInstancesResp)(nil),             // 158: openim.agent.ListMyInstancesResp
+	(*GetMyCloneReq)(nil),                   // 159: openim.agent.GetMyCloneReq
+	(*GetMyCloneResp)(nil),                  // 160: openim.agent.GetMyCloneResp
+	(*GetInstanceConfigReq)(nil),            // 161: openim.agent.GetInstanceConfigReq
+	(*GetInstanceConfigResp)(nil),           // 162: openim.agent.GetInstanceConfigResp
+	(*PrepareInstanceReq)(nil),              // 163: openim.agent.PrepareInstanceReq
+	(*PrepareInstanceResp)(nil),             // 164: openim.agent.PrepareInstanceResp
+	(*BindInstanceReq)(nil),                 // 165: openim.agent.BindInstanceReq
+	(*BindInstanceResp)(nil),                // 166: openim.agent.BindInstanceResp
+	(*RemoveInstanceReq)(nil),               // 167: openim.agent.RemoveInstanceReq
+	(*RemoveInstanceResp)(nil),              // 168: openim.agent.RemoveInstanceResp
+	(*GetInstanceEligibilityReq)(nil),       // 169: openim.agent.GetInstanceEligibilityReq
+	(*GetInstanceEligibilityResp)(nil),      // 170: openim.agent.GetInstanceEligibilityResp
+	(*Work)(nil),                            // 171: openim.agent.Work
+	(*WorkSupplement)(nil),                  // 172: openim.agent.WorkSupplement
+	(*GetWorksReq)(nil),                     // 173: openim.agent.GetWorksReq
+	(*GetWorksResp)(nil),                    // 174: openim.agent.GetWorksResp
+	(*ListWorksReq)(nil),                    // 175: openim.agent.ListWorksReq
+	(*ListWorksResp)(nil),                   // 176: openim.agent.ListWorksResp
+	(*GetWorkStatsReq)(nil),                 // 177: openim.agent.GetWorkStatsReq
+	(*GetWorkStatsResp)(nil),                // 178: openim.agent.GetWorkStatsResp
+	(*InstanceWorkCount)(nil),               // 179: openim.agent.InstanceWorkCount
+	(*StopWorkReq)(nil),                     // 180: openim.agent.StopWorkReq
+	(*StopWorkResp)(nil),                    // 181: openim.agent.StopWorkResp
+	(*CreateWorkReq)(nil),                   // 182: openim.agent.CreateWorkReq
+	(*CreateWorkResp)(nil),                  // 183: openim.agent.CreateWorkResp
+	(*StartWorkReq)(nil),                    // 184: openim.agent.StartWorkReq
+	(*StartWorkResp)(nil),                   // 185: openim.agent.StartWorkResp
+	(*RequeueWorksReq)(nil),                 // 186: openim.agent.RequeueWorksReq
+	(*RequeueWorksResp)(nil),                // 187: openim.agent.RequeueWorksResp
+	(*MarkInstanceReadReq)(nil),             // 188: openim.agent.MarkInstanceReadReq
+	(*MarkInstanceReadResp)(nil),            // 189: openim.agent.MarkInstanceReadResp
+	(*CheckWorkReq)(nil),                    // 190: openim.agent.CheckWorkReq
+	(*CheckWorkResp)(nil),                   // 191: openim.agent.CheckWorkResp
+	(*TakeWorkByTaskReq)(nil),               // 192: openim.agent.TakeWorkByTaskReq
+	(*TakeWorkByTaskResp)(nil),              // 193: openim.agent.TakeWorkByTaskResp
+	(*SyncWorkByTaskReq)(nil),               // 194: openim.agent.SyncWorkByTaskReq
+	(*SyncWorkByTaskResp)(nil),              // 195: openim.agent.SyncWorkByTaskResp
+	(*EndGroupWorksReq)(nil),                // 196: openim.agent.EndGroupWorksReq
+	(*EndGroupWorksResp)(nil),               // 197: openim.agent.EndGroupWorksResp
+	(*InstancesJoinedGroupReq)(nil),         // 198: openim.agent.InstancesJoinedGroupReq
+	(*InstancesJoinedGroupResp)(nil),        // 199: openim.agent.InstancesJoinedGroupResp
+	(*WorkEvent)(nil),                       // 200: openim.agent.WorkEvent
+	(*ListWorkEventsReq)(nil),               // 201: openim.agent.ListWorkEventsReq
+	(*ListWorkEventsResp)(nil),              // 202: openim.agent.ListWorkEventsResp
+	(*FeedbackMessage)(nil),                 // 203: openim.agent.FeedbackMessage
+	(*Feedback)(nil),                        // 204: openim.agent.Feedback
+	(*SubmitFeedbackReq)(nil),               // 205: openim.agent.SubmitFeedbackReq
+	(*SubmitFeedbackResp)(nil),              // 206: openim.agent.SubmitFeedbackResp
+	(*ListFeedbackReq)(nil),                 // 207: openim.agent.ListFeedbackReq
+	(*ListFeedbackResp)(nil),                // 208: openim.agent.ListFeedbackResp
+	(*HandoffWorkReq)(nil),                  // 209: openim.agent.HandoffWorkReq
+	(*HandoffWorkResp)(nil),                 // 210: openim.agent.HandoffWorkResp
+	(*CreateSubWorkReq)(nil),                // 211: openim.agent.CreateSubWorkReq
+	(*CreateSubWorkResp)(nil),               // 212: openim.agent.CreateSubWorkResp
+	(*ClaimSubWorkReq)(nil),                 // 213: openim.agent.ClaimSubWorkReq
+	(*ClaimSubWorkResp)(nil),                // 214: openim.agent.ClaimSubWorkResp
+	(*ReportSubWorkReq)(nil),                // 215: openim.agent.ReportSubWorkReq
+	(*ReportSubWorkResp)(nil),               // 216: openim.agent.ReportSubWorkResp
+	(*PublishWorkReq)(nil),                  // 217: openim.agent.PublishWorkReq
+	(*PublishWorkResp)(nil),                 // 218: openim.agent.PublishWorkResp
+	(*GroupMemberSetting)(nil),              // 219: openim.agent.GroupMemberSetting
+	(*GroupSetting)(nil),                    // 220: openim.agent.GroupSetting
+	(*GetGroupSettingReq)(nil),              // 221: openim.agent.GetGroupSettingReq
+	(*GetGroupSettingResp)(nil),             // 222: openim.agent.GetGroupSettingResp
+	(*SetGroupSettingReq)(nil),              // 223: openim.agent.SetGroupSettingReq
+	(*SetGroupSettingResp)(nil),             // 224: openim.agent.SetGroupSettingResp
+	(*ListGroupAgentsReq)(nil),              // 225: openim.agent.ListGroupAgentsReq
+	(*GroupAgent)(nil),                      // 226: openim.agent.GroupAgent
+	(*ListGroupAgentsResp)(nil),             // 227: openim.agent.ListGroupAgentsResp
+	(*InstanceSetting)(nil),                 // 228: openim.agent.InstanceSetting
+	(*GetInstanceSettingReq)(nil),           // 229: openim.agent.GetInstanceSettingReq
+	(*GetInstanceSettingResp)(nil),          // 230: openim.agent.GetInstanceSettingResp
+	(*SetInstanceSettingReq)(nil),           // 231: openim.agent.SetInstanceSettingReq
+	(*SetInstanceSettingResp)(nil),          // 232: openim.agent.SetInstanceSettingResp
+	(*Memory)(nil),                          // 233: openim.agent.Memory
+	(*ListMemoriesReq)(nil),                 // 234: openim.agent.ListMemoriesReq
+	(*ListMemoriesResp)(nil),                // 235: openim.agent.ListMemoriesResp
+	(*SaveMemoryReq)(nil),                   // 236: openim.agent.SaveMemoryReq
+	(*SaveMemoryResp)(nil),                  // 237: openim.agent.SaveMemoryResp
+	(*UpdateMemoryReq)(nil),                 // 238: openim.agent.UpdateMemoryReq
+	(*UpdateMemoryResp)(nil),                // 239: openim.agent.UpdateMemoryResp
+	(*DeleteMemoriesReq)(nil),               // 240: openim.agent.DeleteMemoriesReq
+	(*DeleteMemoriesResp)(nil),              // 241: openim.agent.DeleteMemoriesResp
+	(*Scope)(nil),                           // 242: openim.agent.Scope
+	(*ScopeDepartment)(nil),                 // 243: openim.agent.ScopeDepartment
+	(*PeopleRule)(nil),                      // 244: openim.agent.PeopleRule
+	(*PeopleGroup)(nil),                     // 245: openim.agent.PeopleGroup
+	(*ScopeName)(nil),                       // 246: openim.agent.ScopeName
+	(*ScopeOption)(nil),                     // 247: openim.agent.ScopeOption
+	(*PeopleGroupMember)(nil),               // 248: openim.agent.PeopleGroupMember
+	(*UserPeopleGroup)(nil),                 // 249: openim.agent.UserPeopleGroup
+	(*PeopleGroupRef)(nil),                  // 250: openim.agent.PeopleGroupRef
+	(*DescribeScopeReq)(nil),                // 251: openim.agent.DescribeScopeReq
+	(*DescribeScopeResp)(nil),               // 252: openim.agent.DescribeScopeResp
+	(*ScopeOptionsReq)(nil),                 // 253: openim.agent.ScopeOptionsReq
+	(*ScopeOptionsResp)(nil),                // 254: openim.agent.ScopeOptionsResp
+	(*AdminGetCompanySettingReq)(nil),       // 255: openim.agent.AdminGetCompanySettingReq
+	(*AdminGetCompanySettingResp)(nil),      // 256: openim.agent.AdminGetCompanySettingResp
+	(*AdminSetCompanySettingReq)(nil),       // 257: openim.agent.AdminSetCompanySettingReq
+	(*AdminSetCompanySettingResp)(nil),      // 258: openim.agent.AdminSetCompanySettingResp
+	(*AdminListCompanySettingsReq)(nil),     // 259: openim.agent.AdminListCompanySettingsReq
+	(*AdminListCompanySettingsResp)(nil),    // 260: openim.agent.AdminListCompanySettingsResp
+	(*AdminListCapabilitiesReq)(nil),        // 261: openim.agent.AdminListCapabilitiesReq
+	(*AdminListCapabilitiesResp)(nil),       // 262: openim.agent.AdminListCapabilitiesResp
+	(*AdminListTemplatesReq)(nil),           // 263: openim.agent.AdminListTemplatesReq
+	(*AdminListTemplatesResp)(nil),          // 264: openim.agent.AdminListTemplatesResp
+	(*AdminSaveTemplateReq)(nil),            // 265: openim.agent.AdminSaveTemplateReq
+	(*AdminSaveTemplateResp)(nil),           // 266: openim.agent.AdminSaveTemplateResp
+	(*AdminDeleteTemplateReq)(nil),          // 267: openim.agent.AdminDeleteTemplateReq
+	(*AdminDeleteTemplateResp)(nil),         // 268: openim.agent.AdminDeleteTemplateResp
+	(*AdminListTagsReq)(nil),                // 269: openim.agent.AdminListTagsReq
+	(*AdminListTagsResp)(nil),               // 270: openim.agent.AdminListTagsResp
+	(*AdminSaveTagReq)(nil),                 // 271: openim.agent.AdminSaveTagReq
+	(*AdminSaveTagResp)(nil),                // 272: openim.agent.AdminSaveTagResp
+	(*AdminDeleteTagReq)(nil),               // 273: openim.agent.AdminDeleteTagReq
+	(*AdminDeleteTagResp)(nil),              // 274: openim.agent.AdminDeleteTagResp
+	(*AdminListAgentsReq)(nil),              // 275: openim.agent.AdminListAgentsReq
+	(*AdminListAgentsResp)(nil),             // 276: openim.agent.AdminListAgentsResp
+	(*AgentStateCounts)(nil),                // 277: openim.agent.AgentStateCounts
+	(*AdminGetAgentConfigReq)(nil),          // 278: openim.agent.AdminGetAgentConfigReq
+	(*AdminGetAgentConfigResp)(nil),         // 279: openim.agent.AdminGetAgentConfigResp
+	(*AdminSetAgentMemberReq)(nil),          // 280: openim.agent.AdminSetAgentMemberReq
+	(*AdminSetAgentMemberResp)(nil),         // 281: openim.agent.AdminSetAgentMemberResp
+	(*AdminRemoveAgentMemberReq)(nil),       // 282: openim.agent.AdminRemoveAgentMemberReq
+	(*AdminRemoveAgentMemberResp)(nil),      // 283: openim.agent.AdminRemoveAgentMemberResp
+	(*AdminUpdateAgentReq)(nil),             // 284: openim.agent.AdminUpdateAgentReq
+	(*AdminUpdateAgentResp)(nil),            // 285: openim.agent.AdminUpdateAgentResp
+	(*AdminDisableAgentReq)(nil),            // 286: openim.agent.AdminDisableAgentReq
+	(*AdminDisableAgentResp)(nil),           // 287: openim.agent.AdminDisableAgentResp
+	(*AdminEnableAgentReq)(nil),             // 288: openim.agent.AdminEnableAgentReq
+	(*AdminEnableAgentResp)(nil),            // 289: openim.agent.AdminEnableAgentResp
+	(*AdminDelistAgentReq)(nil),             // 290: openim.agent.AdminDelistAgentReq
+	(*AdminDelistAgentResp)(nil),            // 291: openim.agent.AdminDelistAgentResp
+	(*AdminRelistAgentReq)(nil),             // 292: openim.agent.AdminRelistAgentReq
+	(*AdminRelistAgentResp)(nil),            // 293: openim.agent.AdminRelistAgentResp
+	(*AdminDeleteAgentReq)(nil),             // 294: openim.agent.AdminDeleteAgentReq
+	(*AdminDeleteAgentResp)(nil),            // 295: openim.agent.AdminDeleteAgentResp
+	(*AdminRestoreAgentReq)(nil),            // 296: openim.agent.AdminRestoreAgentReq
+	(*AdminRestoreAgentResp)(nil),           // 297: openim.agent.AdminRestoreAgentResp
+	(*AuditFilter)(nil),                     // 298: openim.agent.AuditFilter
+	(*AdminListAuditsReq)(nil),              // 299: openim.agent.AdminListAuditsReq
+	(*AdminListAuditsResp)(nil),             // 300: openim.agent.AdminListAuditsResp
+	(*AdminExportAuditsReq)(nil),            // 301: openim.agent.AdminExportAuditsReq
+	(*AdminExportAuditsResp)(nil),           // 302: openim.agent.AdminExportAuditsResp
+	(*AdminListReviewsReq)(nil),             // 303: openim.agent.AdminListReviewsReq
+	(*AdminReviewItem)(nil),                 // 304: openim.agent.AdminReviewItem
+	(*AdminListReviewsResp)(nil),            // 305: openim.agent.AdminListReviewsResp
+	(*AdminGetReviewReq)(nil),               // 306: openim.agent.AdminGetReviewReq
+	(*AdminGetReviewResp)(nil),              // 307: openim.agent.AdminGetReviewResp
+	(*AdminDecideReviewReq)(nil),            // 308: openim.agent.AdminDecideReviewReq
+	(*AdminDecideReviewResp)(nil),           // 309: openim.agent.AdminDecideReviewResp
+	(*AdminScopeOptionsReq)(nil),            // 310: openim.agent.AdminScopeOptionsReq
+	(*AdminScopeOptionsResp)(nil),           // 311: openim.agent.AdminScopeOptionsResp
+	(*AdminDescribeScopeReq)(nil),           // 312: openim.agent.AdminDescribeScopeReq
+	(*AdminDescribeScopeResp)(nil),          // 313: openim.agent.AdminDescribeScopeResp
+	(*AdminListPeopleGroupsReq)(nil),        // 314: openim.agent.AdminListPeopleGroupsReq
+	(*AdminListPeopleGroupsResp)(nil),       // 315: openim.agent.AdminListPeopleGroupsResp
+	(*AdminGetPeopleGroupReq)(nil),          // 316: openim.agent.AdminGetPeopleGroupReq
+	(*AdminGetPeopleGroupResp)(nil),         // 317: openim.agent.AdminGetPeopleGroupResp
+	(*AdminListPeopleGroupMembersReq)(nil),  // 318: openim.agent.AdminListPeopleGroupMembersReq
+	(*AdminListPeopleGroupMembersResp)(nil), // 319: openim.agent.AdminListPeopleGroupMembersResp
+	(*AdminListUserPeopleGroupsReq)(nil),    // 320: openim.agent.AdminListUserPeopleGroupsReq
+	(*AdminListUserPeopleGroupsResp)(nil),   // 321: openim.agent.AdminListUserPeopleGroupsResp
+	(*AdminSavePeopleGroupReq)(nil),         // 322: openim.agent.AdminSavePeopleGroupReq
+	(*AdminSavePeopleGroupResp)(nil),        // 323: openim.agent.AdminSavePeopleGroupResp
+	(*AdminDeletePeopleGroupReq)(nil),       // 324: openim.agent.AdminDeletePeopleGroupReq
+	(*AdminDeletePeopleGroupResp)(nil),      // 325: openim.agent.AdminDeletePeopleGroupResp
+	(*AdminAddPeopleGroupUsersReq)(nil),     // 326: openim.agent.AdminAddPeopleGroupUsersReq
+	(*AdminAddPeopleGroupUsersResp)(nil),    // 327: openim.agent.AdminAddPeopleGroupUsersResp
+	(*AdminRemovePeopleGroupUsersReq)(nil),  // 328: openim.agent.AdminRemovePeopleGroupUsersReq
+	(*AdminRemovePeopleGroupUsersResp)(nil), // 329: openim.agent.AdminRemovePeopleGroupUsersResp
+	nil,                                     // 330: openim.agent.CapabilityRef.FieldsEntry
+	nil,                                     // 331: openim.agent.WorkEvent.DetailEntry
+	(*wrapperspb.BoolValue)(nil),            // 332: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil),         // 333: openim.sdkws.RequestPagination
 }
 var file_agent_agent_proto_depIdxs = []int32{
-	331, // 0: openim.agent.AgentDuty.main:type_name -> openim.protobuf.BoolValue
-	35,  // 1: openim.agent.RoleSetting.duties:type_name -> openim.agent.AgentDuty
+	332, // 0: openim.agent.AgentDuty.main:type_name -> openim.protobuf.BoolValue
+	36,  // 1: openim.agent.RoleSetting.duties:type_name -> openim.agent.AgentDuty
 	8,   // 2: openim.agent.CapabilityRef.type:type_name -> openim.agent.CapabilityType
-	329, // 3: openim.agent.CapabilityRef.fields:type_name -> openim.agent.CapabilityRef.FieldsEntry
-	38,  // 4: openim.agent.CapabilityRef.install:type_name -> openim.agent.CapabilityInstall
-	39,  // 5: openim.agent.CapabilityInstall.skill:type_name -> openim.agent.CapabilitySkillInstall
-	40,  // 6: openim.agent.CapabilityInstall.connector:type_name -> openim.agent.CapabilityConnectorInstall
-	41,  // 7: openim.agent.CapabilityConnectorInstall.authFields:type_name -> openim.agent.CapabilityAuthField
+	330, // 3: openim.agent.CapabilityRef.fields:type_name -> openim.agent.CapabilityRef.FieldsEntry
+	39,  // 4: openim.agent.CapabilityRef.install:type_name -> openim.agent.CapabilityInstall
+	40,  // 5: openim.agent.CapabilityInstall.skill:type_name -> openim.agent.CapabilitySkillInstall
+	41,  // 6: openim.agent.CapabilityInstall.connector:type_name -> openim.agent.CapabilityConnectorInstall
+	42,  // 7: openim.agent.CapabilityConnectorInstall.authFields:type_name -> openim.agent.CapabilityAuthField
 	12,  // 8: openim.agent.RoleImport.zone:type_name -> openim.agent.ImportZone
 	13,  // 9: openim.agent.RoleImport.mode:type_name -> openim.agent.ImportMode
 	11,  // 10: openim.agent.RoleImport.share:type_name -> openim.agent.KnowledgeShare
-	36,  // 11: openim.agent.AgentConfig.role:type_name -> openim.agent.RoleSetting
-	37,  // 12: openim.agent.AgentConfig.capabilities:type_name -> openim.agent.CapabilityRef
-	42,  // 13: openim.agent.AgentConfig.knowledge:type_name -> openim.agent.KnowledgeRef
-	43,  // 14: openim.agent.AgentConfig.memory:type_name -> openim.agent.MemorySetting
-	44,  // 15: openim.agent.AgentConfig.usage:type_name -> openim.agent.UsageSetting
-	45,  // 16: openim.agent.AgentConfig.imports:type_name -> openim.agent.RoleImport
+	37,  // 11: openim.agent.AgentConfig.role:type_name -> openim.agent.RoleSetting
+	38,  // 12: openim.agent.AgentConfig.capabilities:type_name -> openim.agent.CapabilityRef
+	43,  // 13: openim.agent.AgentConfig.knowledge:type_name -> openim.agent.KnowledgeRef
+	44,  // 14: openim.agent.AgentConfig.memory:type_name -> openim.agent.MemorySetting
+	45,  // 15: openim.agent.AgentConfig.usage:type_name -> openim.agent.UsageSetting
+	46,  // 16: openim.agent.AgentConfig.imports:type_name -> openim.agent.RoleImport
 	12,  // 17: openim.agent.AgentConfig.hiddenZones:type_name -> openim.agent.ImportZone
 	0,   // 18: openim.agent.AgentInfo.kind:type_name -> openim.agent.AgentKind
 	1,   // 19: openim.agent.AgentInfo.executor:type_name -> openim.agent.AgentExecutor
 	2,   // 20: openim.agent.AgentInfo.origin:type_name -> openim.agent.AgentOrigin
 	3,   // 21: openim.agent.AgentInfo.status:type_name -> openim.agent.AgentStatus
-	46,  // 22: openim.agent.AgentDraft.config:type_name -> openim.agent.AgentConfig
-	63,  // 23: openim.agent.AgentDraft.restoredFrom:type_name -> openim.agent.RestoredFrom
+	47,  // 22: openim.agent.AgentDraft.config:type_name -> openim.agent.AgentConfig
+	64,  // 23: openim.agent.AgentDraft.restoredFrom:type_name -> openim.agent.RestoredFrom
 	8,   // 24: openim.agent.CapabilityStatus.type:type_name -> openim.agent.CapabilityType
 	10,  // 25: openim.agent.CapabilityStatus.state:type_name -> openim.agent.CapabilityState
 	11,  // 26: openim.agent.KnowledgeMeta.share:type_name -> openim.agent.KnowledgeShare
 	4,   // 27: openim.agent.ReleaseInfo.scope:type_name -> openim.agent.ReleaseScope
-	53,  // 28: openim.agent.ReleaseInfo.disableMark:type_name -> openim.agent.StateMark
-	53,  // 29: openim.agent.ReleaseInfo.delistMark:type_name -> openim.agent.StateMark
+	54,  // 28: openim.agent.ReleaseInfo.disableMark:type_name -> openim.agent.StateMark
+	54,  // 29: openim.agent.ReleaseInfo.delistMark:type_name -> openim.agent.StateMark
 	4,   // 30: openim.agent.ReleaseLog.scope:type_name -> openim.agent.ReleaseScope
-	46,  // 31: openim.agent.AgentSnapshot.config:type_name -> openim.agent.AgentConfig
-	63,  // 32: openim.agent.AgentSnapshot.restoredFrom:type_name -> openim.agent.RestoredFrom
-	47,  // 33: openim.agent.AgentListItem.agent:type_name -> openim.agent.AgentInfo
-	54,  // 34: openim.agent.AgentListItem.release:type_name -> openim.agent.ReleaseInfo
+	47,  // 31: openim.agent.AgentSnapshot.config:type_name -> openim.agent.AgentConfig
+	64,  // 32: openim.agent.AgentSnapshot.restoredFrom:type_name -> openim.agent.RestoredFrom
+	48,  // 33: openim.agent.AgentListItem.agent:type_name -> openim.agent.AgentInfo
+	55,  // 34: openim.agent.AgentListItem.release:type_name -> openim.agent.ReleaseInfo
 	5,   // 35: openim.agent.AgentListItem.state:type_name -> openim.agent.AgentState
 	6,   // 36: openim.agent.AgentListItem.myRole:type_name -> openim.agent.MemberRole
-	58,  // 37: openim.agent.AgentListItem.scopeSummary:type_name -> openim.agent.ScopeSummary
+	59,  // 37: openim.agent.AgentListItem.scopeSummary:type_name -> openim.agent.ScopeSummary
 	6,   // 38: openim.agent.AgentMember.role:type_name -> openim.agent.MemberRole
-	241, // 39: openim.agent.VisibleScopeInfo.scope:type_name -> openim.agent.Scope
+	242, // 39: openim.agent.VisibleScopeInfo.scope:type_name -> openim.agent.Scope
 	18,  // 40: openim.agent.CheckIssue.item:type_name -> openim.agent.CheckItem
 	20,  // 41: openim.agent.CheckIssue.level:type_name -> openim.agent.IssueLevel
 	18,  // 42: openim.agent.CheckResult.item:type_name -> openim.agent.CheckItem
 	19,  // 43: openim.agent.CheckResult.state:type_name -> openim.agent.CheckState
-	61,  // 44: openim.agent.CheckResult.issues:type_name -> openim.agent.CheckIssue
+	62,  // 44: openim.agent.CheckResult.issues:type_name -> openim.agent.CheckIssue
 	28,  // 45: openim.agent.ChangeBlock.group:type_name -> openim.agent.ChangeGroup
 	28,  // 46: openim.agent.DiffItem.group:type_name -> openim.agent.ChangeGroup
 	29,  // 47: openim.agent.DiffItem.handling:type_name -> openim.agent.ChangeHandling
-	52,  // 48: openim.agent.DiffItem.knowledgeAdded:type_name -> openim.agent.KnowledgeMeta
-	52,  // 49: openim.agent.DiffItem.knowledgeRemoved:type_name -> openim.agent.KnowledgeMeta
+	53,  // 48: openim.agent.DiffItem.knowledgeAdded:type_name -> openim.agent.KnowledgeMeta
+	53,  // 49: openim.agent.DiffItem.knowledgeRemoved:type_name -> openim.agent.KnowledgeMeta
 	4,   // 50: openim.agent.VersionEffect.scope:type_name -> openim.agent.ReleaseScope
 	4,   // 51: openim.agent.ReviewBrief.targetScope:type_name -> openim.agent.ReleaseScope
 	26,  // 52: openim.agent.ReviewBrief.status:type_name -> openim.agent.ReviewStatus
 	27,  // 53: openim.agent.ReviewBrief.effect:type_name -> openim.agent.EffectState
-	66,  // 54: openim.agent.VersionItem.effects:type_name -> openim.agent.VersionEffect
-	67,  // 55: openim.agent.VersionItem.reviews:type_name -> openim.agent.ReviewBrief
-	63,  // 56: openim.agent.VersionItem.restoredFrom:type_name -> openim.agent.RestoredFrom
-	64,  // 57: openim.agent.VersionItem.changes:type_name -> openim.agent.ChangeBlock
+	67,  // 54: openim.agent.VersionItem.effects:type_name -> openim.agent.VersionEffect
+	68,  // 55: openim.agent.VersionItem.reviews:type_name -> openim.agent.ReviewBrief
+	64,  // 56: openim.agent.VersionItem.restoredFrom:type_name -> openim.agent.RestoredFrom
+	65,  // 57: openim.agent.VersionItem.changes:type_name -> openim.agent.ChangeBlock
 	27,  // 58: openim.agent.EffectInfo.state:type_name -> openim.agent.EffectState
 	4,   // 59: openim.agent.ReviewInfo.targetScope:type_name -> openim.agent.ReleaseScope
 	26,  // 60: openim.agent.ReviewInfo.status:type_name -> openim.agent.ReviewStatus
-	69,  // 61: openim.agent.ReviewInfo.effect:type_name -> openim.agent.EffectInfo
-	64,  // 62: openim.agent.ReviewInfo.summary:type_name -> openim.agent.ChangeBlock
-	62,  // 63: openim.agent.ReviewInfo.checks:type_name -> openim.agent.CheckResult
+	70,  // 61: openim.agent.ReviewInfo.effect:type_name -> openim.agent.EffectInfo
+	65,  // 62: openim.agent.ReviewInfo.summary:type_name -> openim.agent.ChangeBlock
+	63,  // 63: openim.agent.ReviewInfo.checks:type_name -> openim.agent.CheckResult
 	15,  // 64: openim.agent.ReviewTest.result:type_name -> openim.agent.TestResult
 	16,  // 65: openim.agent.ReviewTest.verdict:type_name -> openim.agent.TestVerdict
 	14,  // 66: openim.agent.ReviewTest.mode:type_name -> openim.agent.TestMode
 	4,   // 67: openim.agent.Eligibility.scope:type_name -> openim.agent.ReleaseScope
-	74,  // 68: openim.agent.AgentProfile.capabilities:type_name -> openim.agent.ProfileCapability
+	75,  // 68: openim.agent.AgentProfile.capabilities:type_name -> openim.agent.ProfileCapability
 	8,   // 69: openim.agent.ProfileCapability.type:type_name -> openim.agent.CapabilityType
 	7,   // 70: openim.agent.AgentInstance.status:type_name -> openim.agent.InstanceStatus
-	75,  // 71: openim.agent.MyInstance.instance:type_name -> openim.agent.AgentInstance
-	73,  // 72: openim.agent.MyInstance.profile:type_name -> openim.agent.AgentProfile
+	76,  // 71: openim.agent.MyInstance.instance:type_name -> openim.agent.AgentInstance
+	74,  // 72: openim.agent.MyInstance.profile:type_name -> openim.agent.AgentProfile
 	8,   // 73: openim.agent.CapabilityItem.type:type_name -> openim.agent.CapabilityType
 	9,   // 74: openim.agent.CapabilityItem.location:type_name -> openim.agent.CapabilityLocation
-	77,  // 75: openim.agent.CapabilityItem.tools:type_name -> openim.agent.CapabilityTool
-	78,  // 76: openim.agent.CapabilityItem.fields:type_name -> openim.agent.CapabilityField
+	78,  // 75: openim.agent.CapabilityItem.tools:type_name -> openim.agent.CapabilityTool
+	79,  // 76: openim.agent.CapabilityItem.fields:type_name -> openim.agent.CapabilityField
 	14,  // 77: openim.agent.TestRun.mode:type_name -> openim.agent.TestMode
-	80,  // 78: openim.agent.TestRun.events:type_name -> openim.agent.TestEvent
+	81,  // 78: openim.agent.TestRun.events:type_name -> openim.agent.TestEvent
 	15,  // 79: openim.agent.TestRun.result:type_name -> openim.agent.TestResult
 	16,  // 80: openim.agent.TestRun.verdict:type_name -> openim.agent.TestVerdict
 	17,  // 81: openim.agent.DutyCoverageInfo.coverage:type_name -> openim.agent.DutyCoverage
 	21,  // 82: openim.agent.AgentTemplate.category:type_name -> openim.agent.TemplateCategory
-	36,  // 83: openim.agent.AgentTemplate.role:type_name -> openim.agent.RoleSetting
-	37,  // 84: openim.agent.AgentTemplate.capabilities:type_name -> openim.agent.CapabilityRef
-	86,  // 85: openim.agent.CompanySettingInfo.creatorScope:type_name -> openim.agent.CreatorScope
-	85,  // 86: openim.agent.CompanySettingInfo.limits:type_name -> openim.agent.AgentLimits
-	85,  // 87: openim.agent.CompanySettingInfo.effectiveLimits:type_name -> openim.agent.AgentLimits
+	37,  // 83: openim.agent.AgentTemplate.role:type_name -> openim.agent.RoleSetting
+	38,  // 84: openim.agent.AgentTemplate.capabilities:type_name -> openim.agent.CapabilityRef
+	87,  // 85: openim.agent.CompanySettingInfo.creatorScope:type_name -> openim.agent.CreatorScope
+	86,  // 86: openim.agent.CompanySettingInfo.limits:type_name -> openim.agent.AgentLimits
+	86,  // 87: openim.agent.CompanySettingInfo.effectiveLimits:type_name -> openim.agent.AgentLimits
 	24,  // 88: openim.agent.AuditLog.category:type_name -> openim.agent.AuditCategory
 	4,   // 89: openim.agent.AuditLog.scope:type_name -> openim.agent.ReleaseScope
 	22,  // 90: openim.agent.AuditLog.operatorRole:type_name -> openim.agent.OperatorRole
 	25,  // 91: openim.agent.AuditLog.result:type_name -> openim.agent.AuditResult
 	2,   // 92: openim.agent.CreateAgentReq.origin:type_name -> openim.agent.AgentOrigin
-	47,  // 93: openim.agent.CreateAgentResp.agent:type_name -> openim.agent.AgentInfo
-	49,  // 94: openim.agent.CreateAgentResp.draft:type_name -> openim.agent.AgentDraft
-	47,  // 95: openim.agent.GetAgentResp.agent:type_name -> openim.agent.AgentInfo
-	48,  // 96: openim.agent.GetAgentResp.permissions:type_name -> openim.agent.AgentPermissions
-	49,  // 97: openim.agent.GetAgentResp.draft:type_name -> openim.agent.AgentDraft
-	50,  // 98: openim.agent.GetAgentResp.capabilities:type_name -> openim.agent.CapabilityStatus
-	52,  // 99: openim.agent.GetAgentResp.knowledge:type_name -> openim.agent.KnowledgeMeta
-	51,  // 100: openim.agent.GetAgentResp.core:type_name -> openim.agent.CoreStatus
-	54,  // 101: openim.agent.GetAgentResp.release:type_name -> openim.agent.ReleaseInfo
-	60,  // 102: openim.agent.GetAgentResp.visibleScope:type_name -> openim.agent.VisibleScopeInfo
+	48,  // 93: openim.agent.CreateAgentResp.agent:type_name -> openim.agent.AgentInfo
+	50,  // 94: openim.agent.CreateAgentResp.draft:type_name -> openim.agent.AgentDraft
+	48,  // 95: openim.agent.GetAgentResp.agent:type_name -> openim.agent.AgentInfo
+	49,  // 96: openim.agent.GetAgentResp.permissions:type_name -> openim.agent.AgentPermissions
+	50,  // 97: openim.agent.GetAgentResp.draft:type_name -> openim.agent.AgentDraft
+	51,  // 98: openim.agent.GetAgentResp.capabilities:type_name -> openim.agent.CapabilityStatus
+	53,  // 99: openim.agent.GetAgentResp.knowledge:type_name -> openim.agent.KnowledgeMeta
+	52,  // 100: openim.agent.GetAgentResp.core:type_name -> openim.agent.CoreStatus
+	55,  // 101: openim.agent.GetAgentResp.release:type_name -> openim.agent.ReleaseInfo
+	61,  // 102: openim.agent.GetAgentResp.visibleScope:type_name -> openim.agent.VisibleScopeInfo
 	5,   // 103: openim.agent.GetAgentResp.state:type_name -> openim.agent.AgentState
 	6,   // 104: openim.agent.GetAgentResp.myRole:type_name -> openim.agent.MemberRole
-	332, // 105: openim.agent.ListMyAgentsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	333, // 105: openim.agent.ListMyAgentsReq.pagination:type_name -> openim.sdkws.RequestPagination
 	6,   // 106: openim.agent.ListMyAgentsReq.role:type_name -> openim.agent.MemberRole
-	57,  // 107: openim.agent.ListMyAgentsResp.agents:type_name -> openim.agent.AgentListItem
-	46,  // 108: openim.agent.SaveDraftReq.config:type_name -> openim.agent.AgentConfig
+	58,  // 107: openim.agent.ListMyAgentsResp.agents:type_name -> openim.agent.AgentListItem
+	47,  // 108: openim.agent.SaveDraftReq.config:type_name -> openim.agent.AgentConfig
 	12,  // 109: openim.agent.SaveDraftReq.overwriteZones:type_name -> openim.agent.ImportZone
-	46,  // 110: openim.agent.SaveDraftResp.config:type_name -> openim.agent.AgentConfig
-	49,  // 111: openim.agent.RestoreDraftResp.draft:type_name -> openim.agent.AgentDraft
-	47,  // 112: openim.agent.RestoreAgentResp.agent:type_name -> openim.agent.AgentInfo
+	47,  // 110: openim.agent.SaveDraftResp.config:type_name -> openim.agent.AgentConfig
+	50,  // 111: openim.agent.RestoreDraftResp.draft:type_name -> openim.agent.AgentDraft
+	48,  // 112: openim.agent.RestoreAgentResp.agent:type_name -> openim.agent.AgentInfo
 	8,   // 113: openim.agent.ListCapabilitiesReq.type:type_name -> openim.agent.CapabilityType
-	332, // 114: openim.agent.ListCapabilitiesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	79,  // 115: openim.agent.ListCapabilitiesResp.items:type_name -> openim.agent.CapabilityItem
+	333, // 114: openim.agent.ListCapabilitiesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	80,  // 115: openim.agent.ListCapabilitiesResp.items:type_name -> openim.agent.CapabilityItem
 	11,  // 116: openim.agent.PreviewRoleImportResp.share:type_name -> openim.agent.KnowledgeShare
 	13,  // 117: openim.agent.ApplyRoleImportReq.mode:type_name -> openim.agent.ImportMode
 	12,  // 118: openim.agent.ApplyRoleImportReq.zone:type_name -> openim.agent.ImportZone
-	49,  // 119: openim.agent.ApplyRoleImportResp.draft:type_name -> openim.agent.AgentDraft
-	332, // 120: openim.agent.ListTestRunsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	81,  // 121: openim.agent.ListTestRunsResp.runs:type_name -> openim.agent.TestRun
-	82,  // 122: openim.agent.ListTestRunsResp.duties:type_name -> openim.agent.DutyCoverageInfo
+	50,  // 119: openim.agent.ApplyRoleImportResp.draft:type_name -> openim.agent.AgentDraft
+	333, // 120: openim.agent.ListTestRunsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	82,  // 121: openim.agent.ListTestRunsResp.runs:type_name -> openim.agent.TestRun
+	83,  // 122: openim.agent.ListTestRunsResp.duties:type_name -> openim.agent.DutyCoverageInfo
 	16,  // 123: openim.agent.MarkTestRunReq.verdict:type_name -> openim.agent.TestVerdict
-	81,  // 124: openim.agent.MarkTestRunResp.run:type_name -> openim.agent.TestRun
+	82,  // 124: openim.agent.MarkTestRunResp.run:type_name -> openim.agent.TestRun
 	14,  // 125: openim.agent.ReportTestRunReq.mode:type_name -> openim.agent.TestMode
-	80,  // 126: openim.agent.ReportTestRunReq.events:type_name -> openim.agent.TestEvent
+	81,  // 126: openim.agent.ReportTestRunReq.events:type_name -> openim.agent.TestEvent
 	15,  // 127: openim.agent.ReportTestRunReq.result:type_name -> openim.agent.TestResult
-	81,  // 128: openim.agent.ReportTestRunResp.run:type_name -> openim.agent.TestRun
-	332, // 129: openim.agent.ListReleasesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	55,  // 130: openim.agent.ListReleasesResp.logs:type_name -> openim.agent.ReleaseLog
-	54,  // 131: openim.agent.ListReleasesResp.release:type_name -> openim.agent.ReleaseInfo
-	56,  // 132: openim.agent.GetSnapshotResp.snapshot:type_name -> openim.agent.AgentSnapshot
-	62,  // 133: openim.agent.SubmitCheckResp.checks:type_name -> openim.agent.CheckResult
-	59,  // 134: openim.agent.ListMembersResp.members:type_name -> openim.agent.AgentMember
+	82,  // 128: openim.agent.ReportTestRunResp.run:type_name -> openim.agent.TestRun
+	333, // 129: openim.agent.ListReleasesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	56,  // 130: openim.agent.ListReleasesResp.logs:type_name -> openim.agent.ReleaseLog
+	55,  // 131: openim.agent.ListReleasesResp.release:type_name -> openim.agent.ReleaseInfo
+	57,  // 132: openim.agent.GetSnapshotResp.snapshot:type_name -> openim.agent.AgentSnapshot
+	63,  // 133: openim.agent.SubmitCheckResp.checks:type_name -> openim.agent.CheckResult
+	60,  // 134: openim.agent.ListMembersResp.members:type_name -> openim.agent.AgentMember
 	6,   // 135: openim.agent.SetMemberReq.role:type_name -> openim.agent.MemberRole
-	59,  // 136: openim.agent.SetMemberResp.member:type_name -> openim.agent.AgentMember
-	241, // 137: openim.agent.SetVisibleScopeReq.scope:type_name -> openim.agent.Scope
-	70,  // 138: openim.agent.SetVisibleScopeResp.review:type_name -> openim.agent.ReviewInfo
+	60,  // 136: openim.agent.SetMemberResp.member:type_name -> openim.agent.AgentMember
+	242, // 137: openim.agent.SetVisibleScopeReq.scope:type_name -> openim.agent.Scope
+	71,  // 138: openim.agent.SetVisibleScopeResp.review:type_name -> openim.agent.ReviewInfo
 	21,  // 139: openim.agent.ListTemplatesReq.category:type_name -> openim.agent.TemplateCategory
-	332, // 140: openim.agent.ListTemplatesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	83,  // 141: openim.agent.ListTemplatesResp.templates:type_name -> openim.agent.AgentTemplate
-	83,  // 142: openim.agent.GetTemplateResp.template:type_name -> openim.agent.AgentTemplate
-	84,  // 143: openim.agent.ListTagsResp.tags:type_name -> openim.agent.AgentTag
-	72,  // 144: openim.agent.GetEligibilityResp.eligibility:type_name -> openim.agent.Eligibility
-	73,  // 145: openim.agent.GetEligibilityResp.profile:type_name -> openim.agent.AgentProfile
-	332, // 146: openim.agent.ListVersionsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	68,  // 147: openim.agent.ListVersionsResp.versions:type_name -> openim.agent.VersionItem
-	65,  // 148: openim.agent.DiffVersionResp.items:type_name -> openim.agent.DiffItem
-	62,  // 149: openim.agent.SubmitReviewResp.checks:type_name -> openim.agent.CheckResult
-	70,  // 150: openim.agent.SubmitReviewResp.review:type_name -> openim.agent.ReviewInfo
-	70,  // 151: openim.agent.WithdrawReviewResp.review:type_name -> openim.agent.ReviewInfo
-	332, // 152: openim.agent.ListReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	70,  // 153: openim.agent.ListReviewsResp.reviews:type_name -> openim.agent.ReviewInfo
-	70,  // 154: openim.agent.GetReviewResp.review:type_name -> openim.agent.ReviewInfo
-	44,  // 155: openim.agent.GetReviewResp.usage:type_name -> openim.agent.UsageSetting
-	37,  // 156: openim.agent.GetReviewResp.capabilities:type_name -> openim.agent.CapabilityRef
-	52,  // 157: openim.agent.GetReviewResp.knowledge:type_name -> openim.agent.KnowledgeMeta
-	71,  // 158: openim.agent.GetReviewResp.tests:type_name -> openim.agent.ReviewTest
-	241, // 159: openim.agent.GetReviewResp.visibleScope:type_name -> openim.agent.Scope
-	46,  // 160: openim.agent.GetReviewResp.config:type_name -> openim.agent.AgentConfig
-	65,  // 161: openim.agent.GetReviewResp.diff:type_name -> openim.agent.DiffItem
-	70,  // 162: openim.agent.RetryReviewResp.review:type_name -> openim.agent.ReviewInfo
-	332, // 163: openim.agent.ListMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
-	73,  // 164: openim.agent.MarketItem.profile:type_name -> openim.agent.AgentProfile
-	154, // 165: openim.agent.ListMarketResp.items:type_name -> openim.agent.MarketItem
-	76,  // 166: openim.agent.ListMyInstancesResp.items:type_name -> openim.agent.MyInstance
-	47,  // 167: openim.agent.GetMyCloneResp.agent:type_name -> openim.agent.AgentInfo
-	75,  // 168: openim.agent.GetMyCloneResp.instance:type_name -> openim.agent.AgentInstance
-	54,  // 169: openim.agent.GetMyCloneResp.release:type_name -> openim.agent.ReleaseInfo
-	75,  // 170: openim.agent.GetInstanceConfigResp.instance:type_name -> openim.agent.AgentInstance
-	56,  // 171: openim.agent.GetInstanceConfigResp.snapshot:type_name -> openim.agent.AgentSnapshot
-	227, // 172: openim.agent.GetInstanceConfigResp.setting:type_name -> openim.agent.InstanceSetting
-	75,  // 173: openim.agent.PrepareInstanceResp.instance:type_name -> openim.agent.AgentInstance
-	73,  // 174: openim.agent.PrepareInstanceResp.profile:type_name -> openim.agent.AgentProfile
-	75,  // 175: openim.agent.BindInstanceResp.instance:type_name -> openim.agent.AgentInstance
-	75,  // 176: openim.agent.RemoveInstanceResp.instance:type_name -> openim.agent.AgentInstance
-	75,  // 177: openim.agent.GetInstanceEligibilityResp.instance:type_name -> openim.agent.AgentInstance
-	72,  // 178: openim.agent.GetInstanceEligibilityResp.eligibility:type_name -> openim.agent.Eligibility
+	333, // 140: openim.agent.ListTemplatesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	84,  // 141: openim.agent.ListTemplatesResp.templates:type_name -> openim.agent.AgentTemplate
+	84,  // 142: openim.agent.GetTemplateResp.template:type_name -> openim.agent.AgentTemplate
+	85,  // 143: openim.agent.ListTagsResp.tags:type_name -> openim.agent.AgentTag
+	73,  // 144: openim.agent.GetEligibilityResp.eligibility:type_name -> openim.agent.Eligibility
+	74,  // 145: openim.agent.GetEligibilityResp.profile:type_name -> openim.agent.AgentProfile
+	333, // 146: openim.agent.ListVersionsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	69,  // 147: openim.agent.ListVersionsResp.versions:type_name -> openim.agent.VersionItem
+	66,  // 148: openim.agent.DiffVersionResp.items:type_name -> openim.agent.DiffItem
+	63,  // 149: openim.agent.SubmitReviewResp.checks:type_name -> openim.agent.CheckResult
+	71,  // 150: openim.agent.SubmitReviewResp.review:type_name -> openim.agent.ReviewInfo
+	71,  // 151: openim.agent.WithdrawReviewResp.review:type_name -> openim.agent.ReviewInfo
+	333, // 152: openim.agent.ListReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	71,  // 153: openim.agent.ListReviewsResp.reviews:type_name -> openim.agent.ReviewInfo
+	71,  // 154: openim.agent.GetReviewResp.review:type_name -> openim.agent.ReviewInfo
+	45,  // 155: openim.agent.GetReviewResp.usage:type_name -> openim.agent.UsageSetting
+	38,  // 156: openim.agent.GetReviewResp.capabilities:type_name -> openim.agent.CapabilityRef
+	53,  // 157: openim.agent.GetReviewResp.knowledge:type_name -> openim.agent.KnowledgeMeta
+	72,  // 158: openim.agent.GetReviewResp.tests:type_name -> openim.agent.ReviewTest
+	242, // 159: openim.agent.GetReviewResp.visibleScope:type_name -> openim.agent.Scope
+	47,  // 160: openim.agent.GetReviewResp.config:type_name -> openim.agent.AgentConfig
+	66,  // 161: openim.agent.GetReviewResp.diff:type_name -> openim.agent.DiffItem
+	71,  // 162: openim.agent.RetryReviewResp.review:type_name -> openim.agent.ReviewInfo
+	333, // 163: openim.agent.ListMarketReq.pagination:type_name -> openim.sdkws.RequestPagination
+	74,  // 164: openim.agent.MarketItem.profile:type_name -> openim.agent.AgentProfile
+	155, // 165: openim.agent.ListMarketResp.items:type_name -> openim.agent.MarketItem
+	77,  // 166: openim.agent.ListMyInstancesResp.items:type_name -> openim.agent.MyInstance
+	48,  // 167: openim.agent.GetMyCloneResp.agent:type_name -> openim.agent.AgentInfo
+	76,  // 168: openim.agent.GetMyCloneResp.instance:type_name -> openim.agent.AgentInstance
+	55,  // 169: openim.agent.GetMyCloneResp.release:type_name -> openim.agent.ReleaseInfo
+	76,  // 170: openim.agent.GetInstanceConfigResp.instance:type_name -> openim.agent.AgentInstance
+	57,  // 171: openim.agent.GetInstanceConfigResp.snapshot:type_name -> openim.agent.AgentSnapshot
+	228, // 172: openim.agent.GetInstanceConfigResp.setting:type_name -> openim.agent.InstanceSetting
+	76,  // 173: openim.agent.PrepareInstanceResp.instance:type_name -> openim.agent.AgentInstance
+	74,  // 174: openim.agent.PrepareInstanceResp.profile:type_name -> openim.agent.AgentProfile
+	76,  // 175: openim.agent.BindInstanceResp.instance:type_name -> openim.agent.AgentInstance
+	76,  // 176: openim.agent.RemoveInstanceResp.instance:type_name -> openim.agent.AgentInstance
+	76,  // 177: openim.agent.GetInstanceEligibilityResp.instance:type_name -> openim.agent.AgentInstance
+	73,  // 178: openim.agent.GetInstanceEligibilityResp.eligibility:type_name -> openim.agent.Eligibility
 	30,  // 179: openim.agent.Work.status:type_name -> openim.agent.WorkStatus
-	171, // 180: openim.agent.Work.supplements:type_name -> openim.agent.WorkSupplement
+	172, // 180: openim.agent.Work.supplements:type_name -> openim.agent.WorkSupplement
 	31,  // 181: openim.agent.Work.tier:type_name -> openim.agent.GroupTier
 	32,  // 182: openim.agent.Work.publishMode:type_name -> openim.agent.GroupPublishMode
 	34,  // 183: openim.agent.Work.published:type_name -> openim.agent.WorkPublishState
 	33,  // 184: openim.agent.Work.waitKind:type_name -> openim.agent.WorkWaitKind
-	170, // 185: openim.agent.GetWorksResp.works:type_name -> openim.agent.Work
-	170, // 186: openim.agent.GetWorksResp.children:type_name -> openim.agent.Work
+	171, // 185: openim.agent.GetWorksResp.works:type_name -> openim.agent.Work
+	171, // 186: openim.agent.GetWorksResp.children:type_name -> openim.agent.Work
 	30,  // 187: openim.agent.ListWorksReq.statuses:type_name -> openim.agent.WorkStatus
-	332, // 188: openim.agent.ListWorksReq.pagination:type_name -> openim.sdkws.RequestPagination
-	170, // 189: openim.agent.ListWorksResp.works:type_name -> openim.agent.Work
-	178, // 190: openim.agent.GetWorkStatsResp.instances:type_name -> openim.agent.InstanceWorkCount
-	170, // 191: openim.agent.StopWorkResp.work:type_name -> openim.agent.Work
-	170, // 192: openim.agent.CreateWorkResp.work:type_name -> openim.agent.Work
-	170, // 193: openim.agent.StartWorkResp.work:type_name -> openim.agent.Work
-	170, // 194: openim.agent.RequeueWorksResp.works:type_name -> openim.agent.Work
-	170, // 195: openim.agent.CheckWorkResp.work:type_name -> openim.agent.Work
-	170, // 196: openim.agent.TakeWorkByTaskResp.work:type_name -> openim.agent.Work
+	333, // 188: openim.agent.ListWorksReq.pagination:type_name -> openim.sdkws.RequestPagination
+	171, // 189: openim.agent.ListWorksResp.works:type_name -> openim.agent.Work
+	179, // 190: openim.agent.GetWorkStatsResp.instances:type_name -> openim.agent.InstanceWorkCount
+	171, // 191: openim.agent.StopWorkResp.work:type_name -> openim.agent.Work
+	171, // 192: openim.agent.CreateWorkResp.work:type_name -> openim.agent.Work
+	171, // 193: openim.agent.StartWorkResp.work:type_name -> openim.agent.Work
+	171, // 194: openim.agent.RequeueWorksResp.works:type_name -> openim.agent.Work
+	171, // 195: openim.agent.CheckWorkResp.work:type_name -> openim.agent.Work
+	171, // 196: openim.agent.TakeWorkByTaskResp.work:type_name -> openim.agent.Work
 	30,  // 197: openim.agent.WorkEvent.status:type_name -> openim.agent.WorkStatus
-	330, // 198: openim.agent.WorkEvent.detail:type_name -> openim.agent.WorkEvent.DetailEntry
-	199, // 199: openim.agent.ListWorkEventsResp.events:type_name -> openim.agent.WorkEvent
-	202, // 200: openim.agent.Feedback.messages:type_name -> openim.agent.FeedbackMessage
-	202, // 201: openim.agent.SubmitFeedbackReq.messages:type_name -> openim.agent.FeedbackMessage
-	203, // 202: openim.agent.SubmitFeedbackResp.feedback:type_name -> openim.agent.Feedback
-	332, // 203: openim.agent.ListFeedbackReq.pagination:type_name -> openim.sdkws.RequestPagination
-	203, // 204: openim.agent.ListFeedbackResp.items:type_name -> openim.agent.Feedback
-	170, // 205: openim.agent.CreateSubWorkResp.work:type_name -> openim.agent.Work
-	170, // 206: openim.agent.ClaimSubWorkResp.work:type_name -> openim.agent.Work
-	170, // 207: openim.agent.ReportSubWorkResp.work:type_name -> openim.agent.Work
-	170, // 208: openim.agent.PublishWorkResp.work:type_name -> openim.agent.Work
+	331, // 198: openim.agent.WorkEvent.detail:type_name -> openim.agent.WorkEvent.DetailEntry
+	200, // 199: openim.agent.ListWorkEventsResp.events:type_name -> openim.agent.WorkEvent
+	203, // 200: openim.agent.Feedback.messages:type_name -> openim.agent.FeedbackMessage
+	203, // 201: openim.agent.SubmitFeedbackReq.messages:type_name -> openim.agent.FeedbackMessage
+	204, // 202: openim.agent.SubmitFeedbackResp.feedback:type_name -> openim.agent.Feedback
+	333, // 203: openim.agent.ListFeedbackReq.pagination:type_name -> openim.sdkws.RequestPagination
+	204, // 204: openim.agent.ListFeedbackResp.items:type_name -> openim.agent.Feedback
+	171, // 205: openim.agent.CreateSubWorkResp.work:type_name -> openim.agent.Work
+	171, // 206: openim.agent.ClaimSubWorkResp.work:type_name -> openim.agent.Work
+	171, // 207: openim.agent.ReportSubWorkResp.work:type_name -> openim.agent.Work
+	171, // 208: openim.agent.PublishWorkResp.work:type_name -> openim.agent.Work
 	31,  // 209: openim.agent.GroupMemberSetting.tier:type_name -> openim.agent.GroupTier
 	31,  // 210: openim.agent.GroupSetting.defaultTier:type_name -> openim.agent.GroupTier
-	218, // 211: openim.agent.GroupSetting.members:type_name -> openim.agent.GroupMemberSetting
+	219, // 211: openim.agent.GroupSetting.members:type_name -> openim.agent.GroupMemberSetting
 	32,  // 212: openim.agent.GroupSetting.publishMode:type_name -> openim.agent.GroupPublishMode
-	219, // 213: openim.agent.GetGroupSettingResp.setting:type_name -> openim.agent.GroupSetting
+	220, // 213: openim.agent.GetGroupSettingResp.setting:type_name -> openim.agent.GroupSetting
 	31,  // 214: openim.agent.GetGroupSettingResp.myTier:type_name -> openim.agent.GroupTier
 	31,  // 215: openim.agent.SetGroupSettingReq.defaultTier:type_name -> openim.agent.GroupTier
-	218, // 216: openim.agent.SetGroupSettingReq.members:type_name -> openim.agent.GroupMemberSetting
+	219, // 216: openim.agent.SetGroupSettingReq.members:type_name -> openim.agent.GroupMemberSetting
 	32,  // 217: openim.agent.SetGroupSettingReq.publishMode:type_name -> openim.agent.GroupPublishMode
-	219, // 218: openim.agent.SetGroupSettingResp.setting:type_name -> openim.agent.GroupSetting
+	220, // 218: openim.agent.SetGroupSettingResp.setting:type_name -> openim.agent.GroupSetting
 	32,  // 219: openim.agent.GroupAgent.publishMode:type_name -> openim.agent.GroupPublishMode
 	31,  // 220: openim.agent.GroupAgent.myTier:type_name -> openim.agent.GroupTier
-	225, // 221: openim.agent.ListGroupAgentsResp.agents:type_name -> openim.agent.GroupAgent
-	227, // 222: openim.agent.GetInstanceSettingResp.setting:type_name -> openim.agent.InstanceSetting
-	227, // 223: openim.agent.SetInstanceSettingResp.setting:type_name -> openim.agent.InstanceSetting
-	232, // 224: openim.agent.ListMemoriesResp.memories:type_name -> openim.agent.Memory
-	227, // 225: openim.agent.ListMemoriesResp.setting:type_name -> openim.agent.InstanceSetting
-	232, // 226: openim.agent.SaveMemoryResp.memory:type_name -> openim.agent.Memory
-	232, // 227: openim.agent.UpdateMemoryResp.memory:type_name -> openim.agent.Memory
-	242, // 228: openim.agent.Scope.departments:type_name -> openim.agent.ScopeDepartment
-	242, // 229: openim.agent.PeopleRule.departments:type_name -> openim.agent.ScopeDepartment
-	243, // 230: openim.agent.PeopleGroup.rules:type_name -> openim.agent.PeopleRule
-	23,  // 231: openim.agent.ScopeName.type:type_name -> openim.agent.ScopeItemType
-	23,  // 232: openim.agent.ScopeOption.type:type_name -> openim.agent.ScopeItemType
-	245, // 233: openim.agent.DescribeScopeResp.names:type_name -> openim.agent.ScopeName
-	332, // 234: openim.agent.ScopeOptionsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	246, // 235: openim.agent.ScopeOptionsResp.options:type_name -> openim.agent.ScopeOption
-	87,  // 236: openim.agent.AdminGetCompanySettingResp.setting:type_name -> openim.agent.CompanySettingInfo
-	331, // 237: openim.agent.AdminSetCompanySettingReq.enabled:type_name -> openim.protobuf.BoolValue
-	86,  // 238: openim.agent.AdminSetCompanySettingReq.creatorScope:type_name -> openim.agent.CreatorScope
-	85,  // 239: openim.agent.AdminSetCompanySettingReq.limits:type_name -> openim.agent.AgentLimits
-	332, // 240: openim.agent.AdminListCompanySettingsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	87,  // 241: openim.agent.AdminListCompanySettingsResp.settings:type_name -> openim.agent.CompanySettingInfo
-	8,   // 242: openim.agent.AdminListCapabilitiesReq.type:type_name -> openim.agent.CapabilityType
-	332, // 243: openim.agent.AdminListCapabilitiesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	79,  // 244: openim.agent.AdminListCapabilitiesResp.items:type_name -> openim.agent.CapabilityItem
-	21,  // 245: openim.agent.AdminListTemplatesReq.category:type_name -> openim.agent.TemplateCategory
-	332, // 246: openim.agent.AdminListTemplatesReq.pagination:type_name -> openim.sdkws.RequestPagination
-	83,  // 247: openim.agent.AdminListTemplatesResp.templates:type_name -> openim.agent.AgentTemplate
-	83,  // 248: openim.agent.AdminSaveTemplateReq.template:type_name -> openim.agent.AgentTemplate
-	84,  // 249: openim.agent.AdminListTagsResp.tags:type_name -> openim.agent.AgentTag
-	84,  // 250: openim.agent.AdminSaveTagReq.tag:type_name -> openim.agent.AgentTag
-	3,   // 251: openim.agent.AdminListAgentsReq.status:type_name -> openim.agent.AgentStatus
-	332, // 252: openim.agent.AdminListAgentsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	5,   // 253: openim.agent.AdminListAgentsReq.state:type_name -> openim.agent.AgentState
-	57,  // 254: openim.agent.AdminListAgentsResp.agents:type_name -> openim.agent.AgentListItem
-	276, // 255: openim.agent.AdminListAgentsResp.counts:type_name -> openim.agent.AgentStateCounts
-	47,  // 256: openim.agent.AdminGetAgentConfigResp.agent:type_name -> openim.agent.AgentInfo
-	46,  // 257: openim.agent.AdminGetAgentConfigResp.config:type_name -> openim.agent.AgentConfig
-	54,  // 258: openim.agent.AdminGetAgentConfigResp.release:type_name -> openim.agent.ReleaseInfo
-	59,  // 259: openim.agent.AdminGetAgentConfigResp.members:type_name -> openim.agent.AgentMember
-	60,  // 260: openim.agent.AdminGetAgentConfigResp.visibleScope:type_name -> openim.agent.VisibleScopeInfo
-	6,   // 261: openim.agent.AdminSetAgentMemberReq.role:type_name -> openim.agent.MemberRole
-	59,  // 262: openim.agent.AdminSetAgentMemberResp.member:type_name -> openim.agent.AgentMember
-	46,  // 263: openim.agent.AdminUpdateAgentReq.config:type_name -> openim.agent.AgentConfig
-	62,  // 264: openim.agent.AdminUpdateAgentResp.checks:type_name -> openim.agent.CheckResult
-	70,  // 265: openim.agent.AdminUpdateAgentResp.review:type_name -> openim.agent.ReviewInfo
-	54,  // 266: openim.agent.AdminUpdateAgentResp.release:type_name -> openim.agent.ReleaseInfo
-	5,   // 267: openim.agent.AdminEnableAgentResp.state:type_name -> openim.agent.AgentState
-	47,  // 268: openim.agent.AdminRestoreAgentResp.agent:type_name -> openim.agent.AgentInfo
-	24,  // 269: openim.agent.AuditFilter.category:type_name -> openim.agent.AuditCategory
-	25,  // 270: openim.agent.AuditFilter.result:type_name -> openim.agent.AuditResult
-	297, // 271: openim.agent.AdminListAuditsReq.filter:type_name -> openim.agent.AuditFilter
-	332, // 272: openim.agent.AdminListAuditsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	88,  // 273: openim.agent.AdminListAuditsResp.logs:type_name -> openim.agent.AuditLog
-	297, // 274: openim.agent.AdminExportAuditsReq.filter:type_name -> openim.agent.AuditFilter
-	88,  // 275: openim.agent.AdminExportAuditsResp.logs:type_name -> openim.agent.AuditLog
-	26,  // 276: openim.agent.AdminListReviewsReq.statuses:type_name -> openim.agent.ReviewStatus
-	332, // 277: openim.agent.AdminListReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	70,  // 278: openim.agent.AdminReviewItem.review:type_name -> openim.agent.ReviewInfo
-	303, // 279: openim.agent.AdminListReviewsResp.reviews:type_name -> openim.agent.AdminReviewItem
-	150, // 280: openim.agent.AdminGetReviewResp.detail:type_name -> openim.agent.GetReviewResp
-	70,  // 281: openim.agent.AdminDecideReviewResp.review:type_name -> openim.agent.ReviewInfo
-	23,  // 282: openim.agent.AdminScopeOptionsReq.type:type_name -> openim.agent.ScopeItemType
-	332, // 283: openim.agent.AdminScopeOptionsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	246, // 284: openim.agent.AdminScopeOptionsResp.options:type_name -> openim.agent.ScopeOption
-	245, // 285: openim.agent.AdminDescribeScopeResp.names:type_name -> openim.agent.ScopeName
-	332, // 286: openim.agent.AdminListPeopleGroupsReq.pagination:type_name -> openim.sdkws.RequestPagination
-	244, // 287: openim.agent.AdminListPeopleGroupsResp.groups:type_name -> openim.agent.PeopleGroup
-	244, // 288: openim.agent.AdminGetPeopleGroupResp.group:type_name -> openim.agent.PeopleGroup
-	332, // 289: openim.agent.AdminListPeopleGroupMembersReq.pagination:type_name -> openim.sdkws.RequestPagination
-	247, // 290: openim.agent.AdminListPeopleGroupMembersResp.members:type_name -> openim.agent.PeopleGroupMember
-	248, // 291: openim.agent.AdminListUserPeopleGroupsResp.groups:type_name -> openim.agent.UserPeopleGroup
-	244, // 292: openim.agent.AdminSavePeopleGroupReq.group:type_name -> openim.agent.PeopleGroup
-	249, // 293: openim.agent.AdminDeletePeopleGroupResp.refs:type_name -> openim.agent.PeopleGroupRef
-	89,  // 294: openim.agent.Agent.getContext:input_type -> openim.agent.GetContextReq
-	91,  // 295: openim.agent.Agent.createAgent:input_type -> openim.agent.CreateAgentReq
-	93,  // 296: openim.agent.Agent.getAgent:input_type -> openim.agent.GetAgentReq
-	95,  // 297: openim.agent.Agent.listMyAgents:input_type -> openim.agent.ListMyAgentsReq
-	97,  // 298: openim.agent.Agent.saveDraft:input_type -> openim.agent.SaveDraftReq
-	99,  // 299: openim.agent.Agent.restoreDraft:input_type -> openim.agent.RestoreDraftReq
-	101, // 300: openim.agent.Agent.deleteAgent:input_type -> openim.agent.DeleteAgentReq
-	103, // 301: openim.agent.Agent.restoreAgent:input_type -> openim.agent.RestoreAgentReq
-	105, // 302: openim.agent.Agent.listCapabilities:input_type -> openim.agent.ListCapabilitiesReq
-	107, // 303: openim.agent.Agent.previewRoleImport:input_type -> openim.agent.PreviewRoleImportReq
-	109, // 304: openim.agent.Agent.applyRoleImport:input_type -> openim.agent.ApplyRoleImportReq
-	111, // 305: openim.agent.Agent.listTestRuns:input_type -> openim.agent.ListTestRunsReq
-	113, // 306: openim.agent.Agent.markTestRun:input_type -> openim.agent.MarkTestRunReq
-	117, // 307: openim.agent.Agent.listReleases:input_type -> openim.agent.ListReleasesReq
-	119, // 308: openim.agent.Agent.getSnapshot:input_type -> openim.agent.GetSnapshotReq
-	121, // 309: openim.agent.Agent.submitCheck:input_type -> openim.agent.SubmitCheckReq
-	123, // 310: openim.agent.Agent.listMembers:input_type -> openim.agent.ListMembersReq
-	125, // 311: openim.agent.Agent.setMember:input_type -> openim.agent.SetMemberReq
-	127, // 312: openim.agent.Agent.removeMember:input_type -> openim.agent.RemoveMemberReq
-	129, // 313: openim.agent.Agent.setVisibleScope:input_type -> openim.agent.SetVisibleScopeReq
-	115, // 314: openim.agent.Agent.reportTestRun:input_type -> openim.agent.ReportTestRunReq
-	131, // 315: openim.agent.Agent.listTemplates:input_type -> openim.agent.ListTemplatesReq
-	133, // 316: openim.agent.Agent.getTemplate:input_type -> openim.agent.GetTemplateReq
-	135, // 317: openim.agent.Agent.listTags:input_type -> openim.agent.ListTagsReq
-	137, // 318: openim.agent.Agent.getEligibility:input_type -> openim.agent.GetEligibilityReq
-	139, // 319: openim.agent.Agent.listVersions:input_type -> openim.agent.ListVersionsReq
-	141, // 320: openim.agent.Agent.diffVersion:input_type -> openim.agent.DiffVersionReq
-	143, // 321: openim.agent.Agent.submitReview:input_type -> openim.agent.SubmitReviewReq
-	145, // 322: openim.agent.Agent.withdrawReview:input_type -> openim.agent.WithdrawReviewReq
-	147, // 323: openim.agent.Agent.listReviews:input_type -> openim.agent.ListReviewsReq
-	149, // 324: openim.agent.Agent.getReview:input_type -> openim.agent.GetReviewReq
-	151, // 325: openim.agent.Agent.retryReview:input_type -> openim.agent.RetryReviewReq
-	153, // 326: openim.agent.Agent.listMarket:input_type -> openim.agent.ListMarketReq
-	156, // 327: openim.agent.Agent.listMyInstances:input_type -> openim.agent.ListMyInstancesReq
-	158, // 328: openim.agent.Agent.getMyClone:input_type -> openim.agent.GetMyCloneReq
-	160, // 329: openim.agent.Agent.getInstanceConfig:input_type -> openim.agent.GetInstanceConfigReq
-	250, // 330: openim.agent.Agent.describeScope:input_type -> openim.agent.DescribeScopeReq
-	252, // 331: openim.agent.Agent.scopeOptions:input_type -> openim.agent.ScopeOptionsReq
-	172, // 332: openim.agent.Agent.getWorks:input_type -> openim.agent.GetWorksReq
-	174, // 333: openim.agent.Agent.listWorks:input_type -> openim.agent.ListWorksReq
-	176, // 334: openim.agent.Agent.getWorkStats:input_type -> openim.agent.GetWorkStatsReq
-	179, // 335: openim.agent.Agent.stopWork:input_type -> openim.agent.StopWorkReq
-	200, // 336: openim.agent.Agent.listWorkEvents:input_type -> openim.agent.ListWorkEventsReq
-	204, // 337: openim.agent.Agent.submitFeedback:input_type -> openim.agent.SubmitFeedbackReq
-	206, // 338: openim.agent.Agent.listFeedback:input_type -> openim.agent.ListFeedbackReq
-	208, // 339: openim.agent.Agent.handoffWork:input_type -> openim.agent.HandoffWorkReq
-	210, // 340: openim.agent.Agent.createSubWork:input_type -> openim.agent.CreateSubWorkReq
-	212, // 341: openim.agent.Agent.claimSubWork:input_type -> openim.agent.ClaimSubWorkReq
-	214, // 342: openim.agent.Agent.reportSubWork:input_type -> openim.agent.ReportSubWorkReq
-	216, // 343: openim.agent.Agent.publishWork:input_type -> openim.agent.PublishWorkReq
-	220, // 344: openim.agent.Agent.getGroupSetting:input_type -> openim.agent.GetGroupSettingReq
-	222, // 345: openim.agent.Agent.setGroupSetting:input_type -> openim.agent.SetGroupSettingReq
-	224, // 346: openim.agent.Agent.listGroupAgents:input_type -> openim.agent.ListGroupAgentsReq
-	228, // 347: openim.agent.Agent.getInstanceSetting:input_type -> openim.agent.GetInstanceSettingReq
-	230, // 348: openim.agent.Agent.setInstanceSetting:input_type -> openim.agent.SetInstanceSettingReq
-	233, // 349: openim.agent.Agent.listMemories:input_type -> openim.agent.ListMemoriesReq
-	235, // 350: openim.agent.Agent.saveMemory:input_type -> openim.agent.SaveMemoryReq
-	237, // 351: openim.agent.Agent.updateMemory:input_type -> openim.agent.UpdateMemoryReq
-	239, // 352: openim.agent.Agent.deleteMemories:input_type -> openim.agent.DeleteMemoriesReq
-	162, // 353: openim.agent.Agent.prepareInstance:input_type -> openim.agent.PrepareInstanceReq
-	164, // 354: openim.agent.Agent.bindInstance:input_type -> openim.agent.BindInstanceReq
-	166, // 355: openim.agent.Agent.removeInstance:input_type -> openim.agent.RemoveInstanceReq
-	168, // 356: openim.agent.Agent.getInstanceEligibility:input_type -> openim.agent.GetInstanceEligibilityReq
-	181, // 357: openim.agent.Agent.createWork:input_type -> openim.agent.CreateWorkReq
-	183, // 358: openim.agent.Agent.startWork:input_type -> openim.agent.StartWorkReq
-	185, // 359: openim.agent.Agent.requeueWorks:input_type -> openim.agent.RequeueWorksReq
-	187, // 360: openim.agent.Agent.markInstanceRead:input_type -> openim.agent.MarkInstanceReadReq
-	189, // 361: openim.agent.Agent.checkWork:input_type -> openim.agent.CheckWorkReq
-	191, // 362: openim.agent.Agent.takeWorkByTask:input_type -> openim.agent.TakeWorkByTaskReq
-	193, // 363: openim.agent.Agent.syncWorkByTask:input_type -> openim.agent.SyncWorkByTaskReq
-	195, // 364: openim.agent.Agent.endGroupWorks:input_type -> openim.agent.EndGroupWorksReq
-	197, // 365: openim.agent.Agent.instancesJoinedGroup:input_type -> openim.agent.InstancesJoinedGroupReq
-	254, // 366: openim.agent.Agent.adminGetCompanySetting:input_type -> openim.agent.AdminGetCompanySettingReq
-	256, // 367: openim.agent.Agent.adminSetCompanySetting:input_type -> openim.agent.AdminSetCompanySettingReq
-	258, // 368: openim.agent.Agent.adminListCompanySettings:input_type -> openim.agent.AdminListCompanySettingsReq
-	260, // 369: openim.agent.Agent.adminListCapabilities:input_type -> openim.agent.AdminListCapabilitiesReq
-	262, // 370: openim.agent.Agent.adminListTemplates:input_type -> openim.agent.AdminListTemplatesReq
-	264, // 371: openim.agent.Agent.adminSaveTemplate:input_type -> openim.agent.AdminSaveTemplateReq
-	266, // 372: openim.agent.Agent.adminDeleteTemplate:input_type -> openim.agent.AdminDeleteTemplateReq
-	268, // 373: openim.agent.Agent.adminListTags:input_type -> openim.agent.AdminListTagsReq
-	270, // 374: openim.agent.Agent.adminSaveTag:input_type -> openim.agent.AdminSaveTagReq
-	272, // 375: openim.agent.Agent.adminDeleteTag:input_type -> openim.agent.AdminDeleteTagReq
-	274, // 376: openim.agent.Agent.adminListAgents:input_type -> openim.agent.AdminListAgentsReq
-	277, // 377: openim.agent.Agent.adminGetAgentConfig:input_type -> openim.agent.AdminGetAgentConfigReq
-	283, // 378: openim.agent.Agent.adminUpdateAgent:input_type -> openim.agent.AdminUpdateAgentReq
-	279, // 379: openim.agent.Agent.adminSetAgentMember:input_type -> openim.agent.AdminSetAgentMemberReq
-	281, // 380: openim.agent.Agent.adminRemoveAgentMember:input_type -> openim.agent.AdminRemoveAgentMemberReq
-	285, // 381: openim.agent.Agent.adminDisableAgent:input_type -> openim.agent.AdminDisableAgentReq
-	287, // 382: openim.agent.Agent.adminEnableAgent:input_type -> openim.agent.AdminEnableAgentReq
-	289, // 383: openim.agent.Agent.adminDelistAgent:input_type -> openim.agent.AdminDelistAgentReq
-	291, // 384: openim.agent.Agent.adminRelistAgent:input_type -> openim.agent.AdminRelistAgentReq
-	293, // 385: openim.agent.Agent.adminDeleteAgent:input_type -> openim.agent.AdminDeleteAgentReq
-	295, // 386: openim.agent.Agent.adminRestoreAgent:input_type -> openim.agent.AdminRestoreAgentReq
-	298, // 387: openim.agent.Agent.adminListAudits:input_type -> openim.agent.AdminListAuditsReq
-	300, // 388: openim.agent.Agent.adminExportAudits:input_type -> openim.agent.AdminExportAuditsReq
-	302, // 389: openim.agent.Agent.adminListReviews:input_type -> openim.agent.AdminListReviewsReq
-	305, // 390: openim.agent.Agent.adminGetReview:input_type -> openim.agent.AdminGetReviewReq
-	307, // 391: openim.agent.Agent.adminDecideReview:input_type -> openim.agent.AdminDecideReviewReq
-	311, // 392: openim.agent.Agent.adminDescribeScope:input_type -> openim.agent.AdminDescribeScopeReq
-	309, // 393: openim.agent.Agent.adminScopeOptions:input_type -> openim.agent.AdminScopeOptionsReq
-	313, // 394: openim.agent.Agent.adminListPeopleGroups:input_type -> openim.agent.AdminListPeopleGroupsReq
-	315, // 395: openim.agent.Agent.adminGetPeopleGroup:input_type -> openim.agent.AdminGetPeopleGroupReq
-	317, // 396: openim.agent.Agent.adminListPeopleGroupMembers:input_type -> openim.agent.AdminListPeopleGroupMembersReq
-	319, // 397: openim.agent.Agent.adminListUserPeopleGroups:input_type -> openim.agent.AdminListUserPeopleGroupsReq
-	321, // 398: openim.agent.Agent.adminSavePeopleGroup:input_type -> openim.agent.AdminSavePeopleGroupReq
-	323, // 399: openim.agent.Agent.adminDeletePeopleGroup:input_type -> openim.agent.AdminDeletePeopleGroupReq
-	325, // 400: openim.agent.Agent.adminAddPeopleGroupUsers:input_type -> openim.agent.AdminAddPeopleGroupUsersReq
-	327, // 401: openim.agent.Agent.adminRemovePeopleGroupUsers:input_type -> openim.agent.AdminRemovePeopleGroupUsersReq
-	90,  // 402: openim.agent.Agent.getContext:output_type -> openim.agent.GetContextResp
-	92,  // 403: openim.agent.Agent.createAgent:output_type -> openim.agent.CreateAgentResp
-	94,  // 404: openim.agent.Agent.getAgent:output_type -> openim.agent.GetAgentResp
-	96,  // 405: openim.agent.Agent.listMyAgents:output_type -> openim.agent.ListMyAgentsResp
-	98,  // 406: openim.agent.Agent.saveDraft:output_type -> openim.agent.SaveDraftResp
-	100, // 407: openim.agent.Agent.restoreDraft:output_type -> openim.agent.RestoreDraftResp
-	102, // 408: openim.agent.Agent.deleteAgent:output_type -> openim.agent.DeleteAgentResp
-	104, // 409: openim.agent.Agent.restoreAgent:output_type -> openim.agent.RestoreAgentResp
-	106, // 410: openim.agent.Agent.listCapabilities:output_type -> openim.agent.ListCapabilitiesResp
-	108, // 411: openim.agent.Agent.previewRoleImport:output_type -> openim.agent.PreviewRoleImportResp
-	110, // 412: openim.agent.Agent.applyRoleImport:output_type -> openim.agent.ApplyRoleImportResp
-	112, // 413: openim.agent.Agent.listTestRuns:output_type -> openim.agent.ListTestRunsResp
-	114, // 414: openim.agent.Agent.markTestRun:output_type -> openim.agent.MarkTestRunResp
-	118, // 415: openim.agent.Agent.listReleases:output_type -> openim.agent.ListReleasesResp
-	120, // 416: openim.agent.Agent.getSnapshot:output_type -> openim.agent.GetSnapshotResp
-	122, // 417: openim.agent.Agent.submitCheck:output_type -> openim.agent.SubmitCheckResp
-	124, // 418: openim.agent.Agent.listMembers:output_type -> openim.agent.ListMembersResp
-	126, // 419: openim.agent.Agent.setMember:output_type -> openim.agent.SetMemberResp
-	128, // 420: openim.agent.Agent.removeMember:output_type -> openim.agent.RemoveMemberResp
-	130, // 421: openim.agent.Agent.setVisibleScope:output_type -> openim.agent.SetVisibleScopeResp
-	116, // 422: openim.agent.Agent.reportTestRun:output_type -> openim.agent.ReportTestRunResp
-	132, // 423: openim.agent.Agent.listTemplates:output_type -> openim.agent.ListTemplatesResp
-	134, // 424: openim.agent.Agent.getTemplate:output_type -> openim.agent.GetTemplateResp
-	136, // 425: openim.agent.Agent.listTags:output_type -> openim.agent.ListTagsResp
-	138, // 426: openim.agent.Agent.getEligibility:output_type -> openim.agent.GetEligibilityResp
-	140, // 427: openim.agent.Agent.listVersions:output_type -> openim.agent.ListVersionsResp
-	142, // 428: openim.agent.Agent.diffVersion:output_type -> openim.agent.DiffVersionResp
-	144, // 429: openim.agent.Agent.submitReview:output_type -> openim.agent.SubmitReviewResp
-	146, // 430: openim.agent.Agent.withdrawReview:output_type -> openim.agent.WithdrawReviewResp
-	148, // 431: openim.agent.Agent.listReviews:output_type -> openim.agent.ListReviewsResp
-	150, // 432: openim.agent.Agent.getReview:output_type -> openim.agent.GetReviewResp
-	152, // 433: openim.agent.Agent.retryReview:output_type -> openim.agent.RetryReviewResp
-	155, // 434: openim.agent.Agent.listMarket:output_type -> openim.agent.ListMarketResp
-	157, // 435: openim.agent.Agent.listMyInstances:output_type -> openim.agent.ListMyInstancesResp
-	159, // 436: openim.agent.Agent.getMyClone:output_type -> openim.agent.GetMyCloneResp
-	161, // 437: openim.agent.Agent.getInstanceConfig:output_type -> openim.agent.GetInstanceConfigResp
-	251, // 438: openim.agent.Agent.describeScope:output_type -> openim.agent.DescribeScopeResp
-	253, // 439: openim.agent.Agent.scopeOptions:output_type -> openim.agent.ScopeOptionsResp
-	173, // 440: openim.agent.Agent.getWorks:output_type -> openim.agent.GetWorksResp
-	175, // 441: openim.agent.Agent.listWorks:output_type -> openim.agent.ListWorksResp
-	177, // 442: openim.agent.Agent.getWorkStats:output_type -> openim.agent.GetWorkStatsResp
-	180, // 443: openim.agent.Agent.stopWork:output_type -> openim.agent.StopWorkResp
-	201, // 444: openim.agent.Agent.listWorkEvents:output_type -> openim.agent.ListWorkEventsResp
-	205, // 445: openim.agent.Agent.submitFeedback:output_type -> openim.agent.SubmitFeedbackResp
-	207, // 446: openim.agent.Agent.listFeedback:output_type -> openim.agent.ListFeedbackResp
-	209, // 447: openim.agent.Agent.handoffWork:output_type -> openim.agent.HandoffWorkResp
-	211, // 448: openim.agent.Agent.createSubWork:output_type -> openim.agent.CreateSubWorkResp
-	213, // 449: openim.agent.Agent.claimSubWork:output_type -> openim.agent.ClaimSubWorkResp
-	215, // 450: openim.agent.Agent.reportSubWork:output_type -> openim.agent.ReportSubWorkResp
-	217, // 451: openim.agent.Agent.publishWork:output_type -> openim.agent.PublishWorkResp
-	221, // 452: openim.agent.Agent.getGroupSetting:output_type -> openim.agent.GetGroupSettingResp
-	223, // 453: openim.agent.Agent.setGroupSetting:output_type -> openim.agent.SetGroupSettingResp
-	226, // 454: openim.agent.Agent.listGroupAgents:output_type -> openim.agent.ListGroupAgentsResp
-	229, // 455: openim.agent.Agent.getInstanceSetting:output_type -> openim.agent.GetInstanceSettingResp
-	231, // 456: openim.agent.Agent.setInstanceSetting:output_type -> openim.agent.SetInstanceSettingResp
-	234, // 457: openim.agent.Agent.listMemories:output_type -> openim.agent.ListMemoriesResp
-	236, // 458: openim.agent.Agent.saveMemory:output_type -> openim.agent.SaveMemoryResp
-	238, // 459: openim.agent.Agent.updateMemory:output_type -> openim.agent.UpdateMemoryResp
-	240, // 460: openim.agent.Agent.deleteMemories:output_type -> openim.agent.DeleteMemoriesResp
-	163, // 461: openim.agent.Agent.prepareInstance:output_type -> openim.agent.PrepareInstanceResp
-	165, // 462: openim.agent.Agent.bindInstance:output_type -> openim.agent.BindInstanceResp
-	167, // 463: openim.agent.Agent.removeInstance:output_type -> openim.agent.RemoveInstanceResp
-	169, // 464: openim.agent.Agent.getInstanceEligibility:output_type -> openim.agent.GetInstanceEligibilityResp
-	182, // 465: openim.agent.Agent.createWork:output_type -> openim.agent.CreateWorkResp
-	184, // 466: openim.agent.Agent.startWork:output_type -> openim.agent.StartWorkResp
-	186, // 467: openim.agent.Agent.requeueWorks:output_type -> openim.agent.RequeueWorksResp
-	188, // 468: openim.agent.Agent.markInstanceRead:output_type -> openim.agent.MarkInstanceReadResp
-	190, // 469: openim.agent.Agent.checkWork:output_type -> openim.agent.CheckWorkResp
-	192, // 470: openim.agent.Agent.takeWorkByTask:output_type -> openim.agent.TakeWorkByTaskResp
-	194, // 471: openim.agent.Agent.syncWorkByTask:output_type -> openim.agent.SyncWorkByTaskResp
-	196, // 472: openim.agent.Agent.endGroupWorks:output_type -> openim.agent.EndGroupWorksResp
-	198, // 473: openim.agent.Agent.instancesJoinedGroup:output_type -> openim.agent.InstancesJoinedGroupResp
-	255, // 474: openim.agent.Agent.adminGetCompanySetting:output_type -> openim.agent.AdminGetCompanySettingResp
-	257, // 475: openim.agent.Agent.adminSetCompanySetting:output_type -> openim.agent.AdminSetCompanySettingResp
-	259, // 476: openim.agent.Agent.adminListCompanySettings:output_type -> openim.agent.AdminListCompanySettingsResp
-	261, // 477: openim.agent.Agent.adminListCapabilities:output_type -> openim.agent.AdminListCapabilitiesResp
-	263, // 478: openim.agent.Agent.adminListTemplates:output_type -> openim.agent.AdminListTemplatesResp
-	265, // 479: openim.agent.Agent.adminSaveTemplate:output_type -> openim.agent.AdminSaveTemplateResp
-	267, // 480: openim.agent.Agent.adminDeleteTemplate:output_type -> openim.agent.AdminDeleteTemplateResp
-	269, // 481: openim.agent.Agent.adminListTags:output_type -> openim.agent.AdminListTagsResp
-	271, // 482: openim.agent.Agent.adminSaveTag:output_type -> openim.agent.AdminSaveTagResp
-	273, // 483: openim.agent.Agent.adminDeleteTag:output_type -> openim.agent.AdminDeleteTagResp
-	275, // 484: openim.agent.Agent.adminListAgents:output_type -> openim.agent.AdminListAgentsResp
-	278, // 485: openim.agent.Agent.adminGetAgentConfig:output_type -> openim.agent.AdminGetAgentConfigResp
-	284, // 486: openim.agent.Agent.adminUpdateAgent:output_type -> openim.agent.AdminUpdateAgentResp
-	280, // 487: openim.agent.Agent.adminSetAgentMember:output_type -> openim.agent.AdminSetAgentMemberResp
-	282, // 488: openim.agent.Agent.adminRemoveAgentMember:output_type -> openim.agent.AdminRemoveAgentMemberResp
-	286, // 489: openim.agent.Agent.adminDisableAgent:output_type -> openim.agent.AdminDisableAgentResp
-	288, // 490: openim.agent.Agent.adminEnableAgent:output_type -> openim.agent.AdminEnableAgentResp
-	290, // 491: openim.agent.Agent.adminDelistAgent:output_type -> openim.agent.AdminDelistAgentResp
-	292, // 492: openim.agent.Agent.adminRelistAgent:output_type -> openim.agent.AdminRelistAgentResp
-	294, // 493: openim.agent.Agent.adminDeleteAgent:output_type -> openim.agent.AdminDeleteAgentResp
-	296, // 494: openim.agent.Agent.adminRestoreAgent:output_type -> openim.agent.AdminRestoreAgentResp
-	299, // 495: openim.agent.Agent.adminListAudits:output_type -> openim.agent.AdminListAuditsResp
-	301, // 496: openim.agent.Agent.adminExportAudits:output_type -> openim.agent.AdminExportAuditsResp
-	304, // 497: openim.agent.Agent.adminListReviews:output_type -> openim.agent.AdminListReviewsResp
-	306, // 498: openim.agent.Agent.adminGetReview:output_type -> openim.agent.AdminGetReviewResp
-	308, // 499: openim.agent.Agent.adminDecideReview:output_type -> openim.agent.AdminDecideReviewResp
-	312, // 500: openim.agent.Agent.adminDescribeScope:output_type -> openim.agent.AdminDescribeScopeResp
-	310, // 501: openim.agent.Agent.adminScopeOptions:output_type -> openim.agent.AdminScopeOptionsResp
-	314, // 502: openim.agent.Agent.adminListPeopleGroups:output_type -> openim.agent.AdminListPeopleGroupsResp
-	316, // 503: openim.agent.Agent.adminGetPeopleGroup:output_type -> openim.agent.AdminGetPeopleGroupResp
-	318, // 504: openim.agent.Agent.adminListPeopleGroupMembers:output_type -> openim.agent.AdminListPeopleGroupMembersResp
-	320, // 505: openim.agent.Agent.adminListUserPeopleGroups:output_type -> openim.agent.AdminListUserPeopleGroupsResp
-	322, // 506: openim.agent.Agent.adminSavePeopleGroup:output_type -> openim.agent.AdminSavePeopleGroupResp
-	324, // 507: openim.agent.Agent.adminDeletePeopleGroup:output_type -> openim.agent.AdminDeletePeopleGroupResp
-	326, // 508: openim.agent.Agent.adminAddPeopleGroupUsers:output_type -> openim.agent.AdminAddPeopleGroupUsersResp
-	328, // 509: openim.agent.Agent.adminRemovePeopleGroupUsers:output_type -> openim.agent.AdminRemovePeopleGroupUsersResp
-	402, // [402:510] is the sub-list for method output_type
-	294, // [294:402] is the sub-list for method input_type
-	294, // [294:294] is the sub-list for extension type_name
-	294, // [294:294] is the sub-list for extension extendee
-	0,   // [0:294] is the sub-list for field type_name
+	35,  // 221: openim.agent.GroupAgent.hostConnection:type_name -> openim.agent.HostConnection
+	226, // 222: openim.agent.ListGroupAgentsResp.agents:type_name -> openim.agent.GroupAgent
+	228, // 223: openim.agent.GetInstanceSettingResp.setting:type_name -> openim.agent.InstanceSetting
+	228, // 224: openim.agent.SetInstanceSettingResp.setting:type_name -> openim.agent.InstanceSetting
+	233, // 225: openim.agent.ListMemoriesResp.memories:type_name -> openim.agent.Memory
+	228, // 226: openim.agent.ListMemoriesResp.setting:type_name -> openim.agent.InstanceSetting
+	233, // 227: openim.agent.SaveMemoryResp.memory:type_name -> openim.agent.Memory
+	233, // 228: openim.agent.UpdateMemoryResp.memory:type_name -> openim.agent.Memory
+	243, // 229: openim.agent.Scope.departments:type_name -> openim.agent.ScopeDepartment
+	243, // 230: openim.agent.PeopleRule.departments:type_name -> openim.agent.ScopeDepartment
+	244, // 231: openim.agent.PeopleGroup.rules:type_name -> openim.agent.PeopleRule
+	23,  // 232: openim.agent.ScopeName.type:type_name -> openim.agent.ScopeItemType
+	23,  // 233: openim.agent.ScopeOption.type:type_name -> openim.agent.ScopeItemType
+	246, // 234: openim.agent.DescribeScopeResp.names:type_name -> openim.agent.ScopeName
+	333, // 235: openim.agent.ScopeOptionsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	247, // 236: openim.agent.ScopeOptionsResp.options:type_name -> openim.agent.ScopeOption
+	88,  // 237: openim.agent.AdminGetCompanySettingResp.setting:type_name -> openim.agent.CompanySettingInfo
+	332, // 238: openim.agent.AdminSetCompanySettingReq.enabled:type_name -> openim.protobuf.BoolValue
+	87,  // 239: openim.agent.AdminSetCompanySettingReq.creatorScope:type_name -> openim.agent.CreatorScope
+	86,  // 240: openim.agent.AdminSetCompanySettingReq.limits:type_name -> openim.agent.AgentLimits
+	333, // 241: openim.agent.AdminListCompanySettingsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	88,  // 242: openim.agent.AdminListCompanySettingsResp.settings:type_name -> openim.agent.CompanySettingInfo
+	8,   // 243: openim.agent.AdminListCapabilitiesReq.type:type_name -> openim.agent.CapabilityType
+	333, // 244: openim.agent.AdminListCapabilitiesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	80,  // 245: openim.agent.AdminListCapabilitiesResp.items:type_name -> openim.agent.CapabilityItem
+	21,  // 246: openim.agent.AdminListTemplatesReq.category:type_name -> openim.agent.TemplateCategory
+	333, // 247: openim.agent.AdminListTemplatesReq.pagination:type_name -> openim.sdkws.RequestPagination
+	84,  // 248: openim.agent.AdminListTemplatesResp.templates:type_name -> openim.agent.AgentTemplate
+	84,  // 249: openim.agent.AdminSaveTemplateReq.template:type_name -> openim.agent.AgentTemplate
+	85,  // 250: openim.agent.AdminListTagsResp.tags:type_name -> openim.agent.AgentTag
+	85,  // 251: openim.agent.AdminSaveTagReq.tag:type_name -> openim.agent.AgentTag
+	3,   // 252: openim.agent.AdminListAgentsReq.status:type_name -> openim.agent.AgentStatus
+	333, // 253: openim.agent.AdminListAgentsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	5,   // 254: openim.agent.AdminListAgentsReq.state:type_name -> openim.agent.AgentState
+	58,  // 255: openim.agent.AdminListAgentsResp.agents:type_name -> openim.agent.AgentListItem
+	277, // 256: openim.agent.AdminListAgentsResp.counts:type_name -> openim.agent.AgentStateCounts
+	48,  // 257: openim.agent.AdminGetAgentConfigResp.agent:type_name -> openim.agent.AgentInfo
+	47,  // 258: openim.agent.AdminGetAgentConfigResp.config:type_name -> openim.agent.AgentConfig
+	55,  // 259: openim.agent.AdminGetAgentConfigResp.release:type_name -> openim.agent.ReleaseInfo
+	60,  // 260: openim.agent.AdminGetAgentConfigResp.members:type_name -> openim.agent.AgentMember
+	61,  // 261: openim.agent.AdminGetAgentConfigResp.visibleScope:type_name -> openim.agent.VisibleScopeInfo
+	6,   // 262: openim.agent.AdminSetAgentMemberReq.role:type_name -> openim.agent.MemberRole
+	60,  // 263: openim.agent.AdminSetAgentMemberResp.member:type_name -> openim.agent.AgentMember
+	47,  // 264: openim.agent.AdminUpdateAgentReq.config:type_name -> openim.agent.AgentConfig
+	63,  // 265: openim.agent.AdminUpdateAgentResp.checks:type_name -> openim.agent.CheckResult
+	71,  // 266: openim.agent.AdminUpdateAgentResp.review:type_name -> openim.agent.ReviewInfo
+	55,  // 267: openim.agent.AdminUpdateAgentResp.release:type_name -> openim.agent.ReleaseInfo
+	5,   // 268: openim.agent.AdminEnableAgentResp.state:type_name -> openim.agent.AgentState
+	48,  // 269: openim.agent.AdminRestoreAgentResp.agent:type_name -> openim.agent.AgentInfo
+	24,  // 270: openim.agent.AuditFilter.category:type_name -> openim.agent.AuditCategory
+	25,  // 271: openim.agent.AuditFilter.result:type_name -> openim.agent.AuditResult
+	298, // 272: openim.agent.AdminListAuditsReq.filter:type_name -> openim.agent.AuditFilter
+	333, // 273: openim.agent.AdminListAuditsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	89,  // 274: openim.agent.AdminListAuditsResp.logs:type_name -> openim.agent.AuditLog
+	298, // 275: openim.agent.AdminExportAuditsReq.filter:type_name -> openim.agent.AuditFilter
+	89,  // 276: openim.agent.AdminExportAuditsResp.logs:type_name -> openim.agent.AuditLog
+	26,  // 277: openim.agent.AdminListReviewsReq.statuses:type_name -> openim.agent.ReviewStatus
+	333, // 278: openim.agent.AdminListReviewsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	71,  // 279: openim.agent.AdminReviewItem.review:type_name -> openim.agent.ReviewInfo
+	304, // 280: openim.agent.AdminListReviewsResp.reviews:type_name -> openim.agent.AdminReviewItem
+	151, // 281: openim.agent.AdminGetReviewResp.detail:type_name -> openim.agent.GetReviewResp
+	71,  // 282: openim.agent.AdminDecideReviewResp.review:type_name -> openim.agent.ReviewInfo
+	23,  // 283: openim.agent.AdminScopeOptionsReq.type:type_name -> openim.agent.ScopeItemType
+	333, // 284: openim.agent.AdminScopeOptionsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	247, // 285: openim.agent.AdminScopeOptionsResp.options:type_name -> openim.agent.ScopeOption
+	246, // 286: openim.agent.AdminDescribeScopeResp.names:type_name -> openim.agent.ScopeName
+	333, // 287: openim.agent.AdminListPeopleGroupsReq.pagination:type_name -> openim.sdkws.RequestPagination
+	245, // 288: openim.agent.AdminListPeopleGroupsResp.groups:type_name -> openim.agent.PeopleGroup
+	245, // 289: openim.agent.AdminGetPeopleGroupResp.group:type_name -> openim.agent.PeopleGroup
+	333, // 290: openim.agent.AdminListPeopleGroupMembersReq.pagination:type_name -> openim.sdkws.RequestPagination
+	248, // 291: openim.agent.AdminListPeopleGroupMembersResp.members:type_name -> openim.agent.PeopleGroupMember
+	249, // 292: openim.agent.AdminListUserPeopleGroupsResp.groups:type_name -> openim.agent.UserPeopleGroup
+	245, // 293: openim.agent.AdminSavePeopleGroupReq.group:type_name -> openim.agent.PeopleGroup
+	250, // 294: openim.agent.AdminDeletePeopleGroupResp.refs:type_name -> openim.agent.PeopleGroupRef
+	90,  // 295: openim.agent.Agent.getContext:input_type -> openim.agent.GetContextReq
+	92,  // 296: openim.agent.Agent.createAgent:input_type -> openim.agent.CreateAgentReq
+	94,  // 297: openim.agent.Agent.getAgent:input_type -> openim.agent.GetAgentReq
+	96,  // 298: openim.agent.Agent.listMyAgents:input_type -> openim.agent.ListMyAgentsReq
+	98,  // 299: openim.agent.Agent.saveDraft:input_type -> openim.agent.SaveDraftReq
+	100, // 300: openim.agent.Agent.restoreDraft:input_type -> openim.agent.RestoreDraftReq
+	102, // 301: openim.agent.Agent.deleteAgent:input_type -> openim.agent.DeleteAgentReq
+	104, // 302: openim.agent.Agent.restoreAgent:input_type -> openim.agent.RestoreAgentReq
+	106, // 303: openim.agent.Agent.listCapabilities:input_type -> openim.agent.ListCapabilitiesReq
+	108, // 304: openim.agent.Agent.previewRoleImport:input_type -> openim.agent.PreviewRoleImportReq
+	110, // 305: openim.agent.Agent.applyRoleImport:input_type -> openim.agent.ApplyRoleImportReq
+	112, // 306: openim.agent.Agent.listTestRuns:input_type -> openim.agent.ListTestRunsReq
+	114, // 307: openim.agent.Agent.markTestRun:input_type -> openim.agent.MarkTestRunReq
+	118, // 308: openim.agent.Agent.listReleases:input_type -> openim.agent.ListReleasesReq
+	120, // 309: openim.agent.Agent.getSnapshot:input_type -> openim.agent.GetSnapshotReq
+	122, // 310: openim.agent.Agent.submitCheck:input_type -> openim.agent.SubmitCheckReq
+	124, // 311: openim.agent.Agent.listMembers:input_type -> openim.agent.ListMembersReq
+	126, // 312: openim.agent.Agent.setMember:input_type -> openim.agent.SetMemberReq
+	128, // 313: openim.agent.Agent.removeMember:input_type -> openim.agent.RemoveMemberReq
+	130, // 314: openim.agent.Agent.setVisibleScope:input_type -> openim.agent.SetVisibleScopeReq
+	116, // 315: openim.agent.Agent.reportTestRun:input_type -> openim.agent.ReportTestRunReq
+	132, // 316: openim.agent.Agent.listTemplates:input_type -> openim.agent.ListTemplatesReq
+	134, // 317: openim.agent.Agent.getTemplate:input_type -> openim.agent.GetTemplateReq
+	136, // 318: openim.agent.Agent.listTags:input_type -> openim.agent.ListTagsReq
+	138, // 319: openim.agent.Agent.getEligibility:input_type -> openim.agent.GetEligibilityReq
+	140, // 320: openim.agent.Agent.listVersions:input_type -> openim.agent.ListVersionsReq
+	142, // 321: openim.agent.Agent.diffVersion:input_type -> openim.agent.DiffVersionReq
+	144, // 322: openim.agent.Agent.submitReview:input_type -> openim.agent.SubmitReviewReq
+	146, // 323: openim.agent.Agent.withdrawReview:input_type -> openim.agent.WithdrawReviewReq
+	148, // 324: openim.agent.Agent.listReviews:input_type -> openim.agent.ListReviewsReq
+	150, // 325: openim.agent.Agent.getReview:input_type -> openim.agent.GetReviewReq
+	152, // 326: openim.agent.Agent.retryReview:input_type -> openim.agent.RetryReviewReq
+	154, // 327: openim.agent.Agent.listMarket:input_type -> openim.agent.ListMarketReq
+	157, // 328: openim.agent.Agent.listMyInstances:input_type -> openim.agent.ListMyInstancesReq
+	159, // 329: openim.agent.Agent.getMyClone:input_type -> openim.agent.GetMyCloneReq
+	161, // 330: openim.agent.Agent.getInstanceConfig:input_type -> openim.agent.GetInstanceConfigReq
+	251, // 331: openim.agent.Agent.describeScope:input_type -> openim.agent.DescribeScopeReq
+	253, // 332: openim.agent.Agent.scopeOptions:input_type -> openim.agent.ScopeOptionsReq
+	173, // 333: openim.agent.Agent.getWorks:input_type -> openim.agent.GetWorksReq
+	175, // 334: openim.agent.Agent.listWorks:input_type -> openim.agent.ListWorksReq
+	177, // 335: openim.agent.Agent.getWorkStats:input_type -> openim.agent.GetWorkStatsReq
+	180, // 336: openim.agent.Agent.stopWork:input_type -> openim.agent.StopWorkReq
+	201, // 337: openim.agent.Agent.listWorkEvents:input_type -> openim.agent.ListWorkEventsReq
+	205, // 338: openim.agent.Agent.submitFeedback:input_type -> openim.agent.SubmitFeedbackReq
+	207, // 339: openim.agent.Agent.listFeedback:input_type -> openim.agent.ListFeedbackReq
+	209, // 340: openim.agent.Agent.handoffWork:input_type -> openim.agent.HandoffWorkReq
+	211, // 341: openim.agent.Agent.createSubWork:input_type -> openim.agent.CreateSubWorkReq
+	213, // 342: openim.agent.Agent.claimSubWork:input_type -> openim.agent.ClaimSubWorkReq
+	215, // 343: openim.agent.Agent.reportSubWork:input_type -> openim.agent.ReportSubWorkReq
+	217, // 344: openim.agent.Agent.publishWork:input_type -> openim.agent.PublishWorkReq
+	221, // 345: openim.agent.Agent.getGroupSetting:input_type -> openim.agent.GetGroupSettingReq
+	223, // 346: openim.agent.Agent.setGroupSetting:input_type -> openim.agent.SetGroupSettingReq
+	225, // 347: openim.agent.Agent.listGroupAgents:input_type -> openim.agent.ListGroupAgentsReq
+	229, // 348: openim.agent.Agent.getInstanceSetting:input_type -> openim.agent.GetInstanceSettingReq
+	231, // 349: openim.agent.Agent.setInstanceSetting:input_type -> openim.agent.SetInstanceSettingReq
+	234, // 350: openim.agent.Agent.listMemories:input_type -> openim.agent.ListMemoriesReq
+	236, // 351: openim.agent.Agent.saveMemory:input_type -> openim.agent.SaveMemoryReq
+	238, // 352: openim.agent.Agent.updateMemory:input_type -> openim.agent.UpdateMemoryReq
+	240, // 353: openim.agent.Agent.deleteMemories:input_type -> openim.agent.DeleteMemoriesReq
+	163, // 354: openim.agent.Agent.prepareInstance:input_type -> openim.agent.PrepareInstanceReq
+	165, // 355: openim.agent.Agent.bindInstance:input_type -> openim.agent.BindInstanceReq
+	167, // 356: openim.agent.Agent.removeInstance:input_type -> openim.agent.RemoveInstanceReq
+	169, // 357: openim.agent.Agent.getInstanceEligibility:input_type -> openim.agent.GetInstanceEligibilityReq
+	182, // 358: openim.agent.Agent.createWork:input_type -> openim.agent.CreateWorkReq
+	184, // 359: openim.agent.Agent.startWork:input_type -> openim.agent.StartWorkReq
+	186, // 360: openim.agent.Agent.requeueWorks:input_type -> openim.agent.RequeueWorksReq
+	188, // 361: openim.agent.Agent.markInstanceRead:input_type -> openim.agent.MarkInstanceReadReq
+	190, // 362: openim.agent.Agent.checkWork:input_type -> openim.agent.CheckWorkReq
+	192, // 363: openim.agent.Agent.takeWorkByTask:input_type -> openim.agent.TakeWorkByTaskReq
+	194, // 364: openim.agent.Agent.syncWorkByTask:input_type -> openim.agent.SyncWorkByTaskReq
+	196, // 365: openim.agent.Agent.endGroupWorks:input_type -> openim.agent.EndGroupWorksReq
+	198, // 366: openim.agent.Agent.instancesJoinedGroup:input_type -> openim.agent.InstancesJoinedGroupReq
+	255, // 367: openim.agent.Agent.adminGetCompanySetting:input_type -> openim.agent.AdminGetCompanySettingReq
+	257, // 368: openim.agent.Agent.adminSetCompanySetting:input_type -> openim.agent.AdminSetCompanySettingReq
+	259, // 369: openim.agent.Agent.adminListCompanySettings:input_type -> openim.agent.AdminListCompanySettingsReq
+	261, // 370: openim.agent.Agent.adminListCapabilities:input_type -> openim.agent.AdminListCapabilitiesReq
+	263, // 371: openim.agent.Agent.adminListTemplates:input_type -> openim.agent.AdminListTemplatesReq
+	265, // 372: openim.agent.Agent.adminSaveTemplate:input_type -> openim.agent.AdminSaveTemplateReq
+	267, // 373: openim.agent.Agent.adminDeleteTemplate:input_type -> openim.agent.AdminDeleteTemplateReq
+	269, // 374: openim.agent.Agent.adminListTags:input_type -> openim.agent.AdminListTagsReq
+	271, // 375: openim.agent.Agent.adminSaveTag:input_type -> openim.agent.AdminSaveTagReq
+	273, // 376: openim.agent.Agent.adminDeleteTag:input_type -> openim.agent.AdminDeleteTagReq
+	275, // 377: openim.agent.Agent.adminListAgents:input_type -> openim.agent.AdminListAgentsReq
+	278, // 378: openim.agent.Agent.adminGetAgentConfig:input_type -> openim.agent.AdminGetAgentConfigReq
+	284, // 379: openim.agent.Agent.adminUpdateAgent:input_type -> openim.agent.AdminUpdateAgentReq
+	280, // 380: openim.agent.Agent.adminSetAgentMember:input_type -> openim.agent.AdminSetAgentMemberReq
+	282, // 381: openim.agent.Agent.adminRemoveAgentMember:input_type -> openim.agent.AdminRemoveAgentMemberReq
+	286, // 382: openim.agent.Agent.adminDisableAgent:input_type -> openim.agent.AdminDisableAgentReq
+	288, // 383: openim.agent.Agent.adminEnableAgent:input_type -> openim.agent.AdminEnableAgentReq
+	290, // 384: openim.agent.Agent.adminDelistAgent:input_type -> openim.agent.AdminDelistAgentReq
+	292, // 385: openim.agent.Agent.adminRelistAgent:input_type -> openim.agent.AdminRelistAgentReq
+	294, // 386: openim.agent.Agent.adminDeleteAgent:input_type -> openim.agent.AdminDeleteAgentReq
+	296, // 387: openim.agent.Agent.adminRestoreAgent:input_type -> openim.agent.AdminRestoreAgentReq
+	299, // 388: openim.agent.Agent.adminListAudits:input_type -> openim.agent.AdminListAuditsReq
+	301, // 389: openim.agent.Agent.adminExportAudits:input_type -> openim.agent.AdminExportAuditsReq
+	303, // 390: openim.agent.Agent.adminListReviews:input_type -> openim.agent.AdminListReviewsReq
+	306, // 391: openim.agent.Agent.adminGetReview:input_type -> openim.agent.AdminGetReviewReq
+	308, // 392: openim.agent.Agent.adminDecideReview:input_type -> openim.agent.AdminDecideReviewReq
+	312, // 393: openim.agent.Agent.adminDescribeScope:input_type -> openim.agent.AdminDescribeScopeReq
+	310, // 394: openim.agent.Agent.adminScopeOptions:input_type -> openim.agent.AdminScopeOptionsReq
+	314, // 395: openim.agent.Agent.adminListPeopleGroups:input_type -> openim.agent.AdminListPeopleGroupsReq
+	316, // 396: openim.agent.Agent.adminGetPeopleGroup:input_type -> openim.agent.AdminGetPeopleGroupReq
+	318, // 397: openim.agent.Agent.adminListPeopleGroupMembers:input_type -> openim.agent.AdminListPeopleGroupMembersReq
+	320, // 398: openim.agent.Agent.adminListUserPeopleGroups:input_type -> openim.agent.AdminListUserPeopleGroupsReq
+	322, // 399: openim.agent.Agent.adminSavePeopleGroup:input_type -> openim.agent.AdminSavePeopleGroupReq
+	324, // 400: openim.agent.Agent.adminDeletePeopleGroup:input_type -> openim.agent.AdminDeletePeopleGroupReq
+	326, // 401: openim.agent.Agent.adminAddPeopleGroupUsers:input_type -> openim.agent.AdminAddPeopleGroupUsersReq
+	328, // 402: openim.agent.Agent.adminRemovePeopleGroupUsers:input_type -> openim.agent.AdminRemovePeopleGroupUsersReq
+	91,  // 403: openim.agent.Agent.getContext:output_type -> openim.agent.GetContextResp
+	93,  // 404: openim.agent.Agent.createAgent:output_type -> openim.agent.CreateAgentResp
+	95,  // 405: openim.agent.Agent.getAgent:output_type -> openim.agent.GetAgentResp
+	97,  // 406: openim.agent.Agent.listMyAgents:output_type -> openim.agent.ListMyAgentsResp
+	99,  // 407: openim.agent.Agent.saveDraft:output_type -> openim.agent.SaveDraftResp
+	101, // 408: openim.agent.Agent.restoreDraft:output_type -> openim.agent.RestoreDraftResp
+	103, // 409: openim.agent.Agent.deleteAgent:output_type -> openim.agent.DeleteAgentResp
+	105, // 410: openim.agent.Agent.restoreAgent:output_type -> openim.agent.RestoreAgentResp
+	107, // 411: openim.agent.Agent.listCapabilities:output_type -> openim.agent.ListCapabilitiesResp
+	109, // 412: openim.agent.Agent.previewRoleImport:output_type -> openim.agent.PreviewRoleImportResp
+	111, // 413: openim.agent.Agent.applyRoleImport:output_type -> openim.agent.ApplyRoleImportResp
+	113, // 414: openim.agent.Agent.listTestRuns:output_type -> openim.agent.ListTestRunsResp
+	115, // 415: openim.agent.Agent.markTestRun:output_type -> openim.agent.MarkTestRunResp
+	119, // 416: openim.agent.Agent.listReleases:output_type -> openim.agent.ListReleasesResp
+	121, // 417: openim.agent.Agent.getSnapshot:output_type -> openim.agent.GetSnapshotResp
+	123, // 418: openim.agent.Agent.submitCheck:output_type -> openim.agent.SubmitCheckResp
+	125, // 419: openim.agent.Agent.listMembers:output_type -> openim.agent.ListMembersResp
+	127, // 420: openim.agent.Agent.setMember:output_type -> openim.agent.SetMemberResp
+	129, // 421: openim.agent.Agent.removeMember:output_type -> openim.agent.RemoveMemberResp
+	131, // 422: openim.agent.Agent.setVisibleScope:output_type -> openim.agent.SetVisibleScopeResp
+	117, // 423: openim.agent.Agent.reportTestRun:output_type -> openim.agent.ReportTestRunResp
+	133, // 424: openim.agent.Agent.listTemplates:output_type -> openim.agent.ListTemplatesResp
+	135, // 425: openim.agent.Agent.getTemplate:output_type -> openim.agent.GetTemplateResp
+	137, // 426: openim.agent.Agent.listTags:output_type -> openim.agent.ListTagsResp
+	139, // 427: openim.agent.Agent.getEligibility:output_type -> openim.agent.GetEligibilityResp
+	141, // 428: openim.agent.Agent.listVersions:output_type -> openim.agent.ListVersionsResp
+	143, // 429: openim.agent.Agent.diffVersion:output_type -> openim.agent.DiffVersionResp
+	145, // 430: openim.agent.Agent.submitReview:output_type -> openim.agent.SubmitReviewResp
+	147, // 431: openim.agent.Agent.withdrawReview:output_type -> openim.agent.WithdrawReviewResp
+	149, // 432: openim.agent.Agent.listReviews:output_type -> openim.agent.ListReviewsResp
+	151, // 433: openim.agent.Agent.getReview:output_type -> openim.agent.GetReviewResp
+	153, // 434: openim.agent.Agent.retryReview:output_type -> openim.agent.RetryReviewResp
+	156, // 435: openim.agent.Agent.listMarket:output_type -> openim.agent.ListMarketResp
+	158, // 436: openim.agent.Agent.listMyInstances:output_type -> openim.agent.ListMyInstancesResp
+	160, // 437: openim.agent.Agent.getMyClone:output_type -> openim.agent.GetMyCloneResp
+	162, // 438: openim.agent.Agent.getInstanceConfig:output_type -> openim.agent.GetInstanceConfigResp
+	252, // 439: openim.agent.Agent.describeScope:output_type -> openim.agent.DescribeScopeResp
+	254, // 440: openim.agent.Agent.scopeOptions:output_type -> openim.agent.ScopeOptionsResp
+	174, // 441: openim.agent.Agent.getWorks:output_type -> openim.agent.GetWorksResp
+	176, // 442: openim.agent.Agent.listWorks:output_type -> openim.agent.ListWorksResp
+	178, // 443: openim.agent.Agent.getWorkStats:output_type -> openim.agent.GetWorkStatsResp
+	181, // 444: openim.agent.Agent.stopWork:output_type -> openim.agent.StopWorkResp
+	202, // 445: openim.agent.Agent.listWorkEvents:output_type -> openim.agent.ListWorkEventsResp
+	206, // 446: openim.agent.Agent.submitFeedback:output_type -> openim.agent.SubmitFeedbackResp
+	208, // 447: openim.agent.Agent.listFeedback:output_type -> openim.agent.ListFeedbackResp
+	210, // 448: openim.agent.Agent.handoffWork:output_type -> openim.agent.HandoffWorkResp
+	212, // 449: openim.agent.Agent.createSubWork:output_type -> openim.agent.CreateSubWorkResp
+	214, // 450: openim.agent.Agent.claimSubWork:output_type -> openim.agent.ClaimSubWorkResp
+	216, // 451: openim.agent.Agent.reportSubWork:output_type -> openim.agent.ReportSubWorkResp
+	218, // 452: openim.agent.Agent.publishWork:output_type -> openim.agent.PublishWorkResp
+	222, // 453: openim.agent.Agent.getGroupSetting:output_type -> openim.agent.GetGroupSettingResp
+	224, // 454: openim.agent.Agent.setGroupSetting:output_type -> openim.agent.SetGroupSettingResp
+	227, // 455: openim.agent.Agent.listGroupAgents:output_type -> openim.agent.ListGroupAgentsResp
+	230, // 456: openim.agent.Agent.getInstanceSetting:output_type -> openim.agent.GetInstanceSettingResp
+	232, // 457: openim.agent.Agent.setInstanceSetting:output_type -> openim.agent.SetInstanceSettingResp
+	235, // 458: openim.agent.Agent.listMemories:output_type -> openim.agent.ListMemoriesResp
+	237, // 459: openim.agent.Agent.saveMemory:output_type -> openim.agent.SaveMemoryResp
+	239, // 460: openim.agent.Agent.updateMemory:output_type -> openim.agent.UpdateMemoryResp
+	241, // 461: openim.agent.Agent.deleteMemories:output_type -> openim.agent.DeleteMemoriesResp
+	164, // 462: openim.agent.Agent.prepareInstance:output_type -> openim.agent.PrepareInstanceResp
+	166, // 463: openim.agent.Agent.bindInstance:output_type -> openim.agent.BindInstanceResp
+	168, // 464: openim.agent.Agent.removeInstance:output_type -> openim.agent.RemoveInstanceResp
+	170, // 465: openim.agent.Agent.getInstanceEligibility:output_type -> openim.agent.GetInstanceEligibilityResp
+	183, // 466: openim.agent.Agent.createWork:output_type -> openim.agent.CreateWorkResp
+	185, // 467: openim.agent.Agent.startWork:output_type -> openim.agent.StartWorkResp
+	187, // 468: openim.agent.Agent.requeueWorks:output_type -> openim.agent.RequeueWorksResp
+	189, // 469: openim.agent.Agent.markInstanceRead:output_type -> openim.agent.MarkInstanceReadResp
+	191, // 470: openim.agent.Agent.checkWork:output_type -> openim.agent.CheckWorkResp
+	193, // 471: openim.agent.Agent.takeWorkByTask:output_type -> openim.agent.TakeWorkByTaskResp
+	195, // 472: openim.agent.Agent.syncWorkByTask:output_type -> openim.agent.SyncWorkByTaskResp
+	197, // 473: openim.agent.Agent.endGroupWorks:output_type -> openim.agent.EndGroupWorksResp
+	199, // 474: openim.agent.Agent.instancesJoinedGroup:output_type -> openim.agent.InstancesJoinedGroupResp
+	256, // 475: openim.agent.Agent.adminGetCompanySetting:output_type -> openim.agent.AdminGetCompanySettingResp
+	258, // 476: openim.agent.Agent.adminSetCompanySetting:output_type -> openim.agent.AdminSetCompanySettingResp
+	260, // 477: openim.agent.Agent.adminListCompanySettings:output_type -> openim.agent.AdminListCompanySettingsResp
+	262, // 478: openim.agent.Agent.adminListCapabilities:output_type -> openim.agent.AdminListCapabilitiesResp
+	264, // 479: openim.agent.Agent.adminListTemplates:output_type -> openim.agent.AdminListTemplatesResp
+	266, // 480: openim.agent.Agent.adminSaveTemplate:output_type -> openim.agent.AdminSaveTemplateResp
+	268, // 481: openim.agent.Agent.adminDeleteTemplate:output_type -> openim.agent.AdminDeleteTemplateResp
+	270, // 482: openim.agent.Agent.adminListTags:output_type -> openim.agent.AdminListTagsResp
+	272, // 483: openim.agent.Agent.adminSaveTag:output_type -> openim.agent.AdminSaveTagResp
+	274, // 484: openim.agent.Agent.adminDeleteTag:output_type -> openim.agent.AdminDeleteTagResp
+	276, // 485: openim.agent.Agent.adminListAgents:output_type -> openim.agent.AdminListAgentsResp
+	279, // 486: openim.agent.Agent.adminGetAgentConfig:output_type -> openim.agent.AdminGetAgentConfigResp
+	285, // 487: openim.agent.Agent.adminUpdateAgent:output_type -> openim.agent.AdminUpdateAgentResp
+	281, // 488: openim.agent.Agent.adminSetAgentMember:output_type -> openim.agent.AdminSetAgentMemberResp
+	283, // 489: openim.agent.Agent.adminRemoveAgentMember:output_type -> openim.agent.AdminRemoveAgentMemberResp
+	287, // 490: openim.agent.Agent.adminDisableAgent:output_type -> openim.agent.AdminDisableAgentResp
+	289, // 491: openim.agent.Agent.adminEnableAgent:output_type -> openim.agent.AdminEnableAgentResp
+	291, // 492: openim.agent.Agent.adminDelistAgent:output_type -> openim.agent.AdminDelistAgentResp
+	293, // 493: openim.agent.Agent.adminRelistAgent:output_type -> openim.agent.AdminRelistAgentResp
+	295, // 494: openim.agent.Agent.adminDeleteAgent:output_type -> openim.agent.AdminDeleteAgentResp
+	297, // 495: openim.agent.Agent.adminRestoreAgent:output_type -> openim.agent.AdminRestoreAgentResp
+	300, // 496: openim.agent.Agent.adminListAudits:output_type -> openim.agent.AdminListAuditsResp
+	302, // 497: openim.agent.Agent.adminExportAudits:output_type -> openim.agent.AdminExportAuditsResp
+	305, // 498: openim.agent.Agent.adminListReviews:output_type -> openim.agent.AdminListReviewsResp
+	307, // 499: openim.agent.Agent.adminGetReview:output_type -> openim.agent.AdminGetReviewResp
+	309, // 500: openim.agent.Agent.adminDecideReview:output_type -> openim.agent.AdminDecideReviewResp
+	313, // 501: openim.agent.Agent.adminDescribeScope:output_type -> openim.agent.AdminDescribeScopeResp
+	311, // 502: openim.agent.Agent.adminScopeOptions:output_type -> openim.agent.AdminScopeOptionsResp
+	315, // 503: openim.agent.Agent.adminListPeopleGroups:output_type -> openim.agent.AdminListPeopleGroupsResp
+	317, // 504: openim.agent.Agent.adminGetPeopleGroup:output_type -> openim.agent.AdminGetPeopleGroupResp
+	319, // 505: openim.agent.Agent.adminListPeopleGroupMembers:output_type -> openim.agent.AdminListPeopleGroupMembersResp
+	321, // 506: openim.agent.Agent.adminListUserPeopleGroups:output_type -> openim.agent.AdminListUserPeopleGroupsResp
+	323, // 507: openim.agent.Agent.adminSavePeopleGroup:output_type -> openim.agent.AdminSavePeopleGroupResp
+	325, // 508: openim.agent.Agent.adminDeletePeopleGroup:output_type -> openim.agent.AdminDeletePeopleGroupResp
+	327, // 509: openim.agent.Agent.adminAddPeopleGroupUsers:output_type -> openim.agent.AdminAddPeopleGroupUsersResp
+	329, // 510: openim.agent.Agent.adminRemovePeopleGroupUsers:output_type -> openim.agent.AdminRemovePeopleGroupUsersResp
+	403, // [403:511] is the sub-list for method output_type
+	295, // [295:403] is the sub-list for method input_type
+	295, // [295:295] is the sub-list for extension type_name
+	295, // [295:295] is the sub-list for extension extendee
+	0,   // [0:295] is the sub-list for field type_name
 }
 
 func init() { file_agent_agent_proto_init() }
@@ -24608,7 +24664,7 @@ func file_agent_agent_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agent_agent_proto_rawDesc), len(file_agent_agent_proto_rawDesc)),
-			NumEnums:      35,
+			NumEnums:      36,
 			NumMessages:   296,
 			NumExtensions: 0,
 			NumServices:   1,

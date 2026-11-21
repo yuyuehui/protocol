@@ -76,8 +76,12 @@ func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
 		t.Fatalf("设了确认人应输出: %s", content)
 	}
 	snapshot.Mentions = &Mentions{UserIDs: []string{"user"}}
-	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"mentions":{"userIDs":["user"]}`)) {
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"mentions":{"userIDs":["user"],"displayNames":[]}`)) {
 		t.Fatalf("设了提醒的人应输出: %s", content)
+	}
+	snapshot.Mentions.DisplayNames = []string{"张三"}
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"mentions":{"userIDs":["user"],"displayNames":["张三"]}`)) {
+		t.Fatalf("带显示名应输出: %s", content)
 	}
 }
 
@@ -89,20 +93,48 @@ func TestMentions(t *testing.T) {
 	for _, c := range []struct {
 		name  string
 		users []string
+		names []string
 		ok    bool
 	}{
-		{"一个", []string{"user"}, true},
-		{"上限", ten, true},
-		{"空列表", []string{}, false},
-		{"超上限", append(append([]string(nil), ten...), "more"), false},
-		{"重复", []string{"a", "a"}, false},
-		{"空 ID", []string{""}, false},
-		{"ID 太长", []string{strings.Repeat("a", MaxMentionIDBytes+1)}, false},
+		{"一个", []string{"user"}, nil, true},
+		{"上限", ten, nil, true},
+		{"空列表", []string{}, nil, false},
+		{"超上限", append(append([]string(nil), ten...), "more"), nil, false},
+		{"重复", []string{"a", "a"}, nil, false},
+		{"空 ID", []string{""}, nil, false},
+		{"ID 太长", []string{strings.Repeat("a", MaxMentionIDBytes+1)}, nil, false},
+		{"带显示名", []string{"a", "b"}, []string{"张三", ""}, true},
+		{"显示名上限", []string{"a"}, []string{strings.Repeat("名", MaxMentionNameRunes)}, true},
+		{"显示名比 ID 少", []string{"a", "b"}, []string{"张三"}, false},
+		{"显示名比 ID 多", []string{"a"}, []string{"张三", "李四"}, false},
+		{"显示名太长", []string{"a"}, []string{strings.Repeat("名", MaxMentionNameRunes+1)}, false},
+		{"显示名首尾空白", []string{"a"}, []string{" 张三"}, false},
+		{"显示名控制字符", []string{"a"}, []string{"张\n三"}, false},
+		{"显示名无效编码", []string{"a"}, []string{"张\xff"}, false},
 	} {
 		s := validSnapshot()
-		s.Mentions = &Mentions{UserIDs: c.users}
+		s.Mentions = &Mentions{UserIDs: c.users, DisplayNames: c.names}
 		if err := ValidatePublicSnapshot(s); (err == nil) != c.ok {
 			t.Fatalf("%s: %v", c.name, err)
+		}
+	}
+}
+
+// TestMentionDisplayName 整理发送人昵称：去掉无效编码、控制字符和首尾空白，超长截断，整理过的再整理不变
+func TestMentionDisplayName(t *testing.T) {
+	for _, c := range []struct{ in, want string }{
+		{"张三", "张三"},
+		{"  张三\u3000", "张三"},
+		{"张\n三\x00", "张三"},
+		{"张\xff三", "张三"},
+		{"", ""},
+		{" \t ", ""},
+		{strings.Repeat("名", MaxMentionNameRunes+5), strings.Repeat("名", MaxMentionNameRunes)},
+		{strings.Repeat("名", MaxMentionNameRunes-1) + " 尾", strings.Repeat("名", MaxMentionNameRunes-1)},
+	} {
+		got := MentionDisplayName(c.in)
+		if got != c.want || MentionDisplayName(got) != got {
+			t.Fatalf("%q: got %q want %q", c.in, got, c.want)
 		}
 	}
 }

@@ -26,9 +26,10 @@ const (
 	// 云文档卡片：一条消息最多几张、标题最多几个字符（与 IM 文档卡片消息一致）
 	MaxDocCards          = 10
 	MaxDocCardTitleRunes = 200
-	// 回复提醒的人：最多几个、每个用户 ID 最长几个字节
-	MaxMentions       = 10
-	MaxMentionIDBytes = 64
+	// 回复提醒的人：最多几个、每个用户 ID 最长几个字节、显示名最多几个字符
+	MaxMentions         = 10
+	MaxMentionIDBytes   = 64
+	MaxMentionNameRunes = 64
 )
 
 var docCardTID = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
@@ -51,10 +52,33 @@ func ValidDocCard(c *DocCardBlock) bool {
 	return true
 }
 
-// validMentions 设了就至少一个，不重复，不超过上限
+// MentionDisplayName 把发送人昵称整理成提醒的显示名：去掉无效编码和控制字符、首尾空白，最多 MaxMentionNameRunes 个字符
+func MentionDisplayName(name string) string {
+	name = strings.Map(func(r rune) rune {
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, strings.ToValidUTF8(name, ""))
+	name = strings.TrimSpace(name)
+	if utf8.RuneCountInString(name) > MaxMentionNameRunes {
+		name = strings.TrimSpace(string([]rune(name)[:MaxMentionNameRunes]))
+	}
+	return name
+}
+
+// validMentions 设了就至少一个，不重复，不超过上限；显示名要么没有，要么和用户 ID 一样多且都整理过
 func validMentions(m *Mentions) bool {
 	if len(m.UserIDs) == 0 || len(m.UserIDs) > MaxMentions {
 		return false
+	}
+	if len(m.DisplayNames) != 0 && len(m.DisplayNames) != len(m.UserIDs) {
+		return false
+	}
+	for _, name := range m.DisplayNames {
+		if MentionDisplayName(name) != name {
+			return false
+		}
 	}
 	seen := make(map[string]struct{}, len(m.UserIDs))
 	for _, id := range m.UserIDs {

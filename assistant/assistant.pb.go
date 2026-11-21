@@ -541,8 +541,7 @@ type AssistantElem struct {
 	Summary       string                 `protobuf:"bytes,10,opt,name=summary,proto3" json:"summary"`
 	Blocks        []*Block               `protobuf:"bytes,11,rep,name=blocks,proto3" json:"blocks"`
 	// 回复提醒的人（2026-11-14）：群里受理时由服务端填发起人，执行端写的不算；PC 在回复开头显示“@昵称”。
-	// 用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。服务端按 im-server 的 assistant.replyMentions
-	// 开关填（默认关），各端 SDK 都认这个字段以后再开
+	// 用 optional：没设时按 EmitUnpopulated 序列化也不输出
 	Mentions      *Mentions `protobuf:"bytes,12,opt,name=mentions,proto3,oneof" json:"mentions"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -662,10 +661,14 @@ func (x *AssistantElem) GetMentions() *Mentions {
 	return nil
 }
 
-// 1–MaxMentions 个不重复的用户 ID，每个 1–64 字节
+// userIDs：1–MaxMentions 个不重复的用户 ID，每个 1–64 字节，认人只看它。
+// displayNames（2026-11-20）：和 userIDs 按位置一一对应的显示名，只用来显示“@昵称”。服务端受理时取发起人那条消息上的发送人昵称，
+// 不另查用户资料，之后改名也不变；老消息没有这一项。有就和 userIDs 一样多，每个按 MentionDisplayName 整理过（最多
+// MaxMentionNameRunes 个字符、没有控制字符、首尾没有空白），可以是空串。没有这一项或这一项是空串时客户端显示“@群成员”
 type Mentions struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserIDs       []string               `protobuf:"bytes,1,rep,name=userIDs,proto3" json:"userIDs"`
+	DisplayNames  []string               `protobuf:"bytes,2,rep,name=displayNames,proto3" json:"displayNames"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -703,6 +706,13 @@ func (*Mentions) Descriptor() ([]byte, []int) {
 func (x *Mentions) GetUserIDs() []string {
 	if x != nil {
 		return x.UserIDs
+	}
+	return nil
+}
+
+func (x *Mentions) GetDisplayNames() []string {
+	if x != nil {
+		return x.DisplayNames
 	}
 	return nil
 }
@@ -2135,9 +2145,10 @@ const file_assistant_assistant_proto_rawDesc = "" +
 	" \x01(\tR\asummary\x12/\n" +
 	"\x06blocks\x18\v \x03(\v2\x17.openim.assistant.BlockR\x06blocks\x12;\n" +
 	"\bmentions\x18\f \x01(\v2\x1a.openim.assistant.MentionsH\x00R\bmentions\x88\x01\x01B\v\n" +
-	"\t_mentions\"$\n" +
+	"\t_mentions\"H\n" +
 	"\bMentions\x12\x18\n" +
-	"\auserIDs\x18\x01 \x03(\tR\auserIDs\"\x96\x04\n" +
+	"\auserIDs\x18\x01 \x03(\tR\auserIDs\x12\"\n" +
+	"\fdisplayNames\x18\x02 \x03(\tR\fdisplayNames\"\x96\x04\n" +
 	"\x05Block\x12\x18\n" +
 	"\ablockID\x18\x01 \x01(\tR\ablockID\x121\n" +
 	"\x04text\x18\x02 \x01(\v2\x1b.openim.assistant.TextBlockH\x00R\x04text\x12=\n" +

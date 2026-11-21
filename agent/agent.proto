@@ -1890,10 +1890,20 @@ message SetGroupSettingResp {
 }
 
 // 群里的数字员工：现在的群成员都能查，只列在雇、账号在群里的实例，按进群先后。
-// 每个实例给运行人（雇佣人）、发布方式、执行电脑在不在线，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
+// 每个实例给运行人（雇佣人）、发布方式、执行电脑连没连上，和查看人自己的档位、是否自行确认；只有运行人能改（setGroupSetting）
 message ListGroupAgentsReq {
   string groupID = 1;
 }
+
+// 执行电脑（运行人的电脑）连没连上。和 im-chat 员工中心同一口径：员工在运行人名下的有效执行租约和网关登记的连接都在，
+// 设备 ID、hostEpoch 也对上才算已连接；查到了但对不上（没有租约、没有连接、连着的是别的电脑或旧的一轮）算未连接；
+// 查不了（Redis 出错）为 UNSPECIFIED，客户端显示“状态暂不可用”、不当成未连接
+enum HostConnection {
+  HOST_CONNECTION_UNSPECIFIED = 0;
+  HOST_CONNECTION_CONNECTED = 1;
+  HOST_CONNECTION_DISCONNECTED = 2;
+}
+
 message GroupAgent {
   string instanceID = 1;
   string botID = 2;
@@ -1905,9 +1915,10 @@ message GroupAgent {
   bool defaulted = 8;               // 运行人还没设过，按默认
   bool editable = 9;                // 查看人就是运行人，能改
   bool clone = 10;                  // 运行人的分身
-  // 执行电脑（运行人的电脑）现在连着：不在线时发起人发消息前在输入框上方提示“XX 的电脑不在线，需求会在电脑上线后处理”，
-  // 排队中的工作卡对其他成员显示“暂停中”。按网关登记的连接算，意外断开的最多 90 秒后才算不在线；查不了的按不在线
-  bool hostOnline = 11;
+  reserved 11;
+  reserved "hostOnline"; // 只看网关连接、查不了也算不在线，改用 hostConnection
+  // 执行电脑连没连上：明确未连接时客户端才提示“员工未连接”。网关连接意外断开的，最多 90 秒后才算未连接
+  HostConnection hostConnection = 12;
 }
 message ListGroupAgentsResp {
   repeated GroupAgent agents = 1;

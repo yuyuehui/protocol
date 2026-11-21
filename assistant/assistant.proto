@@ -30,12 +30,17 @@ message AssistantElem {
   string summary = 10;
   repeated Block blocks = 11;
   // 回复提醒的人（2026-11-14）：群里受理时由服务端填发起人，执行端写的不算；PC 在回复开头显示“@昵称”。
-  // 用 optional：没设时按 EmitUnpopulated 序列化也不输出，老客户端照常解析。服务端按 im-server 的 assistant.replyMentions
-  // 开关填（默认关），各端 SDK 都认这个字段以后再开
+  // 用 optional：没设时按 EmitUnpopulated 序列化也不输出
   optional Mentions mentions = 12;
 }
-// 1–MaxMentions 个不重复的用户 ID，每个 1–64 字节
-message Mentions { repeated string userIDs = 1; }
+// userIDs：1–MaxMentions 个不重复的用户 ID，每个 1–64 字节，认人只看它。
+// displayNames（2026-11-20）：和 userIDs 按位置一一对应的显示名，只用来显示“@昵称”。服务端受理时取发起人那条消息上的发送人昵称，
+// 不另查用户资料，之后改名也不变；老消息没有这一项。有就和 userIDs 一样多，每个按 MentionDisplayName 整理过（最多
+// MaxMentionNameRunes 个字符、没有控制字符、首尾没有空白），可以是空串。没有这一项或这一项是空串时客户端显示“@群成员”
+message Mentions {
+  repeated string userIDs = 1;
+  repeated string displayNames = 2;
+}
 
 enum RunStatus {
   RUN_STATUS_UNSPECIFIED = 0;
