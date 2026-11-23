@@ -127,6 +127,7 @@ const (
 	GroupMemberSetToOrdinaryUserNotification = 1518 // 群成员设为普通用户通知
 	GroupInfoSetAnnouncementNotification     = 1519 // 群组公告设置通知
 	GroupInfoSetNameNotification             = 1520 // 群组名称设置通知
+	MsgPushChangedNotification               = 1521 // 消息推送添加/移除提示（im-server msgpush 发；im-server、SDK 目前本地定义同值）
 
 	// 信令通知 (已注释，暂未使用)
 	//SignalingNotificationBegin = 1600
