@@ -69,6 +69,7 @@ message Block {
     ReceiptBlock receipt = 7;
     NoticeBlock notice = 8;
     DocCardBlock docCard = 9;
+    ScheduleProposalBlock scheduleProposal = 10;
   }
 }
 message TextBlock { string text = 1; }
@@ -148,6 +149,20 @@ message DocCardBlock {
   string tid = 1;      // 文档 ID：字母、数字、_、-，1–64 字节
   string docType = 2;  // doc | excel | board
   string title = 3;    // 1–200 个字符，不能全是空白，不含控制字符
+}
+
+// 定时任务提议卡：员工在 IM 里提议建一个定时任务（im-server agentschedule 以员工身份发，执行端不用自己放）。
+// 客户端按 proposalID 调 /agent/schedule/proposal/get 取状态（pending / created / expired）和完整内容；
+// 只有 initiatorUserID 能点「创建」（调 /agent/schedule/create 带 proposalID）或「修改」（编辑器预填后再创建）。一条消息最多一张
+message ScheduleProposalBlock {
+  string proposalID = 1;       // 1–64 字节
+  string name = 2;             // 任务名，1–64 个字符
+  string scheduleText = 3;     // 展示用时间，如「每天 09:00」「每周一、五 10:00」，1–64 个字符
+  string promptSummary = 4;    // 指令摘要，最多 200 个字符；完整指令只给发起人（proposal/get）
+  string deliveryKind = 5;     // 结果发到：single（私聊发起人）| group（本群）
+  string deliveryTargetID = 6; // single 为发起人 userID，group 为群 ID
+  string initiatorUserID = 7;  // 发起人，只有他能创建
+  int64 expiresAt = 8;         // 毫秒，过了不能再创建
 }
 
 enum InteractionKind {

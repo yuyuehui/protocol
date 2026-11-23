@@ -2,6 +2,7 @@ package assistant
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
@@ -58,6 +59,15 @@ func TestRejectInvalidSnapshots(t *testing.T) {
 
 // 服务端按 EmitUnpopulated 序列化 215 / 2122，老客户端严格解析、认不出的字段会让整条显示不了：
 // 后加进公开快照的字段必须有 presence（optional 或 oneof），不设时不输出。
+// compactJSON protojson 会按二进制随机插入空白（故意防止按字节比对），比较前先压紧
+func compactJSON(raw []byte) []byte {
+	var buf bytes.Buffer
+	if err := json.Compact(&buf, raw); err != nil {
+		return raw
+	}
+	return buf.Bytes()
+}
+
 func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
 	snapshot := validSnapshot()
 	snapshot.Blocks = append(snapshot.Blocks, &Block{BlockID: "ask", Content: &Block_Interaction{Interaction: &InteractionRef{InteractionID: "ask"}}})
@@ -72,15 +82,15 @@ func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
 	}
 	confirmer := "hirer"
 	snapshot.Blocks[1].GetInteraction().ConfirmerUserID = &confirmer
-	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"confirmerUserID":"hirer"`)) {
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"confirmerUserID":"hirer"`)) {
 		t.Fatalf("设了确认人应输出: %s", content)
 	}
 	snapshot.Mentions = &Mentions{UserIDs: []string{"user"}}
-	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"mentions":{"userIDs":["user"],"displayNames":[]}`)) {
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"mentions":{"userIDs":["user"],"displayNames":[]}`)) {
 		t.Fatalf("设了提醒的人应输出: %s", content)
 	}
 	snapshot.Mentions.DisplayNames = []string{"张三"}
-	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(content, []byte(`"mentions":{"userIDs":["user"],"displayNames":["张三"]}`)) {
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"mentions":{"userIDs":["user"],"displayNames":["张三"]}`)) {
 		t.Fatalf("带显示名应输出: %s", content)
 	}
 }
@@ -355,5 +365,42 @@ func TestPublicTextSafety(t *testing.T) {
 	}
 	if InboundAttachmentID("m1", 0) == InboundAttachmentID("m1", 1) || InboundAttachmentID("m1", 0) != InboundAttachmentID("m1", 0) {
 		t.Fatal("附件 ID 不稳定或冲突")
+	}
+}
+
+func TestScheduleProposalBlock(t *testing.T) {
+	card := func() *ScheduleProposalBlock {
+		return &ScheduleProposalBlock{ProposalID: "p1", Name: "日报", ScheduleText: "每天 09:00", PromptSummary: "汇总工单",
+			DeliveryKind: "group", DeliveryTargetID: "g1", InitiatorUserID: "u1", ExpiresAt: 1}
+	}
+	snap := func(blocks ...*Block) *AssistantElem {
+		s := validSnapshot()
+		s.Status = RunStatus_RUN_STATUS_COMPLETED
+		s.Blocks = blocks
+		return s
+	}
+	ok := snap(&Block{BlockID: "p", Content: &Block_ScheduleProposal{ScheduleProposal: card()}})
+	if err := ValidatePublicSnapshot(ok); err != nil {
+		t.Fatalf("valid proposal: %v", err)
+	}
+	two := snap(&Block{BlockID: "p", Content: &Block_ScheduleProposal{ScheduleProposal: card()}}, &Block{BlockID: "q", Content: &Block_ScheduleProposal{ScheduleProposal: card()}})
+	if ValidatePublicSnapshot(two) == nil {
+		t.Fatal("at most one proposal per message")
+	}
+	for name, mutate := range map[string]func(*ScheduleProposalBlock){
+		"no id":        func(c *ScheduleProposalBlock) { c.ProposalID = "" },
+		"blank name":   func(c *ScheduleProposalBlock) { c.Name = " " },
+		"no schedule":  func(c *ScheduleProposalBlock) { c.ScheduleText = "" },
+		"bad delivery": func(c *ScheduleProposalBlock) { c.DeliveryKind = "none" },
+		"no target":    func(c *ScheduleProposalBlock) { c.DeliveryTargetID = "" },
+		"no initiator": func(c *ScheduleProposalBlock) { c.InitiatorUserID = "" },
+		"no expiry":    func(c *ScheduleProposalBlock) { c.ExpiresAt = 0 },
+		"long summary": func(c *ScheduleProposalBlock) { c.PromptSummary = strings.Repeat("长", MaxProposalSummaryRunes+1) },
+	} {
+		c := card()
+		mutate(c)
+		if ValidScheduleProposal(c) {
+			t.Fatalf("%s must be invalid", name)
+		}
 	}
 }

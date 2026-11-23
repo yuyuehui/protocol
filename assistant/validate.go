@@ -52,6 +52,36 @@ func ValidDocCard(c *DocCardBlock) bool {
 	return true
 }
 
+// 提议卡字段上限
+const (
+	MaxProposalIDBytes       = 64
+	MaxProposalNameRunes     = 64
+	MaxProposalScheduleRunes = 64
+	MaxProposalSummaryRunes  = 200
+)
+
+// ValidScheduleProposal 定时任务提议卡的字段形状；提议本身存不存在、谁能创建由 im-server 在创建时核对
+func ValidScheduleProposal(p *ScheduleProposalBlock) bool {
+	if p == nil || p.ProposalID == "" || len(p.ProposalID) > MaxProposalIDBytes || p.InitiatorUserID == "" || p.ExpiresAt <= 0 {
+		return false
+	}
+	for _, f := range []struct {
+		text string
+		max  int
+		need bool
+	}{{p.Name, MaxProposalNameRunes, true}, {p.ScheduleText, MaxProposalScheduleRunes, true}, {p.PromptSummary, MaxProposalSummaryRunes, false}} {
+		if !utf8.ValidString(f.text) || utf8.RuneCountInString(f.text) > f.max || (f.need && strings.TrimSpace(f.text) == "") {
+			return false
+		}
+	}
+	switch p.DeliveryKind {
+	case "single", "group":
+		return p.DeliveryTargetID != ""
+	default:
+		return false
+	}
+}
+
 // MentionDisplayName 把发送人昵称整理成提醒的显示名：去掉无效编码和控制字符、首尾空白，最多 MaxMentionNameRunes 个字符
 func MentionDisplayName(name string) string {
 	name = strings.Map(func(r rune) rune {
@@ -167,6 +197,7 @@ func ValidatePublicSnapshot(s *AssistantElem) error {
 	}
 	seen := make(map[string]struct{}, len(s.Blocks))
 	docCards := 0
+	proposals := 0
 	for _, b := range s.Blocks {
 		if b == nil || b.BlockID == "" || b.Content == nil {
 			return ErrInvalidSnapshot
@@ -217,6 +248,10 @@ func ValidatePublicSnapshot(s *AssistantElem) error {
 			}
 		case *Block_DocCard:
 			if docCards++; c == nil || !ValidDocCard(c.DocCard) || docCards > MaxDocCards {
+				return ErrInvalidSnapshot
+			}
+		case *Block_ScheduleProposal:
+			if proposals++; c == nil || !ValidScheduleProposal(c.ScheduleProposal) || proposals > 1 {
 				return ErrInvalidSnapshot
 			}
 		default:
