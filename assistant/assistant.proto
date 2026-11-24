@@ -188,9 +188,22 @@ enum InteractionOutcome {
   INTERACTION_OUTCOME_CONFIRMED = 4;
   INTERACTION_OUTCOME_CANCELLED = 5;
 }
+// 问答是哪种题（InteractionRef.questionType），客户端按它定卡片标题；只填文字的问答不带这一项
+enum InteractionQuestionType {
+  INTERACTION_QUESTION_TYPE_UNSPECIFIED = 0;
+  INTERACTION_QUESTION_TYPE_CONFIRM = 1; // 确认：写操作确认（创建时标了 confirm 的问答），标题“需要你确认”
+  INTERACTION_QUESTION_TYPE_CHOICE = 2;  // 选择：带选项的题（契约 §15）
+}
+// 交互不是在 IM 卡片上了结的（InteractionRef.resolvedBy）：原执行端直接上报的
+enum InteractionResolver {
+  INTERACTION_RESOLVER_UNSPECIFIED = 0;
+  INTERACTION_RESOLVER_EXECUTOR = 1; // 已在执行端（桌面）处理：state 为 ACCEPTED，outcome 是处理结果，actorUserID 是交互的处理人
+  INTERACTION_RESOLVER_REVOKED = 2;  // 执行端已撤销，不用再处理：state 为 CANCELLED，actorUserID 为空
+}
 // 此引用不赋予操作权；详情与有效操作人由受保护接口返回。
-// state / outcome / actorUserID / decidedAt / confirmerUserID 只能由服务端按交互记录写入，执行端不能自行伪造；
-// 不含答案、参数或草稿正文，处理结果文案由客户端按 outcome 本地化。
+// state / outcome / actorUserID / decidedAt / confirmerUserID / questionType / answerSummary / resolvedBy 只能由服务端按交互记录写入，
+// 执行端不能自行伪造（questionType、answerSummary、resolvedBy 执行端写快照时不用带，带了也按服务端的为准）；
+// 不含参数或草稿正文，答案只在私聊里给摘要，处理结果文案由客户端按 outcome 本地化。
 message InteractionRef {
   string interactionID = 1;
   InteractionKind kind = 2;
@@ -206,6 +219,12 @@ message InteractionRef {
   // 用 optional：服务端按 EmitUnpopulated 序列化 215，普通字段为空也会输出，老客户端严格解析、认不出就整条显示不了；
   // optional 没设时不输出，只有交给别人确认的新流程才需要新客户端
   optional string confirmerUserID = 10;
+  // 以下几项都用 optional，用不到时不输出（同 confirmerUserID）
+  optional InteractionQuestionType questionType = 11; // 只有确认题、选择题带；只填文字的问答、别的类别不带
+  // 已回答的问答的回答摘要：选了的选项文字（多题按题号拼），没选项的是填的文字的开头，最多 MaxAnswerSummaryRunes 个字。
+  // 只在私聊里给：群里的卡片群成员都看得到，不给回答内容
+  optional string answerSummary = 12;
+  optional InteractionResolver resolvedBy = 13; // 执行端上报“已在桌面处理”或“已撤销”的才带
 }
 
 enum DeliveryStatus {

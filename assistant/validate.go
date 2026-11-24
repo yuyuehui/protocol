@@ -30,6 +30,8 @@ const (
 	MaxMentions         = 10
 	MaxMentionIDBytes   = 64
 	MaxMentionNameRunes = 64
+	// 交互块里问答的回答摘要最多几个字符（InteractionRef.answerSummary）
+	MaxAnswerSummaryRunes = 200
 )
 
 var docCardTID = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
@@ -325,6 +327,38 @@ func validateInteractionState(ref *InteractionRef) error {
 		}
 	default:
 		return ErrInvalidSnapshot
+	}
+	return validateInteractionExtras(ref)
+}
+
+// validateInteractionExtras 服务端给出的题型、回答摘要和处理来源要和类别、状态对得上：题型只有问答有；
+// 回答摘要只有已回答的问答有；已在执行端处理的是受理了的，已撤销的是作废了的、没有处理人。
+func validateInteractionExtras(ref *InteractionRef) error {
+	if ref.QuestionType != nil && (ref.Kind != InteractionKind_INTERACTION_KIND_QUESTION ||
+		(ref.GetQuestionType() != InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM && ref.GetQuestionType() != InteractionQuestionType_INTERACTION_QUESTION_TYPE_CHOICE)) {
+		return ErrInvalidSnapshot
+	}
+	if ref.AnswerSummary != nil {
+		summary := ref.GetAnswerSummary()
+		answered := ref.State == InteractionState_INTERACTION_STATE_SUBMITTED || ref.State == InteractionState_INTERACTION_STATE_ACCEPTED
+		if ref.Kind != InteractionKind_INTERACTION_KIND_QUESTION || !answered || ref.Outcome != InteractionOutcome_INTERACTION_OUTCOME_ANSWERED ||
+			strings.TrimSpace(summary) == "" || !utf8.ValidString(summary) || utf8.RuneCountInString(summary) > MaxAnswerSummaryRunes {
+			return ErrInvalidSnapshot
+		}
+	}
+	if ref.ResolvedBy != nil {
+		switch ref.GetResolvedBy() {
+		case InteractionResolver_INTERACTION_RESOLVER_EXECUTOR:
+			if ref.State != InteractionState_INTERACTION_STATE_ACCEPTED {
+				return ErrInvalidSnapshot
+			}
+		case InteractionResolver_INTERACTION_RESOLVER_REVOKED:
+			if ref.State != InteractionState_INTERACTION_STATE_CANCELLED || ref.ActorUserID != "" {
+				return ErrInvalidSnapshot
+			}
+		default:
+			return ErrInvalidSnapshot
+		}
 	}
 	return nil
 }

@@ -75,7 +75,7 @@ func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, field := range []string{"confirmerUserID", "docCard", "mentions"} {
+	for _, field := range []string{"confirmerUserID", "docCard", "mentions", "questionType", "answerSummary", "resolvedBy"} {
 		if bytes.Contains(content, []byte(field)) {
 			t.Fatalf("没设的 %s 不应输出: %s", field, content)
 		}
@@ -92,6 +92,11 @@ func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
 	snapshot.Mentions.DisplayNames = []string{"张三"}
 	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"mentions":{"userIDs":["user"],"displayNames":["张三"]}`)) {
 		t.Fatalf("带显示名应输出: %s", content)
+	}
+	confirm := InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM
+	snapshot.Blocks[1].GetInteraction().QuestionType = &confirm
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"questionType":"INTERACTION_QUESTION_TYPE_CONFIRM"`)) {
+		t.Fatalf("设了题型应输出: %s", content)
 	}
 }
 
@@ -340,6 +345,66 @@ func TestInteractionState(t *testing.T) {
 	}
 	for name, mutate := range invalid {
 		ref := base()
+		mutate(ref)
+		if ValidatePublicSnapshot(interactionSnapshot(ref)) == nil {
+			t.Fatalf("%s: 未被拒绝", name)
+		}
+	}
+}
+
+// 题型只有问答有；回答摘要只有已回答的问答有；已在执行端处理的是受理了的，已撤销的是作废了的、没有处理人
+func TestInteractionExtras(t *testing.T) {
+	question := func() *InteractionRef {
+		return &InteractionRef{InteractionID: "q1", Kind: InteractionKind_INTERACTION_KIND_QUESTION, Revision: 1, ExpiresAt: 10, Summary: "需要补充信息", State: InteractionState_INTERACTION_STATE_PENDING}
+	}
+	answered := func(r *InteractionRef) {
+		r.State, r.Outcome, r.ActorUserID, r.DecidedAt = InteractionState_INTERACTION_STATE_ACCEPTED, InteractionOutcome_INTERACTION_OUTCOME_ANSWERED, "u1", 5
+	}
+	confirm, choice := InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM, InteractionQuestionType_INTERACTION_QUESTION_TYPE_CHOICE
+	executor, revoked := InteractionResolver_INTERACTION_RESOLVER_EXECUTOR, InteractionResolver_INTERACTION_RESOLVER_REVOKED
+	valid := map[string]func(*InteractionRef){
+		"确认题": func(r *InteractionRef) { r.QuestionType = &confirm },
+		"选择题已回答带摘要": func(r *InteractionRef) {
+			r.QuestionType, r.AnswerSummary = &choice, proto.String("方案 A")
+			answered(r)
+		},
+		"在执行端回答": func(r *InteractionRef) {
+			answered(r)
+			r.ResolvedBy = &executor
+		},
+		"执行端撤销": func(r *InteractionRef) {
+			r.State, r.DecidedAt, r.ResolvedBy = InteractionState_INTERACTION_STATE_CANCELLED, 6, &revoked
+		},
+	}
+	for name, mutate := range valid {
+		ref := question()
+		mutate(ref)
+		if err := ValidatePublicSnapshot(interactionSnapshot(ref)); err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+	}
+	unknown := InteractionQuestionType(9)
+	invalid := map[string]func(*InteractionRef){
+		"审批带题型": func(r *InteractionRef) {
+			r.Kind, r.Summary, r.QuestionType = InteractionKind_INTERACTION_KIND_EXECUTION_APPROVAL, "等待执行审批", &confirm
+		},
+		"认不得的题型": func(r *InteractionRef) { r.QuestionType = &unknown },
+		"没回答带摘要": func(r *InteractionRef) { r.AnswerSummary = proto.String("方案 A") },
+		"空摘要": func(r *InteractionRef) {
+			answered(r)
+			r.AnswerSummary = proto.String(" ")
+		},
+		"摘要太长": func(r *InteractionRef) {
+			answered(r)
+			r.AnswerSummary = proto.String(strings.Repeat("长", MaxAnswerSummaryRunes+1))
+		},
+		"待处理说在执行端处理了": func(r *InteractionRef) { r.ResolvedBy = &executor },
+		"撤销带处理人": func(r *InteractionRef) {
+			r.State, r.ActorUserID, r.DecidedAt, r.ResolvedBy = InteractionState_INTERACTION_STATE_CANCELLED, "u1", 6, &revoked
+		},
+	}
+	for name, mutate := range invalid {
+		ref := question()
 		mutate(ref)
 		if ValidatePublicSnapshot(interactionSnapshot(ref)) == nil {
 			t.Fatalf("%s: 未被拒绝", name)
