@@ -223,6 +223,9 @@ func (x *GetConversationsHasReadAndMaxSeqReq) Check() error {
 }
 
 func (x *GetConversationMaxSeqResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if x.MaxSeq > 50 {
 		return fmt.Sprintf("len is %v", x.MaxSeq)
 	}
@@ -230,6 +233,9 @@ func (x *GetConversationMaxSeqResp) Format() any {
 }
 
 func (x *GetConversationsHasReadAndMaxSeqResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.Seqs) > 50 {
 		return fmt.Sprintf("len is %v", len(x.Seqs))
 	}
@@ -237,6 +243,9 @@ func (x *GetConversationsHasReadAndMaxSeqResp) Format() any {
 }
 
 func (x *SeqsInfoResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.MaxSeqs) > 50 {
 		return fmt.Sprintf("len is %v", len(x.MaxSeqs))
 	}

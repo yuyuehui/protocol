@@ -198,6 +198,9 @@ func (x *GetSortedConversationListReq) Check() error {
 }
 
 func (x *GetConversationIDsResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.ConversationIDs) > 50 {
 		return fmt.Sprintf("len is %v", len(x.ConversationIDs))
 	}
@@ -205,6 +208,9 @@ func (x *GetConversationIDsResp) Format() any {
 }
 
 func (x *GetOwnerConversationResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if x.Total > 50 {
 		return fmt.Sprintf("len is %v", x.Total)
 	}
@@ -212,6 +218,9 @@ func (x *GetOwnerConversationResp) Format() any {
 }
 
 func (x *GetAllConversationsResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.Conversations) > 50 {
 		return fmt.Sprintf("len is %v", len(x.Conversations))
 	}
@@ -219,6 +228,9 @@ func (x *GetAllConversationsResp) Format() any {
 }
 
 func (x *GetFullOwnerConversationIDsResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.ConversationIDs) > 20 {
 		return fmt.Sprintf("len is %v", len(x.ConversationIDs))
 	}

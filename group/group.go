@@ -403,6 +403,9 @@ func (x *GetFullJoinGroupIDsReq) Check() error {
 }
 
 func (x *BatchGetIncrementalGroupMemberResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.RespList) > 50 {
 		return fmt.Sprintf("len is %v", len(x.RespList))
 	}
@@ -410,12 +413,18 @@ func (x *BatchGetIncrementalGroupMemberResp) Format() any {
 }
 
 func (x *GetGroupApplicationListResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.GroupRequests) > 50 {
 		return fmt.Sprintf("len is %v", len(x.GroupRequests))
 	}
 	return x
 }
 func (x *GetJoinedGroupListResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.Groups) > 20 {
 		return fmt.Sprintf("len is %v", len(x.Groups))
 	}
@@ -423,6 +432,9 @@ func (x *GetJoinedGroupListResp) Format() any {
 }
 
 func (x *GetGroupsInfoResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.GroupInfos) > 20 {
 		return fmt.Sprintf("len is %v", len(x.GroupInfos))
 	}
@@ -430,6 +442,9 @@ func (x *GetGroupsInfoResp) Format() any {
 }
 
 func (x *GetGroupMemberListResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.Members) > 50 {
 		return fmt.Sprintf("len is %v", len(x.Members))
 	}
@@ -437,6 +452,9 @@ func (x *GetGroupMemberListResp) Format() any {
 }
 
 func (x *GetUserReqApplicationListResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.GroupRequests) > 20 {
 		return fmt.Sprintf("len is %v", len(x.GroupRequests))
 	}

@@ -299,6 +299,9 @@ func (x *UpdateUserInfoExReq) Check() error {
 }
 
 func (x *GetDesignateUsersResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.UsersInfo) > 20 {
 		return fmt.Sprintf("len is %v", len(x.UsersInfo))
 	}
