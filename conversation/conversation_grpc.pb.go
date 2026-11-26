@@ -64,6 +64,7 @@ const (
 	Conversation_UpdateConversationsByUser_FullMethodName               = "/openim.conversation.conversation/UpdateConversationsByUser"
 	Conversation_DeleteConversations_FullMethodName                     = "/openim.conversation.conversation/DeleteConversations"
 	Conversation_UnhideConversationsIfNeeded_FullMethodName             = "/openim.conversation.conversation/UnhideConversationsIfNeeded"
+	Conversation_NotifyGroupConversationsChanged_FullMethodName         = "/openim.conversation.conversation/NotifyGroupConversationsChanged"
 	Conversation_InitConversationGroups_FullMethodName                  = "/openim.conversation.conversation/InitConversationGroups"
 	Conversation_GetAllConversationGroups_FullMethodName                = "/openim.conversation.conversation/GetAllConversationGroups"
 	Conversation_GetVisibleConversationGroups_FullMethodName            = "/openim.conversation.conversation/GetVisibleConversationGroups"
@@ -120,6 +121,7 @@ type ConversationClient interface {
 	UpdateConversationsByUser(ctx context.Context, in *UpdateConversationsByUserReq, opts ...grpc.CallOption) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(ctx context.Context, in *DeleteConversationsReq, opts ...grpc.CallOption) (*DeleteConversationsResp, error)
 	UnhideConversationsIfNeeded(ctx context.Context, in *UnhideConversationsIfNeededReq, opts ...grpc.CallOption) (*UnhideConversationsIfNeededResp, error)
+	NotifyGroupConversationsChanged(ctx context.Context, in *NotifyGroupConversationsChangedReq, opts ...grpc.CallOption) (*NotifyGroupConversationsChangedResp, error)
 	InitConversationGroups(ctx context.Context, in *InitConversationGroupsReq, opts ...grpc.CallOption) (*InitConversationGroupsResp, error)
 	GetAllConversationGroups(ctx context.Context, in *GetAllConversationGroupsReq, opts ...grpc.CallOption) (*GetAllConversationGroupsResp, error)
 	GetVisibleConversationGroups(ctx context.Context, in *GetVisibleConversationGroupsReq, opts ...grpc.CallOption) (*GetVisibleConversationGroupsResp, error)
@@ -459,6 +461,16 @@ func (c *conversationClient) UnhideConversationsIfNeeded(ctx context.Context, in
 	return out, nil
 }
 
+func (c *conversationClient) NotifyGroupConversationsChanged(ctx context.Context, in *NotifyGroupConversationsChangedReq, opts ...grpc.CallOption) (*NotifyGroupConversationsChangedResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(NotifyGroupConversationsChangedResp)
+	err := c.cc.Invoke(ctx, Conversation_NotifyGroupConversationsChanged_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *conversationClient) InitConversationGroups(ctx context.Context, in *InitConversationGroupsReq, opts ...grpc.CallOption) (*InitConversationGroupsResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(InitConversationGroupsResp)
@@ -675,6 +687,7 @@ type ConversationServer interface {
 	UpdateConversationsByUser(context.Context, *UpdateConversationsByUserReq) (*UpdateConversationsByUserResp, error)
 	DeleteConversations(context.Context, *DeleteConversationsReq) (*DeleteConversationsResp, error)
 	UnhideConversationsIfNeeded(context.Context, *UnhideConversationsIfNeededReq) (*UnhideConversationsIfNeededResp, error)
+	NotifyGroupConversationsChanged(context.Context, *NotifyGroupConversationsChangedReq) (*NotifyGroupConversationsChangedResp, error)
 	InitConversationGroups(context.Context, *InitConversationGroupsReq) (*InitConversationGroupsResp, error)
 	GetAllConversationGroups(context.Context, *GetAllConversationGroupsReq) (*GetAllConversationGroupsResp, error)
 	GetVisibleConversationGroups(context.Context, *GetVisibleConversationGroupsReq) (*GetVisibleConversationGroupsResp, error)
@@ -796,6 +809,9 @@ func (UnimplementedConversationServer) DeleteConversations(context.Context, *Del
 }
 func (UnimplementedConversationServer) UnhideConversationsIfNeeded(context.Context, *UnhideConversationsIfNeededReq) (*UnhideConversationsIfNeededResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method UnhideConversationsIfNeeded not implemented")
+}
+func (UnimplementedConversationServer) NotifyGroupConversationsChanged(context.Context, *NotifyGroupConversationsChangedReq) (*NotifyGroupConversationsChangedResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method NotifyGroupConversationsChanged not implemented")
 }
 func (UnimplementedConversationServer) InitConversationGroups(context.Context, *InitConversationGroupsReq) (*InitConversationGroupsResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method InitConversationGroups not implemented")
@@ -1430,6 +1446,24 @@ func _Conversation_UnhideConversationsIfNeeded_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Conversation_NotifyGroupConversationsChanged_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyGroupConversationsChangedReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConversationServer).NotifyGroupConversationsChanged(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Conversation_NotifyGroupConversationsChanged_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConversationServer).NotifyGroupConversationsChanged(ctx, req.(*NotifyGroupConversationsChangedReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Conversation_InitConversationGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InitConversationGroupsReq)
 	if err := dec(in); err != nil {
@@ -1884,6 +1918,10 @@ var Conversation_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnhideConversationsIfNeeded",
 			Handler:    _Conversation_UnhideConversationsIfNeeded_Handler,
+		},
+		{
+			MethodName: "NotifyGroupConversationsChanged",
+			Handler:    _Conversation_NotifyGroupConversationsChanged_Handler,
 		},
 		{
 			MethodName: "InitConversationGroups",

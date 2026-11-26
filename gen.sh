@@ -57,6 +57,7 @@ PROTO_NAMES=(
     "call"
     "workbench"
     "openplatform"
+    "agent"
 )
 
 for name in "${PROTO_NAMES[@]}"; do

@@ -26,6 +26,8 @@ type GatewayClaims struct {
 	BodyHash      string `json:"bodyHash"`
 	IssuedAt      int64  `json:"issuedAt"`
 	Nonce         string `json:"nonce"`
+	// WorkTokenHash 是执行端随回传带来的数字员工工作令牌的 SHA-256（十六进制），由网关计算，令牌原文不进 im-server；没带令牌时为空。
+	WorkTokenHash string `json:"workTokenHash,omitempty"`
 }
 
 func GatewayBodyHash(body []byte) string {
@@ -33,7 +35,7 @@ func GatewayBodyHash(body []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 func validGatewayClaims(c GatewayClaims) bool {
-	return c.ApplicationID != "" && len(c.ApplicationID) <= 256 && c.BotID != "" && len(c.BotID) <= 256 && c.ConnectionID != "" && len(c.ConnectionID) <= 256 && c.ActionID != "" && len(c.ActionID) <= 256 && c.Method == "POST" && strings.HasPrefix(c.Path, "/assistant/internal/") && !strings.ContainsAny(c.Path, "?#") && len(c.BodyHash) == 64 && len(c.Nonce) >= 16 && len(c.Nonce) <= 128 && c.IssuedAt > 0
+	return c.ApplicationID != "" && len(c.ApplicationID) <= 256 && c.BotID != "" && len(c.BotID) <= 256 && c.ConnectionID != "" && len(c.ConnectionID) <= 256 && c.ActionID != "" && len(c.ActionID) <= 256 && c.Method == "POST" && strings.HasPrefix(c.Path, "/assistant/internal/") && !strings.ContainsAny(c.Path, "?#") && len(c.BodyHash) == 64 && len(c.Nonce) >= 16 && len(c.Nonce) <= 128 && c.IssuedAt > 0 && (c.WorkTokenHash == "" || len(c.WorkTokenHash) == 64)
 }
 func SignGatewayAssertion(key []byte, c GatewayClaims) (string, error) {
 	if len(key) < 32 || !validGatewayClaims(c) {

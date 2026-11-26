@@ -102,6 +102,7 @@ type GroupInfo struct {
 	ApplyMemberFriend      int32                  `protobuf:"varint,15,opt,name=applyMemberFriend,proto3" json:"applyMemberFriend"`
 	NotificationUpdateTime int64                  `protobuf:"varint,16,opt,name=notificationUpdateTime,proto3" json:"notificationUpdateTime"`
 	NotificationUserID     string                 `protobuf:"bytes,17,opt,name=notificationUserID,proto3" json:"notificationUserID"`
+	MemberComposition      int32                  `protobuf:"varint,18,opt,name=memberComposition,proto3" json:"memberComposition"` // 成员构成：0=纯人，1=数字员工和人混合，2=纯数字员工（数字员工按 userID 前缀 bot_ 识别，进人退人时服务端自动算，不能设置）
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
@@ -253,6 +254,13 @@ func (x *GroupInfo) GetNotificationUserID() string {
 		return x.NotificationUserID
 	}
 	return ""
+}
+
+func (x *GroupInfo) GetMemberComposition() int32 {
+	if x != nil {
+		return x.MemberComposition
+	}
+	return 0
 }
 
 type GroupInfoForSet struct {
@@ -9558,7 +9566,7 @@ var File_sdkws_sdkws_proto protoreflect.FileDescriptor
 
 const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\n" +
-	"\x11sdkws/sdkws.proto\x12\fopenim.sdkws\x1a\x1bwrapperspb/wrapperspb.proto\"\xdf\x04\n" +
+	"\x11sdkws/sdkws.proto\x12\fopenim.sdkws\x1a\x1bwrapperspb/wrapperspb.proto\"\x8d\x05\n" +
 	"\tGroupInfo\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x1c\n" +
 	"\tgroupName\x18\x02 \x01(\tR\tgroupName\x12\"\n" +
@@ -9579,7 +9587,8 @@ const file_sdkws_sdkws_proto_rawDesc = "" +
 	"\x0elookMemberInfo\x18\x0e \x01(\x05R\x0elookMemberInfo\x12,\n" +
 	"\x11applyMemberFriend\x18\x0f \x01(\x05R\x11applyMemberFriend\x126\n" +
 	"\x16notificationUpdateTime\x18\x10 \x01(\x03R\x16notificationUpdateTime\x12.\n" +
-	"\x12notificationUserID\x18\x11 \x01(\tR\x12notificationUserID\"\xb2\x03\n" +
+	"\x12notificationUserID\x18\x11 \x01(\tR\x12notificationUserID\x12,\n" +
+	"\x11memberComposition\x18\x12 \x01(\x05R\x11memberComposition\"\xb2\x03\n" +
 	"\x0fGroupInfoForSet\x12\x18\n" +
 	"\agroupID\x18\x01 \x01(\tR\agroupID\x12\x1c\n" +
 	"\tgroupName\x18\x02 \x01(\tR\tgroupName\x12\"\n" +

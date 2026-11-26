@@ -3,6 +3,9 @@ package assistant
 import (
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -20,7 +23,147 @@ const (
 	MaxSummaryRunes     = 200
 	MaxNoticeCodeBytes  = 64
 	MaxNoticeSummaryLen = 500
+	// 云文档卡片：一条消息最多几张、标题最多几个字符（与 IM 文档卡片消息一致）
+	MaxDocCards          = 10
+	MaxDocCardTitleRunes = 200
+	// 回复提醒的人：最多几个、每个用户 ID 最长几个字节、显示名最多几个字符
+	MaxMentions         = 10
+	MaxMentionIDBytes   = 64
+	MaxMentionNameRunes = 64
+	// 交互块里问答的回答摘要最多几个字符（InteractionRef.answerSummary）
+	MaxAnswerSummaryRunes = 200
 )
+
+var docCardTID = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
+
+// ValidDocCard 云文档卡片的字段形状，规则与 IM 文档卡片消息（自定义消息 110）一致
+func ValidDocCard(c *DocCardBlock) bool {
+	if c == nil || !docCardTID.MatchString(c.Tid) || strings.TrimSpace(c.Title) == "" || !utf8.ValidString(c.Title) || utf8.RuneCountInString(c.Title) > MaxDocCardTitleRunes {
+		return false
+	}
+	switch c.DocType {
+	case "doc", "excel", "board":
+	default:
+		return false
+	}
+	for _, r := range c.Title {
+		if unicode.IsControl(r) {
+			return false
+		}
+	}
+	return true
+}
+
+// 提议卡字段上限
+const (
+	MaxProposalIDBytes       = 64
+	MaxProposalNameRunes     = 64
+	MaxProposalScheduleRunes = 64
+	MaxProposalSummaryRunes  = 200
+)
+
+// ValidScheduleProposal 定时任务提议卡的字段形状；提议本身存不存在、谁能创建由 im-server 在创建时核对
+func ValidScheduleProposal(p *ScheduleProposalBlock) bool {
+	if p == nil || p.ProposalID == "" || len(p.ProposalID) > MaxProposalIDBytes || p.InitiatorUserID == "" || p.ExpiresAt <= 0 {
+		return false
+	}
+	for _, f := range []struct {
+		text string
+		max  int
+		need bool
+	}{{p.Name, MaxProposalNameRunes, true}, {p.ScheduleText, MaxProposalScheduleRunes, true}, {p.PromptSummary, MaxProposalSummaryRunes, false}} {
+		if !utf8.ValidString(f.text) || utf8.RuneCountInString(f.text) > f.max || (f.need && strings.TrimSpace(f.text) == "") {
+			return false
+		}
+	}
+	switch p.DeliveryKind {
+	case "single", "group":
+		return p.DeliveryTargetID != ""
+	default:
+		return false
+	}
+}
+
+// MentionDisplayName 把发送人昵称整理成提醒的显示名：去掉无效编码和控制字符、首尾空白，最多 MaxMentionNameRunes 个字符
+func MentionDisplayName(name string) string {
+	name = strings.Map(func(r rune) rune {
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, strings.ToValidUTF8(name, ""))
+	name = strings.TrimSpace(name)
+	if utf8.RuneCountInString(name) > MaxMentionNameRunes {
+		name = strings.TrimSpace(string([]rune(name)[:MaxMentionNameRunes]))
+	}
+	return name
+}
+
+// validMentions 设了就至少一个，不重复，不超过上限；显示名要么没有，要么和用户 ID 一样多且都整理过
+func validMentions(m *Mentions) bool {
+	if len(m.UserIDs) == 0 || len(m.UserIDs) > MaxMentions {
+		return false
+	}
+	if len(m.DisplayNames) != 0 && len(m.DisplayNames) != len(m.UserIDs) {
+		return false
+	}
+	for _, name := range m.DisplayNames {
+		if MentionDisplayName(name) != name {
+			return false
+		}
+	}
+	seen := make(map[string]struct{}, len(m.UserIDs))
+	for _, id := range m.UserIDs {
+		if _, exists := seen[id]; exists || id == "" || len(id) > MaxMentionIDBytes {
+			return false
+		}
+		seen[id] = struct{}{}
+	}
+	return true
+}
+
+// 附件类别（AttachmentBlock.kind），服务端按真实字节判断
+const (
+	AttachmentKindImage = "image"
+	AttachmentKindVideo = "video"
+	AttachmentKindAudio = "audio"
+	AttachmentKindFile  = "file"
+	// IM 文件对象名最长几个字节（与 IM 上传的对象名一致）
+	MaxIMObjectBytes = 1024
+)
+
+// 客户端直接拼 <API 地址>/object/<imObject>，对象名只用不需要转义的字符
+var imObjectSegment = regexp.MustCompile(`^[A-Za-z0-9._@-]+$`)
+
+// validAttachmentFile 服务端写的 IM 文件字段：类别和对象名要么都有要么都没有；宽高只有图片带，两个都带且大于 0
+func validAttachmentFile(a *AttachmentBlock) bool {
+	if a.Kind == nil && a.ImObject == nil {
+		return a.Width == nil && a.Height == nil
+	}
+	if a.Kind == nil || a.ImObject == nil || !ValidIMObject(*a.ImObject) {
+		return false
+	}
+	switch *a.Kind {
+	case AttachmentKindImage:
+		return a.Width != nil && a.Height != nil && *a.Width > 0 && *a.Height > 0
+	case AttachmentKindVideo, AttachmentKindAudio, AttachmentKindFile:
+		return a.Width == nil && a.Height == nil
+	}
+	return false
+}
+
+// ValidIMObject IM 文件对象名：用 / 分段，每段只有字母、数字和 . _ @ -，不能是 . 或 ..
+func ValidIMObject(name string) bool {
+	if len(name) > MaxIMObjectBytes {
+		return false
+	}
+	for _, seg := range strings.Split(name, "/") {
+		if seg == "." || seg == ".." || !imObjectSegment.MatchString(seg) {
+			return false
+		}
+	}
+	return true
+}
 
 var ErrInvalidSnapshot = errors.New("invalid assistant snapshot")
 
@@ -51,7 +194,12 @@ func ValidatePublicSnapshot(s *AssistantElem) error {
 	} else if s.TaskID == "" || s.RunID == "" || s.StreamEpoch == 0 {
 		return ErrInvalidSnapshot
 	}
+	if s.Mentions != nil && !validMentions(s.Mentions) {
+		return fmt.Errorf("%w: invalid mentions", ErrInvalidSnapshot)
+	}
 	seen := make(map[string]struct{}, len(s.Blocks))
+	docCards := 0
+	proposals := 0
 	for _, b := range s.Blocks {
 		if b == nil || b.BlockID == "" || b.Content == nil {
 			return ErrInvalidSnapshot
@@ -73,7 +221,7 @@ func ValidatePublicSnapshot(s *AssistantElem) error {
 				return err
 			}
 		case *Block_Attachment:
-			if c == nil || c.Attachment == nil || c.Attachment.ResourceID == "" || c.Attachment.ContentVersion == "" || c.Attachment.Size < 0 {
+			if c == nil || c.Attachment == nil || c.Attachment.ResourceID == "" || c.Attachment.ContentVersion == "" || c.Attachment.Size < 0 || !validAttachmentFile(c.Attachment) {
 				return ErrInvalidSnapshot
 			}
 		case *Block_Sources:
@@ -98,6 +246,14 @@ func ValidatePublicSnapshot(s *AssistantElem) error {
 			}
 		case *Block_Notice:
 			if c == nil || c.Notice == nil || c.Notice.Code == "" || len(c.Notice.Code) > MaxNoticeCodeBytes || !utf8.ValidString(c.Notice.Summary) || utf8.RuneCountInString(c.Notice.Summary) > MaxNoticeSummaryLen {
+				return ErrInvalidSnapshot
+			}
+		case *Block_DocCard:
+			if docCards++; c == nil || !ValidDocCard(c.DocCard) || docCards > MaxDocCards {
+				return ErrInvalidSnapshot
+			}
+		case *Block_ScheduleProposal:
+			if proposals++; c == nil || !ValidScheduleProposal(c.ScheduleProposal) || proposals > 1 {
 				return ErrInvalidSnapshot
 			}
 		default:
@@ -171,6 +327,38 @@ func validateInteractionState(ref *InteractionRef) error {
 		}
 	default:
 		return ErrInvalidSnapshot
+	}
+	return validateInteractionExtras(ref)
+}
+
+// validateInteractionExtras 服务端给出的题型、回答摘要和处理来源要和类别、状态对得上：题型只有问答有；
+// 回答摘要只有已回答的问答有；已在执行端处理的是受理了的，已撤销的是作废了的、没有处理人。
+func validateInteractionExtras(ref *InteractionRef) error {
+	if ref.QuestionType != nil && (ref.Kind != InteractionKind_INTERACTION_KIND_QUESTION ||
+		(ref.GetQuestionType() != InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM && ref.GetQuestionType() != InteractionQuestionType_INTERACTION_QUESTION_TYPE_CHOICE)) {
+		return ErrInvalidSnapshot
+	}
+	if ref.AnswerSummary != nil {
+		summary := ref.GetAnswerSummary()
+		answered := ref.State == InteractionState_INTERACTION_STATE_SUBMITTED || ref.State == InteractionState_INTERACTION_STATE_ACCEPTED
+		if ref.Kind != InteractionKind_INTERACTION_KIND_QUESTION || !answered || ref.Outcome != InteractionOutcome_INTERACTION_OUTCOME_ANSWERED ||
+			strings.TrimSpace(summary) == "" || !utf8.ValidString(summary) || utf8.RuneCountInString(summary) > MaxAnswerSummaryRunes {
+			return ErrInvalidSnapshot
+		}
+	}
+	if ref.ResolvedBy != nil {
+		switch ref.GetResolvedBy() {
+		case InteractionResolver_INTERACTION_RESOLVER_EXECUTOR:
+			if ref.State != InteractionState_INTERACTION_STATE_ACCEPTED {
+				return ErrInvalidSnapshot
+			}
+		case InteractionResolver_INTERACTION_RESOLVER_REVOKED:
+			if ref.State != InteractionState_INTERACTION_STATE_CANCELLED || ref.ActorUserID != "" {
+				return ErrInvalidSnapshot
+			}
+		default:
+			return ErrInvalidSnapshot
+		}
 	}
 	return nil
 }

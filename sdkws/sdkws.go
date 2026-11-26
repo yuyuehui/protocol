@@ -48,6 +48,9 @@ func (x *RequestPagination) Check() error {
 }
 
 func (x *GetMaxSeqResp) Format() any {
+	if x == nil {
+		return nil
+	}
 	if len(x.MaxSeqs) > 50 {
 		return fmt.Sprintf("len is %v", len(x.MaxSeqs))
 	}

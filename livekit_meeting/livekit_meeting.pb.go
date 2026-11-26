@@ -52,9 +52,17 @@ type MeetingSetting struct {
 	MaxParticipants        int32                  `protobuf:"varint,7,opt,name=maxParticipants,proto3" json:"maxParticipants"`
 	ReminderMinutes        []int32                `protobuf:"varint,8,rep,packed,name=reminderMinutes,proto3" json:"reminderMinutes"`     // 提前提醒分钟数列表，如 [5, 15, 30]
 	CanParticipantInvite   bool                   `protobuf:"varint,9,opt,name=canParticipantInvite,proto3" json:"canParticipantInvite"`  // 参会者是否可以邀请他人
-	CanParticipantUnmute   bool                   `protobuf:"varint,10,opt,name=canParticipantUnmute,proto3" json:"canParticipantUnmute"` // 参会者是否可以自行解除静音
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
+	CanParticipantUnmute   bool                   `protobuf:"varint,10,opt,name=canParticipantUnmute,proto3" json:"canParticipantUnmute"` // 参会者是否可以自行解除静音（与 allowSelfUnmute 同值）
+	// 以下为会中控制状态：服务端单独存储，随详情、入会响应下发；修改走 set_control / raise_hand，UpdateMeeting 传了也忽略
+	MuteAllLocked   bool     `protobuf:"varint,11,opt,name=muteAllLocked,proto3" json:"muteAllLocked"`     // 全员静音中：后入会的非主持人也入会即静音
+	AllowSelfUnmute bool     `protobuf:"varint,12,opt,name=allowSelfUnmute,proto3" json:"allowSelfUnmute"` // 是否允许参会者自行解除静音
+	Locked          bool     `protobuf:"varint,13,opt,name=locked,proto3" json:"locked"`                   // 会议已锁定：主持人/联合主持人以外不能入会
+	ShareMode       string   `protobuf:"bytes,14,opt,name=shareMode,proto3" json:"shareMode"`              // 共享权限：all=所有人 host=仅主持人/联合主持人
+	ChatMode        string   `protobuf:"bytes,15,opt,name=chatMode,proto3" json:"chatMode"`                // 聊天权限：all=所有人 host=仅主持人/联合主持人 off=关闭
+	RaisedHands     []string `protobuf:"bytes,16,rep,name=raisedHands,proto3" json:"raisedHands"`          // 举手中的用户ID（按举手先后）
+	ControlVersion  int64    `protobuf:"varint,17,opt,name=controlVersion,proto3" json:"controlVersion"`   // 控制状态版本号，每次变更 +1
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *MeetingSetting) Reset() {
@@ -157,6 +165,148 @@ func (x *MeetingSetting) GetCanParticipantUnmute() bool {
 	return false
 }
 
+func (x *MeetingSetting) GetMuteAllLocked() bool {
+	if x != nil {
+		return x.MuteAllLocked
+	}
+	return false
+}
+
+func (x *MeetingSetting) GetAllowSelfUnmute() bool {
+	if x != nil {
+		return x.AllowSelfUnmute
+	}
+	return false
+}
+
+func (x *MeetingSetting) GetLocked() bool {
+	if x != nil {
+		return x.Locked
+	}
+	return false
+}
+
+func (x *MeetingSetting) GetShareMode() string {
+	if x != nil {
+		return x.ShareMode
+	}
+	return ""
+}
+
+func (x *MeetingSetting) GetChatMode() string {
+	if x != nil {
+		return x.ChatMode
+	}
+	return ""
+}
+
+func (x *MeetingSetting) GetRaisedHands() []string {
+	if x != nil {
+		return x.RaisedHands
+	}
+	return nil
+}
+
+func (x *MeetingSetting) GetControlVersion() int64 {
+	if x != nil {
+		return x.ControlVersion
+	}
+	return 0
+}
+
+// MeetingControl 会中控制状态（同 MeetingSetting 11~17，用于 1815 通知和控制接口返回）
+type MeetingControl struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	MuteAllLocked   bool                   `protobuf:"varint,1,opt,name=muteAllLocked,proto3" json:"muteAllLocked"`
+	AllowSelfUnmute bool                   `protobuf:"varint,2,opt,name=allowSelfUnmute,proto3" json:"allowSelfUnmute"`
+	Locked          bool                   `protobuf:"varint,3,opt,name=locked,proto3" json:"locked"`
+	ShareMode       string                 `protobuf:"bytes,4,opt,name=shareMode,proto3" json:"shareMode"` // all / host
+	ChatMode        string                 `protobuf:"bytes,5,opt,name=chatMode,proto3" json:"chatMode"`   // all / host / off
+	RaisedHands     []string               `protobuf:"bytes,6,rep,name=raisedHands,proto3" json:"raisedHands"`
+	Version         int64                  `protobuf:"varint,7,opt,name=version,proto3" json:"version"` // 版本号，客户端收到比本地旧的直接丢弃
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *MeetingControl) Reset() {
+	*x = MeetingControl{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MeetingControl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MeetingControl) ProtoMessage() {}
+
+func (x *MeetingControl) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MeetingControl.ProtoReflect.Descriptor instead.
+func (*MeetingControl) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *MeetingControl) GetMuteAllLocked() bool {
+	if x != nil {
+		return x.MuteAllLocked
+	}
+	return false
+}
+
+func (x *MeetingControl) GetAllowSelfUnmute() bool {
+	if x != nil {
+		return x.AllowSelfUnmute
+	}
+	return false
+}
+
+func (x *MeetingControl) GetLocked() bool {
+	if x != nil {
+		return x.Locked
+	}
+	return false
+}
+
+func (x *MeetingControl) GetShareMode() string {
+	if x != nil {
+		return x.ShareMode
+	}
+	return ""
+}
+
+func (x *MeetingControl) GetChatMode() string {
+	if x != nil {
+		return x.ChatMode
+	}
+	return ""
+}
+
+func (x *MeetingControl) GetRaisedHands() []string {
+	if x != nil {
+		return x.RaisedHands
+	}
+	return nil
+}
+
+func (x *MeetingControl) GetVersion() int64 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
 // RepeatRule 重复规则
 type RepeatRule struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -170,7 +320,7 @@ type RepeatRule struct {
 
 func (x *RepeatRule) Reset() {
 	*x = RepeatRule{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[1]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -182,7 +332,7 @@ func (x *RepeatRule) String() string {
 func (*RepeatRule) ProtoMessage() {}
 
 func (x *RepeatRule) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[1]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -195,7 +345,7 @@ func (x *RepeatRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RepeatRule.ProtoReflect.Descriptor instead.
 func (*RepeatRule) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{1}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *RepeatRule) GetType() string {
@@ -260,7 +410,7 @@ type MeetingScheduleInfo struct {
 
 func (x *MeetingScheduleInfo) Reset() {
 	*x = MeetingScheduleInfo{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[2]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -272,7 +422,7 @@ func (x *MeetingScheduleInfo) String() string {
 func (*MeetingScheduleInfo) ProtoMessage() {}
 
 func (x *MeetingScheduleInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[2]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -285,7 +435,7 @@ func (x *MeetingScheduleInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingScheduleInfo.ProtoReflect.Descriptor instead.
 func (*MeetingScheduleInfo) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{2}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *MeetingScheduleInfo) GetScheduleID() string {
@@ -501,7 +651,7 @@ type MeetingInfo struct {
 
 func (x *MeetingInfo) Reset() {
 	*x = MeetingInfo{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[3]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -513,7 +663,7 @@ func (x *MeetingInfo) String() string {
 func (*MeetingInfo) ProtoMessage() {}
 
 func (x *MeetingInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[3]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -526,7 +676,7 @@ func (x *MeetingInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingInfo.ProtoReflect.Descriptor instead.
 func (*MeetingInfo) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{3}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *MeetingInfo) GetMeetingID() string {
@@ -748,7 +898,7 @@ type MeetingRecordingSummary struct {
 
 func (x *MeetingRecordingSummary) Reset() {
 	*x = MeetingRecordingSummary{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[4]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -760,7 +910,7 @@ func (x *MeetingRecordingSummary) String() string {
 func (*MeetingRecordingSummary) ProtoMessage() {}
 
 func (x *MeetingRecordingSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[4]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -773,7 +923,7 @@ func (x *MeetingRecordingSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingRecordingSummary.ProtoReflect.Descriptor instead.
 func (*MeetingRecordingSummary) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{4}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *MeetingRecordingSummary) GetRecordingID() string {
@@ -895,7 +1045,7 @@ type MeetingParticipant struct {
 
 func (x *MeetingParticipant) Reset() {
 	*x = MeetingParticipant{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[5]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -907,7 +1057,7 @@ func (x *MeetingParticipant) String() string {
 func (*MeetingParticipant) ProtoMessage() {}
 
 func (x *MeetingParticipant) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[5]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -920,7 +1070,7 @@ func (x *MeetingParticipant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingParticipant.ProtoReflect.Descriptor instead.
 func (*MeetingParticipant) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{5}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *MeetingParticipant) GetMeetingID() string {
@@ -1020,7 +1170,7 @@ type LiveKitInfo struct {
 
 func (x *LiveKitInfo) Reset() {
 	*x = LiveKitInfo{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[6]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1032,7 +1182,7 @@ func (x *LiveKitInfo) String() string {
 func (*LiveKitInfo) ProtoMessage() {}
 
 func (x *LiveKitInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[6]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1045,7 +1195,7 @@ func (x *LiveKitInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LiveKitInfo.ProtoReflect.Descriptor instead.
 func (*LiveKitInfo) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{6}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LiveKitInfo) GetToken() string {
@@ -1094,7 +1244,7 @@ type MeetingInviteRecord struct {
 
 func (x *MeetingInviteRecord) Reset() {
 	*x = MeetingInviteRecord{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[7]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1106,7 +1256,7 @@ func (x *MeetingInviteRecord) String() string {
 func (*MeetingInviteRecord) ProtoMessage() {}
 
 func (x *MeetingInviteRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[7]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1119,7 +1269,7 @@ func (x *MeetingInviteRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingInviteRecord.ProtoReflect.Descriptor instead.
 func (*MeetingInviteRecord) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{7}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *MeetingInviteRecord) GetMeetingID() string {
@@ -1200,7 +1350,7 @@ type NotificationPreference struct {
 
 func (x *NotificationPreference) Reset() {
 	*x = NotificationPreference{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[8]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1212,7 +1362,7 @@ func (x *NotificationPreference) String() string {
 func (*NotificationPreference) ProtoMessage() {}
 
 func (x *NotificationPreference) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[8]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1225,7 +1375,7 @@ func (x *NotificationPreference) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotificationPreference.ProtoReflect.Descriptor instead.
 func (*NotificationPreference) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{8}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *NotificationPreference) GetUserID() string {
@@ -1283,7 +1433,7 @@ type CreateQuickMeetingReq struct {
 
 func (x *CreateQuickMeetingReq) Reset() {
 	*x = CreateQuickMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[9]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1295,7 +1445,7 @@ func (x *CreateQuickMeetingReq) String() string {
 func (*CreateQuickMeetingReq) ProtoMessage() {}
 
 func (x *CreateQuickMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[9]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1308,7 +1458,7 @@ func (x *CreateQuickMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateQuickMeetingReq.ProtoReflect.Descriptor instead.
 func (*CreateQuickMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{9}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CreateQuickMeetingReq) GetTitle() string {
@@ -1356,7 +1506,7 @@ type CreateQuickMeetingResp struct {
 
 func (x *CreateQuickMeetingResp) Reset() {
 	*x = CreateQuickMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[10]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1368,7 +1518,7 @@ func (x *CreateQuickMeetingResp) String() string {
 func (*CreateQuickMeetingResp) ProtoMessage() {}
 
 func (x *CreateQuickMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[10]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1381,7 +1531,7 @@ func (x *CreateQuickMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateQuickMeetingResp.ProtoReflect.Descriptor instead.
 func (*CreateQuickMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{10}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *CreateQuickMeetingResp) GetMeeting() *MeetingInfo {
@@ -1414,7 +1564,7 @@ type ScheduleMeetingReq struct {
 
 func (x *ScheduleMeetingReq) Reset() {
 	*x = ScheduleMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[11]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1426,7 +1576,7 @@ func (x *ScheduleMeetingReq) String() string {
 func (*ScheduleMeetingReq) ProtoMessage() {}
 
 func (x *ScheduleMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[11]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1439,7 +1589,7 @@ func (x *ScheduleMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleMeetingReq.ProtoReflect.Descriptor instead.
 func (*ScheduleMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{11}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ScheduleMeetingReq) GetTitle() string {
@@ -1507,7 +1657,7 @@ type ScheduleMeetingResp struct {
 
 func (x *ScheduleMeetingResp) Reset() {
 	*x = ScheduleMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[12]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1519,7 +1669,7 @@ func (x *ScheduleMeetingResp) String() string {
 func (*ScheduleMeetingResp) ProtoMessage() {}
 
 func (x *ScheduleMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[12]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1532,7 +1682,7 @@ func (x *ScheduleMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleMeetingResp.ProtoReflect.Descriptor instead.
 func (*ScheduleMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{12}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ScheduleMeetingResp) GetMeeting() *MeetingInfo {
@@ -1552,7 +1702,7 @@ type JoinMeetingReq struct {
 
 func (x *JoinMeetingReq) Reset() {
 	*x = JoinMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[13]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1564,7 +1714,7 @@ func (x *JoinMeetingReq) String() string {
 func (*JoinMeetingReq) ProtoMessage() {}
 
 func (x *JoinMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[13]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1577,7 +1727,7 @@ func (x *JoinMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinMeetingReq.ProtoReflect.Descriptor instead.
 func (*JoinMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{13}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *JoinMeetingReq) GetMeetingNumber() string {
@@ -1604,7 +1754,7 @@ type JoinMeetingResp struct {
 
 func (x *JoinMeetingResp) Reset() {
 	*x = JoinMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[14]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1616,7 +1766,7 @@ func (x *JoinMeetingResp) String() string {
 func (*JoinMeetingResp) ProtoMessage() {}
 
 func (x *JoinMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[14]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1629,7 +1779,7 @@ func (x *JoinMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JoinMeetingResp.ProtoReflect.Descriptor instead.
 func (*JoinMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{14}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *JoinMeetingResp) GetMeeting() *MeetingInfo {
@@ -1661,7 +1811,7 @@ type GetMeetingListReq struct {
 
 func (x *GetMeetingListReq) Reset() {
 	*x = GetMeetingListReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[15]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1673,7 +1823,7 @@ func (x *GetMeetingListReq) String() string {
 func (*GetMeetingListReq) ProtoMessage() {}
 
 func (x *GetMeetingListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[15]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1686,7 +1836,7 @@ func (x *GetMeetingListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingListReq.ProtoReflect.Descriptor instead.
 func (*GetMeetingListReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{15}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetMeetingListReq) GetStatus() []string {
@@ -1748,7 +1898,7 @@ type GetMeetingListResp struct {
 
 func (x *GetMeetingListResp) Reset() {
 	*x = GetMeetingListResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[16]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1760,7 +1910,7 @@ func (x *GetMeetingListResp) String() string {
 func (*GetMeetingListResp) ProtoMessage() {}
 
 func (x *GetMeetingListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[16]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1773,7 +1923,7 @@ func (x *GetMeetingListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingListResp.ProtoReflect.Descriptor instead.
 func (*GetMeetingListResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{16}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetMeetingListResp) GetTotal() int32 {
@@ -1799,7 +1949,7 @@ type GetMeetingReq struct {
 
 func (x *GetMeetingReq) Reset() {
 	*x = GetMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[17]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1811,7 +1961,7 @@ func (x *GetMeetingReq) String() string {
 func (*GetMeetingReq) ProtoMessage() {}
 
 func (x *GetMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[17]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1824,7 +1974,7 @@ func (x *GetMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingReq.ProtoReflect.Descriptor instead.
 func (*GetMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{17}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *GetMeetingReq) GetMeetingID() string {
@@ -1844,7 +1994,7 @@ type GetMeetingResp struct {
 
 func (x *GetMeetingResp) Reset() {
 	*x = GetMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[18]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1856,7 +2006,7 @@ func (x *GetMeetingResp) String() string {
 func (*GetMeetingResp) ProtoMessage() {}
 
 func (x *GetMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[18]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1869,7 +2019,7 @@ func (x *GetMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingResp.ProtoReflect.Descriptor instead.
 func (*GetMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{18}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetMeetingResp) GetMeeting() *MeetingInfo {
@@ -1902,7 +2052,7 @@ type UpdateMeetingReq struct {
 
 func (x *UpdateMeetingReq) Reset() {
 	*x = UpdateMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[19]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1914,7 +2064,7 @@ func (x *UpdateMeetingReq) String() string {
 func (*UpdateMeetingReq) ProtoMessage() {}
 
 func (x *UpdateMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[19]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1927,7 +2077,7 @@ func (x *UpdateMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMeetingReq.ProtoReflect.Descriptor instead.
 func (*UpdateMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{19}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *UpdateMeetingReq) GetMeetingID() string {
@@ -1995,7 +2145,7 @@ type UpdateMeetingResp struct {
 
 func (x *UpdateMeetingResp) Reset() {
 	*x = UpdateMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[20]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2007,7 +2157,7 @@ func (x *UpdateMeetingResp) String() string {
 func (*UpdateMeetingResp) ProtoMessage() {}
 
 func (x *UpdateMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[20]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2020,7 +2170,7 @@ func (x *UpdateMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMeetingResp.ProtoReflect.Descriptor instead.
 func (*UpdateMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{20}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *UpdateMeetingResp) GetMeeting() *MeetingInfo {
@@ -2040,7 +2190,7 @@ type CancelMeetingReq struct {
 
 func (x *CancelMeetingReq) Reset() {
 	*x = CancelMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[21]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2052,7 +2202,7 @@ func (x *CancelMeetingReq) String() string {
 func (*CancelMeetingReq) ProtoMessage() {}
 
 func (x *CancelMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[21]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2065,7 +2215,7 @@ func (x *CancelMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelMeetingReq.ProtoReflect.Descriptor instead.
 func (*CancelMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{21}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *CancelMeetingReq) GetMeetingID() string {
@@ -2090,7 +2240,7 @@ type CancelMeetingResp struct {
 
 func (x *CancelMeetingResp) Reset() {
 	*x = CancelMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[22]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2102,7 +2252,7 @@ func (x *CancelMeetingResp) String() string {
 func (*CancelMeetingResp) ProtoMessage() {}
 
 func (x *CancelMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[22]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2115,7 +2265,7 @@ func (x *CancelMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelMeetingResp.ProtoReflect.Descriptor instead.
 func (*CancelMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{22}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{23}
 }
 
 type EndMeetingReq struct {
@@ -2127,7 +2277,7 @@ type EndMeetingReq struct {
 
 func (x *EndMeetingReq) Reset() {
 	*x = EndMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[23]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2139,7 +2289,7 @@ func (x *EndMeetingReq) String() string {
 func (*EndMeetingReq) ProtoMessage() {}
 
 func (x *EndMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[23]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2152,7 +2302,7 @@ func (x *EndMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndMeetingReq.ProtoReflect.Descriptor instead.
 func (*EndMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{23}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *EndMeetingReq) GetMeetingID() string {
@@ -2170,7 +2320,7 @@ type EndMeetingResp struct {
 
 func (x *EndMeetingResp) Reset() {
 	*x = EndMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[24]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2182,7 +2332,7 @@ func (x *EndMeetingResp) String() string {
 func (*EndMeetingResp) ProtoMessage() {}
 
 func (x *EndMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[24]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2195,7 +2345,7 @@ func (x *EndMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndMeetingResp.ProtoReflect.Descriptor instead.
 func (*EndMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{24}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{25}
 }
 
 type InviteToMeetingReq struct {
@@ -2208,7 +2358,7 @@ type InviteToMeetingReq struct {
 
 func (x *InviteToMeetingReq) Reset() {
 	*x = InviteToMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[25]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2220,7 +2370,7 @@ func (x *InviteToMeetingReq) String() string {
 func (*InviteToMeetingReq) ProtoMessage() {}
 
 func (x *InviteToMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[25]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2233,7 +2383,7 @@ func (x *InviteToMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InviteToMeetingReq.ProtoReflect.Descriptor instead.
 func (*InviteToMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{25}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *InviteToMeetingReq) GetMeetingID() string {
@@ -2260,7 +2410,7 @@ type InviteToMeetingResp struct {
 
 func (x *InviteToMeetingResp) Reset() {
 	*x = InviteToMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[26]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2272,7 +2422,7 @@ func (x *InviteToMeetingResp) String() string {
 func (*InviteToMeetingResp) ProtoMessage() {}
 
 func (x *InviteToMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[26]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2285,7 +2435,7 @@ func (x *InviteToMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InviteToMeetingResp.ProtoReflect.Descriptor instead.
 func (*InviteToMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{26}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *InviteToMeetingResp) GetSuccessUserIDs() []string {
@@ -2313,7 +2463,7 @@ type RespondMeetingInvitationReq struct {
 
 func (x *RespondMeetingInvitationReq) Reset() {
 	*x = RespondMeetingInvitationReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[27]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2325,7 +2475,7 @@ func (x *RespondMeetingInvitationReq) String() string {
 func (*RespondMeetingInvitationReq) ProtoMessage() {}
 
 func (x *RespondMeetingInvitationReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[27]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2338,7 +2488,7 @@ func (x *RespondMeetingInvitationReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespondMeetingInvitationReq.ProtoReflect.Descriptor instead.
 func (*RespondMeetingInvitationReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{27}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *RespondMeetingInvitationReq) GetMeetingID() string {
@@ -2370,7 +2520,7 @@ type RespondMeetingInvitationResp struct {
 
 func (x *RespondMeetingInvitationResp) Reset() {
 	*x = RespondMeetingInvitationResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[28]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2382,7 +2532,7 @@ func (x *RespondMeetingInvitationResp) String() string {
 func (*RespondMeetingInvitationResp) ProtoMessage() {}
 
 func (x *RespondMeetingInvitationResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[28]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2395,7 +2545,7 @@ func (x *RespondMeetingInvitationResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RespondMeetingInvitationResp.ProtoReflect.Descriptor instead.
 func (*RespondMeetingInvitationResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{28}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{29}
 }
 
 type CancelMeetingInvitationReq struct {
@@ -2409,7 +2559,7 @@ type CancelMeetingInvitationReq struct {
 
 func (x *CancelMeetingInvitationReq) Reset() {
 	*x = CancelMeetingInvitationReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[29]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2421,7 +2571,7 @@ func (x *CancelMeetingInvitationReq) String() string {
 func (*CancelMeetingInvitationReq) ProtoMessage() {}
 
 func (x *CancelMeetingInvitationReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[29]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2434,7 +2584,7 @@ func (x *CancelMeetingInvitationReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelMeetingInvitationReq.ProtoReflect.Descriptor instead.
 func (*CancelMeetingInvitationReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{29}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *CancelMeetingInvitationReq) GetMeetingID() string {
@@ -2468,7 +2618,7 @@ type CancelMeetingInvitationResp struct {
 
 func (x *CancelMeetingInvitationResp) Reset() {
 	*x = CancelMeetingInvitationResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[30]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2480,7 +2630,7 @@ func (x *CancelMeetingInvitationResp) String() string {
 func (*CancelMeetingInvitationResp) ProtoMessage() {}
 
 func (x *CancelMeetingInvitationResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[30]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2493,7 +2643,7 @@ func (x *CancelMeetingInvitationResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelMeetingInvitationResp.ProtoReflect.Descriptor instead.
 func (*CancelMeetingInvitationResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{30}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *CancelMeetingInvitationResp) GetSuccessUserIDs() []string {
@@ -2520,7 +2670,7 @@ type GetInviteRecordListReq struct {
 
 func (x *GetInviteRecordListReq) Reset() {
 	*x = GetInviteRecordListReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[31]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2532,7 +2682,7 @@ func (x *GetInviteRecordListReq) String() string {
 func (*GetInviteRecordListReq) ProtoMessage() {}
 
 func (x *GetInviteRecordListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[31]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2545,7 +2695,7 @@ func (x *GetInviteRecordListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInviteRecordListReq.ProtoReflect.Descriptor instead.
 func (*GetInviteRecordListReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{31}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GetInviteRecordListReq) GetMeetingID() string {
@@ -2572,7 +2722,7 @@ type GetInviteRecordListResp struct {
 
 func (x *GetInviteRecordListResp) Reset() {
 	*x = GetInviteRecordListResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[32]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2584,7 +2734,7 @@ func (x *GetInviteRecordListResp) String() string {
 func (*GetInviteRecordListResp) ProtoMessage() {}
 
 func (x *GetInviteRecordListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[32]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2597,7 +2747,7 @@ func (x *GetInviteRecordListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInviteRecordListResp.ProtoReflect.Descriptor instead.
 func (*GetInviteRecordListResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{32}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetInviteRecordListResp) GetTotal() int32 {
@@ -2625,7 +2775,7 @@ type KickParticipantReq struct {
 
 func (x *KickParticipantReq) Reset() {
 	*x = KickParticipantReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[33]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2637,7 +2787,7 @@ func (x *KickParticipantReq) String() string {
 func (*KickParticipantReq) ProtoMessage() {}
 
 func (x *KickParticipantReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[33]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2650,7 +2800,7 @@ func (x *KickParticipantReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KickParticipantReq.ProtoReflect.Descriptor instead.
 func (*KickParticipantReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{33}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *KickParticipantReq) GetMeetingID() string {
@@ -2684,7 +2834,7 @@ type KickParticipantResp struct {
 
 func (x *KickParticipantResp) Reset() {
 	*x = KickParticipantResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[34]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2696,7 +2846,7 @@ func (x *KickParticipantResp) String() string {
 func (*KickParticipantResp) ProtoMessage() {}
 
 func (x *KickParticipantResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[34]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2709,7 +2859,7 @@ func (x *KickParticipantResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KickParticipantResp.ProtoReflect.Descriptor instead.
 func (*KickParticipantResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{34}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *KickParticipantResp) GetSuccessUserIDs() []string {
@@ -2737,7 +2887,7 @@ type SetParticipantRoleReq struct {
 
 func (x *SetParticipantRoleReq) Reset() {
 	*x = SetParticipantRoleReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[35]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2749,7 +2899,7 @@ func (x *SetParticipantRoleReq) String() string {
 func (*SetParticipantRoleReq) ProtoMessage() {}
 
 func (x *SetParticipantRoleReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[35]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2762,7 +2912,7 @@ func (x *SetParticipantRoleReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetParticipantRoleReq.ProtoReflect.Descriptor instead.
 func (*SetParticipantRoleReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{35}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *SetParticipantRoleReq) GetMeetingID() string {
@@ -2794,7 +2944,7 @@ type SetParticipantRoleResp struct {
 
 func (x *SetParticipantRoleResp) Reset() {
 	*x = SetParticipantRoleResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[36]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2806,7 +2956,7 @@ func (x *SetParticipantRoleResp) String() string {
 func (*SetParticipantRoleResp) ProtoMessage() {}
 
 func (x *SetParticipantRoleResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[36]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2819,7 +2969,7 @@ func (x *SetParticipantRoleResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetParticipantRoleResp.ProtoReflect.Descriptor instead.
 func (*SetParticipantRoleResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{36}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{37}
 }
 
 type GetMeetingTokenReq struct {
@@ -2832,7 +2982,7 @@ type GetMeetingTokenReq struct {
 
 func (x *GetMeetingTokenReq) Reset() {
 	*x = GetMeetingTokenReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[37]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2844,7 +2994,7 @@ func (x *GetMeetingTokenReq) String() string {
 func (*GetMeetingTokenReq) ProtoMessage() {}
 
 func (x *GetMeetingTokenReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[37]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2857,7 +3007,7 @@ func (x *GetMeetingTokenReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingTokenReq.ProtoReflect.Descriptor instead.
 func (*GetMeetingTokenReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{37}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetMeetingTokenReq) GetMeetingID() string {
@@ -2883,7 +3033,7 @@ type GetMeetingTokenResp struct {
 
 func (x *GetMeetingTokenResp) Reset() {
 	*x = GetMeetingTokenResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[38]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2895,7 +3045,7 @@ func (x *GetMeetingTokenResp) String() string {
 func (*GetMeetingTokenResp) ProtoMessage() {}
 
 func (x *GetMeetingTokenResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[38]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2908,7 +3058,7 @@ func (x *GetMeetingTokenResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingTokenResp.ProtoReflect.Descriptor instead.
 func (*GetMeetingTokenResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{38}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *GetMeetingTokenResp) GetLiveKit() *LiveKitInfo {
@@ -2927,7 +3077,7 @@ type SyncMeetingReq struct {
 
 func (x *SyncMeetingReq) Reset() {
 	*x = SyncMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[39]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2939,7 +3089,7 @@ func (x *SyncMeetingReq) String() string {
 func (*SyncMeetingReq) ProtoMessage() {}
 
 func (x *SyncMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[39]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2952,7 +3102,7 @@ func (x *SyncMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncMeetingReq.ProtoReflect.Descriptor instead.
 func (*SyncMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{39}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *SyncMeetingReq) GetLastSyncTime() int64 {
@@ -2973,7 +3123,7 @@ type SyncMeetingResp struct {
 
 func (x *SyncMeetingResp) Reset() {
 	*x = SyncMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[40]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2985,7 +3135,7 @@ func (x *SyncMeetingResp) String() string {
 func (*SyncMeetingResp) ProtoMessage() {}
 
 func (x *SyncMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[40]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2998,7 +3148,7 @@ func (x *SyncMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncMeetingResp.ProtoReflect.Descriptor instead.
 func (*SyncMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{40}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *SyncMeetingResp) GetMeetings() []*MeetingInfo {
@@ -3032,7 +3182,7 @@ type SetMeetingReminderReq struct {
 
 func (x *SetMeetingReminderReq) Reset() {
 	*x = SetMeetingReminderReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[41]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3044,7 +3194,7 @@ func (x *SetMeetingReminderReq) String() string {
 func (*SetMeetingReminderReq) ProtoMessage() {}
 
 func (x *SetMeetingReminderReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[41]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3057,7 +3207,7 @@ func (x *SetMeetingReminderReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetMeetingReminderReq.ProtoReflect.Descriptor instead.
 func (*SetMeetingReminderReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{41}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *SetMeetingReminderReq) GetMeetingID() string {
@@ -3082,7 +3232,7 @@ type SetMeetingReminderResp struct {
 
 func (x *SetMeetingReminderResp) Reset() {
 	*x = SetMeetingReminderResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[42]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3094,7 +3244,7 @@ func (x *SetMeetingReminderResp) String() string {
 func (*SetMeetingReminderResp) ProtoMessage() {}
 
 func (x *SetMeetingReminderResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[42]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3107,7 +3257,7 @@ func (x *SetMeetingReminderResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetMeetingReminderResp.ProtoReflect.Descriptor instead.
 func (*SetMeetingReminderResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{42}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{43}
 }
 
 type GetMeetingRemindersReq struct {
@@ -3119,7 +3269,7 @@ type GetMeetingRemindersReq struct {
 
 func (x *GetMeetingRemindersReq) Reset() {
 	*x = GetMeetingRemindersReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[43]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3131,7 +3281,7 @@ func (x *GetMeetingRemindersReq) String() string {
 func (*GetMeetingRemindersReq) ProtoMessage() {}
 
 func (x *GetMeetingRemindersReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[43]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3144,7 +3294,7 @@ func (x *GetMeetingRemindersReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingRemindersReq.ProtoReflect.Descriptor instead.
 func (*GetMeetingRemindersReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{43}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *GetMeetingRemindersReq) GetMeetingID() string {
@@ -3163,7 +3313,7 @@ type GetMeetingRemindersResp struct {
 
 func (x *GetMeetingRemindersResp) Reset() {
 	*x = GetMeetingRemindersResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[44]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3175,7 +3325,7 @@ func (x *GetMeetingRemindersResp) String() string {
 func (*GetMeetingRemindersResp) ProtoMessage() {}
 
 func (x *GetMeetingRemindersResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[44]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3188,7 +3338,7 @@ func (x *GetMeetingRemindersResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMeetingRemindersResp.ProtoReflect.Descriptor instead.
 func (*GetMeetingRemindersResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{44}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *GetMeetingRemindersResp) GetReminderMinutes() []int32 {
@@ -3207,7 +3357,7 @@ type SetNotificationPreferenceReq struct {
 
 func (x *SetNotificationPreferenceReq) Reset() {
 	*x = SetNotificationPreferenceReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[45]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3219,7 +3369,7 @@ func (x *SetNotificationPreferenceReq) String() string {
 func (*SetNotificationPreferenceReq) ProtoMessage() {}
 
 func (x *SetNotificationPreferenceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[45]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3232,7 +3382,7 @@ func (x *SetNotificationPreferenceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetNotificationPreferenceReq.ProtoReflect.Descriptor instead.
 func (*SetNotificationPreferenceReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{45}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *SetNotificationPreferenceReq) GetPreference() *NotificationPreference {
@@ -3250,7 +3400,7 @@ type SetNotificationPreferenceResp struct {
 
 func (x *SetNotificationPreferenceResp) Reset() {
 	*x = SetNotificationPreferenceResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[46]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3262,7 +3412,7 @@ func (x *SetNotificationPreferenceResp) String() string {
 func (*SetNotificationPreferenceResp) ProtoMessage() {}
 
 func (x *SetNotificationPreferenceResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[46]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3275,7 +3425,7 @@ func (x *SetNotificationPreferenceResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetNotificationPreferenceResp.ProtoReflect.Descriptor instead.
 func (*SetNotificationPreferenceResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{46}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{47}
 }
 
 type GetNotificationPreferenceReq struct {
@@ -3286,7 +3436,7 @@ type GetNotificationPreferenceReq struct {
 
 func (x *GetNotificationPreferenceReq) Reset() {
 	*x = GetNotificationPreferenceReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[47]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3298,7 +3448,7 @@ func (x *GetNotificationPreferenceReq) String() string {
 func (*GetNotificationPreferenceReq) ProtoMessage() {}
 
 func (x *GetNotificationPreferenceReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[47]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3311,7 +3461,7 @@ func (x *GetNotificationPreferenceReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotificationPreferenceReq.ProtoReflect.Descriptor instead.
 func (*GetNotificationPreferenceReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{47}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{48}
 }
 
 type GetNotificationPreferenceResp struct {
@@ -3323,7 +3473,7 @@ type GetNotificationPreferenceResp struct {
 
 func (x *GetNotificationPreferenceResp) Reset() {
 	*x = GetNotificationPreferenceResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[48]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3335,7 +3485,7 @@ func (x *GetNotificationPreferenceResp) String() string {
 func (*GetNotificationPreferenceResp) ProtoMessage() {}
 
 func (x *GetNotificationPreferenceResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[48]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3348,7 +3498,7 @@ func (x *GetNotificationPreferenceResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotificationPreferenceResp.ProtoReflect.Descriptor instead.
 func (*GetNotificationPreferenceResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{48}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *GetNotificationPreferenceResp) GetPreference() *NotificationPreference {
@@ -3369,7 +3519,7 @@ type MeetingCreatedTips struct {
 
 func (x *MeetingCreatedTips) Reset() {
 	*x = MeetingCreatedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[49]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3381,7 +3531,7 @@ func (x *MeetingCreatedTips) String() string {
 func (*MeetingCreatedTips) ProtoMessage() {}
 
 func (x *MeetingCreatedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[49]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3394,7 +3544,7 @@ func (x *MeetingCreatedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingCreatedTips.ProtoReflect.Descriptor instead.
 func (*MeetingCreatedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{49}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *MeetingCreatedTips) GetMeeting() *MeetingInfo {
@@ -3422,7 +3572,7 @@ type MeetingUpdatedTips struct {
 
 func (x *MeetingUpdatedTips) Reset() {
 	*x = MeetingUpdatedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[50]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3434,7 +3584,7 @@ func (x *MeetingUpdatedTips) String() string {
 func (*MeetingUpdatedTips) ProtoMessage() {}
 
 func (x *MeetingUpdatedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[50]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3447,7 +3597,7 @@ func (x *MeetingUpdatedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingUpdatedTips.ProtoReflect.Descriptor instead.
 func (*MeetingUpdatedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{50}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *MeetingUpdatedTips) GetMeeting() *MeetingInfo {
@@ -3476,7 +3626,7 @@ type MeetingDeletedTips struct {
 
 func (x *MeetingDeletedTips) Reset() {
 	*x = MeetingDeletedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[51]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3488,7 +3638,7 @@ func (x *MeetingDeletedTips) String() string {
 func (*MeetingDeletedTips) ProtoMessage() {}
 
 func (x *MeetingDeletedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[51]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3501,7 +3651,7 @@ func (x *MeetingDeletedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingDeletedTips.ProtoReflect.Descriptor instead.
 func (*MeetingDeletedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{51}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *MeetingDeletedTips) GetMeetingID() string {
@@ -3536,7 +3686,7 @@ type MeetingInvitationTips struct {
 
 func (x *MeetingInvitationTips) Reset() {
 	*x = MeetingInvitationTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[52]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3548,7 +3698,7 @@ func (x *MeetingInvitationTips) String() string {
 func (*MeetingInvitationTips) ProtoMessage() {}
 
 func (x *MeetingInvitationTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[52]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3561,7 +3711,7 @@ func (x *MeetingInvitationTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingInvitationTips.ProtoReflect.Descriptor instead.
 func (*MeetingInvitationTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{52}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *MeetingInvitationTips) GetMeeting() *MeetingInfo {
@@ -3593,7 +3743,7 @@ type InvitationRespondedTips struct {
 
 func (x *InvitationRespondedTips) Reset() {
 	*x = InvitationRespondedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[53]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3605,7 +3755,7 @@ func (x *InvitationRespondedTips) String() string {
 func (*InvitationRespondedTips) ProtoMessage() {}
 
 func (x *InvitationRespondedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[53]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3618,7 +3768,7 @@ func (x *InvitationRespondedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvitationRespondedTips.ProtoReflect.Descriptor instead.
 func (*InvitationRespondedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{53}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *InvitationRespondedTips) GetMeetingID() string {
@@ -3676,7 +3826,7 @@ type InvitationCancelledTips struct {
 
 func (x *InvitationCancelledTips) Reset() {
 	*x = InvitationCancelledTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[54]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3688,7 +3838,7 @@ func (x *InvitationCancelledTips) String() string {
 func (*InvitationCancelledTips) ProtoMessage() {}
 
 func (x *InvitationCancelledTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[54]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3701,7 +3851,7 @@ func (x *InvitationCancelledTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvitationCancelledTips.ProtoReflect.Descriptor instead.
 func (*InvitationCancelledTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{54}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *InvitationCancelledTips) GetMeetingID() string {
@@ -3745,7 +3895,7 @@ type MeetingParticipantChangedTips struct {
 
 func (x *MeetingParticipantChangedTips) Reset() {
 	*x = MeetingParticipantChangedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[55]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3757,7 +3907,7 @@ func (x *MeetingParticipantChangedTips) String() string {
 func (*MeetingParticipantChangedTips) ProtoMessage() {}
 
 func (x *MeetingParticipantChangedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[55]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3770,7 +3920,7 @@ func (x *MeetingParticipantChangedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingParticipantChangedTips.ProtoReflect.Descriptor instead.
 func (*MeetingParticipantChangedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{55}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *MeetingParticipantChangedTips) GetMeetingID() string {
@@ -3814,7 +3964,7 @@ type MeetingStatusChangedTips struct {
 
 func (x *MeetingStatusChangedTips) Reset() {
 	*x = MeetingStatusChangedTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[56]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3826,7 +3976,7 @@ func (x *MeetingStatusChangedTips) String() string {
 func (*MeetingStatusChangedTips) ProtoMessage() {}
 
 func (x *MeetingStatusChangedTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[56]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3839,7 +3989,7 @@ func (x *MeetingStatusChangedTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingStatusChangedTips.ProtoReflect.Descriptor instead.
 func (*MeetingStatusChangedTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{56}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *MeetingStatusChangedTips) GetMeetingID() string {
@@ -3881,7 +4031,7 @@ type MeetingReminderTips struct {
 
 func (x *MeetingReminderTips) Reset() {
 	*x = MeetingReminderTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[57]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3893,7 +4043,7 @@ func (x *MeetingReminderTips) String() string {
 func (*MeetingReminderTips) ProtoMessage() {}
 
 func (x *MeetingReminderTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[57]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3906,7 +4056,7 @@ func (x *MeetingReminderTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingReminderTips.ProtoReflect.Descriptor instead.
 func (*MeetingReminderTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{57}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *MeetingReminderTips) GetMeeting() *MeetingInfo {
@@ -3919,6 +4069,107 @@ func (x *MeetingReminderTips) GetMeeting() *MeetingInfo {
 func (x *MeetingReminderTips) GetReminderMinutes() int32 {
 	if x != nil {
 		return x.ReminderMinutes
+	}
+	return 0
+}
+
+// MeetingControlChangedTips 会中控制变更通知（1815）
+type MeetingControlChangedTips struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type"`                    // control=控制状态变更 role=联合主持人变更 raise_hand=举手/放下 request_unmute=请求解除静音
+	Control       *MeetingControl        `protobuf:"bytes,3,opt,name=control,proto3" json:"control"`              // 变更后的完整控制状态（每种 type 都带）
+	Participant   *MeetingParticipant    `protobuf:"bytes,4,opt,name=participant,proto3" json:"participant"`      // type=role：被设置的成员（含新角色）；type=raise_hand：举手/放下的成员
+	Raised        bool                   `protobuf:"varint,5,opt,name=raised,proto3" json:"raised"`               // type=raise_hand：true=举手 false=放下
+	TargetUserIDs []string               `protobuf:"bytes,6,rep,name=targetUserIDs,proto3" json:"targetUserIDs"`  // type=request_unmute：被请求开麦的用户（通知只发给他们）
+	OpUser        *sdkws.UserInfo        `protobuf:"bytes,7,opt,name=opUser,proto3" json:"opUser"`                // 操作人（成员离会/被移出时自动放下手，为该成员本人或移出人）
+	OperationTime int64                  `protobuf:"varint,8,opt,name=operationTime,proto3" json:"operationTime"` // 毫秒时间戳
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MeetingControlChangedTips) Reset() {
+	*x = MeetingControlChangedTips{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[59]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MeetingControlChangedTips) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MeetingControlChangedTips) ProtoMessage() {}
+
+func (x *MeetingControlChangedTips) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[59]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MeetingControlChangedTips.ProtoReflect.Descriptor instead.
+func (*MeetingControlChangedTips) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *MeetingControlChangedTips) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *MeetingControlChangedTips) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *MeetingControlChangedTips) GetControl() *MeetingControl {
+	if x != nil {
+		return x.Control
+	}
+	return nil
+}
+
+func (x *MeetingControlChangedTips) GetParticipant() *MeetingParticipant {
+	if x != nil {
+		return x.Participant
+	}
+	return nil
+}
+
+func (x *MeetingControlChangedTips) GetRaised() bool {
+	if x != nil {
+		return x.Raised
+	}
+	return false
+}
+
+func (x *MeetingControlChangedTips) GetTargetUserIDs() []string {
+	if x != nil {
+		return x.TargetUserIDs
+	}
+	return nil
+}
+
+func (x *MeetingControlChangedTips) GetOpUser() *sdkws.UserInfo {
+	if x != nil {
+		return x.OpUser
+	}
+	return nil
+}
+
+func (x *MeetingControlChangedTips) GetOperationTime() int64 {
+	if x != nil {
+		return x.OperationTime
 	}
 	return 0
 }
@@ -3936,7 +4187,7 @@ type ProcessLiveKitWebhookReq struct {
 
 func (x *ProcessLiveKitWebhookReq) Reset() {
 	*x = ProcessLiveKitWebhookReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[58]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3948,7 +4199,7 @@ func (x *ProcessLiveKitWebhookReq) String() string {
 func (*ProcessLiveKitWebhookReq) ProtoMessage() {}
 
 func (x *ProcessLiveKitWebhookReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[58]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3961,7 +4212,7 @@ func (x *ProcessLiveKitWebhookReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessLiveKitWebhookReq.ProtoReflect.Descriptor instead.
 func (*ProcessLiveKitWebhookReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{58}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ProcessLiveKitWebhookReq) GetEvent() string {
@@ -4000,7 +4251,7 @@ type ProcessLiveKitWebhookResp struct {
 
 func (x *ProcessLiveKitWebhookResp) Reset() {
 	*x = ProcessLiveKitWebhookResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[59]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4012,7 +4263,7 @@ func (x *ProcessLiveKitWebhookResp) String() string {
 func (*ProcessLiveKitWebhookResp) ProtoMessage() {}
 
 func (x *ProcessLiveKitWebhookResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[59]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4025,7 +4276,764 @@ func (x *ProcessLiveKitWebhookResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProcessLiveKitWebhookResp.ProtoReflect.Descriptor instead.
 func (*ProcessLiveKitWebhookResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{59}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{61}
+}
+
+type BatchGetMeetingStatusReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingIDs    []string               `protobuf:"bytes,1,rep,name=meetingIDs,proto3" json:"meetingIDs"` // 最多 50 个
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetMeetingStatusReq) Reset() {
+	*x = BatchGetMeetingStatusReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[62]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetMeetingStatusReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetMeetingStatusReq) ProtoMessage() {}
+
+func (x *BatchGetMeetingStatusReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[62]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetMeetingStatusReq.ProtoReflect.Descriptor instead.
+func (*BatchGetMeetingStatusReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *BatchGetMeetingStatusReq) GetMeetingIDs() []string {
+	if x != nil {
+		return x.MeetingIDs
+	}
+	return nil
+}
+
+type MeetingStatusItem struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID        string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Status           string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status"` // scheduled/waiting/in-progress/ended/cancelled
+	ScheduledTime    int64                  `protobuf:"varint,3,opt,name=scheduledTime,proto3" json:"scheduledTime"`
+	ScheduledEndTime int64                  `protobuf:"varint,4,opt,name=scheduledEndTime,proto3" json:"scheduledEndTime"`
+	ActualStartTime  int64                  `protobuf:"varint,5,opt,name=actualStartTime,proto3" json:"actualStartTime"`
+	ActualEndTime    int64                  `protobuf:"varint,6,opt,name=actualEndTime,proto3" json:"actualEndTime"`
+	ParticipantCount int32                  `protobuf:"varint,7,opt,name=participantCount,proto3" json:"participantCount"`
+	HasRecording     bool                   `protobuf:"varint,8,opt,name=hasRecording,proto3" json:"hasRecording"` // 是否有已完成的录制
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *MeetingStatusItem) Reset() {
+	*x = MeetingStatusItem{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MeetingStatusItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MeetingStatusItem) ProtoMessage() {}
+
+func (x *MeetingStatusItem) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MeetingStatusItem.ProtoReflect.Descriptor instead.
+func (*MeetingStatusItem) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *MeetingStatusItem) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *MeetingStatusItem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *MeetingStatusItem) GetScheduledTime() int64 {
+	if x != nil {
+		return x.ScheduledTime
+	}
+	return 0
+}
+
+func (x *MeetingStatusItem) GetScheduledEndTime() int64 {
+	if x != nil {
+		return x.ScheduledEndTime
+	}
+	return 0
+}
+
+func (x *MeetingStatusItem) GetActualStartTime() int64 {
+	if x != nil {
+		return x.ActualStartTime
+	}
+	return 0
+}
+
+func (x *MeetingStatusItem) GetActualEndTime() int64 {
+	if x != nil {
+		return x.ActualEndTime
+	}
+	return 0
+}
+
+func (x *MeetingStatusItem) GetParticipantCount() int32 {
+	if x != nil {
+		return x.ParticipantCount
+	}
+	return 0
+}
+
+func (x *MeetingStatusItem) GetHasRecording() bool {
+	if x != nil {
+		return x.HasRecording
+	}
+	return false
+}
+
+type BatchGetMeetingStatusResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*MeetingStatusItem   `protobuf:"bytes,1,rep,name=items,proto3" json:"items"` // 不存在、已删除或无权查看的会议不返回
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchGetMeetingStatusResp) Reset() {
+	*x = BatchGetMeetingStatusResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchGetMeetingStatusResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchGetMeetingStatusResp) ProtoMessage() {}
+
+func (x *BatchGetMeetingStatusResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchGetMeetingStatusResp.ProtoReflect.Descriptor instead.
+func (*BatchGetMeetingStatusResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{64}
+}
+
+func (x *BatchGetMeetingStatusResp) GetItems() []*MeetingStatusItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type ShareMeetingCardReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	RecvIDs       []string               `protobuf:"bytes,2,rep,name=recvIDs,proto3" json:"recvIDs"`   // 单聊接收人
+	GroupIDs      []string               `protobuf:"bytes,3,rep,name=groupIDs,proto3" json:"groupIDs"` // 群聊（调用者须是群成员）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ShareMeetingCardReq) Reset() {
+	*x = ShareMeetingCardReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[65]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShareMeetingCardReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShareMeetingCardReq) ProtoMessage() {}
+
+func (x *ShareMeetingCardReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[65]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShareMeetingCardReq.ProtoReflect.Descriptor instead.
+func (*ShareMeetingCardReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{65}
+}
+
+func (x *ShareMeetingCardReq) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *ShareMeetingCardReq) GetRecvIDs() []string {
+	if x != nil {
+		return x.RecvIDs
+	}
+	return nil
+}
+
+func (x *ShareMeetingCardReq) GetGroupIDs() []string {
+	if x != nil {
+		return x.GroupIDs
+	}
+	return nil
+}
+
+type ShareMeetingCardResp struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	SuccessUserIDs  []string               `protobuf:"bytes,1,rep,name=successUserIDs,proto3" json:"successUserIDs"`
+	FailedUserIDs   []string               `protobuf:"bytes,2,rep,name=failedUserIDs,proto3" json:"failedUserIDs"`
+	SuccessGroupIDs []string               `protobuf:"bytes,3,rep,name=successGroupIDs,proto3" json:"successGroupIDs"`
+	FailedGroupIDs  []string               `protobuf:"bytes,4,rep,name=failedGroupIDs,proto3" json:"failedGroupIDs"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ShareMeetingCardResp) Reset() {
+	*x = ShareMeetingCardResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ShareMeetingCardResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShareMeetingCardResp) ProtoMessage() {}
+
+func (x *ShareMeetingCardResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ShareMeetingCardResp.ProtoReflect.Descriptor instead.
+func (*ShareMeetingCardResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{66}
+}
+
+func (x *ShareMeetingCardResp) GetSuccessUserIDs() []string {
+	if x != nil {
+		return x.SuccessUserIDs
+	}
+	return nil
+}
+
+func (x *ShareMeetingCardResp) GetFailedUserIDs() []string {
+	if x != nil {
+		return x.FailedUserIDs
+	}
+	return nil
+}
+
+func (x *ShareMeetingCardResp) GetSuccessGroupIDs() []string {
+	if x != nil {
+		return x.SuccessGroupIDs
+	}
+	return nil
+}
+
+func (x *ShareMeetingCardResp) GetFailedGroupIDs() []string {
+	if x != nil {
+		return x.FailedGroupIDs
+	}
+	return nil
+}
+
+// SetMeetingControlReq 只修改传了的字段
+type SetMeetingControlReq struct {
+	state            protoimpl.MessageState  `protogen:"open.v1"`
+	MeetingID        string                  `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	MuteAllLocked    *wrapperspb.BoolValue   `protobuf:"bytes,2,opt,name=muteAllLocked,proto3" json:"muteAllLocked"`
+	AllowSelfUnmute  *wrapperspb.BoolValue   `protobuf:"bytes,3,opt,name=allowSelfUnmute,proto3" json:"allowSelfUnmute"`
+	Locked           *wrapperspb.BoolValue   `protobuf:"bytes,4,opt,name=locked,proto3" json:"locked"`
+	ShareMode        *wrapperspb.StringValue `protobuf:"bytes,5,opt,name=shareMode,proto3" json:"shareMode"`               // all / host
+	ChatMode         *wrapperspb.StringValue `protobuf:"bytes,6,opt,name=chatMode,proto3" json:"chatMode"`                 // all / host / off
+	LowerHandUserIDs []string                `protobuf:"bytes,7,rep,name=lowerHandUserIDs,proto3" json:"lowerHandUserIDs"` // 放下指定成员的手
+	LowerAllHands    bool                    `protobuf:"varint,8,opt,name=lowerAllHands,proto3" json:"lowerAllHands"`      // 放下所有人的手
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *SetMeetingControlReq) Reset() {
+	*x = SetMeetingControlReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetMeetingControlReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetMeetingControlReq) ProtoMessage() {}
+
+func (x *SetMeetingControlReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetMeetingControlReq.ProtoReflect.Descriptor instead.
+func (*SetMeetingControlReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{67}
+}
+
+func (x *SetMeetingControlReq) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *SetMeetingControlReq) GetMuteAllLocked() *wrapperspb.BoolValue {
+	if x != nil {
+		return x.MuteAllLocked
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetAllowSelfUnmute() *wrapperspb.BoolValue {
+	if x != nil {
+		return x.AllowSelfUnmute
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetLocked() *wrapperspb.BoolValue {
+	if x != nil {
+		return x.Locked
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetShareMode() *wrapperspb.StringValue {
+	if x != nil {
+		return x.ShareMode
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetChatMode() *wrapperspb.StringValue {
+	if x != nil {
+		return x.ChatMode
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetLowerHandUserIDs() []string {
+	if x != nil {
+		return x.LowerHandUserIDs
+	}
+	return nil
+}
+
+func (x *SetMeetingControlReq) GetLowerAllHands() bool {
+	if x != nil {
+		return x.LowerAllHands
+	}
+	return false
+}
+
+type SetMeetingControlResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Control       *MeetingControl        `protobuf:"bytes,1,opt,name=control,proto3" json:"control"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetMeetingControlResp) Reset() {
+	*x = SetMeetingControlResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetMeetingControlResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetMeetingControlResp) ProtoMessage() {}
+
+func (x *SetMeetingControlResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetMeetingControlResp.ProtoReflect.Descriptor instead.
+func (*SetMeetingControlResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{68}
+}
+
+func (x *SetMeetingControlResp) GetControl() *MeetingControl {
+	if x != nil {
+		return x.Control
+	}
+	return nil
+}
+
+type SetMeetingRoleReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	Role          int32                  `protobuf:"varint,3,opt,name=role,proto3" json:"role"` // 2=设为联合主持人 3=取消联合主持人
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetMeetingRoleReq) Reset() {
+	*x = SetMeetingRoleReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetMeetingRoleReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetMeetingRoleReq) ProtoMessage() {}
+
+func (x *SetMeetingRoleReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetMeetingRoleReq.ProtoReflect.Descriptor instead.
+func (*SetMeetingRoleReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{69}
+}
+
+func (x *SetMeetingRoleReq) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *SetMeetingRoleReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *SetMeetingRoleReq) GetRole() int32 {
+	if x != nil {
+		return x.Role
+	}
+	return 0
+}
+
+type SetMeetingRoleResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Participant   *MeetingParticipant    `protobuf:"bytes,1,opt,name=participant,proto3" json:"participant"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetMeetingRoleResp) Reset() {
+	*x = SetMeetingRoleResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[70]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetMeetingRoleResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetMeetingRoleResp) ProtoMessage() {}
+
+func (x *SetMeetingRoleResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[70]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetMeetingRoleResp.ProtoReflect.Descriptor instead.
+func (*SetMeetingRoleResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{70}
+}
+
+func (x *SetMeetingRoleResp) GetParticipant() *MeetingParticipant {
+	if x != nil {
+		return x.Participant
+	}
+	return nil
+}
+
+type RequestUnmuteReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	UserIDs       []string               `protobuf:"bytes,2,rep,name=userIDs,proto3" json:"userIDs"` // 为空表示会中全部成员（不含自己）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestUnmuteReq) Reset() {
+	*x = RequestUnmuteReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[71]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestUnmuteReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestUnmuteReq) ProtoMessage() {}
+
+func (x *RequestUnmuteReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[71]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestUnmuteReq.ProtoReflect.Descriptor instead.
+func (*RequestUnmuteReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{71}
+}
+
+func (x *RequestUnmuteReq) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *RequestUnmuteReq) GetUserIDs() []string {
+	if x != nil {
+		return x.UserIDs
+	}
+	return nil
+}
+
+type RequestUnmuteResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserIDs       []string               `protobuf:"bytes,1,rep,name=userIDs,proto3" json:"userIDs"` // 实际通知到的用户
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestUnmuteResp) Reset() {
+	*x = RequestUnmuteResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[72]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestUnmuteResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestUnmuteResp) ProtoMessage() {}
+
+func (x *RequestUnmuteResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[72]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestUnmuteResp.ProtoReflect.Descriptor instead.
+func (*RequestUnmuteResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{72}
+}
+
+func (x *RequestUnmuteResp) GetUserIDs() []string {
+	if x != nil {
+		return x.UserIDs
+	}
+	return nil
+}
+
+type RaiseHandReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MeetingID     string                 `protobuf:"bytes,1,opt,name=meetingID,proto3" json:"meetingID"`
+	Raised        bool                   `protobuf:"varint,2,opt,name=raised,proto3" json:"raised"` // true=举手 false=放下
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RaiseHandReq) Reset() {
+	*x = RaiseHandReq{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[73]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RaiseHandReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RaiseHandReq) ProtoMessage() {}
+
+func (x *RaiseHandReq) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[73]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RaiseHandReq.ProtoReflect.Descriptor instead.
+func (*RaiseHandReq) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{73}
+}
+
+func (x *RaiseHandReq) GetMeetingID() string {
+	if x != nil {
+		return x.MeetingID
+	}
+	return ""
+}
+
+func (x *RaiseHandReq) GetRaised() bool {
+	if x != nil {
+		return x.Raised
+	}
+	return false
+}
+
+type RaiseHandResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Control       *MeetingControl        `protobuf:"bytes,1,opt,name=control,proto3" json:"control"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RaiseHandResp) Reset() {
+	*x = RaiseHandResp{}
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[74]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RaiseHandResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RaiseHandResp) ProtoMessage() {}
+
+func (x *RaiseHandResp) ProtoReflect() protoreflect.Message {
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[74]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RaiseHandResp.ProtoReflect.Descriptor instead.
+func (*RaiseHandResp) Descriptor() ([]byte, []int) {
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{74}
+}
+
+func (x *RaiseHandResp) GetControl() *MeetingControl {
+	if x != nil {
+		return x.Control
+	}
+	return nil
 }
 
 // DeleteMeetingReq 删除会议请求（软删除，仅 cancelled/ended 状态可删）
@@ -4038,7 +5046,7 @@ type DeleteMeetingReq struct {
 
 func (x *DeleteMeetingReq) Reset() {
 	*x = DeleteMeetingReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[60]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[75]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4050,7 +5058,7 @@ func (x *DeleteMeetingReq) String() string {
 func (*DeleteMeetingReq) ProtoMessage() {}
 
 func (x *DeleteMeetingReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[60]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[75]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4063,7 +5071,7 @@ func (x *DeleteMeetingReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMeetingReq.ProtoReflect.Descriptor instead.
 func (*DeleteMeetingReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{60}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{75}
 }
 
 func (x *DeleteMeetingReq) GetMeetingID() string {
@@ -4081,7 +5089,7 @@ type DeleteMeetingResp struct {
 
 func (x *DeleteMeetingResp) Reset() {
 	*x = DeleteMeetingResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[61]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[76]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4093,7 +5101,7 @@ func (x *DeleteMeetingResp) String() string {
 func (*DeleteMeetingResp) ProtoMessage() {}
 
 func (x *DeleteMeetingResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[61]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[76]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4106,7 +5114,7 @@ func (x *DeleteMeetingResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMeetingResp.ProtoReflect.Descriptor instead.
 func (*DeleteMeetingResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{61}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{76}
 }
 
 // MeetingCancelledTips 会议取消通知（区别于删除，取消后仍显示）
@@ -4122,7 +5130,7 @@ type MeetingCancelledTips struct {
 
 func (x *MeetingCancelledTips) Reset() {
 	*x = MeetingCancelledTips{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[62]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[77]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4134,7 +5142,7 @@ func (x *MeetingCancelledTips) String() string {
 func (*MeetingCancelledTips) ProtoMessage() {}
 
 func (x *MeetingCancelledTips) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[62]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[77]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4147,7 +5155,7 @@ func (x *MeetingCancelledTips) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MeetingCancelledTips.ProtoReflect.Descriptor instead.
 func (*MeetingCancelledTips) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{62}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{77}
 }
 
 func (x *MeetingCancelledTips) GetMeetingID() string {
@@ -4188,7 +5196,7 @@ type NotifyMeetingCreatedReq struct {
 
 func (x *NotifyMeetingCreatedReq) Reset() {
 	*x = NotifyMeetingCreatedReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[63]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[78]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4200,7 +5208,7 @@ func (x *NotifyMeetingCreatedReq) String() string {
 func (*NotifyMeetingCreatedReq) ProtoMessage() {}
 
 func (x *NotifyMeetingCreatedReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[63]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[78]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4213,7 +5221,7 @@ func (x *NotifyMeetingCreatedReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifyMeetingCreatedReq.ProtoReflect.Descriptor instead.
 func (*NotifyMeetingCreatedReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{63}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{78}
 }
 
 func (x *NotifyMeetingCreatedReq) GetScheduleID() string {
@@ -4231,7 +5239,7 @@ type NotifyMeetingCreatedResp struct {
 
 func (x *NotifyMeetingCreatedResp) Reset() {
 	*x = NotifyMeetingCreatedResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[64]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[79]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4243,7 +5251,7 @@ func (x *NotifyMeetingCreatedResp) String() string {
 func (*NotifyMeetingCreatedResp) ProtoMessage() {}
 
 func (x *NotifyMeetingCreatedResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[64]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[79]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4256,7 +5264,7 @@ func (x *NotifyMeetingCreatedResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifyMeetingCreatedResp.ProtoReflect.Descriptor instead.
 func (*NotifyMeetingCreatedResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{64}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{79}
 }
 
 // NotifyMeetingUpdatedReq 日程模块通知 meeting 服务发送 MeetingUpdated 通知
@@ -4269,7 +5277,7 @@ type NotifyMeetingUpdatedReq struct {
 
 func (x *NotifyMeetingUpdatedReq) Reset() {
 	*x = NotifyMeetingUpdatedReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[65]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[80]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4281,7 +5289,7 @@ func (x *NotifyMeetingUpdatedReq) String() string {
 func (*NotifyMeetingUpdatedReq) ProtoMessage() {}
 
 func (x *NotifyMeetingUpdatedReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[65]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[80]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4294,7 +5302,7 @@ func (x *NotifyMeetingUpdatedReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifyMeetingUpdatedReq.ProtoReflect.Descriptor instead.
 func (*NotifyMeetingUpdatedReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{65}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{80}
 }
 
 func (x *NotifyMeetingUpdatedReq) GetScheduleID() string {
@@ -4312,7 +5320,7 @@ type NotifyMeetingUpdatedResp struct {
 
 func (x *NotifyMeetingUpdatedResp) Reset() {
 	*x = NotifyMeetingUpdatedResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[81]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4324,7 +5332,7 @@ func (x *NotifyMeetingUpdatedResp) String() string {
 func (*NotifyMeetingUpdatedResp) ProtoMessage() {}
 
 func (x *NotifyMeetingUpdatedResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[66]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[81]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4337,7 +5345,7 @@ func (x *NotifyMeetingUpdatedResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotifyMeetingUpdatedResp.ProtoReflect.Descriptor instead.
 func (*NotifyMeetingUpdatedResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{66}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{81}
 }
 
 // CreateCallReq 发起1对1通话请求
@@ -4351,7 +5359,7 @@ type CreateCallReq struct {
 
 func (x *CreateCallReq) Reset() {
 	*x = CreateCallReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[82]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4363,7 +5371,7 @@ func (x *CreateCallReq) String() string {
 func (*CreateCallReq) ProtoMessage() {}
 
 func (x *CreateCallReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[67]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[82]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4376,7 +5384,7 @@ func (x *CreateCallReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCallReq.ProtoReflect.Descriptor instead.
 func (*CreateCallReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{67}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{82}
 }
 
 func (x *CreateCallReq) GetInviteeUserID() string {
@@ -4404,7 +5412,7 @@ type CreateCallResp struct {
 
 func (x *CreateCallResp) Reset() {
 	*x = CreateCallResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[83]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4416,7 +5424,7 @@ func (x *CreateCallResp) String() string {
 func (*CreateCallResp) ProtoMessage() {}
 
 func (x *CreateCallResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[68]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[83]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4429,7 +5437,7 @@ func (x *CreateCallResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCallResp.ProtoReflect.Descriptor instead.
 func (*CreateCallResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{68}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{83}
 }
 
 func (x *CreateCallResp) GetLiveKit() *LiveKitInfo {
@@ -4456,7 +5464,7 @@ type EndCallReq struct {
 
 func (x *EndCallReq) Reset() {
 	*x = EndCallReq{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[84]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4468,7 +5476,7 @@ func (x *EndCallReq) String() string {
 func (*EndCallReq) ProtoMessage() {}
 
 func (x *EndCallReq) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[69]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[84]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4481,7 +5489,7 @@ func (x *EndCallReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndCallReq.ProtoReflect.Descriptor instead.
 func (*EndCallReq) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{69}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{84}
 }
 
 func (x *EndCallReq) GetRoomID() string {
@@ -4500,7 +5508,7 @@ type EndCallResp struct {
 
 func (x *EndCallResp) Reset() {
 	*x = EndCallResp{}
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[70]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[85]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4512,7 +5520,7 @@ func (x *EndCallResp) String() string {
 func (*EndCallResp) ProtoMessage() {}
 
 func (x *EndCallResp) ProtoReflect() protoreflect.Message {
-	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[70]
+	mi := &file_livekit_meeting_livekit_meeting_proto_msgTypes[85]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4525,14 +5533,14 @@ func (x *EndCallResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndCallResp.ProtoReflect.Descriptor instead.
 func (*EndCallResp) Descriptor() ([]byte, []int) {
-	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{70}
+	return file_livekit_meeting_livekit_meeting_proto_rawDescGZIP(), []int{85}
 }
 
 var File_livekit_meeting_livekit_meeting_proto protoreflect.FileDescriptor
 
 const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\n" +
-	"%livekit_meeting/livekit_meeting.proto\x12\x16openim.livekit_meeting\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\x1a\x17schedule/schedule.proto\x1a\x1fmeeting_room/meeting_room.proto\x1a\x13egress/egress.proto\"\xd4\x03\n" +
+	"%livekit_meeting/livekit_meeting.proto\x12\x16openim.livekit_meeting\x1a\x11sdkws/sdkws.proto\x1a\x1bwrapperspb/wrapperspb.proto\x1a\x17schedule/schedule.proto\x1a\x1fmeeting_room/meeting_room.proto\x1a\x13egress/egress.proto\"\xc0\x05\n" +
 	"\x0eMeetingSetting\x12.\n" +
 	"\x12enableCameraOnJoin\x18\x01 \x01(\bR\x12enableCameraOnJoin\x126\n" +
 	"\x16enableMicrophoneOnJoin\x18\x02 \x01(\bR\x16enableMicrophoneOnJoin\x12*\n" +
@@ -4544,7 +5552,22 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\x0freminderMinutes\x18\b \x03(\x05R\x0freminderMinutes\x122\n" +
 	"\x14canParticipantInvite\x18\t \x01(\bR\x14canParticipantInvite\x122\n" +
 	"\x14canParticipantUnmute\x18\n" +
-	" \x01(\bR\x14canParticipantUnmute\"v\n" +
+	" \x01(\bR\x14canParticipantUnmute\x12$\n" +
+	"\rmuteAllLocked\x18\v \x01(\bR\rmuteAllLocked\x12(\n" +
+	"\x0fallowSelfUnmute\x18\f \x01(\bR\x0fallowSelfUnmute\x12\x16\n" +
+	"\x06locked\x18\r \x01(\bR\x06locked\x12\x1c\n" +
+	"\tshareMode\x18\x0e \x01(\tR\tshareMode\x12\x1a\n" +
+	"\bchatMode\x18\x0f \x01(\tR\bchatMode\x12 \n" +
+	"\vraisedHands\x18\x10 \x03(\tR\vraisedHands\x12&\n" +
+	"\x0econtrolVersion\x18\x11 \x01(\x03R\x0econtrolVersion\"\xee\x01\n" +
+	"\x0eMeetingControl\x12$\n" +
+	"\rmuteAllLocked\x18\x01 \x01(\bR\rmuteAllLocked\x12(\n" +
+	"\x0fallowSelfUnmute\x18\x02 \x01(\bR\x0fallowSelfUnmute\x12\x16\n" +
+	"\x06locked\x18\x03 \x01(\bR\x06locked\x12\x1c\n" +
+	"\tshareMode\x18\x04 \x01(\tR\tshareMode\x12\x1a\n" +
+	"\bchatMode\x18\x05 \x01(\tR\bchatMode\x12 \n" +
+	"\vraisedHands\x18\x06 \x03(\tR\vraisedHands\x12\x18\n" +
+	"\aversion\x18\a \x01(\x03R\aversion\"v\n" +
 	"\n" +
 	"RepeatRule\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x1a\n" +
@@ -4868,13 +5891,73 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\x06opUser\x18\x04 \x01(\v2\x16.openim.sdkws.UserInfoR\x06opUser\"~\n" +
 	"\x13MeetingReminderTips\x12=\n" +
 	"\ameeting\x18\x01 \x01(\v2#.openim.livekit_meeting.MeetingInfoR\ameeting\x12(\n" +
-	"\x0freminderMinutes\x18\x02 \x01(\x05R\x0freminderMinutes\"\xb0\x01\n" +
+	"\x0freminderMinutes\x18\x02 \x01(\x05R\x0freminderMinutes\"\xf1\x02\n" +
+	"\x19MeetingControlChangedTips\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12@\n" +
+	"\acontrol\x18\x03 \x01(\v2&.openim.livekit_meeting.MeetingControlR\acontrol\x12L\n" +
+	"\vparticipant\x18\x04 \x01(\v2*.openim.livekit_meeting.MeetingParticipantR\vparticipant\x12\x16\n" +
+	"\x06raised\x18\x05 \x01(\bR\x06raised\x12$\n" +
+	"\rtargetUserIDs\x18\x06 \x03(\tR\rtargetUserIDs\x12.\n" +
+	"\x06opUser\x18\a \x01(\v2\x16.openim.sdkws.UserInfoR\x06opUser\x12$\n" +
+	"\roperationTime\x18\b \x01(\x03R\roperationTime\"\xb0\x01\n" +
 	"\x18ProcessLiveKitWebhookReq\x12\x14\n" +
 	"\x05event\x18\x01 \x01(\tR\x05event\x12\x1a\n" +
 	"\broomName\x18\x02 \x01(\tR\broomName\x12\x1a\n" +
 	"\bidentity\x18\x03 \x01(\tR\bidentity\x12F\n" +
 	"\x0fegressRecording\x18\x04 \x01(\v2\x1c.openim.egress.RecordingInfoR\x0fegressRecording\"\x1b\n" +
-	"\x19ProcessLiveKitWebhookResp\"0\n" +
+	"\x19ProcessLiveKitWebhookResp\":\n" +
+	"\x18BatchGetMeetingStatusReq\x12\x1e\n" +
+	"\n" +
+	"meetingIDs\x18\x01 \x03(\tR\n" +
+	"meetingIDs\"\xbb\x02\n" +
+	"\x11MeetingStatusItem\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12$\n" +
+	"\rscheduledTime\x18\x03 \x01(\x03R\rscheduledTime\x12*\n" +
+	"\x10scheduledEndTime\x18\x04 \x01(\x03R\x10scheduledEndTime\x12(\n" +
+	"\x0factualStartTime\x18\x05 \x01(\x03R\x0factualStartTime\x12$\n" +
+	"\ractualEndTime\x18\x06 \x01(\x03R\ractualEndTime\x12*\n" +
+	"\x10participantCount\x18\a \x01(\x05R\x10participantCount\x12\"\n" +
+	"\fhasRecording\x18\b \x01(\bR\fhasRecording\"\\\n" +
+	"\x19BatchGetMeetingStatusResp\x12?\n" +
+	"\x05items\x18\x01 \x03(\v2).openim.livekit_meeting.MeetingStatusItemR\x05items\"i\n" +
+	"\x13ShareMeetingCardReq\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x18\n" +
+	"\arecvIDs\x18\x02 \x03(\tR\arecvIDs\x12\x1a\n" +
+	"\bgroupIDs\x18\x03 \x03(\tR\bgroupIDs\"\xb6\x01\n" +
+	"\x14ShareMeetingCardResp\x12&\n" +
+	"\x0esuccessUserIDs\x18\x01 \x03(\tR\x0esuccessUserIDs\x12$\n" +
+	"\rfailedUserIDs\x18\x02 \x03(\tR\rfailedUserIDs\x12(\n" +
+	"\x0fsuccessGroupIDs\x18\x03 \x03(\tR\x0fsuccessGroupIDs\x12&\n" +
+	"\x0efailedGroupIDs\x18\x04 \x03(\tR\x0efailedGroupIDs\"\xb8\x03\n" +
+	"\x14SetMeetingControlReq\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12@\n" +
+	"\rmuteAllLocked\x18\x02 \x01(\v2\x1a.openim.protobuf.BoolValueR\rmuteAllLocked\x12D\n" +
+	"\x0fallowSelfUnmute\x18\x03 \x01(\v2\x1a.openim.protobuf.BoolValueR\x0fallowSelfUnmute\x122\n" +
+	"\x06locked\x18\x04 \x01(\v2\x1a.openim.protobuf.BoolValueR\x06locked\x12:\n" +
+	"\tshareMode\x18\x05 \x01(\v2\x1c.openim.protobuf.StringValueR\tshareMode\x128\n" +
+	"\bchatMode\x18\x06 \x01(\v2\x1c.openim.protobuf.StringValueR\bchatMode\x12*\n" +
+	"\x10lowerHandUserIDs\x18\a \x03(\tR\x10lowerHandUserIDs\x12$\n" +
+	"\rlowerAllHands\x18\b \x01(\bR\rlowerAllHands\"Y\n" +
+	"\x15SetMeetingControlResp\x12@\n" +
+	"\acontrol\x18\x01 \x01(\v2&.openim.livekit_meeting.MeetingControlR\acontrol\"]\n" +
+	"\x11SetMeetingRoleReq\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\tR\x06userID\x12\x12\n" +
+	"\x04role\x18\x03 \x01(\x05R\x04role\"b\n" +
+	"\x12SetMeetingRoleResp\x12L\n" +
+	"\vparticipant\x18\x01 \x01(\v2*.openim.livekit_meeting.MeetingParticipantR\vparticipant\"J\n" +
+	"\x10RequestUnmuteReq\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x18\n" +
+	"\auserIDs\x18\x02 \x03(\tR\auserIDs\"-\n" +
+	"\x11RequestUnmuteResp\x12\x18\n" +
+	"\auserIDs\x18\x01 \x03(\tR\auserIDs\"D\n" +
+	"\fRaiseHandReq\x12\x1c\n" +
+	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\x12\x16\n" +
+	"\x06raised\x18\x02 \x01(\bR\x06raised\"Q\n" +
+	"\rRaiseHandResp\x12@\n" +
+	"\acontrol\x18\x01 \x01(\v2&.openim.livekit_meeting.MeetingControlR\acontrol\"0\n" +
 	"\x10DeleteMeetingReq\x12\x1c\n" +
 	"\tmeetingID\x18\x01 \x01(\tR\tmeetingID\"\x13\n" +
 	"\x11DeleteMeetingResp\"\x9a\x01\n" +
@@ -4902,7 +5985,7 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\n" +
 	"EndCallReq\x12\x16\n" +
 	"\x06roomID\x18\x01 \x01(\tR\x06roomID\"\r\n" +
-	"\vEndCallResp2\xec\x16\n" +
+	"\vEndCallResp2\xf4\x1b\n" +
 	"\x0eLiveKitMeeting\x12s\n" +
 	"\x12CreateQuickMeeting\x12-.openim.livekit_meeting.CreateQuickMeetingReq\x1a..openim.livekit_meeting.CreateQuickMeetingResp\x12j\n" +
 	"\x0fScheduleMeeting\x12*.openim.livekit_meeting.ScheduleMeetingReq\x1a+.openim.livekit_meeting.ScheduleMeetingResp\x12^\n" +
@@ -4929,7 +6012,13 @@ const file_livekit_meeting_livekit_meeting_proto_rawDesc = "" +
 	"\x15ProcessLiveKitWebhook\x120.openim.livekit_meeting.ProcessLiveKitWebhookReq\x1a1.openim.livekit_meeting.ProcessLiveKitWebhookResp\x12y\n" +
 	"\x14NotifyMeetingCreated\x12/.openim.livekit_meeting.NotifyMeetingCreatedReq\x1a0.openim.livekit_meeting.NotifyMeetingCreatedResp\x12y\n" +
 	"\x14NotifyMeetingUpdated\x12/.openim.livekit_meeting.NotifyMeetingUpdatedReq\x1a0.openim.livekit_meeting.NotifyMeetingUpdatedResp\x12d\n" +
-	"\rDeleteMeeting\x12(.openim.livekit_meeting.DeleteMeetingReq\x1a).openim.livekit_meeting.DeleteMeetingResp\x12[\n" +
+	"\rDeleteMeeting\x12(.openim.livekit_meeting.DeleteMeetingReq\x1a).openim.livekit_meeting.DeleteMeetingResp\x12|\n" +
+	"\x15BatchGetMeetingStatus\x120.openim.livekit_meeting.BatchGetMeetingStatusReq\x1a1.openim.livekit_meeting.BatchGetMeetingStatusResp\x12m\n" +
+	"\x10ShareMeetingCard\x12+.openim.livekit_meeting.ShareMeetingCardReq\x1a,.openim.livekit_meeting.ShareMeetingCardResp\x12p\n" +
+	"\x11SetMeetingControl\x12,.openim.livekit_meeting.SetMeetingControlReq\x1a-.openim.livekit_meeting.SetMeetingControlResp\x12g\n" +
+	"\x0eSetMeetingRole\x12).openim.livekit_meeting.SetMeetingRoleReq\x1a*.openim.livekit_meeting.SetMeetingRoleResp\x12d\n" +
+	"\rRequestUnmute\x12(.openim.livekit_meeting.RequestUnmuteReq\x1a).openim.livekit_meeting.RequestUnmuteResp\x12X\n" +
+	"\tRaiseHand\x12$.openim.livekit_meeting.RaiseHandReq\x1a%.openim.livekit_meeting.RaiseHandResp\x12[\n" +
 	"\n" +
 	"CreateCall\x12%.openim.livekit_meeting.CreateCallReq\x1a&.openim.livekit_meeting.CreateCallResp\x12R\n" +
 	"\aEndCall\x12\".openim.livekit_meeting.EndCallReq\x1a#.openim.livekit_meeting.EndCallRespB/Z-github.com/openimsdk/protocol/livekit_meetingb\x06proto3"
@@ -4946,198 +6035,237 @@ func file_livekit_meeting_livekit_meeting_proto_rawDescGZIP() []byte {
 	return file_livekit_meeting_livekit_meeting_proto_rawDescData
 }
 
-var file_livekit_meeting_livekit_meeting_proto_msgTypes = make([]protoimpl.MessageInfo, 71)
+var file_livekit_meeting_livekit_meeting_proto_msgTypes = make([]protoimpl.MessageInfo, 86)
 var file_livekit_meeting_livekit_meeting_proto_goTypes = []any{
 	(*MeetingSetting)(nil),                // 0: openim.livekit_meeting.MeetingSetting
-	(*RepeatRule)(nil),                    // 1: openim.livekit_meeting.RepeatRule
-	(*MeetingScheduleInfo)(nil),           // 2: openim.livekit_meeting.MeetingScheduleInfo
-	(*MeetingInfo)(nil),                   // 3: openim.livekit_meeting.MeetingInfo
-	(*MeetingRecordingSummary)(nil),       // 4: openim.livekit_meeting.MeetingRecordingSummary
-	(*MeetingParticipant)(nil),            // 5: openim.livekit_meeting.MeetingParticipant
-	(*LiveKitInfo)(nil),                   // 6: openim.livekit_meeting.LiveKitInfo
-	(*MeetingInviteRecord)(nil),           // 7: openim.livekit_meeting.MeetingInviteRecord
-	(*NotificationPreference)(nil),        // 8: openim.livekit_meeting.NotificationPreference
-	(*CreateQuickMeetingReq)(nil),         // 9: openim.livekit_meeting.CreateQuickMeetingReq
-	(*CreateQuickMeetingResp)(nil),        // 10: openim.livekit_meeting.CreateQuickMeetingResp
-	(*ScheduleMeetingReq)(nil),            // 11: openim.livekit_meeting.ScheduleMeetingReq
-	(*ScheduleMeetingResp)(nil),           // 12: openim.livekit_meeting.ScheduleMeetingResp
-	(*JoinMeetingReq)(nil),                // 13: openim.livekit_meeting.JoinMeetingReq
-	(*JoinMeetingResp)(nil),               // 14: openim.livekit_meeting.JoinMeetingResp
-	(*GetMeetingListReq)(nil),             // 15: openim.livekit_meeting.GetMeetingListReq
-	(*GetMeetingListResp)(nil),            // 16: openim.livekit_meeting.GetMeetingListResp
-	(*GetMeetingReq)(nil),                 // 17: openim.livekit_meeting.GetMeetingReq
-	(*GetMeetingResp)(nil),                // 18: openim.livekit_meeting.GetMeetingResp
-	(*UpdateMeetingReq)(nil),              // 19: openim.livekit_meeting.UpdateMeetingReq
-	(*UpdateMeetingResp)(nil),             // 20: openim.livekit_meeting.UpdateMeetingResp
-	(*CancelMeetingReq)(nil),              // 21: openim.livekit_meeting.CancelMeetingReq
-	(*CancelMeetingResp)(nil),             // 22: openim.livekit_meeting.CancelMeetingResp
-	(*EndMeetingReq)(nil),                 // 23: openim.livekit_meeting.EndMeetingReq
-	(*EndMeetingResp)(nil),                // 24: openim.livekit_meeting.EndMeetingResp
-	(*InviteToMeetingReq)(nil),            // 25: openim.livekit_meeting.InviteToMeetingReq
-	(*InviteToMeetingResp)(nil),           // 26: openim.livekit_meeting.InviteToMeetingResp
-	(*RespondMeetingInvitationReq)(nil),   // 27: openim.livekit_meeting.RespondMeetingInvitationReq
-	(*RespondMeetingInvitationResp)(nil),  // 28: openim.livekit_meeting.RespondMeetingInvitationResp
-	(*CancelMeetingInvitationReq)(nil),    // 29: openim.livekit_meeting.CancelMeetingInvitationReq
-	(*CancelMeetingInvitationResp)(nil),   // 30: openim.livekit_meeting.CancelMeetingInvitationResp
-	(*GetInviteRecordListReq)(nil),        // 31: openim.livekit_meeting.GetInviteRecordListReq
-	(*GetInviteRecordListResp)(nil),       // 32: openim.livekit_meeting.GetInviteRecordListResp
-	(*KickParticipantReq)(nil),            // 33: openim.livekit_meeting.KickParticipantReq
-	(*KickParticipantResp)(nil),           // 34: openim.livekit_meeting.KickParticipantResp
-	(*SetParticipantRoleReq)(nil),         // 35: openim.livekit_meeting.SetParticipantRoleReq
-	(*SetParticipantRoleResp)(nil),        // 36: openim.livekit_meeting.SetParticipantRoleResp
-	(*GetMeetingTokenReq)(nil),            // 37: openim.livekit_meeting.GetMeetingTokenReq
-	(*GetMeetingTokenResp)(nil),           // 38: openim.livekit_meeting.GetMeetingTokenResp
-	(*SyncMeetingReq)(nil),                // 39: openim.livekit_meeting.SyncMeetingReq
-	(*SyncMeetingResp)(nil),               // 40: openim.livekit_meeting.SyncMeetingResp
-	(*SetMeetingReminderReq)(nil),         // 41: openim.livekit_meeting.SetMeetingReminderReq
-	(*SetMeetingReminderResp)(nil),        // 42: openim.livekit_meeting.SetMeetingReminderResp
-	(*GetMeetingRemindersReq)(nil),        // 43: openim.livekit_meeting.GetMeetingRemindersReq
-	(*GetMeetingRemindersResp)(nil),       // 44: openim.livekit_meeting.GetMeetingRemindersResp
-	(*SetNotificationPreferenceReq)(nil),  // 45: openim.livekit_meeting.SetNotificationPreferenceReq
-	(*SetNotificationPreferenceResp)(nil), // 46: openim.livekit_meeting.SetNotificationPreferenceResp
-	(*GetNotificationPreferenceReq)(nil),  // 47: openim.livekit_meeting.GetNotificationPreferenceReq
-	(*GetNotificationPreferenceResp)(nil), // 48: openim.livekit_meeting.GetNotificationPreferenceResp
-	(*MeetingCreatedTips)(nil),            // 49: openim.livekit_meeting.MeetingCreatedTips
-	(*MeetingUpdatedTips)(nil),            // 50: openim.livekit_meeting.MeetingUpdatedTips
-	(*MeetingDeletedTips)(nil),            // 51: openim.livekit_meeting.MeetingDeletedTips
-	(*MeetingInvitationTips)(nil),         // 52: openim.livekit_meeting.MeetingInvitationTips
-	(*InvitationRespondedTips)(nil),       // 53: openim.livekit_meeting.InvitationRespondedTips
-	(*InvitationCancelledTips)(nil),       // 54: openim.livekit_meeting.InvitationCancelledTips
-	(*MeetingParticipantChangedTips)(nil), // 55: openim.livekit_meeting.MeetingParticipantChangedTips
-	(*MeetingStatusChangedTips)(nil),      // 56: openim.livekit_meeting.MeetingStatusChangedTips
-	(*MeetingReminderTips)(nil),           // 57: openim.livekit_meeting.MeetingReminderTips
-	(*ProcessLiveKitWebhookReq)(nil),      // 58: openim.livekit_meeting.ProcessLiveKitWebhookReq
-	(*ProcessLiveKitWebhookResp)(nil),     // 59: openim.livekit_meeting.ProcessLiveKitWebhookResp
-	(*DeleteMeetingReq)(nil),              // 60: openim.livekit_meeting.DeleteMeetingReq
-	(*DeleteMeetingResp)(nil),             // 61: openim.livekit_meeting.DeleteMeetingResp
-	(*MeetingCancelledTips)(nil),          // 62: openim.livekit_meeting.MeetingCancelledTips
-	(*NotifyMeetingCreatedReq)(nil),       // 63: openim.livekit_meeting.NotifyMeetingCreatedReq
-	(*NotifyMeetingCreatedResp)(nil),      // 64: openim.livekit_meeting.NotifyMeetingCreatedResp
-	(*NotifyMeetingUpdatedReq)(nil),       // 65: openim.livekit_meeting.NotifyMeetingUpdatedReq
-	(*NotifyMeetingUpdatedResp)(nil),      // 66: openim.livekit_meeting.NotifyMeetingUpdatedResp
-	(*CreateCallReq)(nil),                 // 67: openim.livekit_meeting.CreateCallReq
-	(*CreateCallResp)(nil),                // 68: openim.livekit_meeting.CreateCallResp
-	(*EndCallReq)(nil),                    // 69: openim.livekit_meeting.EndCallReq
-	(*EndCallResp)(nil),                   // 70: openim.livekit_meeting.EndCallResp
-	(*schedule.MeetingSettings)(nil),      // 71: openim.schedule.MeetingSettings
-	(*schedule.ScheduleRepeatInfo)(nil),   // 72: openim.schedule.ScheduleRepeatInfo
-	(*meeting_room.MeetingRoomInfo)(nil),  // 73: openim.meeting_room.MeetingRoomInfo
-	(*wrapperspb.BoolValue)(nil),          // 74: openim.protobuf.BoolValue
-	(*sdkws.RequestPagination)(nil),       // 75: openim.sdkws.RequestPagination
-	(*wrapperspb.StringValue)(nil),        // 76: openim.protobuf.StringValue
-	(*wrapperspb.Int64Value)(nil),         // 77: openim.protobuf.Int64Value
-	(*wrapperspb.Int32Value)(nil),         // 78: openim.protobuf.Int32Value
-	(*sdkws.UserInfo)(nil),                // 79: openim.sdkws.UserInfo
-	(*egress.RecordingInfo)(nil),          // 80: openim.egress.RecordingInfo
+	(*MeetingControl)(nil),                // 1: openim.livekit_meeting.MeetingControl
+	(*RepeatRule)(nil),                    // 2: openim.livekit_meeting.RepeatRule
+	(*MeetingScheduleInfo)(nil),           // 3: openim.livekit_meeting.MeetingScheduleInfo
+	(*MeetingInfo)(nil),                   // 4: openim.livekit_meeting.MeetingInfo
+	(*MeetingRecordingSummary)(nil),       // 5: openim.livekit_meeting.MeetingRecordingSummary
+	(*MeetingParticipant)(nil),            // 6: openim.livekit_meeting.MeetingParticipant
+	(*LiveKitInfo)(nil),                   // 7: openim.livekit_meeting.LiveKitInfo
+	(*MeetingInviteRecord)(nil),           // 8: openim.livekit_meeting.MeetingInviteRecord
+	(*NotificationPreference)(nil),        // 9: openim.livekit_meeting.NotificationPreference
+	(*CreateQuickMeetingReq)(nil),         // 10: openim.livekit_meeting.CreateQuickMeetingReq
+	(*CreateQuickMeetingResp)(nil),        // 11: openim.livekit_meeting.CreateQuickMeetingResp
+	(*ScheduleMeetingReq)(nil),            // 12: openim.livekit_meeting.ScheduleMeetingReq
+	(*ScheduleMeetingResp)(nil),           // 13: openim.livekit_meeting.ScheduleMeetingResp
+	(*JoinMeetingReq)(nil),                // 14: openim.livekit_meeting.JoinMeetingReq
+	(*JoinMeetingResp)(nil),               // 15: openim.livekit_meeting.JoinMeetingResp
+	(*GetMeetingListReq)(nil),             // 16: openim.livekit_meeting.GetMeetingListReq
+	(*GetMeetingListResp)(nil),            // 17: openim.livekit_meeting.GetMeetingListResp
+	(*GetMeetingReq)(nil),                 // 18: openim.livekit_meeting.GetMeetingReq
+	(*GetMeetingResp)(nil),                // 19: openim.livekit_meeting.GetMeetingResp
+	(*UpdateMeetingReq)(nil),              // 20: openim.livekit_meeting.UpdateMeetingReq
+	(*UpdateMeetingResp)(nil),             // 21: openim.livekit_meeting.UpdateMeetingResp
+	(*CancelMeetingReq)(nil),              // 22: openim.livekit_meeting.CancelMeetingReq
+	(*CancelMeetingResp)(nil),             // 23: openim.livekit_meeting.CancelMeetingResp
+	(*EndMeetingReq)(nil),                 // 24: openim.livekit_meeting.EndMeetingReq
+	(*EndMeetingResp)(nil),                // 25: openim.livekit_meeting.EndMeetingResp
+	(*InviteToMeetingReq)(nil),            // 26: openim.livekit_meeting.InviteToMeetingReq
+	(*InviteToMeetingResp)(nil),           // 27: openim.livekit_meeting.InviteToMeetingResp
+	(*RespondMeetingInvitationReq)(nil),   // 28: openim.livekit_meeting.RespondMeetingInvitationReq
+	(*RespondMeetingInvitationResp)(nil),  // 29: openim.livekit_meeting.RespondMeetingInvitationResp
+	(*CancelMeetingInvitationReq)(nil),    // 30: openim.livekit_meeting.CancelMeetingInvitationReq
+	(*CancelMeetingInvitationResp)(nil),   // 31: openim.livekit_meeting.CancelMeetingInvitationResp
+	(*GetInviteRecordListReq)(nil),        // 32: openim.livekit_meeting.GetInviteRecordListReq
+	(*GetInviteRecordListResp)(nil),       // 33: openim.livekit_meeting.GetInviteRecordListResp
+	(*KickParticipantReq)(nil),            // 34: openim.livekit_meeting.KickParticipantReq
+	(*KickParticipantResp)(nil),           // 35: openim.livekit_meeting.KickParticipantResp
+	(*SetParticipantRoleReq)(nil),         // 36: openim.livekit_meeting.SetParticipantRoleReq
+	(*SetParticipantRoleResp)(nil),        // 37: openim.livekit_meeting.SetParticipantRoleResp
+	(*GetMeetingTokenReq)(nil),            // 38: openim.livekit_meeting.GetMeetingTokenReq
+	(*GetMeetingTokenResp)(nil),           // 39: openim.livekit_meeting.GetMeetingTokenResp
+	(*SyncMeetingReq)(nil),                // 40: openim.livekit_meeting.SyncMeetingReq
+	(*SyncMeetingResp)(nil),               // 41: openim.livekit_meeting.SyncMeetingResp
+	(*SetMeetingReminderReq)(nil),         // 42: openim.livekit_meeting.SetMeetingReminderReq
+	(*SetMeetingReminderResp)(nil),        // 43: openim.livekit_meeting.SetMeetingReminderResp
+	(*GetMeetingRemindersReq)(nil),        // 44: openim.livekit_meeting.GetMeetingRemindersReq
+	(*GetMeetingRemindersResp)(nil),       // 45: openim.livekit_meeting.GetMeetingRemindersResp
+	(*SetNotificationPreferenceReq)(nil),  // 46: openim.livekit_meeting.SetNotificationPreferenceReq
+	(*SetNotificationPreferenceResp)(nil), // 47: openim.livekit_meeting.SetNotificationPreferenceResp
+	(*GetNotificationPreferenceReq)(nil),  // 48: openim.livekit_meeting.GetNotificationPreferenceReq
+	(*GetNotificationPreferenceResp)(nil), // 49: openim.livekit_meeting.GetNotificationPreferenceResp
+	(*MeetingCreatedTips)(nil),            // 50: openim.livekit_meeting.MeetingCreatedTips
+	(*MeetingUpdatedTips)(nil),            // 51: openim.livekit_meeting.MeetingUpdatedTips
+	(*MeetingDeletedTips)(nil),            // 52: openim.livekit_meeting.MeetingDeletedTips
+	(*MeetingInvitationTips)(nil),         // 53: openim.livekit_meeting.MeetingInvitationTips
+	(*InvitationRespondedTips)(nil),       // 54: openim.livekit_meeting.InvitationRespondedTips
+	(*InvitationCancelledTips)(nil),       // 55: openim.livekit_meeting.InvitationCancelledTips
+	(*MeetingParticipantChangedTips)(nil), // 56: openim.livekit_meeting.MeetingParticipantChangedTips
+	(*MeetingStatusChangedTips)(nil),      // 57: openim.livekit_meeting.MeetingStatusChangedTips
+	(*MeetingReminderTips)(nil),           // 58: openim.livekit_meeting.MeetingReminderTips
+	(*MeetingControlChangedTips)(nil),     // 59: openim.livekit_meeting.MeetingControlChangedTips
+	(*ProcessLiveKitWebhookReq)(nil),      // 60: openim.livekit_meeting.ProcessLiveKitWebhookReq
+	(*ProcessLiveKitWebhookResp)(nil),     // 61: openim.livekit_meeting.ProcessLiveKitWebhookResp
+	(*BatchGetMeetingStatusReq)(nil),      // 62: openim.livekit_meeting.BatchGetMeetingStatusReq
+	(*MeetingStatusItem)(nil),             // 63: openim.livekit_meeting.MeetingStatusItem
+	(*BatchGetMeetingStatusResp)(nil),     // 64: openim.livekit_meeting.BatchGetMeetingStatusResp
+	(*ShareMeetingCardReq)(nil),           // 65: openim.livekit_meeting.ShareMeetingCardReq
+	(*ShareMeetingCardResp)(nil),          // 66: openim.livekit_meeting.ShareMeetingCardResp
+	(*SetMeetingControlReq)(nil),          // 67: openim.livekit_meeting.SetMeetingControlReq
+	(*SetMeetingControlResp)(nil),         // 68: openim.livekit_meeting.SetMeetingControlResp
+	(*SetMeetingRoleReq)(nil),             // 69: openim.livekit_meeting.SetMeetingRoleReq
+	(*SetMeetingRoleResp)(nil),            // 70: openim.livekit_meeting.SetMeetingRoleResp
+	(*RequestUnmuteReq)(nil),              // 71: openim.livekit_meeting.RequestUnmuteReq
+	(*RequestUnmuteResp)(nil),             // 72: openim.livekit_meeting.RequestUnmuteResp
+	(*RaiseHandReq)(nil),                  // 73: openim.livekit_meeting.RaiseHandReq
+	(*RaiseHandResp)(nil),                 // 74: openim.livekit_meeting.RaiseHandResp
+	(*DeleteMeetingReq)(nil),              // 75: openim.livekit_meeting.DeleteMeetingReq
+	(*DeleteMeetingResp)(nil),             // 76: openim.livekit_meeting.DeleteMeetingResp
+	(*MeetingCancelledTips)(nil),          // 77: openim.livekit_meeting.MeetingCancelledTips
+	(*NotifyMeetingCreatedReq)(nil),       // 78: openim.livekit_meeting.NotifyMeetingCreatedReq
+	(*NotifyMeetingCreatedResp)(nil),      // 79: openim.livekit_meeting.NotifyMeetingCreatedResp
+	(*NotifyMeetingUpdatedReq)(nil),       // 80: openim.livekit_meeting.NotifyMeetingUpdatedReq
+	(*NotifyMeetingUpdatedResp)(nil),      // 81: openim.livekit_meeting.NotifyMeetingUpdatedResp
+	(*CreateCallReq)(nil),                 // 82: openim.livekit_meeting.CreateCallReq
+	(*CreateCallResp)(nil),                // 83: openim.livekit_meeting.CreateCallResp
+	(*EndCallReq)(nil),                    // 84: openim.livekit_meeting.EndCallReq
+	(*EndCallResp)(nil),                   // 85: openim.livekit_meeting.EndCallResp
+	(*schedule.MeetingSettings)(nil),      // 86: openim.schedule.MeetingSettings
+	(*schedule.ScheduleRepeatInfo)(nil),   // 87: openim.schedule.ScheduleRepeatInfo
+	(*meeting_room.MeetingRoomInfo)(nil),  // 88: openim.meeting_room.MeetingRoomInfo
+	(*wrapperspb.BoolValue)(nil),          // 89: openim.protobuf.BoolValue
+	(*sdkws.RequestPagination)(nil),       // 90: openim.sdkws.RequestPagination
+	(*wrapperspb.StringValue)(nil),        // 91: openim.protobuf.StringValue
+	(*wrapperspb.Int64Value)(nil),         // 92: openim.protobuf.Int64Value
+	(*wrapperspb.Int32Value)(nil),         // 93: openim.protobuf.Int32Value
+	(*sdkws.UserInfo)(nil),                // 94: openim.sdkws.UserInfo
+	(*egress.RecordingInfo)(nil),          // 95: openim.egress.RecordingInfo
 }
 var file_livekit_meeting_livekit_meeting_proto_depIdxs = []int32{
-	71, // 0: openim.livekit_meeting.MeetingScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
-	72, // 1: openim.livekit_meeting.MeetingScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
-	73, // 2: openim.livekit_meeting.MeetingScheduleInfo.roomInfo:type_name -> openim.meeting_room.MeetingRoomInfo
-	1,  // 3: openim.livekit_meeting.MeetingInfo.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
+	86, // 0: openim.livekit_meeting.MeetingScheduleInfo.meetingSettings:type_name -> openim.schedule.MeetingSettings
+	87, // 1: openim.livekit_meeting.MeetingScheduleInfo.repeatInfo:type_name -> openim.schedule.ScheduleRepeatInfo
+	88, // 2: openim.livekit_meeting.MeetingScheduleInfo.roomInfo:type_name -> openim.meeting_room.MeetingRoomInfo
+	2,  // 3: openim.livekit_meeting.MeetingInfo.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
 	0,  // 4: openim.livekit_meeting.MeetingInfo.setting:type_name -> openim.livekit_meeting.MeetingSetting
-	2,  // 5: openim.livekit_meeting.MeetingInfo.scheduleInfo:type_name -> openim.livekit_meeting.MeetingScheduleInfo
-	4,  // 6: openim.livekit_meeting.MeetingInfo.recordings:type_name -> openim.livekit_meeting.MeetingRecordingSummary
+	3,  // 5: openim.livekit_meeting.MeetingInfo.scheduleInfo:type_name -> openim.livekit_meeting.MeetingScheduleInfo
+	5,  // 6: openim.livekit_meeting.MeetingInfo.recordings:type_name -> openim.livekit_meeting.MeetingRecordingSummary
 	0,  // 7: openim.livekit_meeting.CreateQuickMeetingReq.setting:type_name -> openim.livekit_meeting.MeetingSetting
-	3,  // 8: openim.livekit_meeting.CreateQuickMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	6,  // 9: openim.livekit_meeting.CreateQuickMeetingResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	4,  // 8: openim.livekit_meeting.CreateQuickMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	7,  // 9: openim.livekit_meeting.CreateQuickMeetingResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
 	0,  // 10: openim.livekit_meeting.ScheduleMeetingReq.setting:type_name -> openim.livekit_meeting.MeetingSetting
-	1,  // 11: openim.livekit_meeting.ScheduleMeetingReq.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
-	3,  // 12: openim.livekit_meeting.ScheduleMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	3,  // 13: openim.livekit_meeting.JoinMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	6,  // 14: openim.livekit_meeting.JoinMeetingResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
-	74, // 15: openim.livekit_meeting.GetMeetingListReq.showInCalendar:type_name -> openim.protobuf.BoolValue
-	75, // 16: openim.livekit_meeting.GetMeetingListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	3,  // 17: openim.livekit_meeting.GetMeetingListResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
-	3,  // 18: openim.livekit_meeting.GetMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	5,  // 19: openim.livekit_meeting.GetMeetingResp.participants:type_name -> openim.livekit_meeting.MeetingParticipant
-	76, // 20: openim.livekit_meeting.UpdateMeetingReq.title:type_name -> openim.protobuf.StringValue
-	77, // 21: openim.livekit_meeting.UpdateMeetingReq.scheduledTime:type_name -> openim.protobuf.Int64Value
-	78, // 22: openim.livekit_meeting.UpdateMeetingReq.duration:type_name -> openim.protobuf.Int32Value
+	2,  // 11: openim.livekit_meeting.ScheduleMeetingReq.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
+	4,  // 12: openim.livekit_meeting.ScheduleMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	4,  // 13: openim.livekit_meeting.JoinMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	7,  // 14: openim.livekit_meeting.JoinMeetingResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	89, // 15: openim.livekit_meeting.GetMeetingListReq.showInCalendar:type_name -> openim.protobuf.BoolValue
+	90, // 16: openim.livekit_meeting.GetMeetingListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	4,  // 17: openim.livekit_meeting.GetMeetingListResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
+	4,  // 18: openim.livekit_meeting.GetMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	6,  // 19: openim.livekit_meeting.GetMeetingResp.participants:type_name -> openim.livekit_meeting.MeetingParticipant
+	91, // 20: openim.livekit_meeting.UpdateMeetingReq.title:type_name -> openim.protobuf.StringValue
+	92, // 21: openim.livekit_meeting.UpdateMeetingReq.scheduledTime:type_name -> openim.protobuf.Int64Value
+	93, // 22: openim.livekit_meeting.UpdateMeetingReq.duration:type_name -> openim.protobuf.Int32Value
 	0,  // 23: openim.livekit_meeting.UpdateMeetingReq.setting:type_name -> openim.livekit_meeting.MeetingSetting
-	74, // 24: openim.livekit_meeting.UpdateMeetingReq.showInCalendar:type_name -> openim.protobuf.BoolValue
-	1,  // 25: openim.livekit_meeting.UpdateMeetingReq.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
-	78, // 26: openim.livekit_meeting.UpdateMeetingReq.visibility:type_name -> openim.protobuf.Int32Value
-	3,  // 27: openim.livekit_meeting.UpdateMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	75, // 28: openim.livekit_meeting.GetInviteRecordListReq.pagination:type_name -> openim.sdkws.RequestPagination
-	7,  // 29: openim.livekit_meeting.GetInviteRecordListResp.records:type_name -> openim.livekit_meeting.MeetingInviteRecord
-	6,  // 30: openim.livekit_meeting.GetMeetingTokenResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
-	3,  // 31: openim.livekit_meeting.SyncMeetingResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
-	8,  // 32: openim.livekit_meeting.SetNotificationPreferenceReq.preference:type_name -> openim.livekit_meeting.NotificationPreference
-	8,  // 33: openim.livekit_meeting.GetNotificationPreferenceResp.preference:type_name -> openim.livekit_meeting.NotificationPreference
-	3,  // 34: openim.livekit_meeting.MeetingCreatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	79, // 35: openim.livekit_meeting.MeetingCreatedTips.opUser:type_name -> openim.sdkws.UserInfo
-	3,  // 36: openim.livekit_meeting.MeetingUpdatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	79, // 37: openim.livekit_meeting.MeetingUpdatedTips.opUser:type_name -> openim.sdkws.UserInfo
-	79, // 38: openim.livekit_meeting.MeetingDeletedTips.opUser:type_name -> openim.sdkws.UserInfo
-	3,  // 39: openim.livekit_meeting.MeetingInvitationTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	79, // 40: openim.livekit_meeting.MeetingInvitationTips.inviter:type_name -> openim.sdkws.UserInfo
-	79, // 41: openim.livekit_meeting.InvitationRespondedTips.opUser:type_name -> openim.sdkws.UserInfo
-	79, // 42: openim.livekit_meeting.InvitationCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
-	5,  // 43: openim.livekit_meeting.MeetingParticipantChangedTips.participant:type_name -> openim.livekit_meeting.MeetingParticipant
-	79, // 44: openim.livekit_meeting.MeetingParticipantChangedTips.opUser:type_name -> openim.sdkws.UserInfo
-	79, // 45: openim.livekit_meeting.MeetingStatusChangedTips.opUser:type_name -> openim.sdkws.UserInfo
-	3,  // 46: openim.livekit_meeting.MeetingReminderTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
-	80, // 47: openim.livekit_meeting.ProcessLiveKitWebhookReq.egressRecording:type_name -> openim.egress.RecordingInfo
-	79, // 48: openim.livekit_meeting.MeetingCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
-	6,  // 49: openim.livekit_meeting.CreateCallResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
-	9,  // 50: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:input_type -> openim.livekit_meeting.CreateQuickMeetingReq
-	11, // 51: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:input_type -> openim.livekit_meeting.ScheduleMeetingReq
-	13, // 52: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:input_type -> openim.livekit_meeting.JoinMeetingReq
-	15, // 53: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:input_type -> openim.livekit_meeting.GetMeetingListReq
-	17, // 54: openim.livekit_meeting.LiveKitMeeting.GetMeeting:input_type -> openim.livekit_meeting.GetMeetingReq
-	19, // 55: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:input_type -> openim.livekit_meeting.UpdateMeetingReq
-	21, // 56: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:input_type -> openim.livekit_meeting.CancelMeetingReq
-	23, // 57: openim.livekit_meeting.LiveKitMeeting.EndMeeting:input_type -> openim.livekit_meeting.EndMeetingReq
-	25, // 58: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:input_type -> openim.livekit_meeting.InviteToMeetingReq
-	33, // 59: openim.livekit_meeting.LiveKitMeeting.KickParticipant:input_type -> openim.livekit_meeting.KickParticipantReq
-	37, // 60: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:input_type -> openim.livekit_meeting.GetMeetingTokenReq
-	39, // 61: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:input_type -> openim.livekit_meeting.SyncMeetingReq
-	27, // 62: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:input_type -> openim.livekit_meeting.RespondMeetingInvitationReq
-	29, // 63: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:input_type -> openim.livekit_meeting.CancelMeetingInvitationReq
-	31, // 64: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:input_type -> openim.livekit_meeting.GetInviteRecordListReq
-	35, // 65: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:input_type -> openim.livekit_meeting.SetParticipantRoleReq
-	41, // 66: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:input_type -> openim.livekit_meeting.SetMeetingReminderReq
-	43, // 67: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:input_type -> openim.livekit_meeting.GetMeetingRemindersReq
-	45, // 68: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:input_type -> openim.livekit_meeting.SetNotificationPreferenceReq
-	47, // 69: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:input_type -> openim.livekit_meeting.GetNotificationPreferenceReq
-	58, // 70: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:input_type -> openim.livekit_meeting.ProcessLiveKitWebhookReq
-	63, // 71: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:input_type -> openim.livekit_meeting.NotifyMeetingCreatedReq
-	65, // 72: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:input_type -> openim.livekit_meeting.NotifyMeetingUpdatedReq
-	60, // 73: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:input_type -> openim.livekit_meeting.DeleteMeetingReq
-	67, // 74: openim.livekit_meeting.LiveKitMeeting.CreateCall:input_type -> openim.livekit_meeting.CreateCallReq
-	69, // 75: openim.livekit_meeting.LiveKitMeeting.EndCall:input_type -> openim.livekit_meeting.EndCallReq
-	10, // 76: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:output_type -> openim.livekit_meeting.CreateQuickMeetingResp
-	12, // 77: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:output_type -> openim.livekit_meeting.ScheduleMeetingResp
-	14, // 78: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:output_type -> openim.livekit_meeting.JoinMeetingResp
-	16, // 79: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:output_type -> openim.livekit_meeting.GetMeetingListResp
-	18, // 80: openim.livekit_meeting.LiveKitMeeting.GetMeeting:output_type -> openim.livekit_meeting.GetMeetingResp
-	20, // 81: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:output_type -> openim.livekit_meeting.UpdateMeetingResp
-	22, // 82: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:output_type -> openim.livekit_meeting.CancelMeetingResp
-	24, // 83: openim.livekit_meeting.LiveKitMeeting.EndMeeting:output_type -> openim.livekit_meeting.EndMeetingResp
-	26, // 84: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:output_type -> openim.livekit_meeting.InviteToMeetingResp
-	34, // 85: openim.livekit_meeting.LiveKitMeeting.KickParticipant:output_type -> openim.livekit_meeting.KickParticipantResp
-	38, // 86: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:output_type -> openim.livekit_meeting.GetMeetingTokenResp
-	40, // 87: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:output_type -> openim.livekit_meeting.SyncMeetingResp
-	28, // 88: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:output_type -> openim.livekit_meeting.RespondMeetingInvitationResp
-	30, // 89: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:output_type -> openim.livekit_meeting.CancelMeetingInvitationResp
-	32, // 90: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:output_type -> openim.livekit_meeting.GetInviteRecordListResp
-	36, // 91: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:output_type -> openim.livekit_meeting.SetParticipantRoleResp
-	42, // 92: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:output_type -> openim.livekit_meeting.SetMeetingReminderResp
-	44, // 93: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:output_type -> openim.livekit_meeting.GetMeetingRemindersResp
-	46, // 94: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:output_type -> openim.livekit_meeting.SetNotificationPreferenceResp
-	48, // 95: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:output_type -> openim.livekit_meeting.GetNotificationPreferenceResp
-	59, // 96: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:output_type -> openim.livekit_meeting.ProcessLiveKitWebhookResp
-	64, // 97: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:output_type -> openim.livekit_meeting.NotifyMeetingCreatedResp
-	66, // 98: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:output_type -> openim.livekit_meeting.NotifyMeetingUpdatedResp
-	61, // 99: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:output_type -> openim.livekit_meeting.DeleteMeetingResp
-	68, // 100: openim.livekit_meeting.LiveKitMeeting.CreateCall:output_type -> openim.livekit_meeting.CreateCallResp
-	70, // 101: openim.livekit_meeting.LiveKitMeeting.EndCall:output_type -> openim.livekit_meeting.EndCallResp
-	76, // [76:102] is the sub-list for method output_type
-	50, // [50:76] is the sub-list for method input_type
-	50, // [50:50] is the sub-list for extension type_name
-	50, // [50:50] is the sub-list for extension extendee
-	0,  // [0:50] is the sub-list for field type_name
+	89, // 24: openim.livekit_meeting.UpdateMeetingReq.showInCalendar:type_name -> openim.protobuf.BoolValue
+	2,  // 25: openim.livekit_meeting.UpdateMeetingReq.repeatRule:type_name -> openim.livekit_meeting.RepeatRule
+	93, // 26: openim.livekit_meeting.UpdateMeetingReq.visibility:type_name -> openim.protobuf.Int32Value
+	4,  // 27: openim.livekit_meeting.UpdateMeetingResp.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	90, // 28: openim.livekit_meeting.GetInviteRecordListReq.pagination:type_name -> openim.sdkws.RequestPagination
+	8,  // 29: openim.livekit_meeting.GetInviteRecordListResp.records:type_name -> openim.livekit_meeting.MeetingInviteRecord
+	7,  // 30: openim.livekit_meeting.GetMeetingTokenResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	4,  // 31: openim.livekit_meeting.SyncMeetingResp.meetings:type_name -> openim.livekit_meeting.MeetingInfo
+	9,  // 32: openim.livekit_meeting.SetNotificationPreferenceReq.preference:type_name -> openim.livekit_meeting.NotificationPreference
+	9,  // 33: openim.livekit_meeting.GetNotificationPreferenceResp.preference:type_name -> openim.livekit_meeting.NotificationPreference
+	4,  // 34: openim.livekit_meeting.MeetingCreatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	94, // 35: openim.livekit_meeting.MeetingCreatedTips.opUser:type_name -> openim.sdkws.UserInfo
+	4,  // 36: openim.livekit_meeting.MeetingUpdatedTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	94, // 37: openim.livekit_meeting.MeetingUpdatedTips.opUser:type_name -> openim.sdkws.UserInfo
+	94, // 38: openim.livekit_meeting.MeetingDeletedTips.opUser:type_name -> openim.sdkws.UserInfo
+	4,  // 39: openim.livekit_meeting.MeetingInvitationTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	94, // 40: openim.livekit_meeting.MeetingInvitationTips.inviter:type_name -> openim.sdkws.UserInfo
+	94, // 41: openim.livekit_meeting.InvitationRespondedTips.opUser:type_name -> openim.sdkws.UserInfo
+	94, // 42: openim.livekit_meeting.InvitationCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
+	6,  // 43: openim.livekit_meeting.MeetingParticipantChangedTips.participant:type_name -> openim.livekit_meeting.MeetingParticipant
+	94, // 44: openim.livekit_meeting.MeetingParticipantChangedTips.opUser:type_name -> openim.sdkws.UserInfo
+	94, // 45: openim.livekit_meeting.MeetingStatusChangedTips.opUser:type_name -> openim.sdkws.UserInfo
+	4,  // 46: openim.livekit_meeting.MeetingReminderTips.meeting:type_name -> openim.livekit_meeting.MeetingInfo
+	1,  // 47: openim.livekit_meeting.MeetingControlChangedTips.control:type_name -> openim.livekit_meeting.MeetingControl
+	6,  // 48: openim.livekit_meeting.MeetingControlChangedTips.participant:type_name -> openim.livekit_meeting.MeetingParticipant
+	94, // 49: openim.livekit_meeting.MeetingControlChangedTips.opUser:type_name -> openim.sdkws.UserInfo
+	95, // 50: openim.livekit_meeting.ProcessLiveKitWebhookReq.egressRecording:type_name -> openim.egress.RecordingInfo
+	63, // 51: openim.livekit_meeting.BatchGetMeetingStatusResp.items:type_name -> openim.livekit_meeting.MeetingStatusItem
+	89, // 52: openim.livekit_meeting.SetMeetingControlReq.muteAllLocked:type_name -> openim.protobuf.BoolValue
+	89, // 53: openim.livekit_meeting.SetMeetingControlReq.allowSelfUnmute:type_name -> openim.protobuf.BoolValue
+	89, // 54: openim.livekit_meeting.SetMeetingControlReq.locked:type_name -> openim.protobuf.BoolValue
+	91, // 55: openim.livekit_meeting.SetMeetingControlReq.shareMode:type_name -> openim.protobuf.StringValue
+	91, // 56: openim.livekit_meeting.SetMeetingControlReq.chatMode:type_name -> openim.protobuf.StringValue
+	1,  // 57: openim.livekit_meeting.SetMeetingControlResp.control:type_name -> openim.livekit_meeting.MeetingControl
+	6,  // 58: openim.livekit_meeting.SetMeetingRoleResp.participant:type_name -> openim.livekit_meeting.MeetingParticipant
+	1,  // 59: openim.livekit_meeting.RaiseHandResp.control:type_name -> openim.livekit_meeting.MeetingControl
+	94, // 60: openim.livekit_meeting.MeetingCancelledTips.opUser:type_name -> openim.sdkws.UserInfo
+	7,  // 61: openim.livekit_meeting.CreateCallResp.liveKit:type_name -> openim.livekit_meeting.LiveKitInfo
+	10, // 62: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:input_type -> openim.livekit_meeting.CreateQuickMeetingReq
+	12, // 63: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:input_type -> openim.livekit_meeting.ScheduleMeetingReq
+	14, // 64: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:input_type -> openim.livekit_meeting.JoinMeetingReq
+	16, // 65: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:input_type -> openim.livekit_meeting.GetMeetingListReq
+	18, // 66: openim.livekit_meeting.LiveKitMeeting.GetMeeting:input_type -> openim.livekit_meeting.GetMeetingReq
+	20, // 67: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:input_type -> openim.livekit_meeting.UpdateMeetingReq
+	22, // 68: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:input_type -> openim.livekit_meeting.CancelMeetingReq
+	24, // 69: openim.livekit_meeting.LiveKitMeeting.EndMeeting:input_type -> openim.livekit_meeting.EndMeetingReq
+	26, // 70: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:input_type -> openim.livekit_meeting.InviteToMeetingReq
+	34, // 71: openim.livekit_meeting.LiveKitMeeting.KickParticipant:input_type -> openim.livekit_meeting.KickParticipantReq
+	38, // 72: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:input_type -> openim.livekit_meeting.GetMeetingTokenReq
+	40, // 73: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:input_type -> openim.livekit_meeting.SyncMeetingReq
+	28, // 74: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:input_type -> openim.livekit_meeting.RespondMeetingInvitationReq
+	30, // 75: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:input_type -> openim.livekit_meeting.CancelMeetingInvitationReq
+	32, // 76: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:input_type -> openim.livekit_meeting.GetInviteRecordListReq
+	36, // 77: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:input_type -> openim.livekit_meeting.SetParticipantRoleReq
+	42, // 78: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:input_type -> openim.livekit_meeting.SetMeetingReminderReq
+	44, // 79: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:input_type -> openim.livekit_meeting.GetMeetingRemindersReq
+	46, // 80: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:input_type -> openim.livekit_meeting.SetNotificationPreferenceReq
+	48, // 81: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:input_type -> openim.livekit_meeting.GetNotificationPreferenceReq
+	60, // 82: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:input_type -> openim.livekit_meeting.ProcessLiveKitWebhookReq
+	78, // 83: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:input_type -> openim.livekit_meeting.NotifyMeetingCreatedReq
+	80, // 84: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:input_type -> openim.livekit_meeting.NotifyMeetingUpdatedReq
+	75, // 85: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:input_type -> openim.livekit_meeting.DeleteMeetingReq
+	62, // 86: openim.livekit_meeting.LiveKitMeeting.BatchGetMeetingStatus:input_type -> openim.livekit_meeting.BatchGetMeetingStatusReq
+	65, // 87: openim.livekit_meeting.LiveKitMeeting.ShareMeetingCard:input_type -> openim.livekit_meeting.ShareMeetingCardReq
+	67, // 88: openim.livekit_meeting.LiveKitMeeting.SetMeetingControl:input_type -> openim.livekit_meeting.SetMeetingControlReq
+	69, // 89: openim.livekit_meeting.LiveKitMeeting.SetMeetingRole:input_type -> openim.livekit_meeting.SetMeetingRoleReq
+	71, // 90: openim.livekit_meeting.LiveKitMeeting.RequestUnmute:input_type -> openim.livekit_meeting.RequestUnmuteReq
+	73, // 91: openim.livekit_meeting.LiveKitMeeting.RaiseHand:input_type -> openim.livekit_meeting.RaiseHandReq
+	82, // 92: openim.livekit_meeting.LiveKitMeeting.CreateCall:input_type -> openim.livekit_meeting.CreateCallReq
+	84, // 93: openim.livekit_meeting.LiveKitMeeting.EndCall:input_type -> openim.livekit_meeting.EndCallReq
+	11, // 94: openim.livekit_meeting.LiveKitMeeting.CreateQuickMeeting:output_type -> openim.livekit_meeting.CreateQuickMeetingResp
+	13, // 95: openim.livekit_meeting.LiveKitMeeting.ScheduleMeeting:output_type -> openim.livekit_meeting.ScheduleMeetingResp
+	15, // 96: openim.livekit_meeting.LiveKitMeeting.JoinMeeting:output_type -> openim.livekit_meeting.JoinMeetingResp
+	17, // 97: openim.livekit_meeting.LiveKitMeeting.GetMeetingList:output_type -> openim.livekit_meeting.GetMeetingListResp
+	19, // 98: openim.livekit_meeting.LiveKitMeeting.GetMeeting:output_type -> openim.livekit_meeting.GetMeetingResp
+	21, // 99: openim.livekit_meeting.LiveKitMeeting.UpdateMeeting:output_type -> openim.livekit_meeting.UpdateMeetingResp
+	23, // 100: openim.livekit_meeting.LiveKitMeeting.CancelMeeting:output_type -> openim.livekit_meeting.CancelMeetingResp
+	25, // 101: openim.livekit_meeting.LiveKitMeeting.EndMeeting:output_type -> openim.livekit_meeting.EndMeetingResp
+	27, // 102: openim.livekit_meeting.LiveKitMeeting.InviteToMeeting:output_type -> openim.livekit_meeting.InviteToMeetingResp
+	35, // 103: openim.livekit_meeting.LiveKitMeeting.KickParticipant:output_type -> openim.livekit_meeting.KickParticipantResp
+	39, // 104: openim.livekit_meeting.LiveKitMeeting.GetMeetingToken:output_type -> openim.livekit_meeting.GetMeetingTokenResp
+	41, // 105: openim.livekit_meeting.LiveKitMeeting.SyncMeeting:output_type -> openim.livekit_meeting.SyncMeetingResp
+	29, // 106: openim.livekit_meeting.LiveKitMeeting.RespondMeetingInvitation:output_type -> openim.livekit_meeting.RespondMeetingInvitationResp
+	31, // 107: openim.livekit_meeting.LiveKitMeeting.CancelMeetingInvitation:output_type -> openim.livekit_meeting.CancelMeetingInvitationResp
+	33, // 108: openim.livekit_meeting.LiveKitMeeting.GetInviteRecordList:output_type -> openim.livekit_meeting.GetInviteRecordListResp
+	37, // 109: openim.livekit_meeting.LiveKitMeeting.SetParticipantRole:output_type -> openim.livekit_meeting.SetParticipantRoleResp
+	43, // 110: openim.livekit_meeting.LiveKitMeeting.SetMeetingReminder:output_type -> openim.livekit_meeting.SetMeetingReminderResp
+	45, // 111: openim.livekit_meeting.LiveKitMeeting.GetMeetingReminders:output_type -> openim.livekit_meeting.GetMeetingRemindersResp
+	47, // 112: openim.livekit_meeting.LiveKitMeeting.SetNotificationPreference:output_type -> openim.livekit_meeting.SetNotificationPreferenceResp
+	49, // 113: openim.livekit_meeting.LiveKitMeeting.GetNotificationPreference:output_type -> openim.livekit_meeting.GetNotificationPreferenceResp
+	61, // 114: openim.livekit_meeting.LiveKitMeeting.ProcessLiveKitWebhook:output_type -> openim.livekit_meeting.ProcessLiveKitWebhookResp
+	79, // 115: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingCreated:output_type -> openim.livekit_meeting.NotifyMeetingCreatedResp
+	81, // 116: openim.livekit_meeting.LiveKitMeeting.NotifyMeetingUpdated:output_type -> openim.livekit_meeting.NotifyMeetingUpdatedResp
+	76, // 117: openim.livekit_meeting.LiveKitMeeting.DeleteMeeting:output_type -> openim.livekit_meeting.DeleteMeetingResp
+	64, // 118: openim.livekit_meeting.LiveKitMeeting.BatchGetMeetingStatus:output_type -> openim.livekit_meeting.BatchGetMeetingStatusResp
+	66, // 119: openim.livekit_meeting.LiveKitMeeting.ShareMeetingCard:output_type -> openim.livekit_meeting.ShareMeetingCardResp
+	68, // 120: openim.livekit_meeting.LiveKitMeeting.SetMeetingControl:output_type -> openim.livekit_meeting.SetMeetingControlResp
+	70, // 121: openim.livekit_meeting.LiveKitMeeting.SetMeetingRole:output_type -> openim.livekit_meeting.SetMeetingRoleResp
+	72, // 122: openim.livekit_meeting.LiveKitMeeting.RequestUnmute:output_type -> openim.livekit_meeting.RequestUnmuteResp
+	74, // 123: openim.livekit_meeting.LiveKitMeeting.RaiseHand:output_type -> openim.livekit_meeting.RaiseHandResp
+	83, // 124: openim.livekit_meeting.LiveKitMeeting.CreateCall:output_type -> openim.livekit_meeting.CreateCallResp
+	85, // 125: openim.livekit_meeting.LiveKitMeeting.EndCall:output_type -> openim.livekit_meeting.EndCallResp
+	94, // [94:126] is the sub-list for method output_type
+	62, // [62:94] is the sub-list for method input_type
+	62, // [62:62] is the sub-list for extension type_name
+	62, // [62:62] is the sub-list for extension extendee
+	0,  // [0:62] is the sub-list for field type_name
 }
 
 func init() { file_livekit_meeting_livekit_meeting_proto_init() }
@@ -5151,7 +6279,7 @@ func file_livekit_meeting_livekit_meeting_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_livekit_meeting_livekit_meeting_proto_rawDesc), len(file_livekit_meeting_livekit_meeting_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   71,
+			NumMessages:   86,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

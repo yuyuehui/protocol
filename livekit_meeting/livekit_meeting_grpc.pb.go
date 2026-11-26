@@ -57,6 +57,12 @@ const (
 	LiveKitMeeting_NotifyMeetingCreated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingCreated"
 	LiveKitMeeting_NotifyMeetingUpdated_FullMethodName      = "/openim.livekit_meeting.LiveKitMeeting/NotifyMeetingUpdated"
 	LiveKitMeeting_DeleteMeeting_FullMethodName             = "/openim.livekit_meeting.LiveKitMeeting/DeleteMeeting"
+	LiveKitMeeting_BatchGetMeetingStatus_FullMethodName     = "/openim.livekit_meeting.LiveKitMeeting/BatchGetMeetingStatus"
+	LiveKitMeeting_ShareMeetingCard_FullMethodName          = "/openim.livekit_meeting.LiveKitMeeting/ShareMeetingCard"
+	LiveKitMeeting_SetMeetingControl_FullMethodName         = "/openim.livekit_meeting.LiveKitMeeting/SetMeetingControl"
+	LiveKitMeeting_SetMeetingRole_FullMethodName            = "/openim.livekit_meeting.LiveKitMeeting/SetMeetingRole"
+	LiveKitMeeting_RequestUnmute_FullMethodName             = "/openim.livekit_meeting.LiveKitMeeting/RequestUnmute"
+	LiveKitMeeting_RaiseHand_FullMethodName                 = "/openim.livekit_meeting.LiveKitMeeting/RaiseHand"
 	LiveKitMeeting_CreateCall_FullMethodName                = "/openim.livekit_meeting.LiveKitMeeting/CreateCall"
 	LiveKitMeeting_EndCall_FullMethodName                   = "/openim.livekit_meeting.LiveKitMeeting/EndCall"
 )
@@ -93,6 +99,14 @@ type LiveKitMeetingClient interface {
 	NotifyMeetingUpdated(ctx context.Context, in *NotifyMeetingUpdatedReq, opts ...grpc.CallOption) (*NotifyMeetingUpdatedResp, error)
 	// 删除会议（软删除，仅 cancelled/ended 状态可删）
 	DeleteMeeting(ctx context.Context, in *DeleteMeetingReq, opts ...grpc.CallOption) (*DeleteMeetingResp, error)
+	// 卡片：批量查状态、分享卡片
+	BatchGetMeetingStatus(ctx context.Context, in *BatchGetMeetingStatusReq, opts ...grpc.CallOption) (*BatchGetMeetingStatusResp, error)
+	ShareMeetingCard(ctx context.Context, in *ShareMeetingCardReq, opts ...grpc.CallOption) (*ShareMeetingCardResp, error)
+	// 会中控制（变更发 1815）
+	SetMeetingControl(ctx context.Context, in *SetMeetingControlReq, opts ...grpc.CallOption) (*SetMeetingControlResp, error)
+	SetMeetingRole(ctx context.Context, in *SetMeetingRoleReq, opts ...grpc.CallOption) (*SetMeetingRoleResp, error)
+	RequestUnmute(ctx context.Context, in *RequestUnmuteReq, opts ...grpc.CallOption) (*RequestUnmuteResp, error)
+	RaiseHand(ctx context.Context, in *RaiseHandReq, opts ...grpc.CallOption) (*RaiseHandResp, error)
 	// 语音/视频通话（不创建会议记录，仅操作 LiveKit 房间）
 	CreateCall(ctx context.Context, in *CreateCallReq, opts ...grpc.CallOption) (*CreateCallResp, error)
 	EndCall(ctx context.Context, in *EndCallReq, opts ...grpc.CallOption) (*EndCallResp, error)
@@ -346,6 +360,66 @@ func (c *liveKitMeetingClient) DeleteMeeting(ctx context.Context, in *DeleteMeet
 	return out, nil
 }
 
+func (c *liveKitMeetingClient) BatchGetMeetingStatus(ctx context.Context, in *BatchGetMeetingStatusReq, opts ...grpc.CallOption) (*BatchGetMeetingStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchGetMeetingStatusResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_BatchGetMeetingStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) ShareMeetingCard(ctx context.Context, in *ShareMeetingCardReq, opts ...grpc.CallOption) (*ShareMeetingCardResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ShareMeetingCardResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_ShareMeetingCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) SetMeetingControl(ctx context.Context, in *SetMeetingControlReq, opts ...grpc.CallOption) (*SetMeetingControlResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetMeetingControlResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_SetMeetingControl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) SetMeetingRole(ctx context.Context, in *SetMeetingRoleReq, opts ...grpc.CallOption) (*SetMeetingRoleResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SetMeetingRoleResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_SetMeetingRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) RequestUnmute(ctx context.Context, in *RequestUnmuteReq, opts ...grpc.CallOption) (*RequestUnmuteResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RequestUnmuteResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_RequestUnmute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *liveKitMeetingClient) RaiseHand(ctx context.Context, in *RaiseHandReq, opts ...grpc.CallOption) (*RaiseHandResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RaiseHandResp)
+	err := c.cc.Invoke(ctx, LiveKitMeeting_RaiseHand_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *liveKitMeetingClient) CreateCall(ctx context.Context, in *CreateCallReq, opts ...grpc.CallOption) (*CreateCallResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateCallResp)
@@ -398,6 +472,14 @@ type LiveKitMeetingServer interface {
 	NotifyMeetingUpdated(context.Context, *NotifyMeetingUpdatedReq) (*NotifyMeetingUpdatedResp, error)
 	// 删除会议（软删除，仅 cancelled/ended 状态可删）
 	DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error)
+	// 卡片：批量查状态、分享卡片
+	BatchGetMeetingStatus(context.Context, *BatchGetMeetingStatusReq) (*BatchGetMeetingStatusResp, error)
+	ShareMeetingCard(context.Context, *ShareMeetingCardReq) (*ShareMeetingCardResp, error)
+	// 会中控制（变更发 1815）
+	SetMeetingControl(context.Context, *SetMeetingControlReq) (*SetMeetingControlResp, error)
+	SetMeetingRole(context.Context, *SetMeetingRoleReq) (*SetMeetingRoleResp, error)
+	RequestUnmute(context.Context, *RequestUnmuteReq) (*RequestUnmuteResp, error)
+	RaiseHand(context.Context, *RaiseHandReq) (*RaiseHandResp, error)
 	// 语音/视频通话（不创建会议记录，仅操作 LiveKit 房间）
 	CreateCall(context.Context, *CreateCallReq) (*CreateCallResp, error)
 	EndCall(context.Context, *EndCallReq) (*EndCallResp, error)
@@ -482,6 +564,24 @@ func (UnimplementedLiveKitMeetingServer) NotifyMeetingUpdated(context.Context, *
 }
 func (UnimplementedLiveKitMeetingServer) DeleteMeeting(context.Context, *DeleteMeetingReq) (*DeleteMeetingResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteMeeting not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) BatchGetMeetingStatus(context.Context, *BatchGetMeetingStatusReq) (*BatchGetMeetingStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchGetMeetingStatus not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) ShareMeetingCard(context.Context, *ShareMeetingCardReq) (*ShareMeetingCardResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ShareMeetingCard not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) SetMeetingControl(context.Context, *SetMeetingControlReq) (*SetMeetingControlResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetMeetingControl not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) SetMeetingRole(context.Context, *SetMeetingRoleReq) (*SetMeetingRoleResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetMeetingRole not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) RequestUnmute(context.Context, *RequestUnmuteReq) (*RequestUnmuteResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RequestUnmute not implemented")
+}
+func (UnimplementedLiveKitMeetingServer) RaiseHand(context.Context, *RaiseHandReq) (*RaiseHandResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method RaiseHand not implemented")
 }
 func (UnimplementedLiveKitMeetingServer) CreateCall(context.Context, *CreateCallReq) (*CreateCallResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateCall not implemented")
@@ -942,6 +1042,114 @@ func _LiveKitMeeting_DeleteMeeting_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LiveKitMeeting_BatchGetMeetingStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchGetMeetingStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).BatchGetMeetingStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_BatchGetMeetingStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).BatchGetMeetingStatus(ctx, req.(*BatchGetMeetingStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_ShareMeetingCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShareMeetingCardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).ShareMeetingCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_ShareMeetingCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).ShareMeetingCard(ctx, req.(*ShareMeetingCardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_SetMeetingControl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMeetingControlReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).SetMeetingControl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_SetMeetingControl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).SetMeetingControl(ctx, req.(*SetMeetingControlReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_SetMeetingRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMeetingRoleReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).SetMeetingRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_SetMeetingRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).SetMeetingRole(ctx, req.(*SetMeetingRoleReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_RequestUnmute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestUnmuteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).RequestUnmute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_RequestUnmute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).RequestUnmute(ctx, req.(*RequestUnmuteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LiveKitMeeting_RaiseHand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RaiseHandReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LiveKitMeetingServer).RaiseHand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LiveKitMeeting_RaiseHand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LiveKitMeetingServer).RaiseHand(ctx, req.(*RaiseHandReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _LiveKitMeeting_CreateCall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateCallReq)
 	if err := dec(in); err != nil {
@@ -1080,6 +1288,30 @@ var LiveKitMeeting_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMeeting",
 			Handler:    _LiveKitMeeting_DeleteMeeting_Handler,
+		},
+		{
+			MethodName: "BatchGetMeetingStatus",
+			Handler:    _LiveKitMeeting_BatchGetMeetingStatus_Handler,
+		},
+		{
+			MethodName: "ShareMeetingCard",
+			Handler:    _LiveKitMeeting_ShareMeetingCard_Handler,
+		},
+		{
+			MethodName: "SetMeetingControl",
+			Handler:    _LiveKitMeeting_SetMeetingControl_Handler,
+		},
+		{
+			MethodName: "SetMeetingRole",
+			Handler:    _LiveKitMeeting_SetMeetingRole_Handler,
+		},
+		{
+			MethodName: "RequestUnmute",
+			Handler:    _LiveKitMeeting_RequestUnmute_Handler,
+		},
+		{
+			MethodName: "RaiseHand",
+			Handler:    _LiveKitMeeting_RaiseHand_Handler,
 		},
 		{
 			MethodName: "CreateCall",

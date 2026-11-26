@@ -45,6 +45,7 @@ message Conversation {
   bool isSystemDefault = 22;  // 是否为系统默认折叠会话（仅折叠会话有效，true=系统默认，false=用户自定义），用于判断是否可以删除和清空
   bool isHidden = 23;  // 是否隐藏（用户删除/隐藏会话时设置，收到新消息时自动取消隐藏）
   int64 seenSeq = 24;  // 用户已看过的最大序列号；服务端保持 hasReadSeq <= seenSeq <= maxSeq，且不回退
+  int32 memberComposition = 25;  // 群成员构成（只读，返回时按群信息填）：0=纯人，1=数字员工和人混合，2=纯数字员工；单聊恒为 0
 }
 
 message ConversationReq {
@@ -123,6 +124,7 @@ message MsgInfo {
   int32 contentType = 15;
   string content = 16;
   string ex = 17;
+  int32 memberComposition = 18;  // 群成员构成，同 sdkws.GroupInfo.memberComposition
 }
 
 message GetConversationsReq {
@@ -374,6 +376,15 @@ message UnhideConversationsIfNeededResp {
   repeated string unhiddenUserIDs = 1;  // 被取消隐藏的用户ID列表
 }
 
+// 群信息里会话也要带的字段（如成员构成）变了：给这些用户的群会话升版本、发会话变更通知，客户端增量同步时拿到新值
+message NotifyGroupConversationsChangedReq {
+  string groupID = 1;
+  repeated string userIDs = 2;  // 要通知的用户，一般是当前群成员；没有这个群会话的跳过
+}
+message NotifyGroupConversationsChangedResp {
+  repeated string userIDs = 1;  // 实际升了版本、发了通知的用户
+}
+
 // 会话分组
 message ConversationGroup {
     string groupID = 1;
@@ -501,6 +512,7 @@ service conversation {
   rpc UpdateConversationsByUser(UpdateConversationsByUserReq) returns (UpdateConversationsByUserResp);
   rpc DeleteConversations(DeleteConversationsReq) returns (DeleteConversationsResp);
   rpc UnhideConversationsIfNeeded(UnhideConversationsIfNeededReq) returns (UnhideConversationsIfNeededResp);  // 收到新消息时取消隐藏会话
+  rpc NotifyGroupConversationsChanged(NotifyGroupConversationsChangedReq) returns (NotifyGroupConversationsChangedResp);  // 群成员构成等变了，通知群会话重新同步（群服务内部调用）
   rpc InitConversationGroups(InitConversationGroupsReq) returns (InitConversationGroupsResp);
   rpc GetAllConversationGroups(GetAllConversationGroupsReq) returns (GetAllConversationGroupsResp);
   rpc GetVisibleConversationGroups(GetVisibleConversationGroupsReq) returns (GetVisibleConversationGroupsResp);

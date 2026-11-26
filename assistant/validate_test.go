@@ -1,6 +1,10 @@
 package assistant
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"strings"
 	"testing"
 
 	"google.golang.org/protobuf/encoding/protojson"
@@ -50,6 +54,207 @@ func TestRejectInvalidSnapshots(t *testing.T) {
 	}
 	if ValidatePublicSnapshot(nil) == nil {
 		t.Fatal("nil快照未被拒绝")
+	}
+}
+
+// 服务端按 EmitUnpopulated 序列化 215 / 2122，老客户端严格解析、认不出的字段会让整条显示不了：
+// 后加进公开快照的字段必须有 presence（optional 或 oneof），不设时不输出。
+// compactJSON protojson 会按二进制随机插入空白（故意防止按字节比对），比较前先压紧
+func compactJSON(raw []byte) []byte {
+	var buf bytes.Buffer
+	if err := json.Compact(&buf, raw); err != nil {
+		return raw
+	}
+	return buf.Bytes()
+}
+
+func TestLaterSnapshotFieldsOmittedWhenUnset(t *testing.T) {
+	snapshot := validSnapshot()
+	snapshot.Blocks = append(snapshot.Blocks, &Block{BlockID: "ask", Content: &Block_Interaction{Interaction: &InteractionRef{InteractionID: "ask"}}})
+	content, err := protojson.MarshalOptions{EmitUnpopulated: true}.Marshal(snapshot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, field := range []string{"confirmerUserID", "docCard", "mentions", "questionType", "answerSummary", "resolvedBy"} {
+		if bytes.Contains(content, []byte(field)) {
+			t.Fatalf("没设的 %s 不应输出: %s", field, content)
+		}
+	}
+	confirmer := "hirer"
+	snapshot.Blocks[1].GetInteraction().ConfirmerUserID = &confirmer
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"confirmerUserID":"hirer"`)) {
+		t.Fatalf("设了确认人应输出: %s", content)
+	}
+	snapshot.Mentions = &Mentions{UserIDs: []string{"user"}}
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"mentions":{"userIDs":["user"],"displayNames":[]}`)) {
+		t.Fatalf("设了提醒的人应输出: %s", content)
+	}
+	snapshot.Mentions.DisplayNames = []string{"张三"}
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"mentions":{"userIDs":["user"],"displayNames":["张三"]}`)) {
+		t.Fatalf("带显示名应输出: %s", content)
+	}
+	confirm := InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM
+	snapshot.Blocks[1].GetInteraction().QuestionType = &confirm
+	if content, _ = (protojson.MarshalOptions{EmitUnpopulated: true}).Marshal(snapshot); !bytes.Contains(compactJSON(content), []byte(`"questionType":"INTERACTION_QUESTION_TYPE_CONFIRM"`)) {
+		t.Fatalf("设了题型应输出: %s", content)
+	}
+}
+
+func TestMentions(t *testing.T) {
+	ten := make([]string, MaxMentions)
+	for i := range ten {
+		ten[i] = fmt.Sprintf("u%d", i)
+	}
+	for _, c := range []struct {
+		name  string
+		users []string
+		names []string
+		ok    bool
+	}{
+		{"一个", []string{"user"}, nil, true},
+		{"上限", ten, nil, true},
+		{"空列表", []string{}, nil, false},
+		{"超上限", append(append([]string(nil), ten...), "more"), nil, false},
+		{"重复", []string{"a", "a"}, nil, false},
+		{"空 ID", []string{""}, nil, false},
+		{"ID 太长", []string{strings.Repeat("a", MaxMentionIDBytes+1)}, nil, false},
+		{"带显示名", []string{"a", "b"}, []string{"张三", ""}, true},
+		{"显示名上限", []string{"a"}, []string{strings.Repeat("名", MaxMentionNameRunes)}, true},
+		{"显示名比 ID 少", []string{"a", "b"}, []string{"张三"}, false},
+		{"显示名比 ID 多", []string{"a"}, []string{"张三", "李四"}, false},
+		{"显示名太长", []string{"a"}, []string{strings.Repeat("名", MaxMentionNameRunes+1)}, false},
+		{"显示名首尾空白", []string{"a"}, []string{" 张三"}, false},
+		{"显示名控制字符", []string{"a"}, []string{"张\n三"}, false},
+		{"显示名无效编码", []string{"a"}, []string{"张\xff"}, false},
+	} {
+		s := validSnapshot()
+		s.Mentions = &Mentions{UserIDs: c.users, DisplayNames: c.names}
+		if err := ValidatePublicSnapshot(s); (err == nil) != c.ok {
+			t.Fatalf("%s: %v", c.name, err)
+		}
+	}
+}
+
+// TestMentionDisplayName 整理发送人昵称：去掉无效编码、控制字符和首尾空白，超长截断，整理过的再整理不变
+func TestMentionDisplayName(t *testing.T) {
+	for _, c := range []struct{ in, want string }{
+		{"张三", "张三"},
+		{"  张三\u3000", "张三"},
+		{"张\n三\x00", "张三"},
+		{"张\xff三", "张三"},
+		{"", ""},
+		{" \t ", ""},
+		{strings.Repeat("名", MaxMentionNameRunes+5), strings.Repeat("名", MaxMentionNameRunes)},
+		{strings.Repeat("名", MaxMentionNameRunes-1) + " 尾", strings.Repeat("名", MaxMentionNameRunes-1)},
+	} {
+		got := MentionDisplayName(c.in)
+		if got != c.want || MentionDisplayName(got) != got {
+			t.Fatalf("%q: got %q want %q", c.in, got, c.want)
+		}
+	}
+}
+
+func TestAttachmentIMFile(t *testing.T) {
+	str := func(v string) *string { return &v }
+	num := func(v int32) *int32 { return &v }
+	with := func(a *AttachmentBlock) *AssistantElem {
+		s := validSnapshot()
+		a.ResourceID, a.ContentVersion = "res", "v1"
+		s.Blocks = append(s.Blocks, &Block{BlockID: "file", Content: &Block_Attachment{Attachment: a}})
+		return s
+	}
+	// 没设时按 EmitUnpopulated 也不输出
+	content, err := protojson.MarshalOptions{EmitUnpopulated: true}.Marshal(&AttachmentBlock{ResourceID: "res"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, field := range []string{"kind", "imObject", "width", "height"} {
+		if bytes.Contains(content, []byte(field)) {
+			t.Fatalf("没设的 %s 不应输出: %s", field, content)
+		}
+	}
+	for _, c := range []struct {
+		name string
+		a    *AttachmentBlock
+		ok   bool
+	}{
+		{"都不带", &AttachmentBlock{}, true},
+		{"图片", &AttachmentBlock{Kind: str("image"), ImObject: str("bot_1/msg_assistant_ab12.png"), Width: num(640), Height: num(480)}, true},
+		{"文件", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1/msg_assistant_ab12.pdf")}, true},
+		{"视频没扩展名", &AttachmentBlock{Kind: str("video"), ImObject: str("bot_1/msg_assistant_ab12")}, true},
+		{"只有类别", &AttachmentBlock{Kind: str("file")}, false},
+		{"只有对象名", &AttachmentBlock{ImObject: str("bot_1/a.pdf")}, false},
+		{"只有宽高", &AttachmentBlock{Width: num(1), Height: num(1)}, false},
+		{"类别未知", &AttachmentBlock{Kind: str("doc"), ImObject: str("bot_1/a.pdf")}, false},
+		{"图片缺宽高", &AttachmentBlock{Kind: str("image"), ImObject: str("bot_1/a.png")}, false},
+		{"图片宽为 0", &AttachmentBlock{Kind: str("image"), ImObject: str("bot_1/a.png"), Width: num(0), Height: num(1)}, false},
+		{"文件带宽高", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1/a.pdf"), Width: num(1), Height: num(1)}, false},
+		{"空对象名", &AttachmentBlock{Kind: str("file"), ImObject: str("")}, false},
+		{"绝对路径", &AttachmentBlock{Kind: str("file"), ImObject: str("/bot_1/a.pdf")}, false},
+		{"上级目录", &AttachmentBlock{Kind: str("file"), ImObject: str("../a.pdf")}, false},
+		{"空段", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1//a.pdf")}, false},
+		{"空格", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1/a b.pdf")}, false},
+		{"中文", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1/周报.pdf")}, false},
+		{"问号", &AttachmentBlock{Kind: str("file"), ImObject: str("bot_1/a.pdf?x=1")}, false},
+		{"太长", &AttachmentBlock{Kind: str("file"), ImObject: str(strings.Repeat("a", MaxIMObjectBytes+1))}, false},
+	} {
+		if err := ValidatePublicSnapshot(with(c.a)); (err == nil) != c.ok {
+			t.Fatalf("%s: %v", c.name, err)
+		}
+	}
+	s := with(&AttachmentBlock{Kind: str("image"), ImObject: str("bot_1/a.png"), Width: num(2), Height: num(3)})
+	data, err := protojson.MarshalOptions{EmitUnpopulated: true}.Marshal(s)
+	var decoded AssistantElem
+	if err != nil || protojson.Unmarshal(data, &decoded) != nil || !proto.Equal(s, &decoded) || !bytes.Contains(data, []byte(`"imObject":"bot_1/a.png"`)) {
+		t.Fatalf("IM 文件字段序列化不一致: %s %v", data, err)
+	}
+}
+
+func TestDocCardBlock(t *testing.T) {
+	card := func(id, tid, docType, title string) *Block {
+		return &Block{BlockID: id, Content: &Block_DocCard{DocCard: &DocCardBlock{Tid: tid, DocType: docType, Title: title}}}
+	}
+	s := validSnapshot()
+	s.Blocks = append(s.Blocks, card("doc", "t_1-A", "doc", "周报"), card("sheet", "t2", "excel", "销售表"), card("board", "t3", "board", "白板"))
+	if err := ValidatePublicSnapshot(s); err != nil {
+		t.Fatal(err)
+	}
+	data, err := protojson.Marshal(s)
+	var decoded AssistantElem
+	if err != nil || protojson.Unmarshal(data, &decoded) != nil || !proto.Equal(s, &decoded) {
+		t.Fatal("文档卡片序列化不一致", err)
+	}
+	long := ""
+	for range MaxDocCardTitleRunes + 1 {
+		long += "字"
+	}
+	for name, b := range map[string]*Block{
+		"空载荷":   {BlockID: "x", Content: &Block_DocCard{}},
+		"缺编号":   card("x", "", "doc", "周报"),
+		"编号带斜杠": card("x", "a/b", "doc", "周报"),
+		"编号过长":  card("x", "a234567890123456789012345678901234567890123456789012345678901234x", "doc", "周报"),
+		"类型未知":  card("x", "t", "pdf", "周报"),
+		"标题空白":  card("x", "t", "doc", "  "),
+		"标题过长":  card("x", "t", "doc", long),
+		"标题换行":  card("x", "t", "doc", "周\n报"),
+		"标题非法":  card("x", "t", "doc", string([]byte{0xff})),
+	} {
+		bad := validSnapshot()
+		bad.Blocks = append(bad.Blocks, b)
+		if ValidatePublicSnapshot(bad) == nil {
+			t.Fatal("无效文档卡片未被拒绝", name)
+		}
+	}
+	many := validSnapshot()
+	for i := range MaxDocCards + 1 {
+		many.Blocks = append(many.Blocks, card(fmt.Sprint("doc", i), "t", "doc", "周报"))
+	}
+	if ValidatePublicSnapshot(many) == nil {
+		t.Fatal("文档卡片超过上限未被拒绝")
+	}
+	many.Blocks = many.Blocks[:len(many.Blocks)-1]
+	if err := ValidatePublicSnapshot(many); err != nil {
+		t.Fatal("上限以内应通过", err)
 	}
 }
 
@@ -147,6 +352,66 @@ func TestInteractionState(t *testing.T) {
 	}
 }
 
+// 题型只有问答有；回答摘要只有已回答的问答有；已在执行端处理的是受理了的，已撤销的是作废了的、没有处理人
+func TestInteractionExtras(t *testing.T) {
+	question := func() *InteractionRef {
+		return &InteractionRef{InteractionID: "q1", Kind: InteractionKind_INTERACTION_KIND_QUESTION, Revision: 1, ExpiresAt: 10, Summary: "需要补充信息", State: InteractionState_INTERACTION_STATE_PENDING}
+	}
+	answered := func(r *InteractionRef) {
+		r.State, r.Outcome, r.ActorUserID, r.DecidedAt = InteractionState_INTERACTION_STATE_ACCEPTED, InteractionOutcome_INTERACTION_OUTCOME_ANSWERED, "u1", 5
+	}
+	confirm, choice := InteractionQuestionType_INTERACTION_QUESTION_TYPE_CONFIRM, InteractionQuestionType_INTERACTION_QUESTION_TYPE_CHOICE
+	executor, revoked := InteractionResolver_INTERACTION_RESOLVER_EXECUTOR, InteractionResolver_INTERACTION_RESOLVER_REVOKED
+	valid := map[string]func(*InteractionRef){
+		"确认题": func(r *InteractionRef) { r.QuestionType = &confirm },
+		"选择题已回答带摘要": func(r *InteractionRef) {
+			r.QuestionType, r.AnswerSummary = &choice, proto.String("方案 A")
+			answered(r)
+		},
+		"在执行端回答": func(r *InteractionRef) {
+			answered(r)
+			r.ResolvedBy = &executor
+		},
+		"执行端撤销": func(r *InteractionRef) {
+			r.State, r.DecidedAt, r.ResolvedBy = InteractionState_INTERACTION_STATE_CANCELLED, 6, &revoked
+		},
+	}
+	for name, mutate := range valid {
+		ref := question()
+		mutate(ref)
+		if err := ValidatePublicSnapshot(interactionSnapshot(ref)); err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+	}
+	unknown := InteractionQuestionType(9)
+	invalid := map[string]func(*InteractionRef){
+		"审批带题型": func(r *InteractionRef) {
+			r.Kind, r.Summary, r.QuestionType = InteractionKind_INTERACTION_KIND_EXECUTION_APPROVAL, "等待执行审批", &confirm
+		},
+		"认不得的题型": func(r *InteractionRef) { r.QuestionType = &unknown },
+		"没回答带摘要": func(r *InteractionRef) { r.AnswerSummary = proto.String("方案 A") },
+		"空摘要": func(r *InteractionRef) {
+			answered(r)
+			r.AnswerSummary = proto.String(" ")
+		},
+		"摘要太长": func(r *InteractionRef) {
+			answered(r)
+			r.AnswerSummary = proto.String(strings.Repeat("长", MaxAnswerSummaryRunes+1))
+		},
+		"待处理说在执行端处理了": func(r *InteractionRef) { r.ResolvedBy = &executor },
+		"撤销带处理人": func(r *InteractionRef) {
+			r.State, r.ActorUserID, r.DecidedAt, r.ResolvedBy = InteractionState_INTERACTION_STATE_CANCELLED, "u1", 6, &revoked
+		},
+	}
+	for name, mutate := range invalid {
+		ref := question()
+		mutate(ref)
+		if ValidatePublicSnapshot(interactionSnapshot(ref)) == nil {
+			t.Fatalf("%s: 未被拒绝", name)
+		}
+	}
+}
+
 func TestPublicTextSafety(t *testing.T) {
 	for _, text := range []string{"读取附件", "销售表.xlsx · Sheet1", "查询日程 · 3 条", "Read file report.pdf", "Token: 10", "tokens: 1200", "token=abc", "QuarterlySalesReportForEastRegionSummary2026.xlsx", "quarterly_sales_report_for_the_east_region_2026_final_v2.xlsx", "版本 1.2.3", "第 3/5 步"} {
 		if UnsafePublicText(text) {
@@ -165,5 +430,42 @@ func TestPublicTextSafety(t *testing.T) {
 	}
 	if InboundAttachmentID("m1", 0) == InboundAttachmentID("m1", 1) || InboundAttachmentID("m1", 0) != InboundAttachmentID("m1", 0) {
 		t.Fatal("附件 ID 不稳定或冲突")
+	}
+}
+
+func TestScheduleProposalBlock(t *testing.T) {
+	card := func() *ScheduleProposalBlock {
+		return &ScheduleProposalBlock{ProposalID: "p1", Name: "日报", ScheduleText: "每天 09:00", PromptSummary: "汇总工单",
+			DeliveryKind: "group", DeliveryTargetID: "g1", InitiatorUserID: "u1", ExpiresAt: 1}
+	}
+	snap := func(blocks ...*Block) *AssistantElem {
+		s := validSnapshot()
+		s.Status = RunStatus_RUN_STATUS_COMPLETED
+		s.Blocks = blocks
+		return s
+	}
+	ok := snap(&Block{BlockID: "p", Content: &Block_ScheduleProposal{ScheduleProposal: card()}})
+	if err := ValidatePublicSnapshot(ok); err != nil {
+		t.Fatalf("valid proposal: %v", err)
+	}
+	two := snap(&Block{BlockID: "p", Content: &Block_ScheduleProposal{ScheduleProposal: card()}}, &Block{BlockID: "q", Content: &Block_ScheduleProposal{ScheduleProposal: card()}})
+	if ValidatePublicSnapshot(two) == nil {
+		t.Fatal("at most one proposal per message")
+	}
+	for name, mutate := range map[string]func(*ScheduleProposalBlock){
+		"no id":        func(c *ScheduleProposalBlock) { c.ProposalID = "" },
+		"blank name":   func(c *ScheduleProposalBlock) { c.Name = " " },
+		"no schedule":  func(c *ScheduleProposalBlock) { c.ScheduleText = "" },
+		"bad delivery": func(c *ScheduleProposalBlock) { c.DeliveryKind = "none" },
+		"no target":    func(c *ScheduleProposalBlock) { c.DeliveryTargetID = "" },
+		"no initiator": func(c *ScheduleProposalBlock) { c.InitiatorUserID = "" },
+		"no expiry":    func(c *ScheduleProposalBlock) { c.ExpiresAt = 0 },
+		"long summary": func(c *ScheduleProposalBlock) { c.PromptSummary = strings.Repeat("长", MaxProposalSummaryRunes+1) },
+	} {
+		c := card()
+		mutate(c)
+		if ValidScheduleProposal(c) {
+			t.Fatalf("%s must be invalid", name)
+		}
 	}
 }
